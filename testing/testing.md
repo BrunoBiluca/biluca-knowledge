@@ -15,7 +15,7 @@ Testes automatizados apresentam várias vantagens e são uma revolução quando 
   - Exatamente por isso temos feedback constante de cada novo código submetido ao sistema.
 
 - Aumento de produtividade
-  - Time que emprega técnicas como TDD, Continuous integration and delivery gastam 44 porcento mais tempo em trabalho útil (novas funcionalidades) do que corrigindo bugs.
+  - Times que empregam técnicas como TDD, Continuous integration and delivery gastam 44 porcento mais tempo em trabalho útil (novas funcionalidades) do que corrigindo bugs.
 
 ## Tipos de Teste automatizados
 
@@ -64,9 +64,9 @@ Os mais diferentes tipos de testes podem apresentar 3 fases de implementação:
 Um teste automatizado se divide em 3 etapas ou partes
 
 - Arrange, Act, and Assert 
-- Caso, Ação e Verificação
+- Preparação, Ação e Verificação
 
-- Caso
+- Preparação
   - Configura o caso de teste
 - Ação
   - Chama a ação que será testada
@@ -94,16 +94,15 @@ Podemos testar nosso código das mais variadas formas. Os exemplos abaixo serão
 Para métodos que retornam valores numéricos podemos utilizar
 
 ```js
-expect(result).toBe(number)
-expect(result).not.toBe(number)
-expect(result).toBeGreaterThan(number | bigint)
-expect(result).toBeLessThan(number | bigint)
+expect(result).toBe(number)                       // Espera um valor igual
+expect(result).not.toBe(number)                   // Espera um valor diferente
+expect(result).toBeGreaterThan(number | bigint)   // Espera um valor maior
+expect(result).toBeLessThan(number | bigint)      // Espera um valor menor
 ```
-
 Para testar métodos que retornam erros podemos utilizar métodos que esperam que certa ação retorne um erro
 
 ```js
-expect(result).toThrow(error?)
+expect(method()).toThrow(error?)                  // Espera que method lance uma exceção
 ```
 
 # Mocking
