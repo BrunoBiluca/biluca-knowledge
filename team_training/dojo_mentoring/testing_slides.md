@@ -53,6 +53,7 @@ style: |
 - Security Tests
 - Performance Tests
 - Acceptance Tests
+- Quality Assurance Tests
 
 ---
 
@@ -113,6 +114,27 @@ expect(method()).toThrow(error?)                  // Espera que method lance uma
 ## Exemplo de um arquivo específico no relatório de cobertura de código
 
 ![Exemplo de um arquivo específico no relatório de cobertura de código](testing_imgs/code_coverage_file.png)
+
+--- 
+
+# Exemplos
+
+- **ex_1**: Testes unitários 101
+- **ex_2**: GUI testes unitário utilizando Veu 3 + Vue-Jest
+
+---
+
+# Dever de casa
+
+- Implementar testes unitários para 50% de cobertura de linhas do código.
+- Apresentar exemplos de testes implementados
+  - Qual tipo de teste foi implementado?
+  - Qual tecnologia foi utilizada para o desenvolvimento dos testes?
+  - Quais foram as principais dificuldades?
+- **(Opcional)** Mentorados podem implementar outros testes automatizados
+  - Testes de performance
+  - Testes de segurança
+  - Testes de qualidade de código
 
 ---
 

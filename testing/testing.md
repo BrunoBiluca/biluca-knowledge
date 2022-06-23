@@ -33,6 +33,9 @@ Existem vários tipos de testes automatizados que podemos executar em relação 
 - Acceptance Tests
   - Visam testar as funcionalidades do sistema de acordo com o comportamento esperado
   - Exemplo: testar se em uma calculadora a operação de soma está sendo executada da forma esperada
+- Quality Assurance Tests
+  - Visam testar a qualidade do processo de desenvolvimento
+  - Exemplo: testar se todos os arquivos do projeto apresentam a quantidade máxima de linhas e colunas estipulada pelo projeto
 
 Podemos testar qualquer tipo de operação em um sistema de software. Diferentes tipos de testes podem ser utilizados em diferentes situações.
 
