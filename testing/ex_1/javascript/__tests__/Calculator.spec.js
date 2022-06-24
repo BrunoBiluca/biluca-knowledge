@@ -8,6 +8,11 @@ beforeEach(() => {
     calculator = new Calculator(new MemoryStorage())
 });
 
+test('should sum only numbers', () => {
+    expect(() => calculator.sum('1', 2)).toThrow("only numbers")
+    expect(() => calculator.sum(1, '2')).toThrow("only numbers")
+})
+
 test('should add two numbers and return sum value', () => {
     expect(calculator.sum(1, 2)).toBe(3);
 })
@@ -47,5 +52,5 @@ test("should store value when calculator sum two numbers", () => {
 
     expect(storage.store).toHaveBeenCalled()
     expect(storage.get).toHaveBeenCalled()
-    expect(storage.get).not.toHaveBeenCalled()
+    expect(storage.clear).not.toHaveBeenCalled()
 })

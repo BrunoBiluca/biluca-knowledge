@@ -4,6 +4,10 @@ class Calculator {
     }
 
     sum(a, b) {
+
+        if (typeof a !== 'number' || typeof b !== 'number')
+            throw new Error("only numbers")
+
         this.storage.store(a + b)
         return this.storage.get()
     }
