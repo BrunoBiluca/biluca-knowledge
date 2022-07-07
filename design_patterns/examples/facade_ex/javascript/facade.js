@@ -17,10 +17,10 @@ class UserClient {
             const res = await this.httpClient.get(request);    
             return this.userMapper.map(res);
         } catch (error) {
-            this.httpErrorHandler.throw(error())
+            this.httpErrorHandler.throw(error)
         }
     }
 }
 
-// userClient created by dependency injection system
+// userClient created somewhere
 userClient.getById(1);

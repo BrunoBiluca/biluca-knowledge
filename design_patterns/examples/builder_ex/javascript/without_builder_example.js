@@ -1,9 +1,4 @@
 class Pizza {
-    slices
-    hasCheese
-    hasCheedar
-    ingredients
-
     constructor(slices, hasCheese, hasCheedar, ingredients){
         this.slices = slices
         this.hasCheese = hasCheese
