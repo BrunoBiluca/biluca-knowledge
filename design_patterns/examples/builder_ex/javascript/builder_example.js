@@ -13,11 +13,13 @@ class PizzaBuilder {
         this.hasCheedar = false
         this.ingredients = ['ham', 'chicken', 'eggs']
     }
+
     small() { this.slices = 4; return this }
     medium() { this.slices = 6; return this }
     big() { this.slices = 8; return this }
     addCheddar() { this.hasCheedar = true; return this }
     build() { return new Pizza(this.slices, this.hasCheese, this.hasCheedar, this.ingredients) }
+
 }
 
 // build code

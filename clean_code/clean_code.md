@@ -15,6 +15,23 @@ Todas as IDEs e Editores de Texto atuais apresentam ferramentas de refatoraçõe
 - Extrair código
   - VSCode: `CTRL + .` 
 
+## Etapas da refatoração
+
+Podemos seguir algumas etapas enquanto estamos refatorando um código legado.
+
+- Criar teste com o resultado final do que está sendo refatorado
+  - Pode não ser tão simples dependendo no sistema, porém é muito importante que façamos isso para garantir que o comportamento do código não mude de acordo com a refatoração
+- Passo 1: reduzir a desordem (Reduce Clutter)
+  - Remover código desnecessário
+  - Remover comentários que não são pertinentes
+  - Extrair métodos simples
+  - Reduzir expressões lógicas
+- Passo 2: reduzir a complexidade ciclomática
+  - Extrair métodos para código dentro de loops
+  - Extrair métodos para código dentro de ifs
+- Passo 3: criar métodos
+  - Identificar parte do código e extrair para métodos que descrevem bem seu comportamento
+
 ## Uma função faz uma única coisa
 
 Seguindo o princípio de responsabilidade única cada função deve resolver um único problema.
