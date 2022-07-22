@@ -62,6 +62,27 @@ Os mais diferentes tipos de testes podem apresentar 3 fases de implementação:
 
 # Sintaxe de um teste
 
+## Nomenclatura de um teste
+
+Nomear o teste é tão importante quanto implementá-lo. O nome de um teste pode prover muita informação relevante sobre o sistema e auxiliar na hora de entender o próprio sistema. Funciona como uma documentação imbutida no próprio código.
+
+A fim de melhorar a legibilidade do sistema a nomenclatura dos testes podem levar as seguintes indicações como [Vladimir fala muito bem no artigo](#you-are-naming-your-tests-wrong-by-vladimir-khorikov).
+
+- Não criar uma nomenclatura rígida
+- Tentar descrever a unidade de teste que está sendo testada para uma pessoa não programadora.
+- Separar palavras por **underscore**.
+- Não incluir nomes de métodos e classes no nome do teste.
+
+### Exempos de nomenclatura
+
+```c#
+public void Delivery_with_past_date_should_be_invalid()
+```
+
+```c#
+public void Should_not_move_if_there_is_no_destination_setup()
+```
+
 ## Estrutura básica de um teste
 
 Um teste automatizado se divide em 3 etapas ou partes
@@ -149,3 +170,5 @@ Algumas ferramentas de criação de relatório apresentam informações diferent
 - [Documentação do Jest](https://jestjs.io/)
 - [Clean Code Class 4](https://www.youtube.com/watch?v=58jGpV2Cg50&list=PLmmYSbUCWJ4x1GO839azG_BBw8rkh-zOj&index=5)
 - [Accelerate: The Science of Lean Software and DevOps: Building and Scaling High Performing Technology Organizations](https://www.amazon.com/Accelerate-Software-Performing-Technology-Organizations/dp/1942788339)
+
+#### [You are naming your tests wrong! by Vladimir Khorikov](https://enterprisecraftsmanship.com/posts/you-naming-tests-wrong/)
