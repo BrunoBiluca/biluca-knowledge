@@ -122,15 +122,13 @@ ar(Levantar os papéis de cada integrante)
 rp(Reatribuir os papéis de cada integrante)
 doc(Rolê do time criado)
 
-teamManager{{Team Manager}}
+teamManager1{{Team Manager}}
+teamManager2{{Team Manager}}
+teamManager3{{Team Manager}}
+teamManager4{{Team Manager}}
 integrante{{Integrantes}}
 
-dtm --- teamManager 
-dr --- teamManager 
-rp --- teamManager
-doc --- teamManager
-
-ar --- integrante
+teamManager1 --> teamManager2 --> teamManager3 --> integrante --> teamManager4
 
 dtm --> dr --> ar --> rp --> doc
 ```
@@ -146,15 +144,13 @@ ar(Buscar na equipe integrantes)
 rp(Atribuir os papéis de cada integrante)
 doc(Rolê do time criado)
 
-teamManager{{Team Manager}}
+teamManager1{{Team Manager}}
+teamManager2{{Team Manager}}
+teamManager3{{Team Manager}}
+teamManager4{{Team Manager}}
 integrante{{Integrantes}}
 
-dtm --- teamManager 
-dr --- teamManager 
-rp --- teamManager
-doc --- teamManager
-
-ar --- integrante
+teamManager1 --> teamManager2 --> teamManager3 --> integrante --> teamManager4
 
 dtm --> dr --> ar --> rp --> doc
 ```
