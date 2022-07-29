@@ -46,9 +46,99 @@ Os **Deveres de Casa** serão desenvolvidos pela ideia do próprio mentorado, co
   - Devemos manter a taxa de presença o mais alta possível
   - Casos extremos podem ser flexibilizados
 
+## Cronograma
+
+```mermaid
+gantt
+    title Cronograma
+    dateFormat  DD-MM-YYYY
+    axisFormat %d-%m
+    todayMarker off
+
+    section Clean Code
+    Aula sobre Clean Code         :milestone, m1, 29-07-2022, 0d
+    Desenvolvimento               :dev1, after m1, 5d
+    Apresentação                  :milestone, m2, after dev1, 1d
+
+    section Testing
+    Aula sobre Testing            :milestone, m3, after m2, 0d
+    Desenvolvimento               :dev2, after m3, 5d
+    Apresentação                  :milestone, m4, after dev2, 1d
+
+    section Design Patterns
+    Aula sobre Design Patterns            :milestone, m5, after m4, 0d
+    Desenvolvimento               :dev3, after m5, 5d
+    Apresentação                  :milestone, m6, after dev3, 1d
+
+    section Code Principals
+    Aula sobre Code Principals            :milestone, m7, after m6, 0d
+    Desenvolvimento               :dev4, after m7, 5d
+    Apresentação                  :milestone, m8, after dev4, 1d
+
+    section Aulas do mentorados
+    Apresentações            :active, m9, after m8, 4w
+```
+
 ## Conteúdos
 
-- Clean code
-  - utilizando os conceitos contidos na pasta `../clean_code`
-- Testing
-  - utilizando os conceitos contidos na pasta `../testing`
+### Clean code
+
+Apresentação de conceitos relacionados a desenvolvimento de software com foco na qualidade do código gerado.
+
+Um código com qualidade mantem a produtividade da equipe sempre no seu máximo e diminui o despedício de recursos (tanto tempo quanto dinheiro) durante o desenvolvimento de software.
+
+Tópicos abordados:
+
+- Qualidade de software
+- Ferramentas de refatoração
+- Formatação de código
+- Semântica do código
+- Exemplos em código
+
+### Testing
+
+Introdução ao desenvolvimento de software orientado a tests.
+
+Um projeto que apresenta testes automatizados garante a funcionalidade do sistema e aumenta a produtividade de uma equipe. Também ajuda a integrar novos desenvolvedores ao projeto e aumenta a confiabilidade dos clientes em relação ao projeto.
+
+Tópicos abordados:
+
+- Introdução a testes automatizados
+- Tipos de testes automatizados
+- Fases de um teste
+- Sintaxe da implementação de testes
+- Dicas de semântica e documentação
+- Exemplos em código
+
+### Design Patterns
+
+Introdução a Design Patterns no desenvolvimento de software.
+
+Design Patterns são soluções já consolidadas para problemas comuns em software design, especificamente design de código. Desenvolvedores que conhecem Design Patterns tem maior autonomia para solucionar problemas e aumentam capacidade do projeto em prever problemas durante o processo de desenvolvimento.
+
+A utilização de Design Patterns no desenvolvimento de software aumenta a flexibilidade do sistema e o foco do desenvolvimento no problema real do cliente em relação a como fazer a implementação.
+
+Tópicos abordados:
+
+- Introdução a Design Patterns
+- Quando aplicar Design Patterns
+- Quando não aplicar Design Patterns
+- Diagrama de classes
+- Tipos de Design Patterns
+- Exemplos em código
+
+### Code Principles
+
+Introdução a princípios de código.
+
+Utilizar princípios de código ajuda a guiar o desenvolvimento de uma sistema, o que aumenta a agilidade no desenvolvimento e evoluação.
+
+Tópicos abordados:
+
+- Princípio do ETC (Easier to Change)
+- Clean Code
+- DRY
+- Conceitos relacionados a qualidade de código
+  - Modularidade
+  - Coesão
+- Exemplos em código

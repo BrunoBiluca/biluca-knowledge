@@ -1,3 +1,26 @@
+# Table of contents
+
+- [Table of contents](#table-of-contents)
+- [Semântica de código](#semântica-de-código)
+  - [Ferramentas de refatoração](#ferramentas-de-refatoração)
+  - [Etapas da refatoração](#etapas-da-refatoração)
+  - [Uma função faz uma única coisa](#uma-função-faz-uma-única-coisa)
+  - [Evitar condicionais com múltiplas instruções](#evitar-condicionais-com-múltiplas-instruções)
+  - [Side effects (evitar utilizando múltiplos retornos)](#side-effects-evitar-utilizando-múltiplos-retornos)
+  - [Evitar switch/cases](#evitar-switchcases)
+  - [Nomenclatura variáveis](#nomenclatura-variáveis)
+  - [Nomenclatura de métodos](#nomenclatura-de-métodos)
+  - [Evitar Comentários](#evitar-comentários)
+  - [Tratamento de exceções](#tratamento-de-exceções)
+  - [Hierarquia de projetos](#hierarquia-de-projetos)
+    - [Front-end](#front-end)
+  - [Ferramentas de auxilio na construção de código](#ferramentas-de-auxilio-na-construção-de-código)
+    - [Gerais](#gerais)
+    - [Javascript](#javascript)
+    - [Vue](#vue)
+- [Exemplos](#exemplos)
+- [Bibliografia](#bibliografia)
+
 # Semântica de código
 
 > Definição: Semântica é o estudo do significado. 
