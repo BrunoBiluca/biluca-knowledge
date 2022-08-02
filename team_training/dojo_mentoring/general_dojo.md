@@ -96,6 +96,24 @@ Cada conteúdo deve ser descrito da seguinte maneira:
 
 > **🌈 GUIDELINE** Os conteúdos expostos no DOJO devem ser complementares e incrementais. Cada semana um conteúdo novo deve se relacionar com o conteúdo anterior.
 
+## Apresentações dos mentorados
+
+Cada mentorado deve criar uma apresentção de **até 30 minutos** relacionada a algum tópico abordado no DOJO.
+
+> **🌈 GUIDELINE** As apresentações devem ser espaçadas de 1 semana para possibilitar tempo hábil para a confecção das mesmas.
+
+Cada mentorado deverá apresentação o tópico abordado e a justificativa no primeiro momento.
+
+As apresentações deverão conter:
+
+- Apresentação formatada
+  - Qual o tópico abordado?
+  - Justificativa do tópico abordado. (Por que esse tópico deve ser abordado?)
+- Documentação auxiliar referente ao conteúdo apresentado
+- Exemplos de utilização
+
+Após a apresentação temos mais **15-30 minutos** de levantamento de dúvidas e discussões.
+
 ## Avaliações
 
 Ao que se diz respeito ao mentor:
