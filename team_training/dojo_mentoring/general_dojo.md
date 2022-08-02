@@ -1,10 +1,10 @@
 # Edital do DOJO
 
-O Dojo tem como objetivo fomentar o compartilhamento de conhecimento entre a equipe da GH. O conhecimento é compartilhado com foco a exposição de conceitos pertinentes ao desenvolvimento de software aos integrantes mais novos da equipe pelos integrantes mais experiêntes, possibilitando um nivelamento das experiências e maior integração entre os integrantes do time.
+O Dojo tem como objetivo fomentar o compartilhamento de conhecimento entre a equipe da GH. O conhecimento é compartilhado com foco a exposição de conceitos pertinentes ao desenvolvimento de software aos integrantes mais novos da equipe pelos integrantes mais experientes, possibilitando um nivelamento das experiências e maior integração entre os integrantes do time.
 
 Ao final do período de execução os mentorados terão sido expostos aos principais conceitos de desenvolvimento de software empregados pelo mercado e poderão empregar esses conceitos em futuros projetos, possibilitando o desenvolvimento de software com qualidade, escalabilidade e performance.
 
-Paralelo a isso teremos profissionais capacitados para criar seus próprios grupos de treinamento e DOJOs e assim espalhar a cutura do compartilhamento de conhecimento dentro da GH.
+Paralelo a isso teremos profissionais capacitados para criar seus próprios grupos de treinamento e DOJOs e assim espalhar a cultura do compartilhamento de conhecimento dentro da GH.
 
 ## Composição do grupo
 
@@ -113,6 +113,27 @@ As apresentações deverão conter:
 - Exemplos de utilização
 
 Após a apresentação temos mais **15-30 minutos** de levantamento de dúvidas e discussões.
+
+## Quiz de aderência de treinamento
+
+O quiz de aderência de treinamento do DOJO serve como um **índice de acompanhamento do impacto** do DOJO no desenvolvimento cotidiano.
+
+> **🌈 GUIDELINE** O quiz pode ser aplicado mensalmente durante a execução do DOJO a fim de acompanhar a evolução dos conteúdos do DOJO nos projetos de cada mentorado.
+
+- Você ficou satisfeito(a) com o treinamento?
+  - Classificação 1 - 5
+
+- O quão familiarizado com o conteúdo você estava previamente?
+  - Classificação 1 - 5
+
+- O quão fácil foi entender a linguagem ou termos utilizados?
+  - Classificação 1 - 5
+  - Onde poderia melhorar?
+
+- Você teve oportunidade de aplicar algum do conteúdos?
+  - Classificação 1 - 5
+  - O que você mais aplicou?
+  - O que falta para conseguir aplicar o conteúdo?
 
 ## Avaliações
 
