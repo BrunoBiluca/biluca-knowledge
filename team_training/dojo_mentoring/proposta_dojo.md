@@ -1,4 +1,4 @@
-# DOJO
+# DOJO - Biluca Master Class
 
 O Dojo tem como objetivo fomentar o compartilhamento de conhecimento entre a equipe da GH. O conhecimento é compartilhado com foco a exposição de conceitos pertinentes ao desenvolvimento de software aos integrantes mais novos da equipe pelos integrantes mais experientes, possibilitando um nivelamento das experiências e maior integração entre os integrantes do time.
 
@@ -6,23 +6,23 @@ Ao final do período de execução os mentorados terão sido expostos aos princi
 
 Paralelo a isso teremos profissionais capacitados para criar seus próprios grupos de treinamento e DOJOs e assim espalhar a cultura do compartilhamento de conhecimento dentro da GH.
 
-- [DOJO](#dojo)
+- [DOJO - Biluca Master Class](#dojo---biluca-master-class)
   - [Composição do grupo](#composição-do-grupo)
-  - [Observações](#observações)
   - [Cronograma](#cronograma)
+  - [Estimativa de horas](#estimativa-de-horas)
 - [Conteúdos](#conteúdos)
   - [Clean code](#clean-code)
-    - [Dever de casa - Clean Code](#dever-de-casa---clean-code)
-    - [Algoritmos e sistemas recomendados:](#algoritmos-e-sistemas-recomendados)
+    - [🏠 Dever de casa - Clean Code](#-dever-de-casa---clean-code)
+      - [Algoritmos e sistemas recomendados](#algoritmos-e-sistemas-recomendados)
     - [Cronograma](#cronograma-1)
     - [Avaliação](#avaliação)
   - [Testing](#testing)
-    - [Dever de Casa - Automated Tests](#dever-de-casa---automated-tests)
+    - [🏠 Dever de Casa - Automated Tests](#-dever-de-casa---automated-tests)
     - [Cronograma](#cronograma-2)
     - [Avaliação](#avaliação-1)
   - [Design Patterns](#design-patterns)
-    - [Dever de casa - Design Patterns](#dever-de-casa---design-patterns)
-    - [Design Patterns recomendados:](#design-patterns-recomendados)
+    - [🏠 Dever de casa - Design Patterns](#-dever-de-casa---design-patterns)
+      - [Design Patterns recomendados](#design-patterns-recomendados)
     - [Cronograma](#cronograma-3)
     - [Avaliação](#avaliação-2)
   - [Code Principles](#code-principles)
@@ -31,17 +31,9 @@ Paralelo a isso teremos profissionais capacitados para criar seus próprios grup
 
 ## Composição do grupo
 
-- Mentor
-  - Responsável por expor os conceitos definidos e suporte do aprendizado
-- 3 mentorados
-  - Responsáveis por implementar o conteúdo proposto e fomentar com dúvidas as discussões
-
-## Observações
-
-- A empresa precisa apresentar oportunidades do emprego das práticas propostas no treinamento
-- Será necessário a participação integral do grupo
-  - Devemos manter a taxa de presença o mais alta possível
-  - Casos extremos podem ser flexibilizados
+- **Mentor:** Bruno Bernardes da Costa
+- **3 mentorados**
+  - A ser definido pelo formulário de seleção de mentorados
 
 ## Cronograma
 
@@ -54,27 +46,40 @@ gantt
 
     section Clean Code
     Aula sobre Clean Code         :milestone, m1, 16-08-2022, 0d
-    Desenvolvimento               :dev1, after m1, 5d
+    Desenvolvimento               :dev1, after m1, 9d
     Apresentação                  :milestone, m2, after dev1, 1d
 
     section Testing
     Aula sobre Testing            :milestone, m3, after m2, 0d
-    Desenvolvimento               :dev2, after m3, 5d
+    Desenvolvimento               :dev2, after m3, 9d
     Apresentação                  :milestone, m4, after dev2, 1d
 
     section Design Patterns
-    Aula sobre Design Patterns            :milestone, m5, after m4, 0d
-    Desenvolvimento               :dev3, after m5, 5d
+    Aula sobre Design Patterns    :milestone, m5, after m4, 0d
+    Desenvolvimento               :dev3, after m5, 9d
     Apresentação                  :milestone, m6, after dev3, 1d
 
     section Code Principals
-    Aula sobre Code Principals            :milestone, m7, after m6, 0d
-    Desenvolvimento               :dev4, after m7, 5d
+    Aula sobre Code Principals    :milestone, m7, after m6, 0d
+    Desenvolvimento               :dev4, after m7, 9d
     Apresentação                  :milestone, m8, after dev4, 1d
 
     section Aulas do mentorados
     Apresentações            :active, m9, after m8, 4w
 ```
+
+## Estimativa de horas
+
+Cada ciclo do DOJO será executado durante duas semanas. I ciclo de Aulas dos mentorados será executado em 4 semanas.
+
+| Tarefa                  | Estimativa em horas |
+| ----------------------- | ------------------- |
+| Ciclo - Clean Code      | 8h                  |
+| Ciclo - Testing         | 8h                  |
+| Ciclo - Design Patterns | 8h                  |
+| Ciclo - Code Principals | 8h                  |
+| Aulas dos mentorados    | 15h                 |
+| Total                   | 47h                 |
 
 # Conteúdos
 
@@ -92,7 +97,7 @@ Tópicos abordados:
 - Semântica do código
 - Exemplos em código
 
-### Dever de casa - Clean Code
+### 🏠 Dever de casa - Clean Code
 
 Cada mentorado deverá implementar um pequeno sistema ou algoritmo utilizando as práticas apresentadas na aula de Clean code.
 
@@ -105,7 +110,7 @@ A apresentação irá consistir em:
 - Levantamento de pelo menos 3 refatorações efetuadas durante o processo de desenvolvimento
 - Explicação dos benefícios das refatorações efetuadas
 
-### Algoritmos e sistemas recomendados:
+#### Algoritmos e sistemas recomendados
 
 - Jogo de console
 - Sistema de calculadora
@@ -124,8 +129,8 @@ gantt
     Aula sobre Clean Code         :milestone, m1, 29-07-2022, 0d
     Escolha do algoritmo          :active, a1, after m1, 1d
     Levantamento das features     :active, a2, after a1, 1d
-    Desenvolvimento               :a3, after a2, 5d
-    Reunião de alinhamento        :active, 02-08-2022, 1d
+    Desenvolvimento               :a3, after a2, 7d
+    Reunião de alinhamento        :active, 03-08-2022, 1d
     Apresentação                  :milestone, after a3, 1d
 ```
 
@@ -161,7 +166,7 @@ Tópicos abordados:
 - Dicas de semântica e documentação
 - Exemplos em código
 
-### Dever de Casa - Automated Tests
+### 🏠 Dever de Casa - Automated Tests
 
 A fim de exercitar o que foi apresentado, o mentorado deve implementar testes automatizados em um projeto de escolha.
 
@@ -226,7 +231,7 @@ Tópicos abordados:
 - Tipos de Design Patterns
 - Exemplos em código
 
-### Dever de casa - Design Patterns
+### 🏠 Dever de casa - Design Patterns
 
 Cada mentorado deverá implementar um Design Pattern em um projeto separado, tentando replicar um problema real.
 
@@ -239,7 +244,7 @@ A apresentação irá consistir em:
 - Diagrama de classes
 - Os testes para garantir a funcionalidade da solução
 
-### Design Patterns recomendados:
+#### Design Patterns recomendados
 
 - Factory Method
 - Builder
@@ -304,8 +309,6 @@ Tópicos abordados:
 - Exemplos em código
 
 # Quiz de aderência de treinamento
-
-O quiz de aderência de treinamento do DOJO serve como um **índice de acompanhamento do impacto** do DOJO no desenvolvimento cotidiano.
 
 - Você ficou satisfeito(a) com o treinamento?
   - Classificação 1 - 5
