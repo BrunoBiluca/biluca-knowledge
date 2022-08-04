@@ -1,6 +1,6 @@
 # Matemática aplicada para jogos
 
-Matématica é uma ferramenta muito importante quando estamos pensando em criar jogos, todas as interações, manipulação do espaço seja ele em 2D ou 3D, animação, é controlador por várias funções matemáticas.
+Matemática é uma ferramenta muito importante quando estamos pensando em criar jogos, todas as interações, manipulação do espaço seja ele em 2D ou 3D, animação, é controlador por várias funções matemáticas.
 
 Basicamente no desenvolvimento de software conseguimos fazer grande parte das funcionalidades aplicando alguns conceitos simples:
  - Ângulos
@@ -12,11 +12,11 @@ Basicamente no desenvolvimento de software conseguimos fazer grande parte das fu
 
 Essa imagem retrata bem a relação entre todos esse conceitos e a ideia por trás esses conceitos serão amplamente utilizados.
 
-# Pythagoras' Theorem (Teorema de pitágoras)
+# Pythagoras' Theorem (Teorema de Pitágoras)
 
-Teorema de pitágoras relaciona os lados de um triângulo retângulo. Utilizando o teorema de pitágoras, podemos definir as distâncias entre objetos em uma cena.
+Teorema de Pitágoras relaciona os lados de um triângulo retângulo. Utilizando o teorema de Pitágoras, podemos definir as distâncias entre objetos em uma cena.
 
-Pela definição o teorema de pitágora:
+Pela definição o teorema de Pitágoras:
 
 ```
 c^2 = a^2 + b^2
@@ -26,7 +26,7 @@ c = sqrt(a^2 + b^2)
 
 Na imagem abaixo segue o exemplo da distância euclidiana entre um jogador representado pelo ponto *(Px1, Py1)* e o inimigo representado por *(Px2, Py2)*.
 
-![pythagoras theorem](images/pythagoras-theorem.PNG)
+![Pythagoras theorem](images/pythagoras-theorem.PNG)
 
 Sabemos que a distância entre dois pontos num espaço 2D é calculado por, `d = X2 - X1`, podemos aplicar para descobrir os pontos *a* e *b* do teorema:
 
@@ -43,19 +43,27 @@ c = sqrt((Px2 - Px1)^2 + (Py2 - Py1)^2)
 
 # Vectors
 
-Vetores são importantes porque eles determinam tamanho (maginetude), direção e sentido.
+Vetores são importantes porque eles determinam tamanho (magnitude), direção e sentido.
 
-Vetores podem ser somados ou subtraidos, assim sabemos o vetor resultante dada essas operações entre vetores.
+Vetores podem ser somados ou subtraídos, assim sabemos o vetor resultante dada essas operações entre vetores.
 
 ![vectors](images/vectors.PNG)
 
-Um caso interessante para o uso de vetores é saber o vetor resultando de um player, dado vários movimentos no espaço 2 D. O vetor resutando é determinado pela soma dos vetores components.
+Um caso interessante para o uso de vetores é saber o vetor resultando de um player, dado vários movimentos no espaço 2 D. O vetor resultando é determinado pela soma dos vetores components.
 
 Podemos utilizar apenas a direção e o sentido de um vetor, esses vetores são chamados de **vetores unitários (unit vectors)**, podem ser determinados pelo método de normalização.
 
 Os vetores unitários são muito utilizados principalmente para simplificar as operações. São uma ótima forma de navegar o espaço do jogo, já que a distância vira apenas um escalar separado do conceito de direção que o objeto tem durante o percurso.
 
 ![unit vectors](images/vectors-2.PNG)
+
+## Módulo (Magnitude) de um vetor
+
+O módulo (Magnitude) de um vetor pode ser calculado pela raiz quadrada da soma dos quadrados de seus componentes, como sugere a seguinte fórmula:
+
+```math
+|v| = \sqrt{a ^ 2 + b ^2 + ... z ^ 2}
+```
 
 # Angles (Ângulos)
 
@@ -69,7 +77,7 @@ degree_THETA = cos(H / O)
 degree_THETA = tan^-1(O / A)
 ```
 
-A maioria das linguagens de progração utilizam **Radius (Radianos)** como medição dos ângulos. Sabemos que existe uma relação linear entre ângulos e radianos.
+A maioria das linguagens de programação utilizam **Radius (Radianos)** como medição dos ângulos. Sabemos que existe uma relação linear entre ângulos e radianos.
 
 ```
 radians = degrees / 180 * PI
@@ -79,7 +87,7 @@ degrees = radians / PI * 180
 
 ## Sin e Cos
 
-Senos e Cossenos são funções importantes para fazer a relação entre angulos em um espaço 2D ou 3D.
+Senos e Cossenos são funções importantes para fazer a relação entre ângulos em um espaço 2D ou 3D.
 
 ![sin and cos](images/sin-cos.PNG)
 
@@ -93,7 +101,7 @@ Digamos que queremos saber o ângulos entre dois vetores, uma das otimizações 
 
 ![dot product unit vectors](images/dot-product-unit-vectors.PNG)
 
-Dessa forma o produto escalar entre dois vetores é a multiplicação entre os dois
+Dessa forma o produto escalar entre dois vetores é a soma da multiplicação de cada um dos seus componentes.
 
 ```
 DP = Vx1 * Vx2 + Vy1 * Vy2
@@ -107,7 +115,7 @@ Outra propriedade que podemos tirar do produto escalar é:
 
 ![dot product](images/dot-product.PNG)
 
-Uma forma de utilizar o produto escalar pode ser na representação da velocidade do personagem quando este está descendo ou subindo uma área inclinada. Dado o produto escalar podemos aumentar a velocidade do jogador em caso de descida ou diminiuir em caso de subida.
+Uma forma de utilizar o produto escalar pode ser na representação da velocidade do personagem quando este está descendo ou subindo uma área inclinada. Dado o produto escalar podemos aumentar a velocidade do jogador em caso de descida ou diminuir em caso de subida.
 
 ![dot product exemplo](images/dot-product-example.PNG)
 
