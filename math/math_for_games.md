@@ -41,30 +41,6 @@ Pela definição e aplicando ao problema da distância do inimigo, temos:
 c = sqrt((Px2 - Px1)^2 + (Py2 - Py1)^2)
 ```
 
-# Vectors
-
-Vetores são importantes porque eles determinam tamanho (magnitude), direção e sentido.
-
-Vetores podem ser somados ou subtraídos, assim sabemos o vetor resultante dada essas operações entre vetores.
-
-![vectors](images/vectors.PNG)
-
-Um caso interessante para o uso de vetores é saber o vetor resultando de um player, dado vários movimentos no espaço 2 D. O vetor resultando é determinado pela soma dos vetores components.
-
-Podemos utilizar apenas a direção e o sentido de um vetor, esses vetores são chamados de **vetores unitários (unit vectors)**, podem ser determinados pelo método de normalização.
-
-Os vetores unitários são muito utilizados principalmente para simplificar as operações. São uma ótima forma de navegar o espaço do jogo, já que a distância vira apenas um escalar separado do conceito de direção que o objeto tem durante o percurso.
-
-![unit vectors](images/vectors-2.PNG)
-
-## Módulo (Magnitude) de um vetor
-
-O módulo (Magnitude) de um vetor pode ser calculado pela raiz quadrada da soma dos quadrados de seus componentes, como sugere a seguinte fórmula:
-
-```math
-|v| = \sqrt{a ^ 2 + b ^2 + ... z ^ 2}
-```
-
 # Angles (Ângulos)
 
 ![angles](images/angles.png)
@@ -104,14 +80,18 @@ Digamos que queremos saber o ângulos entre dois vetores, uma das otimizações 
 Dessa forma o produto escalar entre dois vetores é a soma da multiplicação de cada um dos seus componentes.
 
 ```
-DP = Vx1 * Vx2 + Vy1 * Vy2
+DP = Ax * Bx + Ay * By
 ```
+
+onde A e B são vetores.
 
 Outra propriedade que podemos tirar do produto escalar é:
 
 - vetores concorrentes(paralelos): **DP = 1**
 - vetores perpendiculares: **DP = 0**
-- vetores opostos: **DP = 1**
+- vetores opostos: **DP = -1**
+
+> 💡 Essas propriedades podemos tirar de vetores escalares, já que sabemos suas dimensões.
 
 ![dot product](images/dot-product.PNG)
 
