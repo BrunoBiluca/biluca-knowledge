@@ -18,8 +18,8 @@ Paralelo a isso teremos profissionais capacitados para criar seus próprios grup
     - [Avaliação](#avaliação)
   - [Testing](#testing)
     - [🏠 Dever de Casa - Automated Tests](#-dever-de-casa---automated-tests)
-    - [Cronograma](#cronograma-2)
     - [Avaliação](#avaliação-1)
+    - [Cronograma](#cronograma-2)
   - [Design Patterns](#design-patterns)
     - [🏠 Dever de casa - Design Patterns](#-dever-de-casa---design-patterns)
       - [Design Patterns recomendados](#design-patterns-recomendados)
@@ -45,7 +45,7 @@ gantt
     todayMarker off
 
     section Clean Code
-    Aula sobre Clean Code         :milestone, m1, 16-08-2022, 0d
+    Aula sobre Clean Code         :milestone, m1, 22-08-2022, 0d
     Desenvolvimento               :dev1, after m1, 9d
     Apresentação                  :milestone, m2, after dev1, 1d
 
@@ -82,6 +82,11 @@ Cada ciclo do DOJO será executado durante duas semanas. I ciclo de Aulas dos me
 | Total                   | 47h                 |
 
 # Conteúdos
+
+- Clean code
+- Testing
+- Design Patterns
+- Code Principals
 
 ## Clean code
 
@@ -138,18 +143,21 @@ gantt
 
 ### Avaliação
 
-<!-- TODO: definir 3 notas para cada um dos tópicos avaliados -->
+Legenda:
+- <span style="color:blue">C</span>: completo
+- <span style="color:brown">P</span>: parcial
+- <span style="color:red">X</span>: não entregue
 
-- Quantidade features implementadas
-- Clean code
-  - Formatação do código
-  - Hierarquia do projeto
-  - Nomenclatura de variáveis
-  - Nomenclatura de métodos
-  - Tratamento de estruturas de múltiplas condições
-  - Tratamento de exceções
-
-**BONUS:** testes automatizados.
+| Quesito                                         | Estado |
+| ----------------------------------------------- | ------ |
+| Implementação do algoritmo                      |        |
+| Formatação do código                            |        |
+| Hierarquia do projeto                           |        |
+| Nomenclatura de variáveis                       |        |
+| Nomenclatura de métodos                         |        |
+| Tratamento de estruturas de múltiplas condições |        |
+| Tratamento de exceções                          |        |
+| **BONUS:** testes automatizados                 |        |
 
 ## Testing
 
@@ -172,15 +180,28 @@ A fim de exercitar o que foi apresentado, o mentorado deve implementar testes au
 
 O projeto escolhido pode ser o apresentado no **Dever de Casa de Clean Code.**
 
-- Implementar testes unitários para 50% - 100% de cobertura de linhas do código.
-- Apresentar exemplos de testes implementados
-  - Qual tipo de teste foi implementado?
-  - Qual tecnologia foi utilizada para o desenvolvimento dos testes?
-  - Quais foram as principais dificuldades?
-- **(Opcional)** Mentorados podem implementar outros testes automatizados
-  - Testes de performance
-  - Testes de segurança
-  - Testes de qualidade de código
+### Avaliação
+
+Legenda:
+- <span style="color:blue">C</span>: completo
+- <span style="color:brown">P</span>: parcial
+- <span style="color:red">X</span>: não entregue
+
+| Quesito                                         | Estado |
+| ----------------------------------------------- | ------ |
+| **Relacionado a Apresentação**                  |        |
+| Apresentação da tecnologia de testes            |        |
+| Apresentação das principais dificuldades        |        |
+| **Relacionado a Implementação**                 |        |
+| Cobertura de 50% do código                      |        |
+| 3 exemplos de testes implementados              |        |
+| **Relacionado a Clean Code**                    |        |
+| Formatação do código                            |        |
+| Hierarquia do projeto                           |        |
+| Nomenclatura de variáveis                       |        |
+| Nomenclatura de métodos                         |        |
+| Tratamento de estruturas de múltiplas condições |        |
+| Tratamento de exceções                          |        |
 
 ### Cronograma
 
@@ -196,23 +217,6 @@ gantt
     Reunião de alinhamento        :active, 31-07-2022, 1d
     Apresentação                  :milestone, after a3, 1d
 ```
-
-### Avaliação
-
-<!-- TODO: definir 3 notas para cada um dos tópicos avaliados -->
-
-- Clean code
-  - Formatação do código
-  - Hierarquia do projeto
-  - Nomenclatura de variáveis
-  - Nomenclatura de métodos
-  - Tratamento de estruturas de múltiplas condições
-  - Tratamento de exceções
-
-- Cobertura de linhas do código
-- Qualidade da bateria de testes
-  - Testes para múltiplos fluxos de código
-  - Testes para tratamento de erros
 
 ## Design Patterns
 
@@ -276,21 +280,30 @@ gantt
 
 ### Avaliação
 
-<!-- TODO: definir 3 notas para cada um dos tópicos avaliados -->
+Legenda:
+- <span style="color:blue">C</span>: completo
+- <span style="color:brown">P</span>: parcial
+- <span style="color:red">X</span>: não entregue
 
-- Apresentação
-  - Capacidade de transmitir a ideia do Design Pattern
-  - Sinergia do problema resolvido com o mundo real do desenvolvimento
-  - Formatação da apresentação
-
-- Clean code
-  - Formatação do código
-  - Hierarquia do projeto
-  - Nomenclatura de variáveis
-
-- Testes
-  - Qualidade da bateria de testes
-  - Cobertura de testes
+| Quesito                                         | Estado |
+| ----------------------------------------------- | ------ |
+| **Relacionado a Apresentação**                  |        |
+| Apresentação da Design Pattern                  |        |
+| Apresentação do diagrama de classes             |        |
+| Apresentação de pseudo código                   |        |
+| **Relacionado a Implementação**                 |        |
+| Design Pattern implementado                     |        |
+| Uso do Design Pattern em um problema            |        |
+| **Relacionado a Testes**                        |        |
+| Cobertura de 50% do código                      |        |
+| 3 exemplos de testes implementados              |        |
+| **Relacionado a Clean Code**                    |        |
+| Formatação do código                            |        |
+| Hierarquia do projeto                           |        |
+| Nomenclatura de variáveis                       |        |
+| Nomenclatura de métodos                         |        |
+| Tratamento de estruturas de múltiplas condições |        |
+| Tratamento de exceções                          |        |
 
 ## Code Principles
 
