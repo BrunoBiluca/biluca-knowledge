@@ -161,10 +161,6 @@ Algumas ferramentas de criação de relatório apresentam informações diferent
   - Implementação de testes automatizados para GUI
   - Implementação de testes para verificar responsividade
 
-- No folder **ex_3** apresenta um exemplo de código da utilização de testes automatizados mais focado na implementação de um server
-  - Implementação de testes para os endpoints
-  - Implementação de testes de performance
-
 # Bibliografia
 
 - [Documentação do Jest](https://jestjs.io/)

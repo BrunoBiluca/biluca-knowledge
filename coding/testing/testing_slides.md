@@ -28,20 +28,20 @@ style: |
 
 ## Documentação de código
 
-![Exemplo de um arquivo de teste](testing_imgs/documentation_by_tests_example.png)
+![Exemplo de um arquivo de teste](imgs/documentation_by_tests_example.png)
 
 ---
 
 ## Safety Net
 
-![Exemplo de execução de testes](testing_imgs/safety_net_example.png)
+![Exemplo de execução de testes](imgs/safety_net_example.png)
 
 ---
 
 ## Aumento de produtividade
 
 <div class="columns">
-<img style="width: 300px" src="testing_imgs/accelerate_book_cover.png" />
+<img style="width: 300px" src="imgs/accelerate_book_cover.png" />
 <p>Times que empregam técnicas como TDD, Continuous integration and delivery gastam 44 porcento mais tempo em trabalho útil (novas funcionalidades) do que corrigindo bugs</p>
 </div>
 
@@ -107,13 +107,13 @@ expect(method()).toThrow(error?)                  // Espera que method lance uma
 
 ## Exemplo de um relatório de cobertura de código
 
-![Exemplo de um relatório de cobertura de código](testing_imgs/code_coverage.png)
+![Exemplo de um relatório de cobertura de código](imgs/code_coverage.png)
 
 ---
 
 ## Exemplo de um arquivo específico no relatório de cobertura de código
 
-![Exemplo de um arquivo específico no relatório de cobertura de código](testing_imgs/code_coverage_file.png)
+<img height="500" width="800" src="imgs/code_coverage_file.png" alt="Exemplo de um arquivo específico no relatório de cobertura de código" />
 
 --- 
 
