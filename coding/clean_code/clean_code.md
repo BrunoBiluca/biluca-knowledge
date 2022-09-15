@@ -1,6 +1,6 @@
-# Table of contents
+# Clean code
 
-- [Table of contents](#table-of-contents)
+- [Clean code](#clean-code)
 - [Semântica de código](#semântica-de-código)
   - [Ferramentas de refatoração](#ferramentas-de-refatoração)
   - [Etapas da refatoração](#etapas-da-refatoração)
@@ -26,6 +26,8 @@
 > Definição: Semântica é o estudo do significado. 
 
 > Minha definição: Quando vc olha para o código e não te vem um que porra é essa na cabeça, a pessoa consegue entender o que foi implementado e quais as decisões que foram tomadas.
+
+![](imgs/wtf.png)
 
 Existem arquiteturas que favorecem a semântica de um projeto. Eric Evans autor do livro Domain Driven Design descreve em seu livro ferramentas e procedimentos que auxiliam na criação de uma aplicação ou conjunto de serviços que possuem um linguagem de comum entendimento entre todas as entidades responsáveis pelo projeto.
 
@@ -156,7 +158,7 @@ Nomes devem ser sempre carregar algum significado.
 
 ## Nomenclatura de métodos
 
-Métodos devem ser nomentados de acordo com a ação que será executada. 
+Métodos devem ser nomeados de acordo com a ação que será executada. 
 
 Métodos devem ser sempre isolados, não deve ser necessário o conhecimento da forma que um método foi implementado para sua utilização
 
@@ -221,7 +223,22 @@ Comentários devem ser evitados no código.
 
 O próprio código deve ser auto explicativo, utilizando nomenclaturas e estruturas claras que demonstrem a intenção do que está sendo implementado. 
 
-Porém comentários são uma ferramenta extremamente útil para descrever funções e classes para terceiros. Ou seja, se vc estiver criando uma biblioteca ou framework é de suma importancia que a camada mais externa do código seja documentada por meio de comentários, já que o desenvolvedor que utilizará o código não precisa saber sobre a implementação para utilizar seus recursos.
+```js
+
+// bad
+function someMethod(value){
+  return value / 1000; // convert ratio
+}
+
+// good
+function someMethod(value){
+  const convertRatio = 1000;
+  return value / convertRatio;
+}
+
+```
+
+Porém comentários são uma ferramenta extremamente útil para descrever funções e classes para terceiros. Ou seja, se vc estiver criando uma biblioteca ou framework é de suma importância que a camada mais externa do código seja documentada por meio de comentários, já que o desenvolvedor que utilizará o código não precisa saber sobre a implementação para utilizar seus recursos.
 
 ## Tratamento de exceções
 
