@@ -84,3 +84,55 @@ Chain of Responsability Pattern é uma especificaçaõ estrutural que garante a 
   - Observer Pattern em C#
   - Prototype em Javascript
   - Strategy em linguagens com recurso de Lambda Functions
+
+---
+
+# 🏠 Dever de casa - Design Patterns
+
+Cada mentorado deverá implementar um Design Pattern em um projeto separado, tentando replicar um problema real.
+
+O projeto deve ser desenvolvido em uma linguagem de programação acordada com o Mentor.
+
+A apresentação irá consistir em:
+
+- Explicação do Design Pattern escolhido
+- Explicação da implementação
+- Diagrama de classes
+- Os testes para garantir a funcionalidade da solução
+
+---
+
+# Design Patterns recomendados
+
+- Factory Method
+- Builder
+- Adapter
+- Composite
+- Decorator
+- Facade
+- Chain of Responsibility
+
+Os mentorados devem escolher um dos Design Patterns disponíveis. Apenas um Design Pattern deve ser apresentado por um mentorado.
+
+---
+# Avaliação
+
+| Quesito                                         | Estado |
+| ----------------------------------------------- | ------ |
+| **Relacionado a Apresentação**                  |        |
+| Apresentação da Design Pattern                  |        |
+| Apresentação do diagrama de classes             |        |
+| Apresentação de pseudo código                   |        |
+| **Relacionado a Implementação**                 |        |
+| Design Pattern implementado                     |        |
+| Uso do Design Pattern em um problema            |        |
+| **Relacionado a Testes**                        |        |
+| Cobertura de 50% do código                      |        |
+| 3 exemplos de testes implementados              |        |
+| **Relacionado a Clean Code**                    |        |
+| Formatação do código                            |        |
+| Hierarquia do projeto                           |        |
+| Nomenclatura de variáveis                       |        |
+| Nomenclatura de métodos                         |        |
+| Tratamento de estruturas de múltiplas condições |        |
+| Tratamento de exceções                          |        |
