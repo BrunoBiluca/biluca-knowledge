@@ -1,3 +1,7 @@
+# 🃏 Histórias (Execução)
+
+Uma 🃏 História é a unidade de ação que será executada.
+
 > Resumo: Uma história do usuário é uma explicação informal e geral sobre um recurso de software escrita a partir da perspectiva do usuário final. Seu objetivo é articular como um recurso de software pode gerar valor para o cliente.
 
 # Template
