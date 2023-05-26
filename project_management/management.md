@@ -1,4 +1,4 @@
-# Organização de um projeto de Software
+# Organização de um time de desenvolvimento de software
 
 A organização de um projeto de software é um fator cruxial e está diretamente relacionado ao sucesso do projeto. A chance de um projeto fracassar ou desperdiar tempo é grande sem um processo formal de organização.
 
@@ -13,7 +13,7 @@ Esse sistema de organização se basea nas seguintes entidades que serão elabor
 > 
 > [🌟 Valor](entities/values.md)
 > [🎯 Metas](entities/goals.md)
-> [🏆 Projetos](entities/projects.md)
+> [🏆 Épicos](entities/epics.md)
 > [🎽 Sprints](entities/sprints.md)
 > [🃏 Histórias](entities/stories.md)
 > 
@@ -25,15 +25,15 @@ flowchart LR
 
 valores["🌟 Valor"]
 metas["🎯 Meta"]
-projetos["🏆 Projeto"]
+epicos["🏆 Épicos"]
 sprints["🎽 Sprint"]
 tarefas["🃏 Histórias"]
 
 valores -- Pode se utilizar --> metas
-valores -- Possui um ou vários --> projetos
+valores -- Possui um ou vários --> epicos
 
-metas -- Possui um ou vários --> projetos
-projetos -- Possui um ou várias --> tarefas
+metas -- Possui um ou vários --> epicos
+epicos -- Possui um ou várias --> tarefas
 
 tarefas -. São organizadas .-> sprints
 ```

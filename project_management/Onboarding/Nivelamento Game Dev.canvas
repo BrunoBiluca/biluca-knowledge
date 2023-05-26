@@ -1,0 +1,32 @@
+{
+	"nodes":[
+		{"type":"text","text":"Async/Await","id":"00a172caf7c1fff4","x":400,"y":-160,"width":250,"height":50},
+		{"type":"text","text":"Generics","id":"5a9a52d13a2c3b6b","x":400,"y":-230,"width":250,"height":50},
+		{"type":"text","text":"Interfaces","id":"6c3ea54c38c25d82","x":400,"y":-300,"width":250,"height":50},
+		{"type":"text","text":"Git - Version Control","id":"7490af2b199e1177","x":-300,"y":-160,"width":250,"height":50,"color":"3"},
+		{"type":"text","text":"Básico de Clean code","id":"f04fcb0df52c6f69","x":-300,"y":-60,"width":250,"height":50,"color":"3"},
+		{"type":"text","text":"Básico de C#","id":"d3dfd59f6aa5074c","x":20,"y":-160,"width":250,"height":50,"color":"3"},
+		{"type":"text","text":"Style guidelines","id":"e7e27a0aef9ccfd9","x":-680,"y":-63,"width":250,"height":60},
+		{"type":"text","text":"Básico de algoritmos e estruturas de dados","id":"9f3178e1c9553edb","x":20,"y":-65,"width":250,"height":60,"color":"3"},
+		{"type":"text","text":"Design Patterns","id":"6e3935ed845f8534","x":401,"y":-64,"width":250,"height":60},
+		{"type":"text","text":"Dependency Container","id":"ec2b7379147f9ee6","x":740,"y":-64,"width":250,"height":60},
+		{"id":"645a6fc04b47055a","x":-680,"y":-163,"width":250,"height":60,"type":"text","text":"Sourcetree"},
+		{"id":"709da53c08fbe519","x":-680,"y":-250,"width":250,"height":60,"type":"text","text":"Terminal"},
+		{"type":"file","file":"coding/clean_code/Clean code.md","id":"ffc4be0c26b68164","x":-1160,"y":40,"width":400,"height":200},
+		{"type":"file","file":"coding/clean_code/Code Principles.md","id":"ae5bc0335609320b","x":-1160,"y":285,"width":400,"height":220},
+		{"type":"text","text":"Semântica de código","id":"e0b98c86cc619eab","x":-680,"y":40,"width":250,"height":60}
+	],
+	"edges":[
+		{"id":"f7147707180dccb8","fromNode":"d3dfd59f6aa5074c","fromSide":"right","toNode":"5a9a52d13a2c3b6b","toSide":"left"},
+		{"id":"7605978ef4ed7a8d","fromNode":"d3dfd59f6aa5074c","fromSide":"right","toNode":"00a172caf7c1fff4","toSide":"left"},
+		{"id":"b8c3461e3566661f","fromNode":"e0b98c86cc619eab","fromSide":"bottom","toNode":"ae5bc0335609320b","toSide":"right"},
+		{"id":"4e197dafcf55a111","fromNode":"d3dfd59f6aa5074c","fromSide":"right","toNode":"6c3ea54c38c25d82","toSide":"left"},
+		{"id":"26e0c59356c034f5","fromNode":"e0b98c86cc619eab","fromSide":"bottom","toNode":"ffc4be0c26b68164","toSide":"right"},
+		{"id":"c837b94b204fab53","fromNode":"f04fcb0df52c6f69","fromSide":"left","toNode":"e0b98c86cc619eab","toSide":"right"},
+		{"id":"722b5d1a632d117d","fromNode":"9f3178e1c9553edb","fromSide":"right","toNode":"6e3935ed845f8534","toSide":"left"},
+		{"id":"513178ba3fd671b5","fromNode":"6e3935ed845f8534","fromSide":"right","toNode":"ec2b7379147f9ee6","toSide":"left"},
+		{"id":"6969b2dfc9bb38d2","fromNode":"f04fcb0df52c6f69","fromSide":"left","toNode":"e7e27a0aef9ccfd9","toSide":"right"},
+		{"id":"f7b25333384cb4cc","fromNode":"7490af2b199e1177","fromSide":"left","toNode":"709da53c08fbe519","toSide":"right"},
+		{"id":"6ec71fb3fe69372b","fromNode":"7490af2b199e1177","fromSide":"left","toNode":"645a6fc04b47055a","toSide":"right"}
+	]
+}

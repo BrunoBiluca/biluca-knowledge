@@ -1,0 +1,196 @@
+{
+  "main": {
+    "id": "6d6d84f5d6602772",
+    "type": "split",
+    "children": [
+      {
+        "id": "ea73560e6fb4e3a8",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "2219dcd97c14858e",
+            "type": "leaf",
+            "state": {
+              "type": "canvas",
+              "state": {
+                "file": "project_management/Onboarding/Nivelamento Game Dev.canvas",
+                "viewState": {
+                  "x": -62.32142110189227,
+                  "y": 66.02378960504606,
+                  "zoom": -0.3333333333333333
+                }
+              }
+            }
+          },
+          {
+            "id": "375b1f5f8b7ba1df",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "project_management/Onboarding/Onboarding.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "c3ed4f35024a1074",
+            "type": "leaf",
+            "state": {
+              "type": "graph",
+              "state": {}
+            }
+          }
+        ],
+        "currentTab": 1
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "4d8176b2a8897f51",
+    "type": "split",
+    "children": [
+      {
+        "id": "15ad41c716e45ba5",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "eec309eac77d68fe",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "8cf37891db58f375",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "79f71b3250cbac8c",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {}
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "a32ca125c7b31770",
+    "type": "split",
+    "children": [
+      {
+        "id": "f02656b9c4079ae9",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "9e1973d6b40ff981",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "project_management/Onboarding/Onboarding.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "d56367cb8d81f0ad",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "project_management/Onboarding/Onboarding.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "dbc465f15fb9e92a",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true
+              }
+            }
+          },
+          {
+            "id": "271cd11bf9c4a812",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "project_management/Onboarding/Onboarding.md"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Abrir a troca rápida": false,
+      "graph:Abrir visualização em gráfico": false,
+      "canvas:Criar novo canvas": false,
+      "daily-notes:Abrir a nota de hoje": false,
+      "templates:Inserir modelo": false,
+      "command-palette:Abrir paleta de comandos": false
+    }
+  },
+  "active": "375b1f5f8b7ba1df",
+  "lastOpenFiles": [
+    "project_management/Onboarding/Nivelamento Game Dev.canvas",
+    "project_management/Onboarding/Onboarding.md",
+    "project_management/management.md",
+    "project_management/Onboarding/Nivelamento de conhecimento.md",
+    "tools/Obsidian.md",
+    "project_management/Canais de Comunicação/Canais de Comunicação.md",
+    "project_management/Canais de Comunicação",
+    "coding/clean_code/Code Principles.md",
+    "Nivelamento.md",
+    "project_management/Onboarding",
+    "project_management/interactions/Programação em par.md",
+    "tools.md",
+    "tools",
+    "coding/clean_code/Clean code.md",
+    "coding/clean_code/code_principles_slides.md",
+    "coding/backend/backend.md",
+    "coding/design_patterns/design_patterns_slides.md",
+    "_reference_pdfs/clean_code.pdf",
+    "coding/testing/ex_1/javascript/node_modules/@babel/plugin-syntax-class-properties/README.md",
+    "2023-05-24.md"
+  ]
+}

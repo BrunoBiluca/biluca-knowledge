@@ -27,4 +27,4 @@ Pode ser dividido na seguinte forma:
 
 A priorização do backlog deve organizar as tarefas de forma a maximizar o valor entregue pelas funcionalidades no projeto e relação ao custo de produção, ou seja, tempo de desenvolvimento, custo com assets e ferramentas.
 
-![](imgs/matrix_priorization.png)
+![](project_management/_images/matrix_priorization.png)

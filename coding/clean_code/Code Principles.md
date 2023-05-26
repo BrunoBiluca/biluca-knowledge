@@ -1,4 +1,3 @@
-# Code Principles (Princípios de código)
 
 Pricípios de código servem para organizar e padronizar código desenvolvido. Fundamentalmente a organização e a padronização de código leva a várias melhorias no processo de desenvolvimento de software.
 
@@ -366,8 +365,8 @@ Os postulados SOLID foram apresentados por Robert C. Martin em um artigo publica
 
 # Exemplos
 
-# Bibliografia
+# Referências
 
-### [Pragmatic Programmer, The: Your journey to mastery, 20th Anniversary Edition (English Edition)](https://www.amazon.com.br/dp/B07VRS84D1/ref=dp-kindle-redirect?_encoding=UTF8&btkr=1)
-### [Modern Software Engineering](https://www.amazon.com/Modern-Software-Engineering-Discipline-Development/dp/0137314914)
-### [SOLID Principles summary](https://en.wikipedia.org/wiki/SOLID)
+- [Pragmatic Programmer, The: Your journey to mastery, 20th Anniversary Edition (English Edition)](https://www.amazon.com.br/dp/B07VRS84D1/ref=dp-kindle-redirect?_encoding=UTF8&btkr=1)
+- [Modern Software Engineering](https://www.amazon.com/Modern-Software-Engineering-Discipline-Development/dp/0137314914)
+- [SOLID Principles summary](https://en.wikipedia.org/wiki/SOLID)

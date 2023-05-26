@@ -1,5 +1,32 @@
-# Papéis e definições
+# Papéis no desenvolvimento de software
 
+Um dos fatores que complicam o desenvolvimento de software é a falta de clareza nas atribuições de cada colaborador ao projeto. 
+
+> 💡 Ter clareza no papel de cada integrante no projeto facilita a comunicação e acelera o processo de desenvolvimento.
+
+A clareza na definição dos papéis dentro de um projeto resolve vários dos problemas comuns que acontecem no desenvolvimento de software, como:
+
+- Configuração do time não é bem definida
+- Todos os colaboradores fazem de tudo no projeto
+- Falta de clareza quando necessário reportar um problema específico
+- Falta de responsabilizada na execução do projeto (o famoso isso é fulano que faz)
+
+Com isso a solução envolve:
+
+- Criar um documento com as definições dos papéis dentro da equipe.
+  - Esse documento deve definir todos os papéis dentro do time, desde o programador e design na ponta até a maior hierarquia (cuidado com hierarquias, elas são gargalos no desenvolvimento e devem ser evitadas) dentro do time.
+  - Deve apresentar exemplos de atribuições para cada papel dentro da equipe
+- Criar cultura da importancia dessas definições.
+- Esse documento deve ser mantido e atualizado a cada alteração na equipe e no projeto.
+
+> ⚠️ O **Manager** é responsável pela criação e manutenção da documentação de definições de papéis.
+
+Ter esse documento de propicia as seguintes vantagens:
+
+- Visibilidade dos integrantes do time
+- Visibilidade dos canais de comunicação
+- Onboarding de novos membros facilitado
+- 
 ### PO - Product Owner
 
 O product owner é um papel criado pela metodologia do Scrum. Seu principal objetivo é gerenciar e otimizar o backlog do produto a fim de maximizar a entrega de valor.

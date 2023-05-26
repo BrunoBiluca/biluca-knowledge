@@ -1,6 +1,7 @@
-# Clean code
+---
+tag: clean_code
+---
 
-- [Clean code](#clean-code)
 - [Semântica de código](#semântica-de-código)
   - [Ferramentas de refatoração](#ferramentas-de-refatoração)
   - [Etapas da refatoração](#etapas-da-refatoração)
