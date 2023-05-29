@@ -1,8 +1,10 @@
-# 🃏 Histórias (Execução)
-
 Uma 🃏 História é a unidade de ação que será executada.
 
 > Resumo: Uma história do usuário é uma explicação informal e geral sobre um recurso de software escrita a partir da perspectiva do usuário final. Seu objetivo é articular como um recurso de software pode gerar valor para o cliente.
+
+### Prioridade de um 🃏 História
+
+A prioridade de qualquer 🃏 História será associada ao Épico relacionado. Isso é feito para garantir a entrega de valor seja consistente, ou seja, se um Épico define um valor a ser entregue no projeto é necessário que todas as histórias dentro do Épico tenham sido concluídas para que então o valor tenha sido entregue. Assim dentro de um Épico não há a necessidade de priorizar histórias.
 
 # Template
 
