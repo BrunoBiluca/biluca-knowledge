@@ -11,8 +11,12 @@
             "id": "40300627d40f479f",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {}
+              "type": "markdown",
+              "state": {
+                "file": "project_management/entities/🃏 Histórias.md",
+                "mode": "source",
+                "source": false
+              }
             }
           }
         ]
@@ -81,6 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
+                "file": "project_management/entities/🃏 Histórias.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -97,6 +102,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
+                "file": "project_management/entities/🃏 Histórias.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -118,7 +124,9 @@
             "type": "leaf",
             "state": {
               "type": "outline",
-              "state": {}
+              "state": {
+                "file": "project_management/entities/🃏 Histórias.md"
+              }
             }
           },
           {
@@ -150,9 +158,9 @@
   },
   "active": "40300627d40f479f",
   "lastOpenFiles": [
+    "project_management/entities/🏆 Épicos.md",
     "project_management/Organização de um time de desenvolvimento de software.md",
     "project_management/Onboarding/Nivelamento Game Dev.canvas",
-    "project_management/entities/🏆 Épicos.md",
     "project_management/entities/🃏 Histórias.md",
     "project_management/entities/🌟 Valores.md",
     "Prioridade de um 🌟 Valor.md",

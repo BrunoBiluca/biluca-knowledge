@@ -116,3 +116,42 @@ Prioridade para 🏆 Propaganda na plataforma de publicação
 ## Exemplos de Épicos
 
 > [!warning] A fazer
+
+### Templates
+
+#### Componentes
+
+- Por que esse projeto?
+
+Definição da motivação do projeto, deve ser um pequeno texto que descreve a motivação da criação do Épico.
+
+- Qual o foco desse projeto? Etapas:
+
+Define o escopo desse Épico, por meio desse componente descrevemos as etapas de conclusão do Épico em alto nível.
+As etapas ajuda a definir o processo de seleção das histórias dentro do Épico.
+
+- Backlog
+
+Define as histórias ainda não concluídas.
+
+- Tarefas na sprint atual
+
+Define as histórias que serão trabalhadas durante a Sprint corrente.
+
+- Concluídas
+
+Define as histórias que já foram concluídas
+
+#### Componentes opcionais
+
+- Descrição das tags
+
+Um Épico pode criar tags específicas para a classificação de histórias.
+
+As tags ajudam a definir em poucas palavras que tipo de trabalho será desenvolvido.
+
+Assim se existem tags específicas de ter definido cada uma das tags no próprio Épico.
+
+- Projetos
+
+Quando se define um Épico BASE é necessário exibir cada um dos projetos associados.
