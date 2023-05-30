@@ -4,35 +4,18 @@
     "type": "split",
     "children": [
       {
-        "id": "2e5dd2875d2f3c25",
+        "id": "0df7fe7dc79ced44",
         "type": "tabs",
         "children": [
           {
-            "id": "1318a867209ebe29",
+            "id": "2b46762d200d4efc",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "project_management/interactions/💎 Reunião de refinamento de Histórias.md",
-                "mode": "source",
-                "source": false
-              }
-            }
-          },
-          {
-            "id": "c469ec3b19b030ac",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "project_management/entities/🪵 Backlog.md",
-                "mode": "source",
-                "source": false
-              }
+              "type": "empty",
+              "state": {}
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -98,7 +81,6 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "project_management/entities/🪵 Backlog.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -115,7 +97,6 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "project_management/entities/🪵 Backlog.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -137,9 +118,7 @@
             "type": "leaf",
             "state": {
               "type": "outline",
-              "state": {
-                "file": "project_management/entities/🪵 Backlog.md"
-              }
+              "state": {}
             }
           },
           {
@@ -169,16 +148,18 @@
       "table-editor-obsidian:Advanced Tables Toolbar": false
     }
   },
-  "active": "c469ec3b19b030ac",
+  "active": "2b46762d200d4efc",
   "lastOpenFiles": [
     "project_management/interactions/💎 Reunião de refinamento de Histórias.md",
+    "project_management/Análises/📈 Análises do time.md",
+    "project_management/Organização de um time de desenvolvimento de software.md",
+    "project_management/Análises",
+    "project_management/entities/🃏 Histórias.md",
     "project_management/entities/🪵 Backlog.md",
     "project_management/entities/🏆 Épicos.md",
     "project_management/interactions/⏪ Reunião de Retrospectiva.md",
     "project_management/interactions/Programação em par.md",
     "project_management/_images/matrix_priorization.png",
-    "project_management/entities/🃏 Histórias.md",
-    "project_management/Organização de um time de desenvolvimento de software.md",
     "project_management/Onboarding/Nivelamento Game Dev.canvas",
     "project_management/entities/🌟 Valores.md",
     "Prioridade de um 🌟 Valor.md",

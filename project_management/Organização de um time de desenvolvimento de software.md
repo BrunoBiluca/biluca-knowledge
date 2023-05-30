@@ -34,3 +34,10 @@ epicos -- Possui um ou várias --> tarefas
 
 tarefas -. São organizadas .-> sprints
 ```
+
+
+# Análise do time
+
+Durante o desenvolvimento do projeto analisar o processo é crucial para levantar oportunidades de melhoria do time.
+
+[[📈 Análises do time]]
