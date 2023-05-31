@@ -18,7 +18,7 @@ Um 🌟 Valor define as ações necessárias para sua conclusão por meio dos �
 - Exemplos de ações para alcançar esse valor.
   - OS exemplos de ações para alcançar esse valor, também são um bom ponto para lembrar da Motivação desse valor durante discussões
 - Prioridade
-  - Prioridade que as 🃏 Histórias desse 🌟 Valor possue no projeto.
+  - Prioridade que as 🃏 Histórias desse 🌟 Valor possui no projeto.
   - É fator para definir quais 🃏 Histórias são adicionadas a Sprints.
 
 #### Prioridade de um 🌟 Valor

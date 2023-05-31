@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "0df7fe7dc79ced44",
+        "id": "98cae87d718cf9cd",
         "type": "tabs",
         "children": [
           {
-            "id": "2b46762d200d4efc",
+            "id": "1c74a243fabebf36",
             "type": "leaf",
             "state": {
               "type": "empty",
@@ -148,21 +148,23 @@
       "table-editor-obsidian:Advanced Tables Toolbar": false
     }
   },
-  "active": "2b46762d200d4efc",
+  "active": "1c74a243fabebf36",
   "lastOpenFiles": [
+    "project_management/entities/🃏 Histórias.md",
+    "project_management/entities/🏆 Épicos.md",
+    "Prioridade de um 🌟 Valor.md",
+    "project_management/entities/🌟 Valores.md",
+    "project_management/project_bootstrap.md",
+    "project_management/principles.md",
+    "project_management/Organização de um time de desenvolvimento de software.md",
     "project_management/interactions/💎 Reunião de refinamento de Histórias.md",
     "project_management/Análises/📈 Análises do time.md",
-    "project_management/Organização de um time de desenvolvimento de software.md",
     "project_management/Análises",
-    "project_management/entities/🃏 Histórias.md",
     "project_management/entities/🪵 Backlog.md",
-    "project_management/entities/🏆 Épicos.md",
     "project_management/interactions/⏪ Reunião de Retrospectiva.md",
     "project_management/interactions/Programação em par.md",
     "project_management/_images/matrix_priorization.png",
     "project_management/Onboarding/Nivelamento Game Dev.canvas",
-    "project_management/entities/🌟 Valores.md",
-    "Prioridade de um 🌟 Valor.md",
     "project_management/Onboarding/Onboarding.md",
     "project_management/Onboarding/Nivelamento de conhecimento.md",
     "tools/Obsidian.md",
