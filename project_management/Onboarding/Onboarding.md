@@ -1,3 +1,5 @@
+#organização 
+
 **Onboarding** é o nome dado ao processo de recepção, treinamento e adaptação de um novo profissional em qualquer empresa. Do inglês, onboarding significa “embarcar”, ou seja, é o primeiro momento de contato com a cultura da empresa, pessoas, ambiente de trabalho e funções que até então foram conversadas somente por entrevistas.
 
 # O que é preciso ter no processo de Onboarding?

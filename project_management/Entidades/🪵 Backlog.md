@@ -1,3 +1,5 @@
+#organização
+
 O backlog de tarefas é o conjunto de história que serão refinadas em relação a vários aspectos do desenvolvimento para serem elegidas como candidatas para a produção ou descartadas.
 
 O Backlog deve ser um recurso utilizado para facilitar ao time de desenvolvimento a criação de Histórias refinadas. O refinamento de Histórias acontece por parte do time de desenvolvimento, por meio de revisões, reuniões usuários, time técnico, time de negócio e qualquer outro tipo de pessoa envolvida ou impactada pela História.

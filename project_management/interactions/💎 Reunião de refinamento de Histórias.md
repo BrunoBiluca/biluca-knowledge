@@ -1,3 +1,5 @@
+#organização
+
 A reunião de refinamento deve ser uma reunião regular com a participação do time ou pelo menos parte do time (parte diretamente relacionada as histórias) a fim de organizar o Backlog melhorando as informações contextuais das histórias e provendo estimativas que sejam cada vez mais relacionadas ao real desenvolvimento de uma história.
 
 > [!info] Configuração

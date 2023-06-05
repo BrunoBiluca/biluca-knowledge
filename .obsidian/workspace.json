@@ -4,15 +4,31 @@
     "type": "split",
     "children": [
       {
-        "id": "98cae87d718cf9cd",
+        "id": "7ea2ef9af5c60624",
         "type": "tabs",
         "children": [
           {
-            "id": "1c74a243fabebf36",
+            "id": "1c669886072a3cce",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {}
+              "type": "markdown",
+              "state": {
+                "file": "project_management/Onboarding/Nivelamento de conhecimento.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "6b5649d1985b0865",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "project_management/Organização de um time de desenvolvimento de software.md",
+                "mode": "source",
+                "source": false
+              }
             }
           }
         ]
@@ -81,6 +97,7 @@
             "state": {
               "type": "backlink",
               "state": {
+                "file": "project_management/Onboarding/Nivelamento de conhecimento.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -97,6 +114,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
+                "file": "project_management/Onboarding/Nivelamento de conhecimento.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -118,7 +136,9 @@
             "type": "leaf",
             "state": {
               "type": "outline",
-              "state": {}
+              "state": {
+                "file": "project_management/Onboarding/Nivelamento de conhecimento.md"
+              }
             }
           },
           {
@@ -148,39 +168,46 @@
       "table-editor-obsidian:Advanced Tables Toolbar": false
     }
   },
-  "active": "1c74a243fabebf36",
+  "active": "1c669886072a3cce",
   "lastOpenFiles": [
-    "project_management/entities/🃏 Histórias.md",
-    "project_management/entities/🏆 Épicos.md",
-    "Prioridade de um 🌟 Valor.md",
-    "project_management/entities/🌟 Valores.md",
-    "project_management/project_bootstrap.md",
-    "project_management/principles.md",
+    "team_training/dojo_mentoring/project_management/project_management_intro.md",
+    "project_management/Onboarding/Nivelamento de conhecimento.md",
     "project_management/Organização de um time de desenvolvimento de software.md",
-    "project_management/interactions/💎 Reunião de refinamento de Histórias.md",
+    "project_management/Onboarding/Onboarding.md",
+    "coding/testing/testing.md",
     "project_management/Análises/📈 Análises do time.md",
-    "project_management/Análises",
-    "project_management/entities/🪵 Backlog.md",
-    "project_management/interactions/⏪ Reunião de Retrospectiva.md",
     "project_management/interactions/Programação em par.md",
+    "project_management/interactions/⏪ Reunião de Retrospectiva.md",
+    "project_management/Entidades/🎽 Sprints.md",
+    "project_management/Entidades/🎯 Metas.md",
+    "project_management/Entidades/🪵 Backlog.md",
+    "project_management/Entidades/🏆 Épicos.md",
+    "project_management/Entidades/🌟 Valores.md",
+    "project_management/Entidades/🃏 Histórias.md",
+    "project_management/interactions/💎 Reunião de refinamento de Histórias.md",
+    "project_management/Papéis no time/Papéis no desenvolvimento de software.md",
+    "project_management/Papéis no time/Stakeholders.md",
+    "project_management/Papéis no time/QA - Quality Assurance.md",
+    "project_management/Papéis no time/PO - Product Owner (Gestor do projeto).md",
+    "project_management/Papéis no time/Game Designer.md",
+    "project_management/Papéis no time/Desenvolvedor.md",
+    "project_management/Papéis no time/Artista Designer.md",
+    "project_management/Papéis no time/Prioridade de um 🌟 Valor.md",
+    "tools/tools.md",
+    "README.md",
+    "Artista",
+    "project_management/Papéis no time",
+    "project_management/_images/stakeholder_chart.png",
+    "Sem título.canvas",
+    "team_training/dojo_mentoring/project_management/dojo_project_greatness.md",
+    "team_training/dojo_mentoring/code_basics/dojo_code_basics.pdf",
+    "_reference_pdfs/clean_code_slides.pdf",
+    "_reference_pdfs/clean_code.pdf",
+    "project_management/Análises",
     "project_management/_images/matrix_priorization.png",
     "project_management/Onboarding/Nivelamento Game Dev.canvas",
-    "project_management/Onboarding/Onboarding.md",
-    "project_management/Onboarding/Nivelamento de conhecimento.md",
-    "tools/Obsidian.md",
-    "project_management/Canais de Comunicação/Canais de Comunicação.md",
     "project_management/Canais de Comunicação",
-    "coding/clean_code/Code Principles.md",
-    "Nivelamento.md",
     "project_management/Onboarding",
-    "tools.md",
-    "tools",
-    "coding/clean_code/Clean code.md",
-    "coding/clean_code/code_principles_slides.md",
-    "coding/backend/backend.md",
-    "coding/design_patterns/design_patterns_slides.md",
-    "_reference_pdfs/clean_code.pdf",
-    "coding/testing/ex_1/javascript/node_modules/@babel/plugin-syntax-class-properties/README.md",
-    "2023-05-24.md"
+    "tools"
   ]
 }

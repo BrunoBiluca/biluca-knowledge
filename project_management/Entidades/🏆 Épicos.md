@@ -1,3 +1,5 @@
+#organização
+
 🏆 Épicos são conjuntos de 🃏 Histórias. Eles agrupam em relação lógica as ações necessárias para a conclusão de 🎯 Metas e 🌟 Valores.
 
 São divididos em dois tipos:

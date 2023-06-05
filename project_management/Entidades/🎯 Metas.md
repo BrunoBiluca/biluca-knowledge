@@ -1,4 +1,4 @@
-# 🎯 Metas (resultado)
+#organização
 
 Metas são uma forma de organização **clara e mensurável** de ações com o objetivo de encurtar distância da realização de um 🌟 Valor.
 

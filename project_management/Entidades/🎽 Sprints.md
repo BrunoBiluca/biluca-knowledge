@@ -1,4 +1,4 @@
-# 🎽 Sprint (Iteração)
+#organização
 
 A 🎽 Sprint é uma iteração de execuções de 🃏 Histórias que foram priorizadas com o objetivo de avançar na conclusão de 🎯 Metas e 🏆 Projetos ativos que por sua vez encurtam a distância para alcançar um 🌟 Valor.
 

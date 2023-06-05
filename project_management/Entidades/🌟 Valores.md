@@ -1,4 +1,6 @@
-Valores são ideais, vontades ou funções serão desempenhadas ou alcançadas. Um Valor não é necessariamente alcançavel e foca em definir um ideal.
+#organização
+
+Valores são ideais, vontades ou funções serão desempenhadas ou alcançadas. Um Valor não é necessariamente alcançável e foca em definir um ideal.
 
 Por meio dos valores é possível definir prioridades serão utilizadas para guiar o planejamento de execução a pequeno, médio e longo prazos (🎯 Metas, 🏆 Projetos).
 

@@ -1,3 +1,5 @@
+#organização 
+
 O nivelamento de conhecimento é uma etapa no processo de onboarding que visa entender o conhecimento atual de tecnologias e conceitos do novo integrante além também de promover integração com os demais integrantes do time no âmbito mais técnico.
 
 O novo integrante deve engajar com o nivelamento de conhecimento durante todo o processo de onboarding. É criado um plano de ação para o novo integrante com atividades para suprir o conhecimento técnico necessário.

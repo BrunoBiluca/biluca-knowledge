@@ -1,3 +1,5 @@
+#organização
+
 # Assertividade de conclusão de 🃏 Histórias
 
 Essa análise visa entender a assertividade na conclusão de Histórias durante um período definido.
