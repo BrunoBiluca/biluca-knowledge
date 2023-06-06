@@ -15,7 +15,7 @@ Esse sistema de organização se baseia nas seguintes entidades que serão elabo
 > [🏆 Épicos](🏆%20Épicos.md)
 > [🎽 Sprints](🎽%20Sprints.md)
 > [🃏 Histórias](🃏%20Histórias.md)
-> 
+> [[🪵 Backlog]]
 > ---
 
 
@@ -51,4 +51,4 @@ Durante o desenvolvimento do projeto analisar o processo é crucial para levanta
 
 # Onboarding de um novo integrante
 
-O processo de Onboarding [[Onboarding]]
+O processo de [[Onboarding]]

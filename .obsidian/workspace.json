@@ -13,7 +13,19 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "project_management/Onboarding/Nivelamento de conhecimento.md",
+                "file": "project_management/Entidades/🎽 Sprints.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "989a194d3a525663",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "project_management/interactions/⏪ Reunião de Retrospectiva.md",
                 "mode": "source",
                 "source": false
               }
@@ -25,13 +37,14 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "project_management/Organização de um time de desenvolvimento de software.md",
+                "file": "project_management/Entidades/🪵 Backlog.md",
                 "mode": "source",
                 "source": false
               }
             }
           }
-        ]
+        ],
+        "currentTab": 2
       }
     ],
     "direction": "vertical"
@@ -97,7 +110,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "project_management/Onboarding/Nivelamento de conhecimento.md",
+                "file": "project_management/Entidades/🪵 Backlog.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -114,7 +127,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "project_management/Onboarding/Nivelamento de conhecimento.md",
+                "file": "project_management/Entidades/🪵 Backlog.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -137,7 +150,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "project_management/Onboarding/Nivelamento de conhecimento.md"
+                "file": "project_management/Entidades/🪵 Backlog.md"
               }
             }
           },
@@ -154,8 +167,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300,
-    "collapsed": true
+    "width": 300
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -168,22 +180,22 @@
       "table-editor-obsidian:Advanced Tables Toolbar": false
     }
   },
-  "active": "1c669886072a3cce",
+  "active": "6b5649d1985b0865",
   "lastOpenFiles": [
-    "team_training/dojo_mentoring/project_management/project_management_intro.md",
-    "project_management/Onboarding/Nivelamento de conhecimento.md",
+    "project_management/Entidades/🃏 Histórias.md",
+    "project_management/Entidades/🪵 Backlog.md",
     "project_management/Organização de um time de desenvolvimento de software.md",
+    "project_management/interactions/⏪ Reunião de Retrospectiva.md",
+    "project_management/Entidades/🎽 Sprints.md",
     "project_management/Onboarding/Onboarding.md",
+    "project_management/Onboarding/Nivelamento de conhecimento.md",
+    "team_training/dojo_mentoring/project_management/project_management_intro.md",
     "coding/testing/testing.md",
     "project_management/Análises/📈 Análises do time.md",
     "project_management/interactions/Programação em par.md",
-    "project_management/interactions/⏪ Reunião de Retrospectiva.md",
-    "project_management/Entidades/🎽 Sprints.md",
     "project_management/Entidades/🎯 Metas.md",
-    "project_management/Entidades/🪵 Backlog.md",
     "project_management/Entidades/🏆 Épicos.md",
     "project_management/Entidades/🌟 Valores.md",
-    "project_management/Entidades/🃏 Histórias.md",
     "project_management/interactions/💎 Reunião de refinamento de Histórias.md",
     "project_management/Papéis no time/Papéis no desenvolvimento de software.md",
     "project_management/Papéis no time/Stakeholders.md",
