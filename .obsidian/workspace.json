@@ -37,7 +37,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "project_management/Entidades/🪵 Backlog.md",
+                "file": "project_management/Entidades/🃏 Histórias.md",
                 "mode": "source",
                 "source": false
               }
@@ -110,7 +110,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "project_management/Entidades/🪵 Backlog.md",
+                "file": "project_management/Entidades/🃏 Histórias.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -127,7 +127,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "project_management/Entidades/🪵 Backlog.md",
+                "file": "project_management/Entidades/🃏 Histórias.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -150,7 +150,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "project_management/Entidades/🪵 Backlog.md"
+                "file": "project_management/Entidades/🃏 Histórias.md"
               }
             }
           },
@@ -182,8 +182,10 @@
   },
   "active": "6b5649d1985b0865",
   "lastOpenFiles": [
-    "project_management/Entidades/🃏 Histórias.md",
+    "project_management/Entidades/🎯 Metas.md",
+    "project_management/Entidades/🌟 Valores.md",
     "project_management/Entidades/🪵 Backlog.md",
+    "project_management/Entidades/🃏 Histórias.md",
     "project_management/Organização de um time de desenvolvimento de software.md",
     "project_management/interactions/⏪ Reunião de Retrospectiva.md",
     "project_management/Entidades/🎽 Sprints.md",
@@ -193,9 +195,7 @@
     "coding/testing/testing.md",
     "project_management/Análises/📈 Análises do time.md",
     "project_management/interactions/Programação em par.md",
-    "project_management/Entidades/🎯 Metas.md",
     "project_management/Entidades/🏆 Épicos.md",
-    "project_management/Entidades/🌟 Valores.md",
     "project_management/interactions/💎 Reunião de refinamento de Histórias.md",
     "project_management/Papéis no time/Papéis no desenvolvimento de software.md",
     "project_management/Papéis no time/Stakeholders.md",

@@ -94,21 +94,41 @@ A estimativa nunca é um valor exato de desenvolvimento. Uma boa forma de estima
 
 Por meio desses 3 valores podemos definir a quantidade de esforço, e a medida que o esforço aumente podemos pensar em alternativas para quebrar as Histórias em outras e então refinar cada uma a fim de chegar em uma quantidade de trabalho menor. 
 
+Uma forma de avaliar a questão da estimativa é:
+
+- Breve: poucas horas (1-2 horas)
+- Pequeno: algumas horas (2-8 horas)
+- Médio: poucos dias (1-2 dias)
+- Grande: alguns dias (2+ dias)
+
+Dessa forma os integrantes do time tem um melhor entendimento da quantidade de trabalho desenvolvido
+
 ### Valor
 
 Define o valor revertido para o grupo de usuários impactados em relação a sua relevância.
 
 Podem ser separados em 2 tipos de entrega de valor
-- Baixo
-- Alto 
+- Baixo: entrega um valor pequeno para o 🌟 Valor ou 🏆 Épico associado
+    - Sua conclusão tem um pequeno impacto
+- Alto: entrega um valor alto para o 🌟 Valor ou 🏆 Épico associado
+    - Sua conclusão tem um alto impacto
 
 ### Escala
 
 Define de acordo com o valor e a estimativa a escala da hierarquia de prioridade da História. Essa escala é utilizada para priorizar as Histórias na hora de fazer o planejamento.
     
-- Curto
-- Médio
-- Longo 
+- Novo: ideia criada
+- Refinando: definição inicial da história foi feita, sabemos o grupo impactado, o valor entregue e temos uma primeira estimativa, a partir desse momento essa história continua ser refinada para melhorar essas propriedades
+- Curto: História totalmente refinada e pronta para desenvolvimento. Apresenta as seguintes propriedades
+    - Valor alto e Estimativa Breve | Pequena | Média
+    - Valor baixo e Estimativa Breve | Pequena
+- Médio: História pode continuar a ser refinada para criar Histórias com mais valor ou menores estimativas.
+    - Valor alto e Estimativa Grande
+    - Valor baixo e Estimativa Médio
+- Longo: História pode continuar a ser refinada para criar Histórias com mais valor ou menores estimativas.
+    - Valor baixo e Estimativa Grande
+- Caducou
+    - História não faz mais sentido, o valor entregue não é relevante ou foi refinado em outras histórias
 
 ### Status
 
