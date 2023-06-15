@@ -8,43 +8,26 @@
         "type": "tabs",
         "children": [
           {
-            "id": "1c669886072a3cce",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "project_management/Entidades/🎽 Sprints.md",
-                "mode": "source",
-                "source": false
-              }
-            }
-          },
-          {
-            "id": "989a194d3a525663",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "project_management/interactions/⏪ Reunião de Retrospectiva.md",
-                "mode": "source",
-                "source": false
-              }
-            }
-          },
-          {
             "id": "6b5649d1985b0865",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "project_management/Entidades/🃏 Histórias.md",
+                "file": "Livros/Fifty Quick Ideas to improve your User Stories/Managing Iterative Delivery.md",
                 "mode": "source",
                 "source": false
               }
             }
+          },
+          {
+            "id": "154a0de737a40a2b",
+            "type": "leaf",
+            "state": {
+              "type": "graph",
+              "state": {}
+            }
           }
-        ],
-        "currentTab": 2
+        ]
       }
     ],
     "direction": "vertical"
@@ -73,7 +56,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "tag:#clean_code",
+                "query": "",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -110,7 +93,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "project_management/Entidades/🃏 Histórias.md",
+                "file": "Livros/Fifty Quick Ideas to improve your User Stories/Managing Iterative Delivery.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -127,7 +110,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "project_management/Entidades/🃏 Histórias.md",
+                "file": "Livros/Fifty Quick Ideas to improve your User Stories/Managing Iterative Delivery.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -150,7 +133,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "project_management/Entidades/🃏 Histórias.md"
+                "file": "Livros/Fifty Quick Ideas to improve your User Stories/Managing Iterative Delivery.md"
               }
             }
           },
@@ -182,12 +165,17 @@
   },
   "active": "6b5649d1985b0865",
   "lastOpenFiles": [
+    "Livros/Fifty Quick Ideas to improve your User Stories/Splitting stories.md",
+    "Livros/Fifty Quick Ideas to improve your User Stories/Managing Iterative Delivery.md",
+    "Livros/Fifty Quick Ideas to improve your User Stories/_info.md",
+    "project_management/interactions/⏪ Reunião de Retrospectiva.md",
+    "project_management/Entidades/🃏 Histórias.md",
+    "Livros/Fifty Quick Ideas to improve your User Stories",
+    "Livros",
     "project_management/Entidades/🎯 Metas.md",
     "project_management/Entidades/🌟 Valores.md",
     "project_management/Entidades/🪵 Backlog.md",
-    "project_management/Entidades/🃏 Histórias.md",
     "project_management/Organização de um time de desenvolvimento de software.md",
-    "project_management/interactions/⏪ Reunião de Retrospectiva.md",
     "project_management/Entidades/🎽 Sprints.md",
     "project_management/Onboarding/Onboarding.md",
     "project_management/Onboarding/Nivelamento de conhecimento.md",
@@ -205,13 +193,10 @@
     "project_management/Papéis no time/Desenvolvedor.md",
     "project_management/Papéis no time/Artista Designer.md",
     "project_management/Papéis no time/Prioridade de um 🌟 Valor.md",
-    "tools/tools.md",
-    "README.md",
     "Artista",
     "project_management/Papéis no time",
     "project_management/_images/stakeholder_chart.png",
     "Sem título.canvas",
-    "team_training/dojo_mentoring/project_management/dojo_project_greatness.md",
     "team_training/dojo_mentoring/code_basics/dojo_code_basics.pdf",
     "_reference_pdfs/clean_code_slides.pdf",
     "_reference_pdfs/clean_code.pdf",
@@ -219,7 +204,6 @@
     "project_management/_images/matrix_priorization.png",
     "project_management/Onboarding/Nivelamento Game Dev.canvas",
     "project_management/Canais de Comunicação",
-    "project_management/Onboarding",
-    "tools"
+    "project_management/Onboarding"
   ]
 }

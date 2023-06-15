@@ -25,7 +25,21 @@
       "query": "tag:#organização",
       "color": {
         "a": 1,
-        "rgb": 11657298
+        "rgb": 5431387
+      }
+    },
+    {
+      "query": "tag:#incidental_work",
+      "color": {
+        "a": 1,
+        "rgb": 14724178
+      }
+    },
+    {
+      "query": "tag:#user_stories",
+      "color": {
+        "a": 1,
+        "rgb": 5399264
       }
     }
   ],
@@ -39,6 +53,6 @@
   "repelStrength": 10.2083333333333,
   "linkStrength": 1,
   "linkDistance": 101,
-  "scale": 0.6905661666446169,
+  "scale": 0.63462856769306,
   "close": false
 }
