@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Livros/Fifty Quick Ideas to improve your User Stories/Managing Iterative Delivery.md",
+                "file": "project_management/Entidades/🃏 Histórias.md",
                 "mode": "source",
                 "source": false
               }
@@ -93,7 +93,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Livros/Fifty Quick Ideas to improve your User Stories/Managing Iterative Delivery.md",
+                "file": "project_management/Entidades/🃏 Histórias.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -110,7 +110,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Livros/Fifty Quick Ideas to improve your User Stories/Managing Iterative Delivery.md",
+                "file": "project_management/Entidades/🃏 Histórias.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -133,7 +133,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Livros/Fifty Quick Ideas to improve your User Stories/Managing Iterative Delivery.md"
+                "file": "project_management/Entidades/🃏 Histórias.md"
               }
             }
           },
@@ -165,11 +165,12 @@
   },
   "active": "6b5649d1985b0865",
   "lastOpenFiles": [
-    "Livros/Fifty Quick Ideas to improve your User Stories/Splitting stories.md",
     "Livros/Fifty Quick Ideas to improve your User Stories/Managing Iterative Delivery.md",
-    "Livros/Fifty Quick Ideas to improve your User Stories/_info.md",
-    "project_management/interactions/⏪ Reunião de Retrospectiva.md",
     "project_management/Entidades/🃏 Histórias.md",
+    "Livros/Fifty Quick Ideas to improve your User Stories/_info.md",
+    "Fifty Quick Ideas to improve your User Stories.md",
+    "Livros/Fifty Quick Ideas to improve your User Stories/Splitting stories.md",
+    "project_management/interactions/⏪ Reunião de Retrospectiva.md",
     "Livros/Fifty Quick Ideas to improve your User Stories",
     "Livros",
     "project_management/Entidades/🎯 Metas.md",
@@ -192,7 +193,6 @@
     "project_management/Papéis no time/Game Designer.md",
     "project_management/Papéis no time/Desenvolvedor.md",
     "project_management/Papéis no time/Artista Designer.md",
-    "project_management/Papéis no time/Prioridade de um 🌟 Valor.md",
     "Artista",
     "project_management/Papéis no time",
     "project_management/_images/stakeholder_chart.png",

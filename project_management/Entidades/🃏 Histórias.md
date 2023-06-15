@@ -82,7 +82,7 @@ A prioridade de qualquer 🃏 História é associada ao Épico relacionado. Isso
 | Concluído em | Data de conclusão da História.                                                                                                                                                             |
 | Status       | Estado atual da História.                                                                                                                                                                  |
 
-### Estimativa
+## Estimativa
 
 Define a quantidade de trabalho necessário para a conclusão da História. O trabalho necessário deve levar em consideração todo o processo de concepção da ideia, desenvolvimento e testes.
 
@@ -103,7 +103,7 @@ Uma forma de avaliar a questão da estimativa é:
 
 Dessa forma os integrantes do time tem um melhor entendimento da quantidade de trabalho desenvolvido
 
-### Valor
+## Valor
 
 Define o valor revertido para o grupo de usuários impactados em relação a sua relevância.
 
@@ -113,7 +113,7 @@ Podem ser separados em 2 tipos de entrega de valor
 - Alto: entrega um valor alto para o 🌟 Valor ou 🏆 Épico associado
     - Sua conclusão tem um alto impacto
 
-### Escala
+## Escala
 
 Define de acordo com o valor e a estimativa a escala da hierarquia de prioridade da História. Essa escala é utilizada para priorizar as Histórias na hora de fazer o planejamento.
     
@@ -130,13 +130,30 @@ Define de acordo com o valor e a estimativa a escala da hierarquia de prioridade
 - Caducou
     - História não faz mais sentido, o valor entregue não é relevante ou foi refinado em outras histórias
 
-### Status
+## Status
 
 Estado atual da História.    
 - A fazer
 - Progresso
 - Pausado
 - Concluído 
+
+# Tags
+
+Tags são utilizadas para em poucas palavras definir o contexto que a História se aplicar.
+
+Algumas tags também podem mudar o formato que a História é desenvolvido.
+
+### Aprendizado
+
+Histórias marcadas como tags de Aprendizado são relacionada a Histórias são utilizadas para que os Stakeholders aprendam mais sobre o projeto a fim de planejar melhor o projeto.
+
+Quando uma tag é marcada como aprendizado algumas propriedades da História passam a ter algumas características específicas
+
+- Estimativa: a estimativa passa a ser uma quantidade fixa de tempo que será desempenhado pelos responsáveis na História. Quando esse tempo se encerra é então levantado se todas as informações coletadas na História satisfazem os Critérios de Aceite.
+- Valor: o valor passa a ser a importância da informação coletada para o projeto.
+
+Toda História definida como Aprendizado deve ter Critérios de Aceitação bem definidos com os Stakeholders, de forma a consideração se as informações coletadas são suficientes para definir a História como pronta ou rejeitar a História. Quando uma História de Aprendizado é rejeitada deve ser definido junto ao Stakeholder se vale a pena continuar a investigação e então uma nova Estimativa é atribuída a História.
 
 ## Template de uma 🃏 História
 
@@ -168,4 +185,5 @@ Critério de aceito 3:
 	- Bom texto sobre Acceptance Criteria, com uma definição concisa sobre o básico de seus conceitos e utilização.
 - [User stories com exemplos e template](https://www.atlassian.com/br/agile/project-management/user-stories)
 - [Agile User Story Splitting by Non-Functional Requirements](https://corebts.com/blog/agile-user-story-splitting-non-functional-requirements/#:~:text=%E2%80%9CA%20type%20of%20requirement%20that,a%20solution%20as%20a%20whole.%E2%80%9D)
+- [[_info|Fifty Quick Ideas to improve your User Stories]]
 
