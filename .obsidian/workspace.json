@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "project_management/Entidades/🃏 Histórias.md",
+                "file": "Livros/Fifty Quick Ideas to improve your User Stories/Managing Iterative Delivery.md",
                 "mode": "source",
                 "source": false
               }
@@ -93,7 +93,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "project_management/Entidades/🃏 Histórias.md",
+                "file": "Livros/Fifty Quick Ideas to improve your User Stories/Managing Iterative Delivery.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -110,7 +110,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "project_management/Entidades/🃏 Histórias.md",
+                "file": "Livros/Fifty Quick Ideas to improve your User Stories/Managing Iterative Delivery.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -133,7 +133,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "project_management/Entidades/🃏 Histórias.md"
+                "file": "Livros/Fifty Quick Ideas to improve your User Stories/Managing Iterative Delivery.md"
               }
             }
           },
@@ -165,8 +165,8 @@
   },
   "active": "6b5649d1985b0865",
   "lastOpenFiles": [
-    "Livros/Fifty Quick Ideas to improve your User Stories/Managing Iterative Delivery.md",
     "project_management/Entidades/🃏 Histórias.md",
+    "Livros/Fifty Quick Ideas to improve your User Stories/Managing Iterative Delivery.md",
     "Livros/Fifty Quick Ideas to improve your User Stories/_info.md",
     "Fifty Quick Ideas to improve your User Stories.md",
     "Livros/Fifty Quick Ideas to improve your User Stories/Splitting stories.md",
