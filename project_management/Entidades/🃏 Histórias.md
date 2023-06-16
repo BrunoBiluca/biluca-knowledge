@@ -96,9 +96,8 @@ Por meio desses 3 valores podemos definir a quantidade de esforço, e a medida q
 
 Uma forma de avaliar a questão da estimativa é:
 
-- Breve: poucas horas (1-2 horas)
-- Pequeno: algumas horas (2-8 horas)
-- Médio: poucos dias (1-2 dias)
+- Pequeno: algumas horas (1 dia)
+- Médio: poucos dias (2-3 dias)
 - Grande: alguns dias (2+ dias)
 
 Dessa forma os integrantes do time tem um melhor entendimento da quantidade de trabalho desenvolvido
