@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Livros/Fifty Quick Ideas to improve your User Stories/Managing Iterative Delivery.md",
+                "file": "Livros/Fifty Quick Ideas to improve your User Stories/_info.md",
                 "mode": "source",
                 "source": false
               }
@@ -93,7 +93,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Livros/Fifty Quick Ideas to improve your User Stories/Managing Iterative Delivery.md",
+                "file": "Livros/Fifty Quick Ideas to improve your User Stories/_info.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -110,7 +110,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Livros/Fifty Quick Ideas to improve your User Stories/Managing Iterative Delivery.md",
+                "file": "Livros/Fifty Quick Ideas to improve your User Stories/_info.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -133,7 +133,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Livros/Fifty Quick Ideas to improve your User Stories/Managing Iterative Delivery.md"
+                "file": "Livros/Fifty Quick Ideas to improve your User Stories/_info.md"
               }
             }
           },
@@ -146,11 +146,11 @@
             }
           }
         ],
-        "currentTab": 4
+        "currentTab": 2
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 393.5
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -165,9 +165,13 @@
   },
   "active": "6b5649d1985b0865",
   "lastOpenFiles": [
-    "project_management/Entidades/🃏 Histórias.md",
-    "Livros/Fifty Quick Ideas to improve your User Stories/Managing Iterative Delivery.md",
+    "Livros/Fifty Quick Ideas to improve your User Stories/Planning with stories.md",
+    "README.md",
     "Livros/Fifty Quick Ideas to improve your User Stories/_info.md",
+    "Livros/Fifty Quick Ideas to improve your User Stories/Discussing stories.md",
+    "Livros/Fifty Quick Ideas to improve your User Stories/Managing Iterative Delivery.md",
+    "Livros/Fifty Quick Ideas to improve your User Stories/Creating stories.md",
+    "project_management/Entidades/🃏 Histórias.md",
     "Fifty Quick Ideas to improve your User Stories.md",
     "Livros/Fifty Quick Ideas to improve your User Stories/Splitting stories.md",
     "project_management/interactions/⏪ Reunião de Retrospectiva.md",
@@ -189,10 +193,6 @@
     "project_management/Papéis no time/Papéis no desenvolvimento de software.md",
     "project_management/Papéis no time/Stakeholders.md",
     "project_management/Papéis no time/QA - Quality Assurance.md",
-    "project_management/Papéis no time/PO - Product Owner (Gestor do projeto).md",
-    "project_management/Papéis no time/Game Designer.md",
-    "project_management/Papéis no time/Desenvolvedor.md",
-    "project_management/Papéis no time/Artista Designer.md",
     "Artista",
     "project_management/Papéis no time",
     "project_management/_images/stakeholder_chart.png",

@@ -1,6 +1,6 @@
 #user_stories 
 #incidental_work 
-#planejamento
+#planejamento_de_projetos 
 
 
 # Don't push everything into stories
