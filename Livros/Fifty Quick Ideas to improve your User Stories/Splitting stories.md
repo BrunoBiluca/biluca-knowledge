@@ -67,7 +67,7 @@ Também é possível simplificar a coleta de dados que não são importantes par
 
 ## Split learning from earning
 
-#incidental_work 
+#planejamento_de_projetos/incidental_work 
 
 Separe Histórias de aprendizado de histórias de entrega.
 

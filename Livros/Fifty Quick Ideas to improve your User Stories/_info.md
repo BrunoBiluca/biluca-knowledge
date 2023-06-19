@@ -12,3 +12,7 @@ Número de páginas: 249
 [[Discussing stories]]
 [[Splitting stories]]
 [[Managing Iterative Delivery]]
+
+# Referências
+- The Checklist Manifesto: How to Get Things Right
+- Usable Usability: Simple Steps for Making Stuff Better
