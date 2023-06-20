@@ -11,7 +11,12 @@ Uma 🃏 História começa a ser definida durante o processo de refinamento desc
 
 ### Prioridade de um 🃏 História
 
-A prioridade de qualquer 🃏 História é associada ao Épico relacionado. Isso é feito para garantir a entrega de valor seja consistente, ou seja, se um 🏆 Épico define um valor a ser entregue no projeto é necessário que todas as histórias dentro do Épico tenham sido concluídas para que então o valor tenha sido entregue. Assim dentro de um Épico não há a necessidade de priorizar histórias.
+A prioridade de qualquer 🃏 História é associada ao 🏆 Épico ou 🌟 Valor relacionado.
+
+Quando um 🏆 Épico define um valor a ser entregue no projeto é necessário que todas as histórias dentro do 🏆 Épico tenham sido concluídas para que então o valor tenha sido entregue. Assim dentro de um Épico não há a necessidade de priorizar histórias.
+
+Quando a História não faz parte de um Épico a sua prioridade é dada pela prioridade do 🌟 Valor relacionado.
+
 
 > [!info] Priorização de um 🏆 Épico
 > [[🏆 Épicos#Priorização de 🏆 Épicos]]
@@ -137,7 +142,7 @@ Estado atual da História.
 - Pausado
 - Concluído 
 
-# Tags
+## Tags
 
 Tags são utilizadas para em poucas palavras definir o contexto que a História se aplicar.
 

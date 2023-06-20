@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "project_management/Entidades/⚙️ Trabalho incidental.md",
+                "file": "project_management/Entidades/🃏 Histórias.md",
                 "mode": "source",
                 "source": false
               }
@@ -85,7 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "project_management/Entidades/⚙️ Trabalho incidental.md",
+                "file": "project_management/Entidades/🃏 Histórias.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +102,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "project_management/Entidades/⚙️ Trabalho incidental.md",
+                "file": "project_management/Entidades/🃏 Histórias.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -125,7 +125,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "project_management/Entidades/⚙️ Trabalho incidental.md"
+                "file": "project_management/Entidades/🃏 Histórias.md"
               }
             }
           },
@@ -157,8 +157,10 @@
   },
   "active": "447f2bdf03756518",
   "lastOpenFiles": [
-    "project_management/Análises/📈 Análises do time.md",
+    "project_management/Entidades/🪵 Backlog.md",
+    "project_management/Entidades/🃏 Histórias.md",
     "project_management/Entidades/⚙️ Trabalho incidental.md",
+    "project_management/Análises/📈 Análises do time.md",
     "project_management/project_bootstrap.md",
     "project_management/principles.md",
     "project_management/Organização de um time de desenvolvimento de software.md",
@@ -169,14 +171,12 @@
     "README.md",
     "Livros/Fifty Quick Ideas to improve your User Stories/Discussing stories.md",
     "Livros/Fifty Quick Ideas to improve your User Stories/Creating stories.md",
-    "project_management/Entidades/🃏 Histórias.md",
     "Fifty Quick Ideas to improve your User Stories.md",
     "project_management/interactions/⏪ Reunião de Retrospectiva.md",
     "Livros/Fifty Quick Ideas to improve your User Stories",
     "Livros",
     "project_management/Entidades/🎯 Metas.md",
     "project_management/Entidades/🌟 Valores.md",
-    "project_management/Entidades/🪵 Backlog.md",
     "project_management/Entidades/🎽 Sprints.md",
     "project_management/Onboarding/Onboarding.md",
     "project_management/Onboarding/Nivelamento de conhecimento.md",
