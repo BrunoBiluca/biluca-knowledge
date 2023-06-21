@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "project_management/Entidades/🃏 Histórias.md",
+                "file": "Escrita/Escrita de artigos de conhecimento.md",
                 "mode": "source",
                 "source": false
               }
@@ -85,7 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "project_management/Entidades/🃏 Histórias.md",
+                "file": "Escrita/Escrita de artigos de conhecimento.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +102,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "project_management/Entidades/🃏 Histórias.md",
+                "file": "Escrita/Escrita de artigos de conhecimento.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -125,7 +125,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "project_management/Entidades/🃏 Histórias.md"
+                "file": "Escrita/Escrita de artigos de conhecimento.md"
               }
             }
           },
@@ -138,11 +138,12 @@
             }
           }
         ],
-        "currentTab": 2
+        "currentTab": 3
       }
     ],
     "direction": "horizontal",
-    "width": 393.5
+    "width": 393.5,
+    "collapsed": true
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -157,8 +158,10 @@
   },
   "active": "447f2bdf03756518",
   "lastOpenFiles": [
-    "project_management/Entidades/🪵 Backlog.md",
     "project_management/Entidades/🃏 Histórias.md",
+    "Escrita/Escrita de artigos de conhecimento.md",
+    "Escrita",
+    "project_management/Entidades/🪵 Backlog.md",
     "project_management/Entidades/⚙️ Trabalho incidental.md",
     "project_management/Análises/📈 Análises do time.md",
     "project_management/project_bootstrap.md",
@@ -184,7 +187,6 @@
     "coding/testing/testing.md",
     "project_management/interactions/Programação em par.md",
     "project_management/Entidades/🏆 Épicos.md",
-    "project_management/interactions/💎 Reunião de refinamento de Histórias.md",
     "Artista",
     "project_management/Papéis no time",
     "project_management/_images/stakeholder_chart.png",
@@ -195,7 +197,6 @@
     "project_management/Análises",
     "project_management/_images/matrix_priorization.png",
     "project_management/Onboarding/Nivelamento Game Dev.canvas",
-    "project_management/Canais de Comunicação",
-    "project_management/Onboarding"
+    "project_management/Canais de Comunicação"
   ]
 }
