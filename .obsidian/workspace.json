@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Escrita/Escrita de artigos de conhecimento.md",
+                "file": "game_development/unity/analytics/Unity Analytics.md",
                 "mode": "source",
                 "source": false
               }
@@ -85,7 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Escrita/Escrita de artigos de conhecimento.md",
+                "file": "game_development/unity/analytics/Unity Analytics.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +102,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Escrita/Escrita de artigos de conhecimento.md",
+                "file": "game_development/unity/analytics/Unity Analytics.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -125,7 +125,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Escrita/Escrita de artigos de conhecimento.md"
+                "file": "game_development/unity/analytics/Unity Analytics.md"
               }
             }
           },
@@ -158,8 +158,11 @@
   },
   "active": "447f2bdf03756518",
   "lastOpenFiles": [
-    "project_management/Entidades/🃏 Histórias.md",
+    "game_development/unity/unity_project_guidelines.md",
+    "game_development/unity/analytics/Unity Analytics.md",
+    "game_development/unity/analytics",
     "Escrita/Escrita de artigos de conhecimento.md",
+    "project_management/Entidades/🃏 Histórias.md",
     "Escrita",
     "project_management/Entidades/🪵 Backlog.md",
     "project_management/Entidades/⚙️ Trabalho incidental.md",
@@ -185,8 +188,6 @@
     "project_management/Onboarding/Nivelamento de conhecimento.md",
     "team_training/dojo_mentoring/project_management/project_management_intro.md",
     "coding/testing/testing.md",
-    "project_management/interactions/Programação em par.md",
-    "project_management/Entidades/🏆 Épicos.md",
     "Artista",
     "project_management/Papéis no time",
     "project_management/_images/stakeholder_chart.png",
@@ -196,7 +197,6 @@
     "_reference_pdfs/clean_code.pdf",
     "project_management/Análises",
     "project_management/_images/matrix_priorization.png",
-    "project_management/Onboarding/Nivelamento Game Dev.canvas",
-    "project_management/Canais de Comunicação"
+    "project_management/Onboarding/Nivelamento Game Dev.canvas"
   ]
 }
