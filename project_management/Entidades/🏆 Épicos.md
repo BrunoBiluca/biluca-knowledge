@@ -2,21 +2,14 @@
 
 🏆 Épicos são conjuntos de 🃏 Histórias. Eles agrupam em relação lógica as ações necessárias para a conclusão de 🎯 Metas e 🌟 Valores.
 
-São divididos em dois tipos:
-
-- Épicos BASE: são conjuntos de Épicos logicamente relacionados. Geralmente um projeto BASE é utilizado para agrupar histórias grandes e que representam um mesmo valor, como o conjunto de funcionalidades do sistema. Esse tipo de organização auxilia na criação de um backlog não hierarquizado que futuramente deve ser refinado em Épicos menores.
-
 - Épicos: são conjuntos de 🃏 Histórias com o propósito de definirem um resultado esperado. Não necessariamente apresentam todas as 🃏 Histórias para a conclusão do projeto, porém o resultado final do projeto é definido e quando alcançado o projeto é finalizado.
 
-Um exemplo para demonstrar a diferença entre Épicos BASE e Épicos é:
-
-- Épicos BASE: Core Gameplay
 - Épicos: Core Gameplay v1
 - Épicos: Core Gameplay v2
 - Épicos: Sistema XYZ auxiliar ao Gameplay
 
 > [!info] Dica
-> Épicos BASE muito genéricos são um problema já que eles nunca são definitivamente concluídos. Um 🏆 Épicos bem definido deve ter um resultado esperado que seja mensurável.
+> Um 🏆 Épicos bem definido deve ter um resultado esperado que seja mensurável.
 > 
 > Assim, quando durante o refinamento de um Épico está difícil de levantar um resultado esperado, provavelmente esse Épico na verdade é um 🌟 Valor. Dessa forma o 🌟 Valor deve ser definido e então é possível afunilar os Épicos desse valor até chegar na conclusão da definição de seus Épicos.
 
@@ -36,9 +29,8 @@ Para se considerar um 🏆 Épico a estrutura possui as seguintes propriedades
 | Estado          | Exibe o estado atual do Épico.<br> 💎 A fazer<br> 🌀 Em progresso<br> ⏸️ Pausado<br> ✅ Concluído                                                                                |
 | 🌟 Valor        | Define o 🌟 Valor que esse Épico está tentando encurtar a distância de conclusão. Por meio do 🌟 Valor podemos definir a prioridade do Épico.                                    |
 | 🎯 Meta         | Pode definir uma 🎯 Meta. Quando uma meta é definida sua prioridade é aumentada.                                                                                                 |
-| ⬆️ Dependências | Pode definir um Épico para se ter como dependência                                                                                                                                                                                 |
-| ⬇️ Dependentes  | Épicos dependentes a esse                                                                                                                                                                                 |
-| 🏆 Épico BASE   | Pode definir um Épico BASE como Épico principal.                                                                                                                                 |
+| ⬆️ Dependências | Pode definir um Épico para se ter como dependência                                                                                                                               |
+| ⬇️ Dependentes  | Épicos dependentes a esse                                                                                                                                                        |
 
 
 ## Priorização de 🏆 Épicos
@@ -153,7 +145,3 @@ Um Épico pode criar tags específicas para a classificação de histórias.
 As tags ajudam a definir em poucas palavras que tipo de trabalho será desenvolvido.
 
 Assim se existem tags específicas de ter definido cada uma das tags no próprio Épico.
-
-- Projetos
-
-Quando se define um Épico BASE é necessário exibir cada um dos projetos associados.

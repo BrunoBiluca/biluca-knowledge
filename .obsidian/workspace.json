@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "game_development/unity/analytics/Unity Analytics.md",
+                "file": "project_management/Entidades/🏆 Épicos.md",
                 "mode": "source",
                 "source": false
               }
@@ -85,7 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "game_development/unity/analytics/Unity Analytics.md",
+                "file": "project_management/Entidades/🏆 Épicos.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +102,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "game_development/unity/analytics/Unity Analytics.md",
+                "file": "project_management/Entidades/🏆 Épicos.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -125,7 +125,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "game_development/unity/analytics/Unity Analytics.md"
+                "file": "project_management/Entidades/🏆 Épicos.md"
               }
             }
           },
@@ -138,12 +138,11 @@
             }
           }
         ],
-        "currentTab": 3
+        "currentTab": 4
       }
     ],
     "direction": "horizontal",
-    "width": 393.5,
-    "collapsed": true
+    "width": 393.5
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -158,8 +157,8 @@
   },
   "active": "447f2bdf03756518",
   "lastOpenFiles": [
-    "game_development/unity/unity_project_guidelines.md",
     "game_development/unity/analytics/Unity Analytics.md",
+    "game_development/unity/unity_project_guidelines.md",
     "game_development/unity/analytics",
     "Escrita/Escrita de artigos de conhecimento.md",
     "project_management/Entidades/🃏 Histórias.md",
