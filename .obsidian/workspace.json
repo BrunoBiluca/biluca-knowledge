@@ -4,19 +4,15 @@
     "type": "split",
     "children": [
       {
-        "id": "fcc58f93858ce1dd",
+        "id": "ad83d5ee08315591",
         "type": "tabs",
         "children": [
           {
-            "id": "447f2bdf03756518",
+            "id": "1d2b9e0f1690afe7",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "project_management/Entidades/🏆 Épicos.md",
-                "mode": "source",
-                "source": false
-              }
+              "type": "empty",
+              "state": {}
             }
           }
         ]
@@ -48,7 +44,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "",
+                "query": "tag:#user_stories",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -69,7 +65,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 209.5
+    "width": 241.5
   },
   "right": {
     "id": "a32ca125c7b31770",
@@ -85,7 +81,6 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "project_management/Entidades/🏆 Épicos.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +97,6 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "project_management/Entidades/🏆 Épicos.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -124,9 +118,7 @@
             "type": "leaf",
             "state": {
               "type": "outline",
-              "state": {
-                "file": "project_management/Entidades/🏆 Épicos.md"
-              }
+              "state": {}
             }
           },
           {
@@ -155,47 +147,47 @@
       "table-editor-obsidian:Advanced Tables Toolbar": false
     }
   },
-  "active": "447f2bdf03756518",
+  "active": "1d2b9e0f1690afe7",
   "lastOpenFiles": [
-    "game_development/unity/analytics/Unity Analytics.md",
-    "game_development/unity/unity_project_guidelines.md",
-    "game_development/unity/analytics",
-    "Escrita/Escrita de artigos de conhecimento.md",
-    "project_management/Entidades/🃏 Histórias.md",
-    "Escrita",
-    "project_management/Entidades/🪵 Backlog.md",
-    "project_management/Entidades/⚙️ Trabalho incidental.md",
-    "project_management/Análises/📈 Análises do time.md",
-    "project_management/project_bootstrap.md",
-    "project_management/principles.md",
-    "project_management/Organização de um time de desenvolvimento de software.md",
-    "Livros/Fifty Quick Ideas to improve your User Stories/Managing Iterative Delivery.md",
-    "Livros/Fifty Quick Ideas to improve your User Stories/Splitting stories.md",
-    "Livros/Fifty Quick Ideas to improve your User Stories/_info.md",
-    "Livros/Fifty Quick Ideas to improve your User Stories/Planning with stories.md",
+    "Gerenciamento de Projetos/Entidades/🏆 Épicos.md",
+    "Gerenciamento de Projetos/Organização de um time de desenvolvimento de software.md",
     "README.md",
-    "Livros/Fifty Quick Ideas to improve your User Stories/Discussing stories.md",
-    "Livros/Fifty Quick Ideas to improve your User Stories/Creating stories.md",
-    "Fifty Quick Ideas to improve your User Stories.md",
-    "project_management/interactions/⏪ Reunião de Retrospectiva.md",
-    "Livros/Fifty Quick Ideas to improve your User Stories",
-    "Livros",
-    "project_management/Entidades/🎯 Metas.md",
-    "project_management/Entidades/🌟 Valores.md",
-    "project_management/Entidades/🎽 Sprints.md",
-    "project_management/Onboarding/Onboarding.md",
-    "project_management/Onboarding/Nivelamento de conhecimento.md",
-    "team_training/dojo_mentoring/project_management/project_management_intro.md",
-    "coding/testing/testing.md",
+    "coding/testing/acceptance_tests.md",
+    "coding/design_patterns/design_patterns.md",
+    "Gerenciamento de Projetos/Entidades/🃏 Histórias.md",
+    "Análises de casos/Livros/Fifty Quick Ideas to improve your User Stories/Planning with stories.md",
+    "Análises de casos/Livros/Fifty Quick Ideas to improve your User Stories/Splitting stories.md",
+    "Análises de casos/Livros/Fifty Quick Ideas to improve your User Stories/Managing Iterative Delivery.md",
+    "Análises de casos/Livros/Fifty Quick Ideas to improve your User Stories/Discussing stories.md",
+    "Análises de casos/Livros/Fifty Quick Ideas to improve your User Stories/Creating stories.md",
+    "Gerenciamento de Projetos/documentation/📕 Documentação.md",
+    "Análises de casos/Livros/Fifty Quick Ideas to improve your User Stories/_Fifty Quick Ideas to improve your User Stories.md",
+    "Gerenciamento de Projetos/Papéis no time/Desenvolvedor.md",
+    "game_development/GDD - Game Design Document.md",
+    "Gerenciamento de Projetos/Papéis no time/Stakeholders.md",
+    "Gerenciamento de Projetos/Papéis no time/QA - Quality Assurance.md",
+    "Gerenciamento de Projetos/Papéis no time/PO - Product Owner (Gestor do projeto).md",
+    "Gerenciamento de Projetos/Papéis no time/Papéis no desenvolvimento de software.md",
+    "Gerenciamento de Projetos/Papéis no time/Game Designer.md",
+    "Gerenciamento de Projetos/Papéis no time/Artista Designer.md",
+    "Gerenciamento de Projetos/Onboarding/Onboarding.md",
+    "Gerenciamento de Projetos/Onboarding/Nivelamento de conhecimento.md",
+    "Gerenciamento de Projetos/Entidades/🪵 Backlog.md",
+    "Gerenciamento de Projetos/Análises/📈 Análises do time.md",
+    "Gerenciamento de Projetos/interactions/💎 Reunião de refinamento de Histórias.md",
+    "Análises de casos/Games",
+    "Análises de casos",
+    "game_development/unity/analytics",
+    "Escrita",
+    "Análises de casos/Livros/Fifty Quick Ideas to improve your User Stories",
+    "Análises de casos/Livros",
     "Artista",
-    "project_management/Papéis no time",
-    "project_management/_images/stakeholder_chart.png",
+    "Gerenciamento de Projetos/Papéis no time",
+    "Gerenciamento de Projetos/_images/stakeholder_chart.png",
     "Sem título.canvas",
     "team_training/dojo_mentoring/code_basics/dojo_code_basics.pdf",
     "_reference_pdfs/clean_code_slides.pdf",
-    "_reference_pdfs/clean_code.pdf",
-    "project_management/Análises",
-    "project_management/_images/matrix_priorization.png",
-    "project_management/Onboarding/Nivelamento Game Dev.canvas"
+    "Gerenciamento de Projetos/_images/matrix_priorization.png",
+    "Gerenciamento de Projetos/Onboarding/Nivelamento Game Dev.canvas"
   ]
 }

@@ -8,13 +8,6 @@
   "collapse-color-groups": false,
   "colorGroups": [
     {
-      "query": "tag:#roles",
-      "color": {
-        "a": 1,
-        "rgb": 14701138
-      }
-    },
-    {
       "query": "tag:#clean_code",
       "color": {
         "a": 1,
@@ -22,37 +15,65 @@
       }
     },
     {
-      "query": "tag:#organização",
+      "query": "tag:#planejamento_de_projetos/interação",
       "color": {
         "a": 1,
-        "rgb": 5431387
+        "rgb": 5431473
       }
     },
     {
-      "query": "tag:#incidental_work",
+      "query": "tag:#planejamento_de_projetos/análise",
       "color": {
         "a": 1,
-        "rgb": 14724178
+        "rgb": 5419488
       }
     },
     {
-      "query": "tag:#user_stories",
+      "query": "tag:#planejamento_de_projetos/papéis",
       "color": {
         "a": 1,
-        "rgb": 5399264
+        "rgb": 10581547
+      }
+    },
+    {
+      "query": "tag:#planejamento_de_projetos/documentação",
+      "color": {
+        "a": 1,
+        "rgb": 11621088
+      }
+    },
+    {
+      "query": "tag:#planejamento_de_projetos/histórias",
+      "color": {
+        "a": 1,
+        "rgb": 14701233
+      }
+    },
+    {
+      "query": "tag:#planejamento_de_projetos/visualização",
+      "color": {
+        "a": 1,
+        "rgb": 8389975
+      }
+    },
+    {
+      "query": "tag:#planejamento_de_projetos",
+      "color": {
+        "a": 1,
+        "rgb": 5431378
       }
     }
   ],
-  "collapse-display": false,
+  "collapse-display": true,
   "showArrow": true,
   "textFadeMultiplier": 0,
   "nodeSizeMultiplier": 1.00155925155925,
   "lineSizeMultiplier": 1.00155925155925,
-  "collapse-forces": false,
+  "collapse-forces": true,
   "centerStrength": 0.604166666666667,
   "repelStrength": 10.2083333333333,
   "linkStrength": 1,
   "linkDistance": 101,
-  "scale": 0.63462856769306,
+  "scale": 0.8897383983458134,
   "close": false
 }
