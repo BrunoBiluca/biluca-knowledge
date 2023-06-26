@@ -11,8 +11,12 @@
             "id": "1d2b9e0f1690afe7",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {}
+              "type": "markdown",
+              "state": {
+                "file": "Análises de casos/Livros/Regras do Jogo Volume 1/_Regras do Jogo Volume 1.md",
+                "mode": "source",
+                "source": false
+              }
             }
           }
         ]
@@ -81,6 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
+                "file": "Análises de casos/Livros/Regras do Jogo Volume 1/_Regras do Jogo Volume 1.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -97,6 +102,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
+                "file": "Análises de casos/Livros/Regras do Jogo Volume 1/_Regras do Jogo Volume 1.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -118,7 +124,9 @@
             "type": "leaf",
             "state": {
               "type": "outline",
-              "state": {}
+              "state": {
+                "file": "Análises de casos/Livros/Regras do Jogo Volume 1/_Regras do Jogo Volume 1.md"
+              }
             }
           },
           {
@@ -147,8 +155,13 @@
       "table-editor-obsidian:Advanced Tables Toolbar": false
     }
   },
-  "active": "1d2b9e0f1690afe7",
+  "active": "eec309eac77d68fe",
   "lastOpenFiles": [
+    "Análises de casos/Livros/Regras do Jogo Volume 1/O processo de design.md",
+    "Análises de casos/Livros/Regras do Jogo Volume 1/_Regras do Jogo Volume 1.md",
+    "Análises de casos/Livros/Regras do Jogo Volume 1/Sobre essa Obra.md",
+    "math/math_algorithms.md",
+    "Análises de casos/Livros/Regras do Jogo Volume 1",
     "Gerenciamento de Projetos/Entidades/🏆 Épicos.md",
     "Gerenciamento de Projetos/Organização de um time de desenvolvimento de software.md",
     "README.md",
@@ -171,10 +184,6 @@
     "Gerenciamento de Projetos/Papéis no time/Game Designer.md",
     "Gerenciamento de Projetos/Papéis no time/Artista Designer.md",
     "Gerenciamento de Projetos/Onboarding/Onboarding.md",
-    "Gerenciamento de Projetos/Onboarding/Nivelamento de conhecimento.md",
-    "Gerenciamento de Projetos/Entidades/🪵 Backlog.md",
-    "Gerenciamento de Projetos/Análises/📈 Análises do time.md",
-    "Gerenciamento de Projetos/interactions/💎 Reunião de refinamento de Histórias.md",
     "Análises de casos/Games",
     "Análises de casos",
     "game_development/unity/analytics",
@@ -186,7 +195,6 @@
     "Gerenciamento de Projetos/_images/stakeholder_chart.png",
     "Sem título.canvas",
     "team_training/dojo_mentoring/code_basics/dojo_code_basics.pdf",
-    "_reference_pdfs/clean_code_slides.pdf",
     "Gerenciamento de Projetos/_images/matrix_priorization.png",
     "Gerenciamento de Projetos/Onboarding/Nivelamento Game Dev.canvas"
   ]

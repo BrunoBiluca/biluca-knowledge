@@ -7,6 +7,7 @@
 
 # Dot Product
 
+
 ```python
 def dot_product(vec1, vec2):
     if len(vec1) != len(vec2):
