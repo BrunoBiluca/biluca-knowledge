@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Análises de casos/Livros/Regras do Jogo Volume 1/_Regras do Jogo Volume 1.md",
+                "file": "README.md",
                 "mode": "source",
                 "source": false
               }
@@ -85,7 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Análises de casos/Livros/Regras do Jogo Volume 1/_Regras do Jogo Volume 1.md",
+                "file": "README.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +102,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Análises de casos/Livros/Regras do Jogo Volume 1/_Regras do Jogo Volume 1.md",
+                "file": "README.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -125,7 +125,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Análises de casos/Livros/Regras do Jogo Volume 1/_Regras do Jogo Volume 1.md"
+                "file": "README.md"
               }
             }
           },
@@ -157,8 +157,8 @@
   },
   "active": "1d2b9e0f1690afe7",
   "lastOpenFiles": [
-    "Análises de casos/Livros/Regras do Jogo Volume 1/Design.md",
     "Análises de casos/Livros/Regras do Jogo Volume 1/_Regras do Jogo Volume 1.md",
+    "Análises de casos/Livros/Regras do Jogo Volume 1/Design.md",
     "Análises de casos/Livros/Regras do Jogo Volume 1/Interação lúdica significativa.md",
     "Análises de casos/Livros/Regras do Jogo Volume 1/Sobre essa Obra.md",
     "Análises de casos/Livros/Regras do Jogo Volume 1/O processo de design.md",
