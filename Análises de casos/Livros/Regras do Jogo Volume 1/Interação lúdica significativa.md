@@ -7,7 +7,8 @@ A interação lúdica significativa em um jogo surge da relação entre a ação
 
 Cada jogo permite que os jogadores, tomem ações e determinem resultados para essas ações. Esse tipo de interação lúdica é chamada de descritiva.
 
-A interação lúdica significativa ocorre quando as relações entre ações e resultados em um jogo são discerníveis e integradas no contexto maior do jogo.
+> [!tip] Interação lúdica significativa
+> A interação lúdica significativa ocorre quando as relações entre ações e resultados em um jogo são discerníveis e integradas no contexto maior do jogo.
 
 Discernível significa que o resultado da ação do jogo é comunicado ao jogador de uma forma perceptível.
 
