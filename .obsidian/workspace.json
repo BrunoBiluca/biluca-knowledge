@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Análises de casos/Livros/Regras do Jogo Volume 1/Sistemas.md",
+                "file": "README.md",
                 "mode": "source",
                 "source": false
               }
@@ -85,7 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Análises de casos/Livros/Regras do Jogo Volume 1/Sistemas.md",
+                "file": "README.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +102,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Análises de casos/Livros/Regras do Jogo Volume 1/Sistemas.md",
+                "file": "README.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -125,7 +125,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Análises de casos/Livros/Regras do Jogo Volume 1/Sistemas.md"
+                "file": "README.md"
               }
             }
           },
@@ -157,8 +157,16 @@
   },
   "active": "1d2b9e0f1690afe7",
   "lastOpenFiles": [
-    "Análises de casos/Livros/Regras do Jogo Volume 1/_Regras do Jogo Volume 1.md",
+    "Negócios/Manifesto de um negócio.md",
+    "Negócios/Planejamento de um negócio.md",
+    "Negócios/_imgs/linha da visão exemplo.png",
+    "Negócios/_imgs/plano de ação - redes sociais 2.png",
+    "Negócios/_imgs/plano de ação - redes sociais.png",
+    "Negócios/_imgs/plano de ação - projeto social.png",
+    "Negócios/Cooperativa.md",
+    "Negócios/_imgs",
     "Análises de casos/Livros/Regras do Jogo Volume 1/Sistemas.md",
+    "Análises de casos/Livros/Regras do Jogo Volume 1/_Regras do Jogo Volume 1.md",
     "README.md",
     "Negócios",
     "Análises de casos/Livros/Regras do Jogo Volume 1/Interação lúdica significativa.md",
@@ -181,10 +189,6 @@
     "Análises de casos/Livros/Fifty Quick Ideas to improve your User Stories/_Fifty Quick Ideas to improve your User Stories.md",
     "Gerenciamento de Projetos/Papéis no time/Desenvolvedor.md",
     "game_development/GDD - Game Design Document.md",
-    "Gerenciamento de Projetos/Papéis no time/Stakeholders.md",
-    "Gerenciamento de Projetos/Papéis no time/QA - Quality Assurance.md",
-    "Gerenciamento de Projetos/Papéis no time/PO - Product Owner (Gestor do projeto).md",
-    "Gerenciamento de Projetos/Papéis no time/Papéis no desenvolvimento de software.md",
     "Análises de casos/Games",
     "Análises de casos",
     "game_development/unity/analytics",
@@ -192,7 +196,6 @@
     "Análises de casos/Livros/Fifty Quick Ideas to improve your User Stories",
     "Análises de casos/Livros",
     "Artista",
-    "Gerenciamento de Projetos/Papéis no time",
     "Gerenciamento de Projetos/_images/stakeholder_chart.png",
     "Sem título.canvas",
     "Gerenciamento de Projetos/_images/matrix_priorization.png",

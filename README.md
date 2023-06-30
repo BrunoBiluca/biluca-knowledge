@@ -42,4 +42,5 @@ Cada commit deve ter um tipo associado, esses tipos são definidos como emojis p
 | Emoji | Descrição                                                                                                                                                          |
 | ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | ✨    | Alteração relacionada a todo o projeto, seja a criação de uma regra, criação de uma nova forma de organização, adição de tags, melhoria de documentação do projeto |
-| 📑    | Alteração relacionada a um livro, seja adição de capítulos, melhorias de explicações, definições e revisões                                                                         |
+| 📑    | Alteração relacionada a um livro, seja adição de capítulos, melhorias de explicações, definições e revisões                                                        |
+| 💼    | Conteúdo relacionado a negócios, organização de empresas e organização jurídica.                                                                                                                                                                   |
