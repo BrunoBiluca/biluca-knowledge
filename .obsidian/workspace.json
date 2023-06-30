@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "README.md",
+                "file": "Análises de casos/Livros/Regras do Jogo Volume 1/Sistemas.md",
                 "mode": "source",
                 "source": false
               }
@@ -85,7 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "README.md",
+                "file": "Análises de casos/Livros/Regras do Jogo Volume 1/Sistemas.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +102,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "README.md",
+                "file": "Análises de casos/Livros/Regras do Jogo Volume 1/Sistemas.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -125,7 +125,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "README.md"
+                "file": "Análises de casos/Livros/Regras do Jogo Volume 1/Sistemas.md"
               }
             }
           },
@@ -157,9 +157,11 @@
   },
   "active": "1d2b9e0f1690afe7",
   "lastOpenFiles": [
-    "Análises de casos/Livros/Regras do Jogo Volume 1/Interação lúdica significativa.md",
-    "README.md",
     "Análises de casos/Livros/Regras do Jogo Volume 1/_Regras do Jogo Volume 1.md",
+    "Análises de casos/Livros/Regras do Jogo Volume 1/Sistemas.md",
+    "README.md",
+    "Negócios",
+    "Análises de casos/Livros/Regras do Jogo Volume 1/Interação lúdica significativa.md",
     "Análises de casos/Livros/Regras do Jogo Volume 1/Design.md",
     "Análises de casos/Livros/Regras do Jogo Volume 1/Sobre essa Obra.md",
     "Análises de casos/Livros/Regras do Jogo Volume 1/O processo de design.md",
@@ -183,7 +185,6 @@
     "Gerenciamento de Projetos/Papéis no time/QA - Quality Assurance.md",
     "Gerenciamento de Projetos/Papéis no time/PO - Product Owner (Gestor do projeto).md",
     "Gerenciamento de Projetos/Papéis no time/Papéis no desenvolvimento de software.md",
-    "Gerenciamento de Projetos/Papéis no time/Game Designer.md",
     "Análises de casos/Games",
     "Análises de casos",
     "game_development/unity/analytics",
@@ -194,7 +195,6 @@
     "Gerenciamento de Projetos/Papéis no time",
     "Gerenciamento de Projetos/_images/stakeholder_chart.png",
     "Sem título.canvas",
-    "team_training/dojo_mentoring/code_basics/dojo_code_basics.pdf",
     "Gerenciamento de Projetos/_images/matrix_priorization.png",
     "Gerenciamento de Projetos/Onboarding/Nivelamento Game Dev.canvas"
   ]
