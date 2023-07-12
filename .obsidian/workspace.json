@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Análises de casos/Livros/Regras do Jogo Volume 1/Definindo Jogos.md",
+                "file": "README.md",
                 "mode": "source",
                 "source": false
               }
@@ -101,7 +101,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Análises de casos/Livros/Regras do Jogo Volume 1/Definindo Jogos.md",
+                "file": "README.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -118,7 +118,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Análises de casos/Livros/Regras do Jogo Volume 1/Definindo Jogos.md",
+                "file": "README.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -141,7 +141,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Análises de casos/Livros/Regras do Jogo Volume 1/Definindo Jogos.md"
+                "file": "README.md"
               }
             }
           },
@@ -173,8 +173,8 @@
   },
   "active": "1d2b9e0f1690afe7",
   "lastOpenFiles": [
-    "Análises de casos/Livros/Regras do Jogo Volume 1/Interatividade.md",
     "Análises de casos/Livros/Regras do Jogo Volume 1/Definindo Jogos.md",
+    "Análises de casos/Livros/Regras do Jogo Volume 1/Interatividade.md",
     "Análises de casos/Livros/Regras do Jogo Volume 1/_Regras do Jogo Volume 1.md",
     "README.md",
     "Sem título.canvas",
