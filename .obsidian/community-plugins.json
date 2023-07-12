@@ -1,5 +1,7 @@
 [
   "table-editor-obsidian",
   "highlightr-plugin",
-  "obsidian-git"
+  "obsidian-git",
+  "recent-files-obsidian",
+  "obsidian-plugin-update-tracker"
 ]

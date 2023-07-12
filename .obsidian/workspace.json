@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "README.md",
+                "file": "Análises de casos/Livros/Regras do Jogo Volume 1/Definindo Jogos.md",
                 "mode": "source",
                 "source": false
               }
@@ -31,6 +31,7 @@
       {
         "id": "15ad41c716e45ba5",
         "type": "tabs",
+        "dimension": 54.074074074074076,
         "children": [
           {
             "id": "eec309eac77d68fe",
@@ -66,6 +67,21 @@
             }
           }
         ]
+      },
+      {
+        "id": "39354fb95026f1ef",
+        "type": "tabs",
+        "dimension": 45.925925925925924,
+        "children": [
+          {
+            "id": "09a53a6960cd7be7",
+            "type": "leaf",
+            "state": {
+              "type": "recent-files",
+              "state": {}
+            }
+          }
+        ]
       }
     ],
     "direction": "horizontal",
@@ -85,7 +101,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "README.md",
+                "file": "Análises de casos/Livros/Regras do Jogo Volume 1/Definindo Jogos.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +118,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "README.md",
+                "file": "Análises de casos/Livros/Regras do Jogo Volume 1/Definindo Jogos.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -125,7 +141,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "README.md"
+                "file": "Análises de casos/Livros/Regras do Jogo Volume 1/Definindo Jogos.md"
               }
             }
           },
@@ -157,6 +173,11 @@
   },
   "active": "1d2b9e0f1690afe7",
   "lastOpenFiles": [
+    "Análises de casos/Livros/Regras do Jogo Volume 1/Interatividade.md",
+    "Análises de casos/Livros/Regras do Jogo Volume 1/Definindo Jogos.md",
+    "Análises de casos/Livros/Regras do Jogo Volume 1/_Regras do Jogo Volume 1.md",
+    "README.md",
+    "Sem título.canvas",
     "Negócios/Manifesto de um negócio.md",
     "Negócios/Planejamento de um negócio.md",
     "Negócios/_imgs/linha da visão exemplo.png",
@@ -166,8 +187,6 @@
     "Negócios/Cooperativa.md",
     "Negócios/_imgs",
     "Análises de casos/Livros/Regras do Jogo Volume 1/Sistemas.md",
-    "Análises de casos/Livros/Regras do Jogo Volume 1/_Regras do Jogo Volume 1.md",
-    "README.md",
     "Negócios",
     "Análises de casos/Livros/Regras do Jogo Volume 1/Interação lúdica significativa.md",
     "Análises de casos/Livros/Regras do Jogo Volume 1/Design.md",
@@ -188,7 +207,6 @@
     "Gerenciamento de Projetos/documentation/📕 Documentação.md",
     "Análises de casos/Livros/Fifty Quick Ideas to improve your User Stories/_Fifty Quick Ideas to improve your User Stories.md",
     "Gerenciamento de Projetos/Papéis no time/Desenvolvedor.md",
-    "game_development/GDD - Game Design Document.md",
     "Análises de casos/Games",
     "Análises de casos",
     "game_development/unity/analytics",
@@ -197,7 +215,6 @@
     "Análises de casos/Livros",
     "Artista",
     "Gerenciamento de Projetos/_images/stakeholder_chart.png",
-    "Sem título.canvas",
     "Gerenciamento de Projetos/_images/matrix_priorization.png",
     "Gerenciamento de Projetos/Onboarding/Nivelamento Game Dev.canvas"
   ]
