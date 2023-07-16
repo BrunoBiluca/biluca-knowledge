@@ -16,4 +16,7 @@ Capítulos
 4. [[Design]]
 5. [[Sistemas]]
 6. [[Interatividade]]
-7. 
+7. [[Definindo Jogos]]
+8. [[Definindo jogos digitais]]
+9. [[Círculo Mágico]]
+10. [[Os esquemas primários]]

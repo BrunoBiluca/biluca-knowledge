@@ -12,7 +12,7 @@ Vantagens de se utilizar um GDD:
 
 - Nos estágios iniciais de desenvolvimento o GDD pode ser um bom guia para criação das primeiras histórias e funcionalidades
 - Se bem atualizado o GDD pode ser um ótimo Log de alteração do projeto, deixando de forma simples e objetiva demonstrações do estado atual do desenvolvimento
-- O GDD deve ser um guia em discussões sobre funcionalidades e implemetações, já que ele contém análises nas mais diversas áreas dentro do desenvolvimento do jogo, isso ajuda na hora de priorizar uma funcionalidade, definir alguma implementação.
+- O GDD deve ser um guia em discussões sobre funcionalidades e implementações, já que ele contém análises nas mais diversas áreas dentro do desenvolvimento do jogo, isso ajuda na hora de priorizar uma funcionalidade, definir alguma implementação.
   
 ## Definição de um GDD
 
@@ -46,7 +46,7 @@ Ideias de informações relevantes
 
 ### 📂 Análise de dados e mercado
 
-Na seção **📂 Análise de dados e mercado** são definidos o principais aspectos mecadológicos em relação ao projeto.
+Na seção **📂 Análise de dados e mercado** são definidos o principais aspectos mercadológicos em relação ao projeto.
 
 Informações relevantes
 - Audiência ou Go To Market (GTM): audiência que o jogo é destinado

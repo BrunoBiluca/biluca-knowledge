@@ -5,16 +5,32 @@
       "path": "README.md"
     },
     {
-      "basename": "Definindo Jogos",
-      "path": "Análises de casos/Livros/Regras do Jogo Volume 1/Definindo Jogos.md"
+      "basename": "Os esquemas primários",
+      "path": "Análises de casos/Livros/Regras do Jogo Volume 1/Os esquemas primários.md"
     },
     {
-      "basename": "Interatividade",
-      "path": "Análises de casos/Livros/Regras do Jogo Volume 1/Interatividade.md"
+      "basename": "Círculo Mágico",
+      "path": "Análises de casos/Livros/Regras do Jogo Volume 1/Círculo Mágico.md"
+    },
+    {
+      "basename": "Definindo jogos digitais",
+      "path": "Análises de casos/Livros/Regras do Jogo Volume 1/Definindo jogos digitais.md"
     },
     {
       "basename": "_Regras do Jogo Volume 1",
       "path": "Análises de casos/Livros/Regras do Jogo Volume 1/_Regras do Jogo Volume 1.md"
+    },
+    {
+      "basename": "Definindo Jogos",
+      "path": "Análises de casos/Livros/Regras do Jogo Volume 1/Definindo Jogos.md"
+    },
+    {
+      "basename": "GDD - Game Design Document",
+      "path": "game_development/GDD - Game Design Document.md"
+    },
+    {
+      "basename": "Interatividade",
+      "path": "Análises de casos/Livros/Regras do Jogo Volume 1/Interatividade.md"
     }
   ],
   "omittedPaths": [],

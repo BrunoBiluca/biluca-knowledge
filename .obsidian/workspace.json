@@ -8,7 +8,7 @@
         "type": "tabs",
         "children": [
           {
-            "id": "1d2b9e0f1690afe7",
+            "id": "c1fecdeba7456544",
             "type": "leaf",
             "state": {
               "type": "markdown",
@@ -171,12 +171,16 @@
       "table-editor-obsidian:Advanced Tables Toolbar": false
     }
   },
-  "active": "1d2b9e0f1690afe7",
+  "active": "c1fecdeba7456544",
   "lastOpenFiles": [
-    "Análises de casos/Livros/Regras do Jogo Volume 1/Definindo Jogos.md",
-    "Análises de casos/Livros/Regras do Jogo Volume 1/Interatividade.md",
+    "Análises de casos/Livros/Regras do Jogo Volume 1/Os esquemas primários.md",
+    "Análises de casos/Livros/Regras do Jogo Volume 1/Círculo Mágico.md",
+    "Análises de casos/Livros/Regras do Jogo Volume 1/Definindo jogos digitais.md",
     "Análises de casos/Livros/Regras do Jogo Volume 1/_Regras do Jogo Volume 1.md",
+    "Análises de casos/Livros/Regras do Jogo Volume 1/Definindo Jogos.md",
+    "game_development/GDD - Game Design Document.md",
     "README.md",
+    "Análises de casos/Livros/Regras do Jogo Volume 1/Interatividade.md",
     "Sem título.canvas",
     "Negócios/Manifesto de um negócio.md",
     "Negócios/Planejamento de um negócio.md",
@@ -203,10 +207,6 @@
     "Análises de casos/Livros/Fifty Quick Ideas to improve your User Stories/Splitting stories.md",
     "Análises de casos/Livros/Fifty Quick Ideas to improve your User Stories/Managing Iterative Delivery.md",
     "Análises de casos/Livros/Fifty Quick Ideas to improve your User Stories/Discussing stories.md",
-    "Análises de casos/Livros/Fifty Quick Ideas to improve your User Stories/Creating stories.md",
-    "Gerenciamento de Projetos/documentation/📕 Documentação.md",
-    "Análises de casos/Livros/Fifty Quick Ideas to improve your User Stories/_Fifty Quick Ideas to improve your User Stories.md",
-    "Gerenciamento de Projetos/Papéis no time/Desenvolvedor.md",
     "Análises de casos/Games",
     "Análises de casos",
     "game_development/unity/analytics",
