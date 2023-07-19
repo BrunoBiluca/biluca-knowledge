@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "README.md",
+                "file": "Negócios/Repartição de rendimentos.md",
                 "mode": "source",
                 "source": false
               }
@@ -101,7 +101,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "README.md",
+                "file": "Negócios/Repartição de rendimentos.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -118,7 +118,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "README.md",
+                "file": "Negócios/Repartição de rendimentos.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -141,7 +141,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "README.md"
+                "file": "Negócios/Repartição de rendimentos.md"
               }
             }
           },
@@ -173,12 +173,12 @@
   },
   "active": "e9157613d0fa747a",
   "lastOpenFiles": [
+    "README.md",
     "Negócios/Repartição de rendimentos.md",
     "Negócios/Cooperativa.md",
     "Gerenciamento de Projetos/Entidades/⚙️ Trabalho incidental.md",
     "Negócios/Planejamento de um negócio coletivo.md",
     "Negócios/Manifesto de um negócio coletivo.md",
-    "README.md",
     "Análises de casos/Livros/Regras do Jogo Volume 1/Os esquemas primários.md",
     "Análises de casos/Livros/Regras do Jogo Volume 1/Círculo Mágico.md",
     "Análises de casos/Livros/Regras do Jogo Volume 1/Definindo jogos digitais.md",
