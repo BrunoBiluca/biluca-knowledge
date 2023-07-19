@@ -1,3 +1,5 @@
+#negócios/fundamentos
+
 - Como funciona uma cooperativa?
 
 [O que é e como formar uma cooperativa? - Sebrae](https://sebrae.com.br/sites/PortalSebrae/artigos/artigosCoperacao/como-criar-uma-cooperativa,f3d5438af1c92410VgnVCM100000b272010aRCRD)

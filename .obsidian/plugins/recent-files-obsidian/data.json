@@ -5,6 +5,26 @@
       "path": "README.md"
     },
     {
+      "basename": "Repartição de rendimentos",
+      "path": "Negócios/Repartição de rendimentos.md"
+    },
+    {
+      "basename": "Cooperativa",
+      "path": "Negócios/Cooperativa.md"
+    },
+    {
+      "basename": "⚙️ Trabalho incidental",
+      "path": "Gerenciamento de Projetos/Entidades/⚙️ Trabalho incidental.md"
+    },
+    {
+      "basename": "Planejamento de um negócio coletivo",
+      "path": "Negócios/Planejamento de um negócio coletivo.md"
+    },
+    {
+      "basename": "Manifesto de um negócio coletivo",
+      "path": "Negócios/Manifesto de um negócio coletivo.md"
+    },
+    {
       "basename": "Os esquemas primários",
       "path": "Análises de casos/Livros/Regras do Jogo Volume 1/Os esquemas primários.md"
     },

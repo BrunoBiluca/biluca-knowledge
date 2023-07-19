@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "ad83d5ee08315591",
+        "id": "cbea8ceb18d48cb9",
         "type": "tabs",
         "children": [
           {
-            "id": "c1fecdeba7456544",
+            "id": "e9157613d0fa747a",
             "type": "leaf",
             "state": {
               "type": "markdown",
@@ -171,24 +171,26 @@
       "table-editor-obsidian:Advanced Tables Toolbar": false
     }
   },
-  "active": "c1fecdeba7456544",
+  "active": "e9157613d0fa747a",
   "lastOpenFiles": [
+    "Negócios/Repartição de rendimentos.md",
+    "Negócios/Cooperativa.md",
+    "Gerenciamento de Projetos/Entidades/⚙️ Trabalho incidental.md",
+    "Negócios/Planejamento de um negócio coletivo.md",
+    "Negócios/Manifesto de um negócio coletivo.md",
+    "README.md",
     "Análises de casos/Livros/Regras do Jogo Volume 1/Os esquemas primários.md",
     "Análises de casos/Livros/Regras do Jogo Volume 1/Círculo Mágico.md",
     "Análises de casos/Livros/Regras do Jogo Volume 1/Definindo jogos digitais.md",
     "Análises de casos/Livros/Regras do Jogo Volume 1/_Regras do Jogo Volume 1.md",
     "Análises de casos/Livros/Regras do Jogo Volume 1/Definindo Jogos.md",
     "game_development/GDD - Game Design Document.md",
-    "README.md",
     "Análises de casos/Livros/Regras do Jogo Volume 1/Interatividade.md",
     "Sem título.canvas",
-    "Negócios/Manifesto de um negócio.md",
-    "Negócios/Planejamento de um negócio.md",
     "Negócios/_imgs/linha da visão exemplo.png",
     "Negócios/_imgs/plano de ação - redes sociais 2.png",
     "Negócios/_imgs/plano de ação - redes sociais.png",
     "Negócios/_imgs/plano de ação - projeto social.png",
-    "Negócios/Cooperativa.md",
     "Negócios/_imgs",
     "Análises de casos/Livros/Regras do Jogo Volume 1/Sistemas.md",
     "Negócios",
@@ -205,8 +207,6 @@
     "Gerenciamento de Projetos/Entidades/🃏 Histórias.md",
     "Análises de casos/Livros/Fifty Quick Ideas to improve your User Stories/Planning with stories.md",
     "Análises de casos/Livros/Fifty Quick Ideas to improve your User Stories/Splitting stories.md",
-    "Análises de casos/Livros/Fifty Quick Ideas to improve your User Stories/Managing Iterative Delivery.md",
-    "Análises de casos/Livros/Fifty Quick Ideas to improve your User Stories/Discussing stories.md",
     "Análises de casos/Games",
     "Análises de casos",
     "game_development/unity/analytics",

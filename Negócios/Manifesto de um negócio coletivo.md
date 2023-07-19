@@ -1,6 +1,12 @@
+#organização_de_coletivo 
+
 Os pilares do coletivo são definições base do trabalho dentro do coletivo. Cada ação feita dentro do coletivo tem que ser guiada pelos pilares do coletivo.
 
 Esse documento visa definir de forma escrita as premissas para o desenvolvimento do trabalho dentro do coletivo.
+
+# Manifesto
+
+A definição do manifesto deve levar em conta a missão do coletivo em relação aos seus integrantes, ou seja, qual a finalidade dos trabalhadores se organizarem em um coletivo.
 
 # Pilares
 

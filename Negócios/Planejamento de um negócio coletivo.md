@@ -1,3 +1,5 @@
+#organização_de_coletivo 
+
 Antes de qualquer tipo de trabalho desenvolvidos os integrantes de um novo negócio devem levantar algumas questões essenciais para que problemas futuros em relação ao entendimento do negócio sejam solucionados já nos momentos iniciais.
 
 
