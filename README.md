@@ -39,8 +39,54 @@ Exemplos de mensagem de commit
 
 Cada commit deve ter um tipo associado, esses tipos são definidos como emojis para facilitar o seu entendimento.
 
-| Emoji | Descrição                                                                                                                                                          |
-| ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| ✨    | Alteração relacionada a todo o projeto, seja a criação de uma regra, criação de uma nova forma de organização, adição de tags, melhoria de documentação do projeto |
-| 📑    | Alteração relacionada a um livro, seja adição de capítulos, melhorias de explicações, definições e revisões                                                        |
-| 💼    | Conteúdo relacionado a negócios, organização de empresas e organização jurídica.                                                                                                                                                                   |
+<table border="1" cellpadding="10">
+	<thead>
+		<th>Emoji</th>
+		<th>Descrição</th>
+		<th>Exemplos</th>
+	</thead>
+	<tbody>
+		<tr valign='top'>
+			<td>✨</td>
+			<td>Alteração relacionada ao projetos Biluca Guidelines</td>
+			<td>
+				<ul>
+					<li>criação de uma regra</li>
+					<li>criação de uma nova forma de organização</li>
+					<li>adição de tags</li>
+					<li>melhoria de documentação do projeto</li>
+				</ul>
+			</td>
+		</tr>
+		<tr valign='top'>
+			<td>📑</td>
+			<td>Alteração relacionada a um livro</td>
+			<td>
+				<ul>
+					<li>adição de capítulos</li>
+					<li>melhorias de explicações</li>
+					<li>definições e revisões</li>
+				</ul>
+			</td>
+		</tr>
+		<tr valign='top'>
+			<td>💼</td>
+			<td>Conteúdo relacionado a negócios, organização de empresas e organização jurídica.</td>
+			<td>
+				<ul>
+					<li>organização de empresas</li>
+					<li>organização jurídica</li>
+				</ul>
+			</td>
+		</tr>
+		<tr valign='top'>
+			<td>📅</td>
+			<td>Conteúdo relacionado a gerenciamento de projetos e suas entidades.</td>
+			<td>
+				<ul>
+					<li>Adição e edição de entidades do gerenciamento de projetos</li>
+				</ul>
+			</td>
+		</tr>
+	</tbody>
+</table>

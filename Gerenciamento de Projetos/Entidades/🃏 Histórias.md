@@ -7,6 +7,8 @@ Uma 🃏 História é a unidade de ação que será executada.
 Uma 🃏 História começa a ser definida durante o processo de refinamento descrito no [[🪵 Backlog]]. Quando ela é refinada e definida uma escala de prioridade ela então pode ser adiciona a um 🎽 Sprint ou executada diretamente.
 
 > [!tip] Dicas para criação de Histórias
+> Uma boa História é assertiva o suficiente para capturar a **essência do requisito** e vaga o suficiente para **permitir várias soluções** para o mesmo requisito.
+> 
 > Histórias devem claramente informar a alteração no comportamento relacionada ao projeto de forma a definir quais são os usuários impactados e que tipo de valor esses usuários irão receber.
 
 ### Prioridade de um 🃏 História

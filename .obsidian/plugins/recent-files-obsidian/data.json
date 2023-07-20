@@ -1,12 +1,24 @@
 {
   "recentFiles": [
     {
-      "basename": "Repartição de rendimentos",
-      "path": "Negócios/Repartição de rendimentos.md"
-    },
-    {
       "basename": "README",
       "path": "README.md"
+    },
+    {
+      "basename": "🃏 Histórias",
+      "path": "Gerenciamento de Projetos/Entidades/🃏 Histórias.md"
+    },
+    {
+      "basename": "GDD - Game Design Document",
+      "path": "game_development/GDD - Game Design Document.md"
+    },
+    {
+      "basename": "Nivelamento de conhecimento",
+      "path": "Gerenciamento de Projetos/Onboarding/Nivelamento de conhecimento.md"
+    },
+    {
+      "basename": "Repartição de rendimentos",
+      "path": "Negócios/Repartição de rendimentos.md"
     },
     {
       "basename": "Cooperativa",
@@ -43,10 +55,6 @@
     {
       "basename": "Definindo Jogos",
       "path": "Análises de casos/Livros/Regras do Jogo Volume 1/Definindo Jogos.md"
-    },
-    {
-      "basename": "GDD - Game Design Document",
-      "path": "game_development/GDD - Game Design Document.md"
     },
     {
       "basename": "Interatividade",

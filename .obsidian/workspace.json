@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Negócios/Repartição de rendimentos.md",
+                "file": "README.md",
                 "mode": "source",
                 "source": false
               }
@@ -49,7 +49,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "tag:#user_stories",
+                "query": "file: nivelamento",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -101,7 +101,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Negócios/Repartição de rendimentos.md",
+                "file": "README.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -118,7 +118,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Negócios/Repartição de rendimentos.md",
+                "file": "README.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -141,7 +141,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Negócios/Repartição de rendimentos.md"
+                "file": "README.md"
               }
             }
           },
@@ -152,9 +152,17 @@
               "type": "advanced-tables-toolbar",
               "state": {}
             }
+          },
+          {
+            "id": "3b5e5bd61b220af5",
+            "type": "leaf",
+            "state": {
+              "type": "side-panel-control-view",
+              "state": {}
+            }
           }
         ],
-        "currentTab": 4
+        "currentTab": 5
       }
     ],
     "direction": "horizontal",
@@ -168,12 +176,16 @@
       "daily-notes:Abrir a nota de hoje": false,
       "templates:Inserir modelo": false,
       "command-palette:Abrir paleta de comandos": false,
-      "table-editor-obsidian:Advanced Tables Toolbar": false
+      "table-editor-obsidian:Advanced Tables Toolbar": false,
+      "obsidian-markdown-formatting-assistant-plugin:Open Markdown Formatting Assistant": false
     }
   },
-  "active": "e9157613d0fa747a",
+  "active": "3b5e5bd61b220af5",
   "lastOpenFiles": [
     "README.md",
+    "Gerenciamento de Projetos/Entidades/🃏 Histórias.md",
+    "game_development/GDD - Game Design Document.md",
+    "Gerenciamento de Projetos/Onboarding/Nivelamento de conhecimento.md",
     "Negócios/Repartição de rendimentos.md",
     "Negócios/Cooperativa.md",
     "Gerenciamento de Projetos/Entidades/⚙️ Trabalho incidental.md",
@@ -184,7 +196,6 @@
     "Análises de casos/Livros/Regras do Jogo Volume 1/Definindo jogos digitais.md",
     "Análises de casos/Livros/Regras do Jogo Volume 1/_Regras do Jogo Volume 1.md",
     "Análises de casos/Livros/Regras do Jogo Volume 1/Definindo Jogos.md",
-    "game_development/GDD - Game Design Document.md",
     "Análises de casos/Livros/Regras do Jogo Volume 1/Interatividade.md",
     "Sem título.canvas",
     "Negócios/_imgs/linha da visão exemplo.png",
@@ -204,9 +215,7 @@
     "Gerenciamento de Projetos/Organização de um time de desenvolvimento de software.md",
     "coding/testing/acceptance_tests.md",
     "coding/design_patterns/design_patterns.md",
-    "Gerenciamento de Projetos/Entidades/🃏 Histórias.md",
     "Análises de casos/Livros/Fifty Quick Ideas to improve your User Stories/Planning with stories.md",
-    "Análises de casos/Livros/Fifty Quick Ideas to improve your User Stories/Splitting stories.md",
     "Análises de casos/Games",
     "Análises de casos",
     "game_development/unity/analytics",
