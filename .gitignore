@@ -1,0 +1,29 @@
+###################################################################################################
+############################              OBSIDIAN               ##################################
+###################################################################################################
+
+# to exclude Obsidian workspace settings (including plugin and hotkey configurations)
+.obsidian/*
+!.obsidian/app.json
+!.obsidian/core-plugins.json
+!.obsidian/community-plugins.json
+!.obsidian/templates.json
+!.obsidian/snippets
+
+# Exclude consultant specific files "personal"
+05*-*Personal/
+
+# Exclude Day Planner directory placed in vault root
+Day*Planners/*
+
+# This file is used to keep track of last auto backup/pull
+.obsidian-git-data
+
+# Exclude Untitled Notes
+Untitled*
+# Exclude "bad" names
+null*
+
+# Add below lines to exclude OS settings and caches
+.trash/
+.DS_Store

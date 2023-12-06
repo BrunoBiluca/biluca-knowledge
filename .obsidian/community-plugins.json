@@ -1,8 +1,9 @@
 [
   "table-editor-obsidian",
   "highlightr-plugin",
-  "obsidian-git",
   "recent-files-obsidian",
   "obsidian-plugin-update-tracker",
-  "obsidian-markdown-formatting-assistant-plugin"
+  "obsidian-markdown-formatting-assistant-plugin",
+  "image-captions",
+  "language-translator"
 ]

@@ -1,0 +1,1 @@
+Nessa seção definimos aspectos de acessibilidade do jogo. Como é um aspecto que deve ser definido desde o começo do desenvolvimento é importante que já sejam criados vários exemplos.

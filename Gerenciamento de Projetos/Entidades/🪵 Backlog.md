@@ -1,6 +1,6 @@
 #planejamento_de_projetos 
 
-O backlog de tarefas é o conjunto de história que serão refinadas em relação a vários aspectos do desenvolvimento para serem elegidas como candidatas para a produção ou descartadas.
+O backlog de tarefas é o conjunto de histórias que serão refinadas em relação a vários aspectos do desenvolvimento para serem elegidas como candidatas para a produção ou descartadas.
 
 O Backlog deve ser um recurso utilizado para facilitar ao time de desenvolvimento a criação de Histórias refinadas. O refinamento de Histórias acontece por parte do time de desenvolvimento, por meio de revisões, reuniões usuários, time técnico, time de negócio e qualquer outro tipo de pessoa envolvida ou impactada pela História.
 
@@ -39,32 +39,13 @@ Todas as outras propriedades são iguais as de [[🃏 Histórias]] já que uma H
 
 # História devidamente refinada
 
-Principais características de uma história devidamente refinada:
+Para a História ser priorizada no Backlog é necessário que esta esteja devidamente refinada. Dessa forma o time tem um melhor entendimento sobre seu escopo e valor entregue.
 
-- Entendimento pelos envolvidos
-Qualquer pessoa envolvida no desenvolvimento ou impactada pela história deve ter entendimento de seu conteúdo. Deve haver informação contextual o suficiente para iniciar seu desenvolvimento. 
+> [!] Sobre refinamento de Histórias
+> - [[Refinamento de Histórias]]
+> - [[💎 Reunião de refinamento de Histórias]]
 
-- Possuem uma estimativa para implementação
-Esse ponto é muito importante, o ponto de implementação não é apenas uma estimativa de tempo de desenvolvimento em relação a programação, mas do ponto que a História foi iniciada até o valor ter sido entregue para o usuário final.
-
-Uma ótima forma de pensar em Histórias de Usuário é utilizando o método INVEST:
-
-- **I**ndependent – elas devem ser desenvolvidas em qualquer sequência e a mudança de uma História não afeta outra
-- **N**egotiable – Depende do time decidir como a História será implementada
-- **V**aluable – cada História entrega valor aos usuários finais.
-- **E**stimable – deve ser fácil de estimar a quantidade de tempo que o desenvolvimento da História vai tomar
-- **S**mall – Deve passar por todo o ciclo de desenvolvimento (designing, coding, testing) em uma única Sprint
-- **T**estable – Deve haver critérios de aceitação claros para checar se a história foi implementada apropriadamente.
-
-O refinamento de uma História deve ser feito por todo o time de desenvolvimento sempre focando na colaboração entre as várias áreas do desenvolvimento de software (Design, QA, Desenvolvimento, Negócio, Marketing). Porém é responsabilidade principal do [[PO - Product Owner (Gestor do projeto)]] garantir que o backlog esteja devidamente refinado, e assim então cobrar os demais papéis do projeto que assim o façam.
-
-# Rituais de gerenciamento de Backlog
-
-Para manter um Backlog organizado podemos recorrer a alguns rituais auxiliares.
-
-[[💎 Reunião de refinamento de Histórias]]
-
-# Técnicas de priorização de backlog em relação a escala da História
+# Priorização de uma História
 
 A criação de um backlog ajuda o time de desenvolvimento a ter acesso a todas as ideias levantadas que podem acrescentar valor ao projeto. Porém a medida que esse número de Histórias aumentam é necessário criar um alguma organização para priorizar Histórias.
 

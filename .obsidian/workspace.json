@@ -4,19 +4,15 @@
     "type": "split",
     "children": [
       {
-        "id": "cbea8ceb18d48cb9",
+        "id": "e40c4e8aa4149c8d",
         "type": "tabs",
         "children": [
           {
-            "id": "e9157613d0fa747a",
+            "id": "bc2b06274d347306",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "README.md",
-                "mode": "source",
-                "source": false
-              }
+              "type": "empty",
+              "state": {}
             }
           }
         ]
@@ -49,7 +45,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "file: nivelamento",
+                "query": "",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -85,7 +81,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 241.5
+    "width": 352.5
   },
   "right": {
     "id": "a32ca125c7b31770",
@@ -101,7 +97,6 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "README.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -118,7 +113,6 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "README.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -140,9 +134,7 @@
             "type": "leaf",
             "state": {
               "type": "outline",
-              "state": {
-                "file": "README.md"
-              }
+              "state": {}
             }
           },
           {
@@ -160,13 +152,63 @@
               "type": "side-panel-control-view",
               "state": {}
             }
+          },
+          {
+            "id": "c336ee821ac099e1",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency"
+              }
+            }
           }
         ],
-        "currentTab": 5
+        "currentTab": 3
+      },
+      {
+        "id": "7f4bc1e67c62ae65",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "933e0c407381ff6a",
+            "type": "leaf",
+            "state": {
+              "type": "localgraph",
+              "state": {
+                "options": {
+                  "collapse-filter": true,
+                  "search": "",
+                  "localJumps": 1,
+                  "localBacklinks": true,
+                  "localForelinks": true,
+                  "localInterlinks": false,
+                  "showTags": false,
+                  "showAttachments": false,
+                  "hideUnresolved": false,
+                  "collapse-color-groups": true,
+                  "colorGroups": [],
+                  "collapse-display": true,
+                  "showArrow": false,
+                  "textFadeMultiplier": 0,
+                  "nodeSizeMultiplier": 1,
+                  "lineSizeMultiplier": 1,
+                  "collapse-forces": true,
+                  "centerStrength": 0.518713248970312,
+                  "repelStrength": 10,
+                  "linkStrength": 1,
+                  "linkDistance": 250,
+                  "scale": 0.7132754626224431,
+                  "close": true
+                }
+              }
+            }
+          }
+        ]
       }
     ],
     "direction": "horizontal",
-    "width": 393.5
+    "width": 346.5
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -176,55 +218,59 @@
       "daily-notes:Abrir a nota de hoje": false,
       "templates:Inserir modelo": false,
       "command-palette:Abrir paleta de comandos": false,
-      "table-editor-obsidian:Advanced Tables Toolbar": false,
-      "obsidian-markdown-formatting-assistant-plugin:Open Markdown Formatting Assistant": false
+      "obsidian-markdown-formatting-assistant-plugin:Open Markdown Formatting Assistant": false,
+      "table-editor-obsidian:Advanced Tables Toolbar": false
     }
   },
-  "active": "3b5e5bd61b220af5",
+  "active": "eec309eac77d68fe",
   "lastOpenFiles": [
-    "README.md",
-    "Gerenciamento de Projetos/Entidades/🃏 Histórias.md",
-    "game_development/GDD - Game Design Document.md",
-    "Gerenciamento de Projetos/Onboarding/Nivelamento de conhecimento.md",
-    "Negócios/Repartição de rendimentos.md",
-    "Negócios/Cooperativa.md",
-    "Gerenciamento de Projetos/Entidades/⚙️ Trabalho incidental.md",
-    "Negócios/Planejamento de um negócio coletivo.md",
-    "Negócios/Manifesto de um negócio coletivo.md",
-    "Análises de casos/Livros/Regras do Jogo Volume 1/Os esquemas primários.md",
-    "Análises de casos/Livros/Regras do Jogo Volume 1/Círculo Mágico.md",
-    "Análises de casos/Livros/Regras do Jogo Volume 1/Definindo jogos digitais.md",
-    "Análises de casos/Livros/Regras do Jogo Volume 1/_Regras do Jogo Volume 1.md",
-    "Análises de casos/Livros/Regras do Jogo Volume 1/Definindo Jogos.md",
-    "Análises de casos/Livros/Regras do Jogo Volume 1/Interatividade.md",
-    "Sem título.canvas",
-    "Negócios/_imgs/linha da visão exemplo.png",
-    "Negócios/_imgs/plano de ação - redes sociais 2.png",
-    "Negócios/_imgs/plano de ação - redes sociais.png",
-    "Negócios/_imgs/plano de ação - projeto social.png",
-    "Negócios/_imgs",
-    "Análises de casos/Livros/Regras do Jogo Volume 1/Sistemas.md",
-    "Negócios",
-    "Análises de casos/Livros/Regras do Jogo Volume 1/Interação lúdica significativa.md",
-    "Análises de casos/Livros/Regras do Jogo Volume 1/Design.md",
-    "Análises de casos/Livros/Regras do Jogo Volume 1/Sobre essa Obra.md",
-    "Análises de casos/Livros/Regras do Jogo Volume 1/O processo de design.md",
-    "math/math_algorithms.md",
-    "Análises de casos/Livros/Regras do Jogo Volume 1",
+    "Programação/Padrões e Práticas/Otimização de código.md",
+    "Programação/Padrões e Práticas/Padrões de projetos.md",
+    "Programação/Padrões e Práticas/Chain of Responsability/Chain of Responsibility.md",
+    "Análises de casos/Livros/Implementing Domain-Driven Design/Value Objects.md",
+    "Análises de casos/Livros/Implementing Domain-Driven Design/_Implementing Domain-Driven Design.md",
+    "Análises de casos/Livros/Regras do Jogo Volume 4 - Cultura/Regras do Jogo Volume 4 - Cultura.md",
+    "Análises de casos/Livros/Regras do Jogo Volume 4 - Cultura/Jogos como ambiente cultural.md",
+    "Análises de casos/Livros/Regras do Jogo Volume 4 - Cultura/Jogos como resistência cultural.md",
+    "Escrita/Fichamento.md",
+    "Escrita/Escrita de artigos de conhecimento.md",
+    "Análises de casos/Livros/Regras do Jogo Volume 4 - Cultura/Jogos como cultura aberta.md",
+    "Análises de casos/Livros/Implementing Domain-Driven Design/Entities.md",
+    "Gerenciamento de Projetos/Entidades/🌟 Valores.md",
+    "desktop.ini",
+    "Gerenciamento de Projetos/Entidades/Histórias/🃏 Histórias.md",
+    "Gerenciamento de Projetos/Entidades/Histórias/Conceitos abandonados de 🃏 Histórias.md",
     "Gerenciamento de Projetos/Entidades/🏆 Épicos.md",
-    "Gerenciamento de Projetos/Organização de um time de desenvolvimento de software.md",
-    "coding/testing/acceptance_tests.md",
-    "coding/design_patterns/design_patterns.md",
-    "Análises de casos/Livros/Fifty Quick Ideas to improve your User Stories/Planning with stories.md",
-    "Análises de casos/Games",
-    "Análises de casos",
-    "game_development/unity/analytics",
-    "Escrita",
-    "Análises de casos/Livros/Fifty Quick Ideas to improve your User Stories",
-    "Análises de casos/Livros",
-    "Artista",
-    "Gerenciamento de Projetos/_images/stakeholder_chart.png",
-    "Gerenciamento de Projetos/_images/matrix_priorization.png",
+    "Entrevista de emprego",
+    "Mineração de dados/Mineração de dados.md",
+    "Ferramentas/tools.md",
+    "Ferramentas/Obsidian.md",
+    "README.md",
+    "Programação/Padrões e Práticas/State/State.md",
+    "Desenvolvimento de jogos/Sistemas/Diálogos/Diálogos.md",
+    "Desenvolvimento de jogos/Sistemas/Diálogos",
+    "Desenvolvimento de jogos/Sistemas",
+    "Análises de casos/Livros/Implementing Domain-Driven Design/Architecture.md",
+    "Análises de casos/Livros/Implementing Domain-Driven Design/Domains, Subdomains, and Bounded Contexts.md",
+    "Programação/Padrões e Práticas/Chain of Responsability/chain_of_responsability_pattern.png",
+    "Programação/Padrões e Práticas/State/exemplo do padrão state como publicação de documentos.png",
+    "Programação/Frontend/React.md",
+    "Programação/Frontend",
+    "Programação/Padrões e Práticas/Chain of Responsability",
+    "Programação/Padrões e Práticas/Strategy/Strategy.md",
+    "Programação/Padrões e Práticas/Strategy/exemplo do navegador de mapa utilizando o padrão Strategy.png",
+    "Programação/Padrões e Práticas/Strategy",
+    "Programação/Padrões e Práticas/State/Pasted image 20231108144343.png",
+    "Programação/Padrões e Práticas/State",
+    "Análises de casos/Games/Viewtiful Joe/_imagens/indicativo de esquiva.png",
+    "Análises de casos/Games/Viewtiful Joe/_imagens/desafio de plataforma - alavanca com espinhos.png",
+    "Análises de casos/Cursos/Write a professional Game Design Document (GDD)/imagens/one pager - exemplo.png",
+    "Análises de casos/Games/Shin Megami Tensei IV/_imagens/visão da cidade.png",
+    "Análises de casos/Games/Shin Megami Tensei IV/_imagens/visão em terceira pessoa da masmorra.png",
+    "Análises de casos/Games/Viewtiful Joe/_imagens/indicativo de esquiva - Copia.png",
+    "data_mining/python",
+    "data_mining",
+    "Sobre mim/Mapa de Habilidades/Mapa de Habilidades.canvas",
     "Gerenciamento de Projetos/Onboarding/Nivelamento Game Dev.canvas"
   ]
 }

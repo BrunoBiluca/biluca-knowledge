@@ -4,7 +4,7 @@ Os stakeholders são integrantes do time responsáveis pela definição inicial 
 
 Os Stakeholders podem ser pessoas do próprio time, por exemplo para desenvolvimento de projetos internos.
 
-Os Stakeholders podem ser separados em 4 tipos de acordo com a sua necessidade de feedback em relação ao desenvolvimento do projeto.
+Os Stakeholders podem ser separados em 4 tipos de acordo com a sua necessidade de feedback em relação ao desenvolvimento do projeto:
 
 - Precisam ficar satisfeitos
 	- São stakeholders que devem ser satisfeitos em relação a suas Histórias
@@ -15,7 +15,7 @@ Os Stakeholders podem ser separados em 4 tipos de acordo com a sua necessidade d
 - Precisam ser monitorados
 	- São pessoas que tem algum interesse (wishlist)
 
-![[stakeholder_chart.png]]
+![[stakeholder_chart.png|Imagem representa as quatro categorias de stakeholder em relação a necessidade de feedback em relação ao desenvolvimento do projeto| center |300]]
 
 Principais atribuições
 

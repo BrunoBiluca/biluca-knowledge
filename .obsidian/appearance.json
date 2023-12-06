@@ -1,3 +1,7 @@
 {
-  "accentColor": ""
+  "accentColor": "",
+  "baseFontSize": 15,
+  "enabledCssSnippets": [
+    "center-images"
+  ]
 }

@@ -16,6 +16,7 @@ Esse sistema de organização se baseia nas seguintes entidades que serão elabo
 > [🎽 Sprints](🎽%20Sprints.md)
 > [🃏 Histórias](🃏%20Histórias.md)
 > [[🪵 Backlog]]
+> [[⚙️ Trabalho incidental]]
 > ---
 
 

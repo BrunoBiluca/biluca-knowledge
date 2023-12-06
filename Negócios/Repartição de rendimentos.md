@@ -1,6 +1,5 @@
 #organização_de_coletivo
 
-
 # Salários
 
 ## Salários abertos
@@ -27,20 +26,19 @@ Propósito de ter uma estrutura de repartição de receita
 - Prover ao time de desenvolvimento a chance de aproveitar do sucesso do projeto
 - Melhorar a proposta imediata de compensação
 
-Tipos base de estruturas de repartição de receita:
-
-- Revenue sharing agreement
+Se a empresa não puder pagar os valores, pode ser adicionado uma cláusula para que os pagamentos sejam adiados.
+### Revenue sharing agreement
 O estúdio junto com cada participante acorda em uma porcentagem dos lucros do jogo a partir da data de lançamento. Também pode ser feito em uma porcentagem dos lucros divididos entre todos os integrantes.
 
 A criação de um "pool" de receita dividida é uma forma mais simples de compartilhar com todos os integrantes.
 
-- Equity-based revenue sharing
+### Equity-based revenue sharing
 
 Divisão baseada em participação acionária do estúdio. Não é muito utilizado por ser mais complexo que o modelo revenue sharing agreement.
 
 Cada classe de ações pode ser associada a um tipo de valor que será pago dos lucros do projeto. Cada projeto tem um pool de ações de forma a garantir que apenas pessoas que trabalharam em cada projeto serão pagos por cada ação.
 
-Considerações sobre repartição de receitas
+# Considerações sobre repartição de receitas
 
 - % do lucro do jogo alocado para repartição
 	- Número de pessoas que serão contratadas e quanto a empresa está decidida em ceder para os novos integrantes.
@@ -55,8 +53,6 @@ Considerações sobre repartição de receitas
 	- Receita distribuída de forma fixa
 	- Híbrido
 	- Se o estúdio for comprado deve terminar todos os acordos de repartição. Talvez fazendo uma última repartição.
-
-Se a empresa não puder pagar os valores, pode ser adicionado uma cláusula para que os pagamentos sejam adiados.
 
 # Referências
 

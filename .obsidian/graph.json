@@ -15,52 +15,45 @@
       }
     },
     {
-      "query": "tag:#planejamento_de_projetos/interação",
-      "color": {
-        "a": 1,
-        "rgb": 5431473
-      }
-    },
-    {
-      "query": "tag:#planejamento_de_projetos/análise",
-      "color": {
-        "a": 1,
-        "rgb": 5419488
-      }
-    },
-    {
-      "query": "tag:#planejamento_de_projetos/papéis",
-      "color": {
-        "a": 1,
-        "rgb": 10581547
-      }
-    },
-    {
-      "query": "tag:#planejamento_de_projetos/documentação",
-      "color": {
-        "a": 1,
-        "rgb": 11621088
-      }
-    },
-    {
-      "query": "tag:#planejamento_de_projetos/histórias",
-      "color": {
-        "a": 1,
-        "rgb": 14701233
-      }
-    },
-    {
-      "query": "tag:#planejamento_de_projetos/visualização",
-      "color": {
-        "a": 1,
-        "rgb": 8389975
-      }
-    },
-    {
       "query": "tag:#planejamento_de_projetos",
       "color": {
         "a": 1,
+        "rgb": 14718802
+      }
+    },
+    {
+      "query": "tag:#game_design",
+      "color": {
+        "a": 1,
+        "rgb": 14701188
+      }
+    },
+    {
+      "query": "tag:#escrita",
+      "color": {
+        "a": 1,
         "rgb": 5431378
+      }
+    },
+    {
+      "query": "tag:#programação",
+      "color": {
+        "a": 1,
+        "rgb": 14731602
+      }
+    },
+    {
+      "query": "tag:#negócios",
+      "color": {
+        "a": 1,
+        "rgb": 4525370
+      }
+    },
+    {
+      "query": "tag:#matemática",
+      "color": {
+        "a": 1,
+        "rgb": 5395168
       }
     }
   ],
@@ -74,6 +67,6 @@
   "repelStrength": 10.2083333333333,
   "linkStrength": 1,
   "linkDistance": 101,
-  "scale": 0.6346285676930613,
+  "scale": 1.1463556364735423,
   "close": false
 }

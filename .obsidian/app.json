@@ -1,10 +1,12 @@
 {
-  "attachmentFolderPath": "coding/testing/ex_2/vue_with_tests/node_modules",
+  "attachmentFolderPath": "./",
   "alwaysUpdateLinks": true,
   "pdfExportSettings": {
-    "pageSize": "Letter",
+    "includeName": false,
+    "pageSize": "A4",
     "landscape": false,
     "margin": "0",
     "downscalePercent": 100
-  }
+  },
+  "newFileLocation": "current"
 }

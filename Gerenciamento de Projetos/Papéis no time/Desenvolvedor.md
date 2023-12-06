@@ -14,16 +14,22 @@ Principais responsabilidades dentro do time:
 
 ## Líder técnico
 
-O Líder de desenvolvimento é uma função adicional ao papel de desenvolvedor que visa mobilizar a equipe levantar e seguir disciplinas de desenvolvimento. O Líder técnico pode ser qualquer integrante do time e é uma boa prática que esse papel seja rotacionado durante o desenvolvimento do projeto.
+O Líder de desenvolvimento é uma função adicional ao papel de Desenvolvedor que visa mobilizar a equipe a seguir disciplinas de desenvolvimento.
 
-As principais responsabilidades dentro do time são:
+O Líder técnico pode ser qualquer integrante do time e é uma boa prática que esse papel seja rotacionado durante o desenvolvimento do projeto.
+
+As responsabilidades adicionais dentro do time são:
 
 - Mobilizar a equipe técnica a criar processos e padrões de desenvolvimento
 - Documentar os processos e padrões criados
-- Levantar Histórias de automação desses processos e padrões a fim de melhorar o trabalho desempenhado pelo time.
+- Levantar automação de processos e padrões
+- Ter o voto de desempate em decisões técnicas
 
-O Líder técnico pode começar com um dos integrantes mais experientes do time, que pode ser alterado de tempos em tempos de acordo com disponibilidade.
+💡 Os papéis de Líderes não tem nenhum tipo de poder de imposição ao time de desenvolvimento, seus focos são principalmente ajudar o time a chegar nas melhores decisões.
 
-> [!error] **Como não ser um Líder técnico** 
-> O Líder técnico não define nenhum tipo de implementação ou solução na História que não é responsável. 
-> Ele deve ser tratado como um desenvolvedor qualquer dentro do time técnico, e qualquer consideração de melhoria deve ser apresentada no Code Review como qualquer outro integrante.
+ 🚫 **Como não ser um Líder técnico**
+
+- Não deve esperar um tratamento diferenciado dos demais desenvolvedores
+- Não define nenhum tipo de implementação ou solução de trabalho que não é diretamente responsável
+- Não força processos e padrões nos demais desenvolvedores
+- Não apresenta processos e padrões que não tenha domínio

@@ -39,7 +39,7 @@ O CREATE funnel é uma forma de organizar histórias de acordo com a passagem de
 
 # Set out global concerns at the start of a milestone
 
-Definir as preocupações e expectativas de qualquer funcionalidade desenvolvida é crucial para o desenvolvimento de projetos, porém <mark style="background: #BBFABBA6;">histórias de usuário não são uma boa ferramenta para levar esse tipo de discussão já que são focada em alterações pontuais do sistema</mark>.
+Definir as preocupações e expectativas de qualquer funcionalidade desenvolvida é crucial para o desenvolvimento de projetos, porém <mark style="background: #BBFABBA6;">histórias de usuário não são uma boa ferramenta para levar esse tipo de discussão já que são focadas em alterações pontuais do sistema</mark>.
 
 Uma sugestão que Gojko levanta é a <mark style="background: #BBFABBA6;">criação de discussões separadas das histórias para considerações globais a cada Milestone.</mark>
 

@@ -1,6 +1,6 @@
 #planejamento_de_projetos/histórias  
 #planejamento_de_projetos/incidental_work 
-#planejamento_de_projetos 
+#planejamento_de_projetos
 
 
 # Don't push everything into stories

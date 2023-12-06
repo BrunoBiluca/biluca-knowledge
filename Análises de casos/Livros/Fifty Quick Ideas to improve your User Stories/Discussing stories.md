@@ -57,7 +57,7 @@ A construção de uma história é um processo colaborativo e não deve ser dita
 
 Uma forma de aumentar o colaboração entre os demais papéis do projeto é dividir a histórias entre as responsabilidades, por exemplo deixar o papel de business focar no impacto que ele quer no usuário e o papel de desenvolvimento na solução específica.
 
-# Split business and techincal discussions
+# Split business and technical discussions
 
 <mark style="background: #BBFABBA6;">Papéis diferentes tem foco diferentes durantes as discussões de uma história</mark>. Mesmo que essas discussões em algum momento se relacionem é importante separar o grosso da discussão para cada um de seus papéis.
 

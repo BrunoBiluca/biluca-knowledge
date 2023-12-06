@@ -1,112 +1,204 @@
 {
   "recentFiles": [
     {
-      "basename": "_Regras do Jogo Volume 2",
-      "path": "Análises de casos/Livros/Regras do Jogo Volume 2/_Regras do Jogo Volume 2.md"
+      "basename": "Otimização de código",
+      "path": "Programação/Padrões e Práticas/Otimização de código.md"
     },
     {
-      "basename": "Jogos como sistemas emergentes",
-      "path": "Análises de casos/Livros/Regras do Jogo Volume 2/Jogos como sistemas emergentes.md"
+      "basename": "Padrões de projetos",
+      "path": "Programação/Padrões e Práticas/Padrões de projetos.md"
     },
     {
-      "basename": "Jogos como sistemas cibernéticos",
-      "path": "Análises de casos/Livros/Regras do Jogo Volume 2/Jogos como sistemas cibernéticos.md"
+      "basename": "Chain of Responsibility",
+      "path": "Programação/Padrões e Práticas/Chain of Responsability/Chain of Responsibility.md"
     },
     {
-      "basename": "Jogos como sitemas da teoria dos jogos",
-      "path": "Análises de casos/Livros/Regras do Jogo Volume 2/Jogos como sitemas da teoria dos jogos.md"
+      "basename": "Value Objects",
+      "path": "Análises de casos/Livros/Implementing Domain-Driven Design/Value Objects.md"
     },
     {
-      "basename": "Quebrando as regras",
-      "path": "Análises de casos/Livros/Regras do Jogo Volume 2/Quebrando as regras.md"
+      "basename": "_Implementing Domain-Driven Design",
+      "path": "Análises de casos/Livros/Implementing Domain-Driven Design/_Implementing Domain-Driven Design.md"
     },
     {
-      "basename": "Jogos como sistemas de conflitos",
-      "path": "Análises de casos/Livros/Regras do Jogo Volume 2/Jogos como sistemas de conflitos.md"
+      "basename": "Regras do Jogo Volume 4 - Cultura",
+      "path": "Análises de casos/Livros/Regras do Jogo Volume 4 - Cultura/Regras do Jogo Volume 4 - Cultura.md"
     },
     {
-      "basename": "Jogos como sistemas de informação",
-      "path": "Análises de casos/Livros/Regras do Jogo Volume 2/Jogos como sistemas de informação.md"
+      "basename": "Jogos como ambiente cultural",
+      "path": "Análises de casos/Livros/Regras do Jogo Volume 4 - Cultura/Jogos como ambiente cultural.md"
     },
     {
-      "basename": "Jogos como sistemas de teoria da informação",
-      "path": "Análises de casos/Livros/Regras do Jogo Volume 2/Jogos como sistemas de teoria da informação.md"
+      "basename": "Jogos como resistência cultural",
+      "path": "Análises de casos/Livros/Regras do Jogo Volume 4 - Cultura/Jogos como resistência cultural.md"
     },
     {
-      "basename": "Jogos como sistemas de incerteza",
-      "path": "Análises de casos/Livros/Regras do Jogo Volume 2/Jogos como sistemas de incerteza.md"
+      "basename": "Fichamento",
+      "path": "Escrita/Fichamento.md"
     },
     {
-      "basename": "As regras dos jogos digitais",
-      "path": "Análises de casos/Livros/Regras do Jogo Volume 2/As regras dos jogos digitais.md"
+      "basename": "Escrita de artigos de conhecimento",
+      "path": "Escrita/Escrita de artigos de conhecimento.md"
     },
     {
-      "basename": "Regras em Três níveis",
-      "path": "Análises de casos/Livros/Regras do Jogo Volume 2/Regras em Três níveis.md"
+      "basename": "Jogos como cultura aberta",
+      "path": "Análises de casos/Livros/Regras do Jogo Volume 4 - Cultura/Jogos como cultura aberta.md"
     },
     {
-      "basename": "Definindo Regras",
-      "path": "Análises de casos/Livros/Regras do Jogo Volume 2/Definindo Regras.md"
+      "basename": "Entities",
+      "path": "Análises de casos/Livros/Implementing Domain-Driven Design/Entities.md"
     },
     {
-      "basename": "_Regras do Jogo Volume 1",
-      "path": "Análises de casos/Livros/Regras do Jogo Volume 1/_Regras do Jogo Volume 1.md"
+      "basename": "🌟 Valores",
+      "path": "Gerenciamento de Projetos/Entidades/🌟 Valores.md"
+    },
+    {
+      "basename": "🃏 Histórias",
+      "path": "Gerenciamento de Projetos/Entidades/Histórias/🃏 Histórias.md"
+    },
+    {
+      "basename": "Conceitos abandonados de 🃏 Histórias",
+      "path": "Gerenciamento de Projetos/Entidades/Histórias/Conceitos abandonados de 🃏 Histórias.md"
+    },
+    {
+      "basename": "🏆 Épicos",
+      "path": "Gerenciamento de Projetos/Entidades/🏆 Épicos.md"
+    },
+    {
+      "basename": "Mineração de dados",
+      "path": "Mineração de dados/Mineração de dados.md"
+    },
+    {
+      "basename": "tools",
+      "path": "Ferramentas/tools.md"
+    },
+    {
+      "basename": "Obsidian",
+      "path": "Ferramentas/Obsidian.md"
     },
     {
       "basename": "README",
       "path": "README.md"
     },
     {
-      "basename": "🃏 Histórias",
-      "path": "Gerenciamento de Projetos/Entidades/🃏 Histórias.md"
+      "basename": "State",
+      "path": "Programação/Padrões e Práticas/State/State.md"
     },
     {
-      "basename": "GDD - Game Design Document",
-      "path": "game_development/GDD - Game Design Document.md"
+      "basename": "Diálogos",
+      "path": "Desenvolvimento de jogos/Sistemas/Diálogos/Diálogos.md"
     },
     {
-      "basename": "Nivelamento de conhecimento",
-      "path": "Gerenciamento de Projetos/Onboarding/Nivelamento de conhecimento.md"
+      "basename": "Architecture",
+      "path": "Análises de casos/Livros/Implementing Domain-Driven Design/Architecture.md"
     },
     {
-      "basename": "Repartição de rendimentos",
-      "path": "Negócios/Repartição de rendimentos.md"
+      "basename": "Domains, Subdomains, and Bounded Contexts",
+      "path": "Análises de casos/Livros/Implementing Domain-Driven Design/Domains, Subdomains, and Bounded Contexts.md"
     },
     {
-      "basename": "Cooperativa",
-      "path": "Negócios/Cooperativa.md"
+      "basename": "chain_of_responsability_pattern",
+      "path": "Programação/Padrões e Práticas/Chain of Responsability/chain_of_responsability_pattern.png"
     },
     {
-      "basename": "⚙️ Trabalho incidental",
-      "path": "Gerenciamento de Projetos/Entidades/⚙️ Trabalho incidental.md"
+      "basename": "exemplo do padrão state como publicação de documentos",
+      "path": "Programação/Padrões e Práticas/State/exemplo do padrão state como publicação de documentos.png"
     },
     {
-      "basename": "Planejamento de um negócio coletivo",
-      "path": "Negócios/Planejamento de um negócio coletivo.md"
+      "basename": "React",
+      "path": "Programação/Frontend/React.md"
     },
     {
-      "basename": "Manifesto de um negócio coletivo",
-      "path": "Negócios/Manifesto de um negócio coletivo.md"
+      "basename": "Strategy",
+      "path": "Programação/Padrões e Práticas/Strategy/Strategy.md"
     },
     {
-      "basename": "Os esquemas primários",
-      "path": "Análises de casos/Livros/Regras do Jogo Volume 1/Os esquemas primários.md"
+      "basename": "exemplo do navegador de mapa utilizando o padrão Strategy",
+      "path": "Programação/Padrões e Práticas/Strategy/exemplo do navegador de mapa utilizando o padrão Strategy.png"
     },
     {
-      "basename": "Círculo Mágico",
-      "path": "Análises de casos/Livros/Regras do Jogo Volume 1/Círculo Mágico.md"
+      "basename": "Código limpo",
+      "path": "Programação/Código limpo/Código limpo.md"
     },
     {
-      "basename": "Definindo jogos digitais",
-      "path": "Análises de casos/Livros/Regras do Jogo Volume 1/Definindo jogos digitais.md"
+      "basename": "Porcentagem",
+      "path": "Matemática/Porcentagem.md"
     },
     {
-      "basename": "Definindo Jogos",
-      "path": "Análises de casos/Livros/Regras do Jogo Volume 1/Definindo Jogos.md"
+      "basename": "indicativo de esquiva",
+      "path": "Análises de casos/Games/Viewtiful Joe/_imagens/indicativo de esquiva.png"
     },
     {
-      "basename": "Interatividade",
-      "path": "Análises de casos/Livros/Regras do Jogo Volume 1/Interatividade.md"
+      "basename": "desafio de plataforma - alavanca com espinhos",
+      "path": "Análises de casos/Games/Viewtiful Joe/_imagens/desafio de plataforma - alavanca com espinhos.png"
+    },
+    {
+      "basename": "Viewtiful Joe",
+      "path": "Análises de casos/Games/Viewtiful Joe/Viewtiful Joe.md"
+    },
+    {
+      "basename": "One-Page Documents",
+      "path": "Análises de casos/Cursos/Write a professional Game Design Document (GDD)/One-Page Documents.md"
+    },
+    {
+      "basename": "one pager - exemplo",
+      "path": "Análises de casos/Cursos/Write a professional Game Design Document (GDD)/imagens/one pager - exemplo.png"
+    },
+    {
+      "basename": "Setting up for success",
+      "path": "Análises de casos/Cursos/Write a professional Game Design Document (GDD)/Setting up for success.md"
+    },
+    {
+      "basename": "Word Processor GDD",
+      "path": "Análises de casos/Cursos/Write a professional Game Design Document (GDD)/Word Processor GDD.md"
+    },
+    {
+      "basename": "visão da cidade",
+      "path": "Análises de casos/Games/Shin Megami Tensei IV/_imagens/visão da cidade.png"
+    },
+    {
+      "basename": "visão em terceira pessoa da masmorra",
+      "path": "Análises de casos/Games/Shin Megami Tensei IV/_imagens/visão em terceira pessoa da masmorra.png"
+    },
+    {
+      "basename": "arquitetura hexagonal",
+      "path": "Análises de casos/Livros/Implementing Domain-Driven Design/_imagens/arquitetura hexagonal.png"
+    },
+    {
+      "basename": "Context Maps",
+      "path": "Análises de casos/Livros/Implementing Domain-Driven Design/Context Maps.md"
+    },
+    {
+      "basename": "arquitetura em camadas",
+      "path": "Análises de casos/Livros/Implementing Domain-Driven Design/_imagens/arquitetura em camadas.png"
+    },
+    {
+      "basename": "TDD - Test Driven Develpment",
+      "path": "Programação/Testes/TDD - Test Driven Develpment.md"
+    },
+    {
+      "basename": "safety_net_example",
+      "path": "Programação/Testes/imgs/safety_net_example.png"
+    },
+    {
+      "basename": "tdd vs test depois do código",
+      "path": "Programação/Testes/imgs/tdd vs test depois do código.png"
+    },
+    {
+      "basename": "Princípios de código",
+      "path": "Programação/Código limpo/Princípios de código.md"
+    },
+    {
+      "basename": "📕 Documentação",
+      "path": "Programação/Documentação/📕 Documentação.md"
+    },
+    {
+      "basename": "Testes automatizados",
+      "path": "Programação/Testes/Testes automatizados.md"
+    },
+    {
+      "basename": "Código limpo (Apresentação)",
+      "path": "Sobre mim/Meus materiais/Código limpo (Apresentação).md"
     }
   ],
   "omittedPaths": [],

@@ -48,7 +48,7 @@ Esse roteiro pode ser utilizado como guia para o planejamento de uma 🎽 Sprint
 	- Começar adicionar por projetos que são de primeira prioridade
 
 - [ ] Criar o estado inicial da retrospectiva
-	- [[⏪ Reunião de Retrospectiva#Propriedades inicias de uma Retrospectiva]]
+	- [[⏪ Reunião de Retrospectiva de 🎽 Sprint#Propriedades inicias de uma Retrospectiva]]
 
 O estado inicial da retrospectiva é utilizado para comparar os resultados depois de concluída a 🎽 Sprint. Dessa forma o time tem informação sobre vários aspectos do projeto, como progresso de Épicos, Metas e priorização.
 
@@ -66,7 +66,7 @@ Quanto a 🎽 Sprint chega ao final, ou seja, todas as tarefas propostas foram c
 
 A reunião de retrospectiva é o momento em que são convocados todos os integrantes que trabalharam durante a 🎽 Sprint para discutir o processo empregado durante seu desenvolvimento. Nesse momento sugestões são levantadas para melhoria de futuras 🎽 Sprints além da discussão sobre o valor entregue e próximos passos.
 
-[[⏪ Reunião de Retrospectiva]]
+[[⏪ Reunião de Retrospectiva de 🎽 Sprint]]
 
 # Exemplo de planejamento de uma 🎽 Sprint
 

@@ -2,6 +2,8 @@
 
 Metas são uma forma de organização **clara e mensurável** de ações com o objetivo de encurtar distância da realização de um 🌟 Valor.
 
+As 🎯 Metas são utilizadas a fim de estipular um prazo para alcançar certo ponto do valor desejado.
+
 Não é necessário saber todas ações (🏆 Projetos, 🃏 Histórias) para definir uma meta, porém a resultado da meta deve ser claro, ou seja, o resultado final que espera ser alcançado deve estar definido.
 
 Quando um 🏆 Projeto é adicionado a uma meta, todas as suas ⬆️ dependências passam a fazer parte da 🎯 meta também. Essas dependências terão prioridades maiores dentro da meta.

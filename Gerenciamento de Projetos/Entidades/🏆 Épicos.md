@@ -1,17 +1,21 @@
 #planejamento_de_projetos
 
-🏆 Épicos são conjuntos de 🃏 Histórias. Eles agrupam em relação lógica as ações necessárias para a conclusão de 🎯 Metas e 🌟 Valores.
+> [!info] Definição de Épicos
+> 🏆 Épicos são agrupamentos lógicos de elementos da 🏗️ Execução (como 🃏 Histórias ou ⚙️ Trabalho incidental) para a conclusão de 🎯 Metas e 🌟 Valores.
 
-- Épicos: são conjuntos de 🃏 Histórias com o propósito de definirem um resultado esperado. Não necessariamente apresentam todas as 🃏 Histórias para a conclusão do projeto, porém o resultado final do projeto é definido e quando alcançado o projeto é finalizado.
+Não necessariamente um Épico apresenta todas as 🏗️ Execuções para a conclusão de um 🌟 Valor ou 🎯 Metas, mas define um avanço considerável pela soma do impacto das 🏗️ Execuções selecionadas. Ou seja, quando um Épico é definido o impacto total de sua conclusão é mais do que se cada Execução fosse feita independentemente, o que nos permite priorizar as 🏗️ Execuções desse épico sobre as demais com a consciência do impacto desse agrupamento no projeto como um todo.
 
 - Épicos: Core Gameplay v1
 - Épicos: Core Gameplay v2
 - Épicos: Sistema XYZ auxiliar ao Gameplay
 
-> [!info] Dica
-> Um 🏆 Épicos bem definido deve ter um resultado esperado que seja mensurável.
+> [!tip] Refinamento de Épicos
+> Um 🏆 Épico é bem definido quando este tem um resultado esperado que seja mensurável.
 > 
-> Assim, quando durante o refinamento de um Épico está difícil de levantar um resultado esperado, provavelmente esse Épico na verdade é um 🌟 Valor. Dessa forma o 🌟 Valor deve ser definido e então é possível afunilar os Épicos desse valor até chegar na conclusão da definição de seus Épicos.
+> Assim, quando durante o refinamento está difícil de definir um resultado esperado para a conclusão de um Épico (resultado esperado é definido pela 🏗️ Execução selecionada), provavelmente esse Épico na verdade é um 🌟 Valor (que não precisa de um resultado esperado). Dessa forma podemos criar um 🌟 Valor com essa concepção, criar todas os elementos de sua 🏗️ Execução necessários e tentar agrupar esses elementos em Épicos com um resultado esperado claro.
+> 
+> Um exemplo de falta de definição de um Épico em um jogo é quando queremos criar um Épico que agrupa as execuções relacionadas a "Mecânicas do jogador" de forma geral. Esse tipo de Épico não tem um conclusão clara (ainda mais em momentos iniciais do projeto que a experimentação faz parte do jogo). Nesse caso podemos definir esse conceito de "Mecânicas do jogador" como um 🌟 Valor, criar todos os elementos para sua 🏗️ Execução e tentar identificar nesses elementos padrões lógicos que para agrupar em um Épico.
+
 
 ## Propriedades de um 🏆 Épico
 

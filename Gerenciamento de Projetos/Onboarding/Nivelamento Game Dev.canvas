@@ -12,8 +12,8 @@
 		{"type":"text","text":"Dependency Container","id":"ec2b7379147f9ee6","x":740,"y":-64,"width":250,"height":60},
 		{"id":"645a6fc04b47055a","x":-680,"y":-163,"width":250,"height":60,"type":"text","text":"Sourcetree"},
 		{"id":"709da53c08fbe519","x":-680,"y":-250,"width":250,"height":60,"type":"text","text":"Terminal"},
-		{"type":"file","file":"coding/clean_code/Clean code.md","id":"ffc4be0c26b68164","x":-1160,"y":40,"width":400,"height":200},
-		{"type":"file","file":"coding/clean_code/Code Principles.md","id":"ae5bc0335609320b","x":-1160,"y":285,"width":400,"height":220},
+		{"type":"file","file":"Programação/Código limpo/Código limpo.md","id":"ffc4be0c26b68164","x":-1160,"y":40,"width":400,"height":200},
+		{"type":"file","file":"Programação/Código limpo/Princípios de código.md","id":"ae5bc0335609320b","x":-1160,"y":285,"width":400,"height":220},
 		{"type":"text","text":"Semântica de código","id":"e0b98c86cc619eab","x":-680,"y":40,"width":250,"height":60}
 	],
 	"edges":[
