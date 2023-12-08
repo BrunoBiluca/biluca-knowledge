@@ -2,46 +2,17 @@
 
 # Elasticsearch
 
-# Table of contents
-
-- Introdução
-  - O que é? E para que serve? O que come?
-  - Ferramentas da stack do Elastic
-- Infraestrutura do elasticsearch
-  - Criação do Elasticsearch local para desenvolvimento
-  - Criação do Elasticsearch local modo cluster
-  - Shards e Replicas
-- Mapeamento
-  - Principais tipos de campos
-  - Parâmetros do mapeamento
-  - Exemplo de json de mapeamento
-  - Routing
-  - Links úteis sobre mapeamento
-- Injestão dos dados
-  - Injestão direta simples
-  - Injestão utilizando pipelines
-- Queries
-  - Search
-  - MSearch
-  - Boolean query
-    - Exemplo de uma Boolean query
-  - Agregações
-  - Elasticsearch queries
-  - Links úteis sobre Queries
-- Pipelines
-- Testes funcionais utilizando elasticsearch
-
 # Introdução
 
 ## O que é? E para que serve? O que come?
 
-Elasticsearch é uma das ferramentas que está mais em alta nos últimos tempos. É um mecanismo de busca e análise distribuída em Json. 
+Elasticsearch é uma das ferramentas mais em alta nos últimos tempos. É um mecanismo de busca e análise distribuída em Json. 
 
-Projetos que necessitam de pesquisas rápidas ou grande abrangência de consultas, agregações e métricas para análisar dados em tempo real, o Elasticsearch é uma ótima ferramenta.
+Projetos que necessitam de pesquisas rápidas ou grande abrangência de consultas, agregações e métricas em tempo real tem no Elasticsearch é uma ótima das melhores ferramentas disponíveis.
 
 Junto ao Elasticsearch também é possível utilizar o ótimo Kibana, um sistema de visualização e gerenciamento de dados, altamente versátil que possibilita criar dashboards incríveis e completos, exibição de dados por geolocalização, análise de logs e métricas de serviços.
 
-Porém como nem tudo são flores o Elasticsearch é um sistema pesado para manter, utilizar o Elasticsearch para uma grande quantidade de dados e um uso grande de queries pesadas pode requisitar uma infraestrutura poderosa e consequentemente uma muito cara 💰💰💰. Isso principalmente pelos requisitos de storage rápido SSD e em grande quantidade e uma quantidade muito grande de RAM para armazenar sua tabela de indexação, somado a um uso muito grande de CPU para grandes agregações paralelas
+Porém como nem tudo são flores o Elasticsearch é um sistema pesado para manter, utilizar o Elasticsearch para uma grande quantidade de dados e um uso grande de queries pesadas pode requisitar uma infraestrutura poderosa e consequentemente uma muito cara 💰. Isso principalmente pelos requisitos de storage rápido SSD e em grande quantidade e uma quantidade muito grande de RAM para armazenar sua tabela de indexação, somado a um uso muito grande de CPU para grandes agregações paralelas
 
 Para contornar esses problemas algumas medidas de otimizações devem ser tomadas, vou apresentar abaixo algumas dicas que ao longo dos projetos que participei melhoraram muito a performance do sistema e nos fez economizar um trocado bem bom.
 
@@ -191,7 +162,7 @@ O insert de documentos deve ser feito então da seguinte maneira:
 }
 ```
 
-Dessa forma eu garanto que todos os dados do Autor referentes ao ano de 2021 estão no mesmo shard e agregações que utilizem dessa informação serão feitas mais facilmente. Por exemplo analizar todos os comentários em busca de comentários positivos de todos os livros referenes a categoria CategoriaA no ano de 2021.
+Dessa forma eu garanto que todos os dados do Autor referentes ao ano de 2021 estão no mesmo shard e agregações que utilizem dessa informação serão feitas mais facilmente. Por exemplo analisar todos os comentários em busca de comentários positivos de todos os livros referentes a categoria CategoriaA no ano de 2021.
 
 ## Links úteis sobre mapeamento
 
@@ -203,9 +174,9 @@ Dessa forma eu garanto que todos os dados do Autor referentes ao ano de 2021 est
 - [Ignore Malformed](https://www.elastic.co/guide/en/elasticsearch/reference/7.11//ignore-malformed.html)
 - [Enabled](https://www.elastic.co/guide/en/elasticsearch/reference/7.11//enabled.html)
 
-# Injestão dos dados
+# Ingestão dos dados
 
-## Injestão direta simples
+## Ingestão direta simples
 
 - Ingestão documento a documento
 
@@ -219,18 +190,18 @@ Outra forma de enviar documentos para o Elasticsearch é enviar todos os documen
 
 Quando estamos utilizando o Apache Spark é necessário utilizar um conector específico do Haddop e Elasticsearch para fazer o envio das informações.
 
-Nesse caso as informações são enviadas de forma paralela para o Elasticsearch, uma cosideração a se fazer é, no caso de uma grande massa de dados ser enviada para o Elasticsearch o processo de indexação desses dados por ser pesada o suficiente para os recursos disponíveis no cluster Elasticsearch como CPU serem totalmente utilizados, e isso pode deixar o cluster do Elasticsearch sobrecarregado para executar agregações.
+Nesse caso as informações são enviadas de forma paralela para o Elasticsearch, uma consideração a se fazer é, no caso de uma grande massa de dados ser enviada para o Elasticsearch o processo de indexação desses dados por ser pesada o suficiente para os recursos disponíveis no cluster Elasticsearch como CPU serem totalmente utilizados, e isso pode deixar o cluster do Elasticsearch sobrecarregado para executar agregações.
 
 ---
 
 Podemos notar uma diferença muito grande no tempo de injestão entre os tipos de injestão simples e no modelo bulk. Esse valores foram feitos utilizando o ambiente local.
 
-![Diferença entre os tipos de injestão de dados](insert_diff.PNG)
+![Diferença entre os tipos de ingestão de dados](insert_diff.PNG)
 
 - Insert simples: 589s
 - Bulk: 36s
 
-## Injestão utilizando pipelines
+## Ingestão utilizando pipelines
 
 Pipelines podem ser utilizados para corrigir ou modificar algum documento que está sendo inserido no Elasticsearch, dessa forma garantimos uma sanidade dos dados em um índice ou podemos também em tempo de inserção criar novos dados a partir do documento enviado a fim de melhorar performance em consultas ou agregações ou removendo dados que podem ser ignorados quando utilizados no Elasticsearch.
 
@@ -361,7 +332,9 @@ Elas são divididas em 3 tipos:
   - Terms aggregations
 - Pipeline: agregações que utilizam outras agregações como input no lugar de documentos
 
-Uma coisa para ter atenção na hora de utilizar agregações é garantir que a varredura de ítens será a menor possível dentro do Elasticsearch. Qualquer filtro dentro da query pode melhorar muito a performance de uma agregação. A imagem abaixo mostra claramente a vantagem de aplicar filtros nos locais corretos para uma melhor performance.
+Uma coisa para ter atenção na hora de utilizar agregações é garantir que a varredura de itens será a menor possível dentro do Elasticsearch. Qualquer filtro dentro da query pode melhorar muito a performance de uma agregação.
+
+A imagem abaixo mostra claramente a vantagem de aplicar filtros nos locais corretos para uma melhor performance.
 
 ![Aplicações de filtros](filter_placements.svg)
 
@@ -406,7 +379,7 @@ Fazendo o exemplo das categorias temos o seguinte resultado dos tempos das queri
 
 ## Elasticsearch queries
 
-O próprio Elasticsearch apresenta várias queries que podem ser utilizadas para o seu gerenciamente, entre elas algumas das mais utilizadas seguem abaixo. 
+O próprio Elasticsearch apresenta várias queries que podem ser utilizadas para o seu gerenciamento, entre elas algumas das mais utilizadas seguem abaixo. 
 
 - **index**/_cache/clear
   - POST

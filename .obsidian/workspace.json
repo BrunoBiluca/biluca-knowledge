@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "e40c4e8aa4149c8d",
+        "id": "227df29093d1930c",
         "type": "tabs",
         "children": [
           {
-            "id": "bc2b06274d347306",
+            "id": "6f3efe0da11b4068",
             "type": "leaf",
             "state": {
               "type": "empty",
@@ -218,12 +218,19 @@
       "daily-notes:Abrir a nota de hoje": false,
       "templates:Inserir modelo": false,
       "command-palette:Abrir paleta de comandos": false,
-      "obsidian-markdown-formatting-assistant-plugin:Open Markdown Formatting Assistant": false,
-      "table-editor-obsidian:Advanced Tables Toolbar": false
+      "table-editor-obsidian:Advanced Tables Toolbar": false,
+      "obsidian-markdown-formatting-assistant-plugin:Open Markdown Formatting Assistant": false
     }
   },
-  "active": "eec309eac77d68fe",
+  "active": "6f3efe0da11b4068",
   "lastOpenFiles": [
+    "README.md",
+    "Armazenamento de dados/Elastic/Elasticsearch.md",
+    "Armazenamento de dados/Elastic/exemplos/Sem título",
+    "Armazenamento de dados/Elastic/images/query_diff.PNG",
+    "Armazenamento de dados/Elastic/images/insert_diff.PNG",
+    "Armazenamento de dados",
+    "Gerenciamento de Projetos/Entidades/Histórias/Exemplo - Resta Um.md",
     "Programação/Padrões e Práticas/Otimização de código.md",
     "Programação/Padrões e Práticas/Padrões de projetos.md",
     "Programação/Padrões e Práticas/Chain of Responsability/Chain of Responsibility.md",
@@ -245,19 +252,15 @@
     "Mineração de dados/Mineração de dados.md",
     "Ferramentas/tools.md",
     "Ferramentas/Obsidian.md",
-    "README.md",
     "Programação/Padrões e Práticas/State/State.md",
     "Desenvolvimento de jogos/Sistemas/Diálogos/Diálogos.md",
     "Desenvolvimento de jogos/Sistemas/Diálogos",
     "Desenvolvimento de jogos/Sistemas",
     "Análises de casos/Livros/Implementing Domain-Driven Design/Architecture.md",
-    "Análises de casos/Livros/Implementing Domain-Driven Design/Domains, Subdomains, and Bounded Contexts.md",
     "Programação/Padrões e Práticas/Chain of Responsability/chain_of_responsability_pattern.png",
     "Programação/Padrões e Práticas/State/exemplo do padrão state como publicação de documentos.png",
-    "Programação/Frontend/React.md",
     "Programação/Frontend",
     "Programação/Padrões e Práticas/Chain of Responsability",
-    "Programação/Padrões e Práticas/Strategy/Strategy.md",
     "Programação/Padrões e Práticas/Strategy/exemplo do navegador de mapa utilizando o padrão Strategy.png",
     "Programação/Padrões e Práticas/Strategy",
     "Programação/Padrões e Práticas/State/Pasted image 20231108144343.png",
@@ -266,10 +269,6 @@
     "Análises de casos/Games/Viewtiful Joe/_imagens/desafio de plataforma - alavanca com espinhos.png",
     "Análises de casos/Cursos/Write a professional Game Design Document (GDD)/imagens/one pager - exemplo.png",
     "Análises de casos/Games/Shin Megami Tensei IV/_imagens/visão da cidade.png",
-    "Análises de casos/Games/Shin Megami Tensei IV/_imagens/visão em terceira pessoa da masmorra.png",
-    "Análises de casos/Games/Viewtiful Joe/_imagens/indicativo de esquiva - Copia.png",
-    "data_mining/python",
-    "data_mining",
     "Sobre mim/Mapa de Habilidades/Mapa de Habilidades.canvas",
     "Gerenciamento de Projetos/Onboarding/Nivelamento Game Dev.canvas"
   ]
