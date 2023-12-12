@@ -16,7 +16,7 @@ V.y = P1.y + P2.y
 
 onde `V` é o vetor resultando dos pontos `P1` e `P2`.
 
-Um caso interessante para o uso de vetores é saber o vetor resultando de um player, dado vários movimentos no espaço 2 D. O vetor resultando é determinado pela soma dos vetores components.
+Um caso interessante para o uso de vetores é saber o vetor resultando de um player, dado vários movimentos no espaço 2D. O vetor resultando é determinado pela soma dos vetores componentes.
 
 Podemos utilizar apenas a direção e o sentido de um vetor, esses vetores são chamados de **vetores unitários (unit vectors)**, podem ser determinados pelo método de normalização.
 
@@ -108,4 +108,42 @@ public:
     return Vector2(this->name, this->x / mag, this->y / mag);
   }
 };
+```
+
+
+# Ângulo entre dois vetores
+
+**Forma vetorial unitária:** Um vetor v, de (0,0) a (A, B) pode ser representado como `v=ai+bj`. O vetor v e o vetor v são os vetores unitários cujas direções estão ao longo do eixo i positivo e do eixo j positivo, respectivamente. Os números reais a e b são os componentes escalares de v; A é o componente horizontal e B é o componente vertical de V.
+
+**Ângulo de direção de um vetor:** O ângulo de direção de um vetor v é o ângulo do eixo x positivo para v.
+
+O ângulo de direção, θ, do vetor, `v=ai+bj`, pode ser encontrado usando a tangente do arco da razão entre a componente vertical do vetor e a componente horizontal do vetor.
+
+```
+θ = tan−1⁡(b/a)
+```
+
+No entanto, este é apenas o ângulo de referência. Para encontrar o ângulo correspondente no quadrante onde o vetor se encontra, precisamos fazer um ajuste apropriado da seguinte maneira.
+
+- Se o vetor v estiver no Quadrante I, o ângulo de direção é |θ|.
+- Se o vetor v estiver no Quadrante II, o ângulo de direção é 180−|θ|.
+- Se o vetor v estiver no Quadrante III, o ângulo de direção é 180+|θ|.
+- Se o vetor v estiver no Quadrante IV, o ângulo de direção é 360−|θ|.
+
+```java
+// Java program for implementation of atan2() method
+import java.util.*;
+class GFG {
+	// Driver Code
+	public static void main(String args[])
+	{
+		// X and Y coordinates
+		double x = 90.0;
+		double y = 15.0;
+		// theta value from polar coordinate (r, theta)
+		double theta = Math.atan2(y, x);
+		System.out.println(theta);
+	}
+}
+
 ```
