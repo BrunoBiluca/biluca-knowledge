@@ -45,12 +45,10 @@ Api --> Domain
 
 Database
 Database --> Domain
-
-DatabaseImpl --> Database
 end
 
 db[(Any DB)]
-DatabaseImpl --> db
+Database --> db
 
 External --> Foundation
 
