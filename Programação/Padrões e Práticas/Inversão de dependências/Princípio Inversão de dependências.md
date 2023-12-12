@@ -20,16 +20,232 @@ Esse é o caso de troca de DLLs em jogos no windows, como por exemplo o caso do 
 
 O artigo de [[Separação de interfaces]] demonstra em um exemplo mais complexo como funciona a relação entre dependência, cliente e seus contratos firmados, além da sua característica de interoperabilidade e independência.
 
+# Exemplo básico
+
+Vamos encerrar a seção anterior com um exemplo. Digamos que temos _ClassA_ e _ClassB_. Suponha que _ClassA_ dependa de _ClassB_. Em tempo de execução, uma instância de _ClassB_ será criada ou injetada em _ClassA_. O fluxo de controle (ou a ordem em que um programa é executado) vai da classe A para a classe B:
+
+![[class_diagram.webp|center]]
+
+Vamos escrever isso como um código:
+
+```java
+class ClassB {
+    // fields, constructor and methods
+}
+
+class ClassA {
+    ClassB objectB;
+
+    ClassA(ClassB objectB) {
+        this.objectB = objectB;
+    }
+    // invoke classB methods
+}
+```
+
+Agora, o que o DIP está nos dizendo é inverter a dependência. Podemos ver como isso se aplica ao nosso diagrama:
+
+![[class_diagram_.webp]]
+
+O fluxo de controle seguirá o mesmo caminho. No entanto, agora ambos os nossos objetos dependerão do nível de abstração da interface. Assim, _ClassB_ inverte sua dependência em relação a _ClassA_. Também podemos criar um diagrama de classes para mostrar como ambas as classes agora dependem da abstração:
+
+![[class_diagram_2.webp|center]]
+
+Da mesma forma, podemos ver isso como código:
+
+```java
+interface InterfaceB {
+    method()
+}
+
+class ClassB implements InterfaceB {
+    // fields, constructor and methods
+}
+
+class ObjectA {
+    InterfaceB objectB;
+
+    ObjectA(InterfaceB objectB) {
+        this.objectB = objectB;
+    }
+    ...
+}
+```
+
 # Vantagens
 
 ## Menor acoplamento entre as camadas do sistema
 
+Organizar um projeto em várias camadas (sejam módulos, pacotes ou namespaces) é uma boa forma de conseguir separar as responsabilidades e garantir um fluxo de trabalho mais paralelizado e com menores conflitos.
+
+Para garantir que a divisão de responsabilidades seja feita com qualidade e robustez é necessário garantir que esses módulos sejam independentes entre si e possam ser trocados de acordo com a necessidade do sistema. Isso é o que o Princípio de Inversão de dependências trás para o sistema.
+
+> [!warning] Distribuição de monolito
+> Mesmo separando o código, se forem utilizadas referências concretas caímos em um problema clássico de distribuição da aplicação em múltiplos módulos, classes, métodos sem realmente fazermos a inversão das dependências. 
+> 
+> Isso no limite pode aumentar a complexidade, que não é o resultado esperado, que seria justamente o inverso.
 
 ## Maior flexibilidade na hora de escrever os testes
 
-O princípio de inversão de dependências nos ajuda a possibilitar a escrita de testes em casos onde não era possível anteriormente a sua aplicação.
+O princípio de inversão de dependências nos ajuda a possibilitar a escrita de testes em casos onde não é possível já que o código de testes não tem controle do cenário que será testado. 
 
-Vamos considerar um exemplo simples para demonstrar a aplicação do princípio. Considere um jogo onde o ataque crítico é calculado com uma chance de 10% de acontecer a cada vez que um personagem ataca outro. Nesse caso partimos do seguinte código:
+Fazendo a inversão de dependências passamos o cenário como dependência, trazendo o controle para o teste.
+
+## Facilidade de alterar partes do sistema
+Como entre os módulos eles dependem apenas sobre abstrações a suas implementações podem ser alteradas sempre que necessário sem que o cliente da dependência seja notificado (atualizado).
+
+Isso é especialmente  bom facilita a correção problemas ou adição de novas funcionalidades desde que não impactem nos módulos dependentes.
+
+O exemplo contido em [[Separação de interfaces]] ilustra muito bem esse aspecto, porém isso pode ser alcançado mesmo sem a separação de interfaces.
+
+# Outros exemplos
+
+## Exemplo: Personagem e ações
+
+Para ilustrar o relacionamento entre múltiplas camadas vamos considerar um jogo 2D de plataforma que existe um personagem que o jogador controla, esse personagem se movimenta no plano XY e ataca objetos que estão espalhados pelo cenário.
+
+Foi modelado a arquitetura do sistema desse jogo a fim de diminuir a responsabilidade do código em relação ao personagem e também para permitir que as ações do personagem sejam criadas de forma independente, podendo criar testes de forma mais simples.
+
+As camadas criadas foram, 
+- Personagem (Character) que envolve todos os controladores do personagem como inputs, atributos;
+- Ações do Personagem (CharacterActions) que fazem transformações em cima do personagem ou implementam interações entre o Personagem e outros recursos do jogo.
+
+```mermaid
+flowchart LR
+Character -.-> CharacterActions
+```
+
+Durante o desenvolvimento eles chegaram no seguinte código:
+
+```csharp
+// módulo: Character.dll
+class Character : ICharacter {
+	// todas essas propriedades são iniciadas
+	string Name {get; private set;}
+	int Power {get; private set;}
+	float Speed {get; private set;}
+	ITransform Transform {get; private set;} // estrutura do espaço do jogo
+
+	public async Task Attack(Object object){
+		await new AttackAction(object).Execute(this)
+	}
+
+	public async Task Move(Vector2 targetPosition) {
+		new MoveAction(targetPosition).execute(this)
+	}
+}
+
+// módulo: CharacterActions.dll
+interface ICharacterAction {
+	async Task Execute(ICharacter character);
+}
+
+class AttackAction : ICharacterAction {
+	public AttackAction(Object object){
+	...
+	}
+
+	public async Task Execute(ICharacter character) {
+		// Implementa o comportamento do ataque
+		...
+	}
+}
+
+class MoveAction : ICharacterAction{
+	public MoveAction(Vector2 targetPosition){
+		...
+	}
+
+	public async Task Execute(ICharacter character) {
+		// Implementa o comportamento da movimentação
+		...
+	}
+}
+```
+
+Como podemos perceber nesse exemplo, na real o que fizemos foi separar as responsabilidades em múltiplas classes. Mesmo assim isso não resolve o nosso problema de acoplamento, sempre que as ações de AttackAction ou de MoveAction mudarem também será necessário atualizar o Character. 
+
+Esse tipo é justamente o tipo de problema que queremos resolver com o princípio de inversão de dependências, utilizando esse princípio já passamos as implementações concretas já prontas para serem utilizadas.
+
+Com isso em mente podemos fazer a seguinte alteração no nosso código:
+
+```csharp
+// módulo: Character.dll
+class Character : ICharacter {
+	// todas essas propriedades são iniciadas
+	string Name {get; private set;}
+	int Power {get; private set;}
+	float Speed {get; private set;}
+	ITransform Transform {get; private set;} // estrutura do espaço do jogo
+
+	// Removemos os métodos anteriores e criamos um método que apenas executa a ação
+	public async Task Do(ICharacterAction action){
+		await action.execute(this)
+	}
+}
+
+// módulo: CharacterActions.dll
+interface ICharacterAction {
+	async Task Execute(ICharacter character);
+}
+
+class AttackAction : ICharacterAction {
+	...
+}
+
+class MoveAction : ICharacterAction{
+	...
+}
+```
+
+Conseguimos um código menos acoplado já que agora os detalhes não dependem de outros detalhes e sim de abstrações, porém temos ou outro problema dependência cíclica. O princípio nos diz que "Módulos alto nível devem depender apenas de módulos baixo nível."
+
+Para resolver isso é muito simples, definimos as abstrações no módulo de baixo nível e os módulos de alto nível são as implementações.
+
+```csharp
+// módulo: Character.dll
+interface ICharacter
+interface ICharacterAction
+
+class Character : ICharacter {
+	// todas essas propriedades são iniciadas
+	string Name {get; private set;}
+	int Power {get; private set;}
+	float Speed {get; private set;}
+	ITransform Transform {get; private set;} // estrutura do espaço do jogo
+
+	// Removemos os métodos anteriores e criamos um método que apenas executa a ação
+	public async Task Do(ICharacterAction action){
+		await action.execute(this)
+	}
+}
+
+// módulo: CharacterActions.dll
+// esse módulo apenas implementa as abstrações do módulo Character.dll
+class AttackAction : ICharacterAction {
+	...
+}
+
+class MoveAction : ICharacterAction{
+	...
+}
+```
+
+```mermaid
+flowchart LR
+Character -.-> ICharacterAction
+Character -->|execute|ICharacterAction
+ICharacterAction -->|execute| CharacterActions
+CharacterActions -.-o ICharacterAction
+```
+
+Agora sim, resolvemos a dependência circular no nosso sistema e temos agora o módulo CharacterActions depende do Character, porém o contrário não é necessário. Dessa forma podemos trocar o módulo `CharacterActions.dll` por ou outro conjunto de ações se que o módulo `Character.dll` fique sabendo disso.
+
+## Exemplo: Teste de aleatoriedade
+
+Vamos considerar um exemplo simples para demonstrar a aplicação do princípio de inversão de dependências no caso de uso para testes. 
+
+Considere um jogo onde o ataque crítico é calculado com uma chance de 10% de acontecer a cada vez que um personagem ataca outro. Nesse caso partimos do seguinte código:
 
 ```python
 import random
@@ -172,12 +388,4 @@ Criamos uma classe, `FakeRandom`, que declara a interface do random que será ut
 
 Além disso o código de testes não depende das mesmas dependências do código fonte, como acontece no exemplo com patch, isso nos possibilita utilizar nos testes, módulos completamente diferente do que são utilizados no código fonte, enquanto respeitarmos as interfaces utilizadas entre as abstrações.
 
-## Facilidade de alterar partes do sistema
-Como entre os módulos eles dependem apenas sobre abstrações a suas implementações podem ser alteradas sempre que necessário sem que o cliente da dependência seja notificado (atualizado).
 
-Isso é especialmente  bom facilita a correção problemas ou adição de novas funcionalidades desde que não impactem nos módulos dependentes.
-
-O exemplo contido em [[Separação de interfaces]] ilustra muito bem esse aspecto, porém isso pode ser alcançado mesmo sem a separação de interfaces.
-
-
-# Exemplo de domínio
