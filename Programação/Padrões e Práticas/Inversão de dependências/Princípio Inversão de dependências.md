@@ -98,6 +98,83 @@ Isso é especialmente  bom facilita a correção problemas ou adição de novas 
 
 O exemplo contido em [[Separação de interfaces]] ilustra muito bem esse aspecto, porém isso pode ser alcançado mesmo sem a separação de interfaces.
 
+# Equívocos comuns na aplicação do princípio
+
+É comum tentar aplicar o princípio de inversão de dependências pensando apenas que devemos passar os objetos para as classes que os usam. Esse pensamento não está errado, porém ele cai em algumas simplificações que podem evitar obter todas as vantagens por não utilizar o princípio em sua totalidade e em alguns casos até em aumentar a complexidade, que é o total oposto do pretendido.
+
+## De quem é a responsabilidade de criar as instâncias?
+
+Construir um objeto da classe utilizada resolvendo suas dependências é uma forma de aplicação do princípio. Porém apenas fazendo essa resolução localmente caímos em um outro problema que fere uma outra letra do SOLID, o de Responsabilidade Única (Single responsibility), que nos diz que uma classe só deve ter um motivo para ser alterada.
+
+Consideremos o seguinte exemplo: Uma sala de aula define os alunos que irão estudar, dentro da sala podemos ter diferentes tipos de locais de estudos como: Escrivaninha e Mesa Comum. Cada aluno para conseguir estudar é necessário saber o local que será realizado o estudo.
+
+Como vemos podemos passar o local de estudo no construtor do aluno, resolvendo assim suas dependências. O código abaixo nos mostra exatamente isso:
+
+```python
+class Aluno:
+	def __init__(local_de_estudo):
+		...
+
+	def estudar():
+		# executa médodo ILocalEstudo
+
+# Sala de aula
+aluno_1 = Aluno(Escrivaninha())
+```
+
+Porém resolvendo as dependências dessas forma temos um problema de responsabilidade única na estrutura que cria o aluno. Essa classe além de controlar os alunos da Sala também tem a responsabilidade de resolver as dependências de cada aluno. Ou seja, pelo princípio de responsabilidade única, caso a forma de construir Aluno mude, também será necessário alterar a classe SalaDeAula, o que fere o princípio.
+
+Para resolver esse problema podemos combinar o princípio de inversão de dependências com a injeção de dependência, uma técnica que delega a resolução das dependências de todos os objetos criados no sistema para uma estrutura própria, **containers**. Os containers são estruturas que registram todos os tipos necessários para as construções dos objetos e sempre que um novo objeto é requisitado para inicialização eles garantem que o objeto é construído com todas as dependências necessárias.
+
+Pensando no nosso exemplo da sala de aula, precisamos de delegar a criação de todos esses objetos para um container de injeção de dependências.
+
+```python
+class Aluno:
+	def __init__(local_de_estudo):
+		...
+
+	def estudar():
+		# executa médodo ILocalEstudo
+
+class AlunoContainer:
+	registrados = {
+		"Aluno": Aluno,
+		"Escrivaninha": Escrivaninha,
+		"MesaComum": MesaComum
+	}
+
+	def criar_aluno(self, local_de_estudo):
+		return self.resolve("Aluno")(local_de_estudo)
+
+	def resolve(self, key):
+		return self.registrados["Aluno"](local_de_estudo)
+
+container = LocalDeEstudoContainer()
+
+# Sala de Aula
+aluno_1 = container.criar_aluno(container.resolve("Escrivaninha"))
+aluno_2 = container.criar_aluno(container.resolve("MesaComum"))
+```
+
+A responsabilidade de construir o local de estudo agora é do AlunoContainer e não mais de uma classe de Sala de Aula por exemplo, nem o aulo nem a sala de aula sabem como essa resolução das dependências é feita, é apenas requisitado o tipo desejado. 
+
+Agora caso a forma de construção do Aluno mude, não é necessário fazer nenhuma alteração na classe que chama a sua instanciação, resolvendo assim tanto o princípio de inversão de dependências como o princípio de responsabilidade única.
+
+## Injeção de dependências é DIP?
+
+
+
+## Polimorfismo é DIP?
+
+After learning about the DIP principle, we’ll apply interfaces or abstractions to manage our modules’ dependencies. For instance, we’ll inject interfaces as a dependency in our modules. Furthermore, we can inject multiple implementations of the same interface in our _ClassA_. For example, let’s say now we have _ClassB1_ and _ClassB2_ extending the _InterfaceB_:
+
+![[class_diagram_4.webp| Exemplo de polimorfismo de uma InterfaceB implementada por várias classes concretas |center]]
+
+However, isn’t that just polymorphism?
+
+Polymorphism indeed plays a part in the principle. However, it is not just the principle itself. This is where the concept of dependency inversion comes in. **Polymorphism is in use to achieve the inversion**.  
+Notice that we are following the Liskov Substitution Principle. This way, we can replace the _ClassB_ with other implementations of the same interface without any break.
+
 # Outros exemplos
 
 ## Exemplo: Personagem e ações
