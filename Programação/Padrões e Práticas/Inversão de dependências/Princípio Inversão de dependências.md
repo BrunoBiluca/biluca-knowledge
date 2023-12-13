@@ -72,6 +72,11 @@ class ObjectA {
 }
 ```
 
+Passando essa lógica para módulos, podemos utilizar o princípio para gerenciar cada módulo de forma independente e garantir que módulos de alto nível apenas dependam de módulos de baixo nível, como mostra a próxima imagem:
+
+![[class_diagram_3.webp]]
+
+Por que a interface está no módulo _ClassA_? Isso precisa ser feito para alcançar a independência do módulo. Se fôssemos colocar em qualquer outro módulo, isso tornaria o módulo de alto nível dependente de outros módulos. A interface é uma abstração através da qual o módulo _ClassA_ pode interagir com o mundo exterior.
 # Vantagens
 
 ## Menor acoplamento entre as camadas do sistema
@@ -100,9 +105,12 @@ O exemplo contido em [[Separação de interfaces]] ilustra muito bem esse aspect
 
 # Equívocos comuns na aplicação do princípio
 
-É comum tentar aplicar o princípio de inversão de dependências pensando apenas que devemos passar os objetos para as classes que os usam. Esse pensamento não está errado, porém ele cai em algumas simplificações que podem evitar obter todas as vantagens por não utilizar o princípio em sua totalidade e em alguns casos até em aumentar a complexidade, que é o total oposto do pretendido.
+É comum tentar aplicar o princípio de inversão de dependências pensando apenas que devemos passar os objetos para as classes que os usam. Esse pensamento não está errado, porém ele cai em algumas simplificações que nos evitam de obter todas as vantagens decorrentes da aplicação do princípio em sua totalidade e em alguns casos até em aumentar a complexidade do projeto, que é o total oposto do pretendido.
 
 ## De quem é a responsabilidade de criar as instâncias?
+
+> [!tip] Spoiler
+> Do container de injeção de dependências
 
 Construir um objeto da classe utilizada resolvendo suas dependências é uma forma de aplicação do princípio. Porém apenas fazendo essa resolução localmente caímos em um outro problema que fere uma outra letra do SOLID, o de Responsabilidade Única (Single responsibility), que nos diz que uma classe só deve ter um motivo para ser alterada.
 
@@ -160,20 +168,41 @@ A responsabilidade de construir o local de estudo agora é do AlunoContainer e n
 
 Agora caso a forma de construção do Aluno mude, não é necessário fazer nenhuma alteração na classe que chama a sua instanciação, resolvendo assim tanto o princípio de inversão de dependências como o princípio de responsabilidade única.
 
-## Injeção de dependências é DIP?
+## DIP então é apenas Injeção de dependências?
 
+>[!tip] Spoiler
+>Não, injeção de dependências é utilizada para alcançar DIP
 
+Apenas a injeção de dependências não garante o princípio, ela é utilizada pra alcançar a inversão de dependências.
 
-## Polimorfismo é DIP?
+Se entre os módulos, classes e funções não são utilizadas abstrações e sim classes concretas, mesmo que essas classes sejam injetadas por um container de IoC estamos ferindo o princípio que nos diz que:
 
-After learning about the DIP principle, we’ll apply interfaces or abstractions to manage our modules’ dependencies. For instance, we’ll inject interfaces as a dependency in our modules. Furthermore, we can inject multiple implementations of the same interface in our _ClassA_. For example, let’s say now we have _ClassB1_ and _ClassB2_ extending the _InterfaceB_:
+> - Abstrações não devem depender de detalhes.
+> - Detalhes devem depender sobre abstrações
+
+Ou seja, para alcançar o que o princípio nos diz em toda a sua totalidade é necessário garantir que todas as estruturas do código dependam de abstrações em vez de classes concretas, e que o meio de resolução das dependências ai sim sejam feitas por um container de IoC.
+
+## DIP então é apenas Polimorfismo?
+
+>[!tip] Spoiler
+>Não, Polimorfismo é utilizado para alcançar DIP
+
+Depois de aprender sobre o princípio DIP, aplicaremos interfaces ou abstrações para gerenciar as dependências de nossos módulos. Por exemplo, injetaremos interfaces como uma dependência em nossos módulos. Além disso, podemos injetar várias implementações da mesma interface em nosso _ClassA_. Por exemplo, digamos que agora temos _ClassB1_ e _ClassB2_ estendendo o _InterfaceB_:
 
 ![[class_diagram_4.webp| Exemplo de polimorfismo de uma InterfaceB implementada por várias classes concretas |center]]
 
-However, isn’t that just polymorphism?
+No entanto, isso não é apenas polimorfismo?
 
-Polymorphism indeed plays a part in the principle. However, it is not just the principle itself. This is where the concept of dependency inversion comes in. **Polymorphism is in use to achieve the inversion**.  
-Notice that we are following the Liskov Substitution Principle. This way, we can replace the _ClassB_ with other implementations of the same interface without any break.
+O polimorfismo de fato desempenha um papel no princípio. No entanto, não é apenas o princípio em si. É aí que entra o conceito de inversão de dependência. **O polimorfismo está em uso para alcançar a inversão**.
+
+Observe que estamos seguindo o Princípio da Substituição de Liskov. Desta forma, podemos substituir o _ClassB_ por outras implementações da mesma interface sem qualquer quebra.
+
+Apenas o polimorfismo não garante que estamos utilizando o princípio já que pela definição, além de utilizar abstrações entre os módulos, que o polimorfismo nos ajuda a alcançar, também temos um outro ponto a considerar: "Módulos alto nível devem depender apenas de módulos baixo nível", só o polimorfismo não nos garante esse ponto.
+
+
+# Transformando o código com DIP
+
+![[dependency_inversion.webp|Principais conceitos utilizado para transformar um código altamente acoplado em um código fracamente acoplado| center]]
 
 # Outros exemplos
 
@@ -466,3 +495,9 @@ Criamos uma classe, `FakeRandom`, que declara a interface do random que será ut
 Além disso o código de testes não depende das mesmas dependências do código fonte, como acontece no exemplo com patch, isso nos possibilita utilizar nos testes, módulos completamente diferente do que são utilizados no código fonte, enquanto respeitarmos as interfaces utilizadas entre as abstrações.
 
 
+# Referências
+
+- [Baeldung](https://www.baeldung.com/cs/dip)
+	- Tem um ótimo resumo sobre o princípio de trás discussões sobre equívocos ao utilizar
+- [balta.io/blog/dependency-injectio](https://balta.io/blog/dependency-injection)
+	- Foco na utilização de injeção de dependências e sua relação com DIP
