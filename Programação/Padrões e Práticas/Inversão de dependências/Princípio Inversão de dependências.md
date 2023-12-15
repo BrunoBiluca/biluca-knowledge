@@ -14,7 +14,9 @@ Uma forma de melhorar a arquitetura em camadas é aplicar o princípio de invers
 
 A essência dessa definição é comunicar que um componente que provê um serviço de baixo nível (Infraestrutura, por exemplo) deve depender de interfaces definidas pelos componentes de alto nível (Interface de usuário, aplicação ou domínio).
 
-Para entender bem o conceito de um dependência definida acima podemos voltar para uma perspectiva de compilação de software, onde só precisaremos recompilar o sistema vigente quando uma dependência é alterada em relação a sua interface. Ou seja, utilizando de um sistema de compilação e gerenciamento de dependências eficiente podemos atualizar a dependência sem recompilar o projeto principal, já que os contratos entre ambos não mudaram.
+Pensando em termos do mundo real, pense em uma pizzaria que você é responsável por preparar os ingredientes, preparar a massa, assar a massa e entregar o pedido aos clientes. Cada uma dessas atribuições é uma responsabilidade que o sistema Pizzaria é responsável. Invertendo o fluxo de dependências, uma pessoa é colocada para resolver essas responsabilidades independentemente, se comunicando por meio da língua (no caso abstração).
+
+Outro exemplo para entender esse conceito se voltando mais para computação podemos voltar para uma perspectiva de compilação de software. Só precisaremos recompilar o sistema vigente quando uma dependência é alterada em relação a sua interface. Ou seja, utilizando de um sistema de compilação e gerenciamento de dependências eficiente podemos atualizar a dependência sem recompilar o projeto principal, já que os contratos entre ambos não mudaram.
 
 Esse é o caso de troca de DLLs em jogos no windows, como por exemplo o caso do DLSS 2.0 que pode ser substituído em alguns jogos para a versão DLSS 2.3 para melhorar a qualidade da imagem.
 
@@ -199,10 +201,243 @@ Observe que estamos seguindo o Princípio da Substituição de Liskov. Desta for
 
 Apenas o polimorfismo não garante que estamos utilizando o princípio já que pela definição, além de utilizar abstrações entre os módulos, que o polimorfismo nos ajuda a alcançar, também temos um outro ponto a considerar: "Módulos alto nível devem depender apenas de módulos baixo nível", só o polimorfismo não nos garante esse ponto.
 
+# Guia de implementação de DIP
 
-# Transformando o código com DIP
+O princípio de inversão de dependências nos trás algumas linhas guias para melhorar a nossa solução como descrito na seção de vantagens e nos próprios exemplos. Porém como se trata de um princípio não define nenhum tipo de implementação. Por isso vamos tentar elencar aqui uma forma de implementação guia para aplicações legadas.
 
-![[dependency_inversion.webp|Principais conceitos utilizado para transformar um código altamente acoplado em um código fracamente acoplado| center]]
+> [!tip] Para aplicação novas
+> Se você estiver no início de uma nova base de código, recomendo já comer do passo 4 e começar a implementar utilizando um Container de inversão de controle. Será de grande ajuda, já que o fluxo do código será definido com um facilitador para o baixo acoplamento.
+
+Na abordagem de design orientado a objetos, as classes precisam interagir umas com as outras para completar uma ou mais funcionalidades, como por exemplo uma classe A cria e gerencia o tempo de vida de um objeto da classe B para interagir com B e completar uma funcionalidade. Essencialmente, a classe A controla a criação e o tempo de vida dos objetos da classe de dependência.
+
+O princípio da IoC (Inversion of Control) sugere inverter o controle. Isso significa delegar o controle a outra classe. Em outras palavras, inverta o controle de criação de dependência da classe A para outra classe
+
+![[ioc-step1.webp|Passos para a transformação de uma base de código altamente acoplada para uma fracamente acoplada|center]]
+
+## Exemplo utilizado
+
+Para ilustrar a aplicação do guia na implementação do DIP vamos considerar o seguinte exemplo: Na arquitetura típica de n camadas, a interface do usuário (UI) usa a camada de serviço para recuperar ou salvar dados. A camada Service usa a classe `BusinessLogic` para aplicar regras de negócios nos dados. A classe `BusinessLogic` depende da classe `DataAccess` que recupera ou salva os dados no banco de dados subjacente. Este é um design simples de arquitetura de n camadas. Vamos nos concentrar nas classes `BusinessLogic` e `DataAccess` para entender a IoC.
+
+```csharp
+public class CustomerBusinessLogic
+{
+    DataAccess _dataAccess;
+
+    public CustomerBusinessLogic()
+    {
+        _dataAccess = new DataAccess();
+    }
+
+    public string GetCustomerName(int id)
+    {
+        return _dataAccess.GetCustomerName(id);
+    }
+}
+
+public class DataAccess
+{
+    public DataAccess()
+    {
+    }
+
+    public string GetCustomerName(int id) {
+        return "Dummy Customer Name"; // get it from DB in real app
+    }
+}
+```
+
+Problemas nas classes de exemplo acima:
+
+1. As classes `CustomerBusinessLogic` e `DataAccess` são classes fortemente acopladas. Portanto, as alterações na classe `DataAccess` levarão a alterações na classe `CustomerBusinessLogic`. Por exemplo, se adicionarmos, removermos ou renomearmos qualquer método na classe `DataAccess`, então precisaremos alterar a classe `CustomerBusinessLogic` de acordo.
+2. Suponha que os dados do cliente venham de diferentes bancos de dados ou serviços da Web e, no futuro, talvez precisemos criar classes diferentes, então isso levará a mudanças na classe `CustomerBusinessLogic`.
+3. A classe `CustomerBusinessLogic` cria um objeto da classe `DataAccess` usando a palavra-chave **new**. Pode haver várias classes que usam a classe `DataAccess` e criam seus objetos. Então, se você alterar o nome da classe, então você precisa encontrar todos os lugares em seu código-fonte onde você criou objetos de `DataAccess` e fazer as alterações em todo o código. Este é um código repetitivo para criar objetos da mesma classe e manter suas dependências.
+4. Como a classe `CustomerBusinessLogic` cria um objeto da classe `DataAccess` concreta, ela não pode ser testada independentemente. A classe `DataAccess` não pode ser substituída por uma classe simulada.
+
+Para resolver todos os problemas acima e obter um design fracamente acoplado, podemos usar os princípios IoC e DIP juntos.
+
+## Passo 1: IoC com Factories
+
+Como um primeiro passo, uma das formas mais simples de inverter o controle de uma dependência é delegar a criação e o ciclo de vida de uma instância de uma classe para uma Factory.
+
+Isso pode ser facilmente feito de forma estática.
+
+```csharp
+public class DataAccessFactory
+{
+	public static DataAccess GetDataAccessObj() 
+	{
+		return new DataAccess();
+	}
+}
+
+public class CustomerBusinessLogic
+{
+    public string GetCustomerName(int id)
+    {
+        DataAccess dataAccess =  DataAccessFactory.GetDataAccessObj();
+
+        return dataAccess.GetCustomerName(id);
+    }
+}
+```
+
+Apenas com essa simples alteração no código já temos uma redução no acoplamento. O `CustomerBusinessLogic` não tem nenhuma responsabilidade sobre o acesso de dados, agora ele apenas requisita o que ele precisa e a forma que isso lhe é concedida ele não tem mais controle.
+
+## Passo 2: Implementando abstrações (DIP)
+
+No passo anterior nos reduzimos o acoplamento entre as classes `CustomerBusinessLogic` e `DataAccess` por delegar algumas responsabilidades para uma fábrica. Mesmo assim caso a classe `DataAccess` altere sua interface isso terá um impacto na classe `CustomerBusinessLogic`, provando que ainda existe algum tipo de acoplamento entre elas.
+
+O princípio de inversão de dependências nos diz que:
+
+> - Abstrações não devem depender de detalhes.
+> - Detalhes devem depender sobre abstrações
+
+As classes `CustomerBusinessLogic` e `DataAccess` são detalhes de implementação, já que explicitam diretamente o comportamento de cada uma das suas responsabilidades. Assim pelo princípio, entre elas devemos interagir apenas por abstrações.
+
+Para o nosso acesso de dados podemos criar uma abstração que defina uma interface comum que será utilizada no projeto.
+
+```csharp
+public interface ICustomerDataAccess
+{
+    string GetCustomerName(int id);
+}
+
+public class CustomerDataAccess: ICustomerDataAccess
+{
+    public CustomerDataAccess() {
+    }
+
+    public string GetCustomerName(int id) {
+        return "Dummy Customer Name";        
+    }
+}
+
+public class DataAccessFactory
+{
+    public static ICustomerDataAccess GetCustomerDataAccessObj() 
+    {
+        return new CustomerDataAccess();
+    }
+}
+
+public class CustomerBusinessLogic
+{
+    ICustomerDataAccess _custDataAccess;
+
+    public CustomerBusinessLogic()
+    {
+        _custDataAccess = DataAccessFactory.GetCustomerDataAccessObj();
+    }
+
+    public string GetCustomerName(int id)
+    {
+        return _custDataAccess.GetCustomerName(id);
+    }
+}
+```
+
+Pronto, agora o `CustomerBusinessLogic` não depende mais de nenhum tipo de detalhe de implementação apenas da abstração nesse caso definida pela interface `ICustomerDataAcess`.
+
+Nesse ponto já podemos usufruir de algumas das vantagens como a flexibilidade em alterar as implementações relacionadas a abstração `ICustomerDataAccess`, podemos mudar de banco de dados sem que a classe que implemente a lógica de negócios sofra com isso.
+
+Ainda assim, não alcançamos classes totalmente fracamente acopladas porque a classe `CustomerBusinessLogic` inclui uma classe de fábrica (`DataAccessFactory`) para obter a referência de `ICustomerDataAccess`. É aqui que o padrão de injeção de dependência nos ajuda.
+
+## Passo 3: Injetando dependências
+
+No passo anterior, relacionado ao DIP, criamos e usamos a abstração para tornar as classes fracamente acopladas. Aqui, vamos implementar a injeção de dependência e o padrão de estratégia juntos para mover a criação do objeto de dependência completamente para fora da classe. Este é o nosso terceiro passo para deixar as classes completamente independentes.
+
+Mais sobre [[Injeção de dependências]].
+
+```csharp
+public class CustomerBusinessLogic
+{
+    ICustomerDataAccess _dataAccess;
+
+    public CustomerBusinessLogic(ICustomerDataAccess custDataAccess)
+    {
+        _dataAccess = custDataAccess;
+    }
+    
+    public string GetCustomerName(int id)
+    {
+        return _dataAccess.GetCustomerName(id);
+    }
+}
+
+public interface ICustomerDataAccess
+{
+    string GetCustomerName(int id);
+}
+
+public class CustomerDataAccess: ICustomerDataAccess
+{
+    public CustomerDataAccess()
+    {
+    }
+
+    public string GetCustomerName(int id) 
+    {
+        //get the customer name from the db in real application        
+        return "Dummy Customer Name"; 
+    }
+}
+```
+
+Nesse exemplo acima, adicionamos um construtor com um parâmetro do tipo `ICustomerDataAccess`. Esse parâmetro deve ser então injetado na classe por um elemento externo. Como por exemplo o código abaixo:
+
+```csharp
+public class CustomerService
+{
+    CustomerBusinessLogic _customerBL;
+
+    public CustomerService()
+    {
+        _customerBL = new CustomerBusinessLogic(new CustomerDataAccess());
+    }
+
+    public string GetCustomerName(int id) {
+        return _customerBL.GetCustomerName(id);
+    }
+}
+```
+
+Agora temos um total desacoplamento da classe `CustomerBusinessLogic` da classe `CustomerDataAccess`, ambas as classes interagem apenas pelas suas abstrações. Mas como você, pode perceber só colocamos esse acoplamento em outro lugar. É a hora de utilizar um Container de IoC para eliminar de vez esse acoplamento entre toda a estrutura do código.
+
+## Passo 4: Contêiner de IoC
+
+No passo anterior conseguimos resolver o acoplamento entre as estruturas iniciais do código. Porém isso nos levou a criar uma outra classe `CustomerService` que está totalmente acoplada. Precisamos de eliminar de uma vez por toda esse gerenciamento de dependência entre as classes. Cada classe deve ser apenas responsável pela sua execução e não ficar gerenciando criação e tempo de vida de outras estruturas. Para isso temos os container de IoC.
+
+O contêiner IoC cria um objeto da classe especificada e também injeta todos os objetos de dependência por meio de um construtor, uma propriedade ou um método em tempo de execução e o descarta no momento apropriado. Isso é feito para que não tenhamos que criar e gerenciar objetos manualmente.
+
+Todos os contêineres devem fornecer suporte fácil para o ciclo de vida de DI seguinte.
+
+- **Registro (Register):** O contêiner deve saber qual dependência instanciar quando encontrar um tipo específico. Esse processo é chamado de registro. Basicamente, ele deve incluir alguma maneira de registrar o mapeamento de tipos.
+- **Resolução (Resolve):** Ao usar o contêiner IoC, não precisamos criar objetos manualmente. O contêiner faz isso por nós. Isso se chama resolução. O contêiner deve incluir alguns métodos para resolver o tipo especificado; O contêiner cria um objeto do tipo especificado, injeta as dependências necessárias, se houver, e retorna o objeto.
+- **Descarte (Dispose):** O contêiner deve gerenciar o tempo de vida dos objetos dependentes. A maioria dos contêineres IoC inclui diferentes gerenciadores de tempo de vida para gerenciar o ciclo de vida de um objeto e descartá-lo.
+
+
+O contêiner de injeção de dependências é definido na inicialização (bootstrap) do projeto. Voltando para o nosso exemplo vamos configurar um contêiner de injeção de dependências para ele. Vou utilizar aqui uma interface padrão para fazer essa configuração já que existem vários contêineres no mercado e cada um tempo sua própria interface.
+
+```csharp
+// startup.cs
+var container = DependencyContainer();
+// sempre que o construtor pedir por um ICustomerDataAccess será passada uma instância de CustomerDataAccess
+container.Register<ICustomerDataAccess, CustomerDataAccess>()
+container.Register<CustomerBusinessLogic>()
+
+var customerBL =  container.Resolve<CustomerBusinessLogic>()
+
+customerBL.GetCustomerName(0)
+// retorna: "Dummy Customer Name"
+```
+
+## Conclusão
+
+Por meio desse guia conseguimos diminuir o acoplamento entre as classes do sistema até chegar num ponto onde todas as totalmente independentes sendo orquestradas no meio pelo contêiner de injeção de dependências.
+
+Cada projeto pode estar em um nível de abstração diferente e pode partir de qualquer ponto desse guia.
+
+Com isso desenvolvido podemos usufruir de todas as vantagens que o princípio nos trás.
 
 # Outros exemplos
 
@@ -494,10 +729,11 @@ Criamos uma classe, `FakeRandom`, que declara a interface do random que será ut
 
 Além disso o código de testes não depende das mesmas dependências do código fonte, como acontece no exemplo com patch, isso nos possibilita utilizar nos testes, módulos completamente diferente do que são utilizados no código fonte, enquanto respeitarmos as interfaces utilizadas entre as abstrações.
 
-
 # Referências
 
 - [Baeldung](https://www.baeldung.com/cs/dip)
 	- Tem um ótimo resumo sobre o princípio de trás discussões sobre equívocos ao utilizar
 - [balta.io/blog/dependency-injectio](https://balta.io/blog/dependency-injection)
 	- Foco na utilização de injeção de dependências e sua relação com DIP
+- https://www.tutorialsteacher.com/ioc
+	- Ótimo artigo que demonstra passo a passo a implementação do princípio
