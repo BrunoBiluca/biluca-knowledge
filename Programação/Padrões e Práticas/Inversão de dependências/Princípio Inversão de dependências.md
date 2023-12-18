@@ -4,7 +4,12 @@ tags:
 ---
 ## Princípio
 
-Uma forma de melhorar a arquitetura em camadas é aplicar o princípio de inversão de dependências:
+Durante o desenvolvimento de um sistema de software é muito comum cairmos em uma base de código totalmente conectada onde classes, métodos, módulos estão intimamente dependentes uns dos outros e qualquer alteração pode impactar em vários pontos.  Enquanto desenvolvedores nessas situações ficamos inseguros em alterar qualquer tipo de funcionalidade, já que erros inesperados podem acontecer, o que leva a uma redução brutal da produtividade dos projetos.
+
+O princípio de inversão de dependências é uma forma de melhorar vários aspectos de um sistema de software garantindo que o fluxo de dependências se inverta e cada classe, método e módulos possam ser realmente independentes.
+
+> [!info]- História
+> A dependência inversão de princípio foi postulada por [Robert C. Martin](https://pt.wikipedia.org/wiki/Robert_Cecil_Martin "Robert Cecil Martin") e descrito em várias publicações, incluindo o papel _Orientado a Objeto-Design de Métricas de Qualidade: uma análise de dependências_, um artigo publicado em C++ Relatório em Maio de 1996, o direito _de Dependência, de Inversão de Princípio_, e os livros _Ágeis de Desenvolvimento de Software, Princípios, Padrões e Práticas_, e _Princípios Ágeis, Padrões e Práticas em C#_.
 
 > [!quote] Definição por Robert C. Martin
 > Módulos alto nível devem depender apenas de módulos baixo nível. Ambos devem depender de abstrações (como por exemplo interfaces).
@@ -14,9 +19,7 @@ Uma forma de melhorar a arquitetura em camadas é aplicar o princípio de invers
 
 A essência dessa definição é comunicar que um componente que provê um serviço de baixo nível (Infraestrutura, por exemplo) deve depender de interfaces definidas pelos componentes de alto nível (Interface de usuário, aplicação ou domínio).
 
-Pensando em termos do mundo real, pense em uma pizzaria que você é responsável por preparar os ingredientes, preparar a massa, assar a massa e entregar o pedido aos clientes. Cada uma dessas atribuições é uma responsabilidade que o sistema Pizzaria é responsável. Invertendo o fluxo de dependências, uma pessoa é colocada para resolver essas responsabilidades independentemente, se comunicando por meio da língua (no caso abstração).
-
-Outro exemplo para entender esse conceito se voltando mais para computação podemos voltar para uma perspectiva de compilação de software. Só precisaremos recompilar o sistema vigente quando uma dependência é alterada em relação a sua interface. Ou seja, utilizando de um sistema de compilação e gerenciamento de dependências eficiente podemos atualizar a dependência sem recompilar o projeto principal, já que os contratos entre ambos não mudaram.
+Para entender esse conceito se voltando mais para computação vamos considerar a perspectiva de compilação de software. Só precisaremos recompilar o sistema vigente quando uma dependência é alterada em relação a sua interface. Ou seja, utilizando de um sistema de compilação e gerenciamento de dependências eficiente podemos atualizar a dependência sem recompilar o projeto principal, já que os contratos entre ambos não mudaram.
 
 Esse é o caso de troca de DLLs em jogos no windows, como por exemplo o caso do DLSS 2.0 que pode ser substituído em alguns jogos para a versão DLSS 2.3 para melhorar a qualidade da imagem.
 
@@ -24,7 +27,7 @@ O artigo de [[Separação de interfaces]] demonstra em um exemplo mais complexo 
 
 # Exemplo básico
 
-Vamos encerrar a seção anterior com um exemplo. Digamos que temos _ClassA_ e _ClassB_. Suponha que _ClassA_ dependa de _ClassB_. Em tempo de execução, uma instância de _ClassB_ será criada ou injetada em _ClassA_. O fluxo de controle (ou a ordem em que um programa é executado) vai da classe A para a classe B:
+Para fins didáticos, digamos que temos _ClassA_ e _ClassB_. Suponha que a _ClassA_ dependa de _ClassB_. Em tempo de execução, uma instância de _ClassB_ será criada ou injetada em _ClassA_. Ou seja, o fluxo de controle (ou a ordem em que um programa é executado) vai da classe A para a classe B:
 
 ![[class_diagram.webp|center]]
 
@@ -45,7 +48,7 @@ class ClassA {
 }
 ```
 
-Agora, o que o DIP está nos dizendo é inverter a dependência. Podemos ver como isso se aplica ao nosso diagrama:
+Agora, o DIP (Dependency Inversion Principle) está nos diz para inverter o fluxo de dependências e adicionar uma camada de abstração entre os detalhes de implementação. Podemos ver como isso se aplica ao nosso diagrama:
 
 ![[class_diagram_.webp]]
 
@@ -78,7 +81,7 @@ Passando essa lógica para módulos, podemos utilizar o princípio para gerencia
 
 ![[class_diagram_3.webp]]
 
-Por que a interface está no módulo _ClassA_? Isso precisa ser feito para alcançar a independência do módulo. Se fôssemos colocar em qualquer outro módulo, isso tornaria o módulo de alto nível dependente de outros módulos. A interface é uma abstração através da qual o módulo _ClassA_ pode interagir com o mundo exterior.
+Uma pergunta comum nesse tipo de alteração é "Por que a interface está no módulo _ClassA_?" Isso precisa ser feito para alcançar a independência do módulo. Dessa forma podemos alterar os módulos que implementam a interface sem que __Class A Module__ saiba sobre isso.
 # Vantagens
 
 ## Menor acoplamento entre as camadas do sistema
