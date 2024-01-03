@@ -23,6 +23,17 @@ Kafka é um sistema distribuído composto por **servidores** e **clientes** que 
 
 **Clientes**: Eles permitem que você escreva aplicativos distribuídos e microsserviços que leem, gravam e processam fluxos de eventos em paralelo, em escala e de maneira tolerante a falhas, mesmo no caso de problemas de rede ou falhas de máquina. Kafka vem com alguns desses clientes incluídos, que são aumentados por [dezenas de clientes](https://cwiki.apache.org/confluence/display/KAFKA/Clients) fornecidos pela comunidade Kafka: os clientes estão disponíveis para Java e Scala, incluindo a biblioteca de nível superior [Kafka Streams](https://kafka.apache.org/documentation/streams/), para Go, Python, C/C++ e muitas outras linguagens de programação, bem como APIs REST.
 
+### Abordagem arquitetônica
+
+Um cluster do Kafka fornece processamento de eventos de fluxo de alto throughput com uma arquitetura mais complexa. Estes são alguns dos principais componentes do Kafka:
+
+- Um _agente do Kafka_ é um servidor do Kafka que permite que os produtores transmitam dados aos consumidores. O agente do Kafka contém tópicos e suas respectivas partições. 
+- Um _tópico_ é o armazenamento de dados que agrupa dados semelhantes em um agente do Kafka. 
+- Uma _partição_ é um armazenamento de dados menor em um tópico que os consumidores assinam. 
+- O ZooKeeper é um software especial que gerencia os clusters e partições do Kafka para fornecer streaming tolerante a falhas. O ZooKeeper foi recentemente substituído pelo protocolo Apache Kafka Raft (KRaft).
+
+Os produtores no Kafka atribuem uma chave a cada mensagem. Em seguida, o agente do Kafka armazena a mensagem na partição principal desse tópico específico. O protocolo KRaft usa algoritmos de consenso para determinar a partição principal.
+
 # Principais conceitos
 
 Um **evento** registra o fato de que "algo aconteceu" no mundo ou em seu negócio. Também é chamado de registro ou mensagem na documentação. Quando você lê ou grava dados em Kafka, você faz isso na forma de eventos. Conceitualmente, um evento tem uma chave, um valor, um carimbo de data/hora e cabeçalhos de metadados opcionais.
