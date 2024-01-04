@@ -37,7 +37,7 @@ Um agente do RabbitMQ encaminha a mensagem para a fila de destino. Depois de lid
 O RabbitMQ pode expandir sua capacidade de processamento de mensagens tanto horizontal quanto verticalmente. Você pode alocar mais recursos computacionais para o servidor do RabbitMQ a fim de aumentar a eficiência da troca de mensagens.
 
 > [!tip] Distribuição de mensagens
->  Em alguns casos, desenvolvedores usam uma técnica de distribuição de mensagens chamada de _troca de hash consistente do RabbitMQ_ para equilibrar o processamento de carga em vários agentes.
+>Em alguns casos, desenvolvedores usam uma técnica de distribuição de mensagens chamada de _troca de hash consistente do RabbitMQ_ para equilibrar o processamento de carga em vários agentes.
 
 # Comparações com o Kafka
 
@@ -46,7 +46,6 @@ O RabbitMQ pode expandir sua capacidade de processamento de mensagens tanto hori
 No RabbitMQ, o produtor envia e monitora se a mensagem chega ao consumidor pretendido. Por outro lado, os produtores de Kafka publicam mensagens na fila, independentemente de os consumidores as terem recuperado.
 
 Pense no RabbitMQ como uma agência postal que recebe correspondência e a entrega aos destinatários pretendidos. Enquanto isso, o Kafka é semelhante a uma biblioteca, que organiza mensagens em prateleiras com diferentes gêneros que os produtores publicam. Em seguida, os consumidores leem as mensagens das respectivas prateleiras e lembram o que leram.
-
 
 # Referências
 
