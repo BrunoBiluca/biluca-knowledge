@@ -307,7 +307,9 @@ Problemas com esse tipo de abordagem:
 - Baixa coesão, já que scripts que resolvem problemas diferentes estão associados
 - Péssima visibilidade da intensão do projeto
 
-Uma forma de suprir esse problemas é implementar uma arquitetura de código orientada ao significado de cada componente do sistema. Como **Kent Beck** falou uma vez a definição de coesão é:
+Uma forma de suprir esse problemas é implementar uma arquitetura de código orientada ao significado de cada componente do sistema. 
+
+Como **Kent Beck** falou uma vez a definição de coesão é:
 
 > Pull the things that are unrelated further apart, and put the things that are related closer together.
 
