@@ -64,6 +64,13 @@ services:
       SPARK_MASTER_URL: spark://spark-master:7077
 ```
 
+
+# Implementações na AWS
+
+## EMR Serverless
+
+[Running jobs from the AWS CLI - Amazon EMR](https://docs.aws.amazon.com/emr/latest/EMR-Serverless-UserGuide/jobs-cli.html) (Melhor documentação para os parâmetros) define a interface padrão por CLI utilizada para executar as operações em relação ao EMR Serverless.
+
 # Referências
 
 - [Using VirtualEnv with PySpark - Cloudera Community - 245932](https://community.cloudera.com/t5/Community-Articles/Using-VirtualEnv-with-PySpark/ta-p/245932)
