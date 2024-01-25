@@ -3,6 +3,10 @@ tags:
   - análise_de_dados
   - engenharia_de_dados
 ---
+[Spark](https://spark.apache.org/) is an open-source distributed general-purpose cluster computing framework. Spark’s in-memory data processing engine conducts analytics, ETL, machine learning and graph processing on data in motion or at rest. It offers high-level APIs for the programming languages: Python, Java, Scala, R, and SQL.
+
+The Apache Spark Architecture is founded on Resilient Distributed Datasets (RDDs). These are distributed immutable tables of data, which are split up and allocated to workers. The worker executors implement the data. The RDD is immutable, so the worker nodes cannot make alterations; they process information and output results.
+
 # PySpark e testes automatizados
 
 ### How should you create a SparkSession for your tests?

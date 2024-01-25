@@ -1,3 +1,7 @@
+body {
+	--file-line-width: 1000px;
+}
+
 .image-captions-figure {
 	margin: 0 auto;
 }
