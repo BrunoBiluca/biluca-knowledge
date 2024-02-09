@@ -2,7 +2,7 @@
 	"nodes":[
 		{"id":"2a5aad689075b4af","type":"group","x":540,"y":-157,"width":817,"height":458,"label":"Engines"},
 		{"id":"bfab6bd425bfa186","type":"group","x":-394,"y":-157,"width":794,"height":276,"label":"Programação"},
-		{"id":"ecd7ce9546ff2cf9","type":"text","text":"C#\n❇️❇️❇️❇️❇️\n\n[[]]","x":-374,"y":-19,"width":250,"height":118},
+		{"id":"ecd7ce9546ff2cf9","type":"text","text":"C#\n❇️❇️❇️❇️❇️\n\n[[]]","x":-374,"y":-19,"width":250,"height":118,"color":"3"},
 		{"id":"cb6a9264f871b775","type":"text","text":"Linguagens","x":-374,"y":-140,"width":250,"height":60},
 		{"id":"052d2d1528a183d9","type":"text","text":"Domain-Driven Design (DDD)\n❇️⬛⬛⬛⬛\n\n[[Domain-Driven Design]]","x":-394,"y":180,"width":291,"height":121},
 		{"id":"a57427cd984423fb","type":"text","text":"Matemática\n❇️⬛⬛⬛⬛\n\n[[]]","x":-394,"y":340,"width":291,"height":121},

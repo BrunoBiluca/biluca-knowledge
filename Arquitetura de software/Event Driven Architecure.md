@@ -2,7 +2,6 @@
 tags:
   - arquitetura_software
 ---
-
 ### Arquivos de log e eventos
 
 Vamos falar um pouco sobre um benefício colateral dessa arquitetura: ela permite sistemas desacoplados e orientados a eventos.
