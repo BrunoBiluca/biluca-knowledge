@@ -24,3 +24,5 @@ Todos os conceitos apresentado no livro de Evans s√£o abordados com essa estrat√
 4. [[Architecture]]
 5. [[Entities]]
 6. [[Value Objects]]
+7. [[Services]]
+8. 
