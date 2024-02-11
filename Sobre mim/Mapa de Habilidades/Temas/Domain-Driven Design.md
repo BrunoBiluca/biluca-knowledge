@@ -1,7 +1,3 @@
 ❇️⬛⬛⬛⬛
 
-# Estudo
-
-- Livro - Implementing Domain-Driven Design
-
-# Projetos
+- [[_Implementing Domain-Driven Design]]

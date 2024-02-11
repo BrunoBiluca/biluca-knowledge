@@ -1,12 +1,5 @@
 #matemática 
 
-# Math Algorithms
-
-- [Math Algorithms](#math-algorithms)
-- [Dot Product](#dot-product)
-- [Vector magnitude](#vector-magnitude)
-- [Gauss Sum](#gauss-sum)
-
 # Dot Product
 
 
