@@ -3,7 +3,6 @@
 
 Python tem muitos ORMs existentes e maduros, infelizmente eles são projetados com um paradigma oposto de como a E/S é processada. `asyncio` é uma tecnologia relativamente nova que possui um modelo de simultaneidade diferente, e a maior mudança é em relação à forma como a E/S é tratada.
 
-
 # Exemplo de utilização
 
 Define your models like so:

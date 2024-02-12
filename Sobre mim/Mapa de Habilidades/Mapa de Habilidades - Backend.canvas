@@ -1,6 +1,14 @@
 {
 	"nodes":[
-		{"id":"3f31c39c99a175dc","type":"file","file":"Sobre mim/Mapa de Habilidades/Temas/Domain-Driven Design.md","x":-520,"y":-320,"width":400,"height":102}
+		{"id":"29992bf73d3624c3","type":"text","text":"### Object-Relational Mapper ❇️⬛⬛⬛⬛\n\n- [[ORM - Object Relational Mappers]]\n- [[Principais ORM em python]]","x":-120,"y":-269,"width":329,"height":87},
+		{"id":"36fdf20f86dab1be","type":"text","text":"### SQLAlchemy ❇️⬛⬛⬛⬛\n\n- [[SQLAlchemy]]","x":380,"y":-261,"width":280,"height":71},
+		{"id":"21f06953f196d71c","type":"text","text":"### Domain-Driven Design ❇️⬛⬛⬛⬛\n\n- [[_Implementing Domain-Driven Design]]\n","x":-660,"y":-269,"width":329,"height":71},
+		{"id":"5e0379c7fe7ea938","type":"text","text":"### Tortoise ORM ❇️⬛⬛⬛⬛\n\n- [[Tortoise ORM]]","x":380,"y":-120,"width":280,"height":71},
+		{"id":"0270914f23f200c2","type":"text","text":"### Programação assíncrona ❇️⬛⬛⬛⬛\n\n- [[AsyncIO]]","x":-120,"y":60,"width":329,"height":87},
+		{"id":"8f689b8c2c5e3f23","x":-1040,"y":-460,"width":250,"height":80,"type":"text","text":"### {Tema}  ❇️⬛⬛⬛⬛\n\n- "}
 	],
-	"edges":[]
+	"edges":[
+		{"id":"728c79539df3b6e1","fromNode":"29992bf73d3624c3","fromSide":"right","toNode":"36fdf20f86dab1be","toSide":"left"},
+		{"id":"74975d466701a02c","fromNode":"29992bf73d3624c3","fromSide":"right","toNode":"5e0379c7fe7ea938","toSide":"left"}
+	]
 }
