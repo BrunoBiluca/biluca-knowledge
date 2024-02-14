@@ -11,7 +11,7 @@ Cada conteúdo tem um nível de qualidade da informação de um tema contido nes
 - Dicas e casos de uso específicos: visões e perspectivas próprias sobre o tema
 
 A qualidade da informação é classificada em 5 estrelas para cada tema levando em consideração os estados das características relacionadas.
-### ✳️⬛⬛⬛⬛
+### Cinza
 Início do um acúmulo sobre um determinado tema.
 
 Características:
@@ -19,7 +19,7 @@ Características:
 - Apresentação dos conceitos mais gerais
 - Possuir um exemplo muito básico, que demonstra a aplicação do tema
 
-### ✳️✳️⬛⬛⬛
+### 🟨 Amarelo
 Segundo momento de acúmulo, onde será destrinchado alguns dos conceitos mais gerais.
 
 Características:
@@ -27,7 +27,7 @@ Características:
 - Adição de outros exemplos para elucidar o conteúdo
 - Revisão do texto escrito
 
-### ✳️✳️✳️⬛⬛
+### 🟪 Roxo
 Avanço do tema em relação a exemplos, dicas e casos de uso.
 
 Características:
@@ -36,14 +36,14 @@ Características:
 - Finalização da escrita dos principais conceitos
 - Adição de padrões de utilização prática do tema próprios
 
-### ✳️✳️✳️✳️⬛
+### 🟦 Azul
 Avanço do tema em tópicos específicos e integração com outros temas.
 
 Características:
 - Ter descrito a relação do tema com outros temas
 - Caso o conteúdo permita ter a criação de um padrão de utilização do tema
 
-### ✳️✳️✳️✳️✳️
+### 🟩 Verde
 Conteúdo está bem definido, com vários exemplos, relação com outros temas e aprofundamento nos principais conceitos.
 
 Características:

@@ -4,7 +4,7 @@ tags:
   - engenharia_de_dados
 ---
 
-# [[Amazon GLUE]]
+# Amazon GLUE
 
 - Solução todo em um para transformação de qualquer integração de dados
 - Serverless

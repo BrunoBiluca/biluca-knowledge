@@ -1,7 +1,7 @@
 ---
 tags:
-  - análise_de_dados
   - engenharia_de_dados
+  - streaming_de_dados
 ---
 # Event streaming
 

@@ -1,6 +1,7 @@
 ---
 tags:
   - engenharia_de_dados
+  - streaming_de_dados
 ---
 When a pipeline is submitted for execution to the Dataflow Service, it is first transformed into an execution plan called the “Optimized” pipeline graph. Optimizations such as operator fusion, combiner lifting, flatten unzipping, and more are applied to the original pipeline to produce a new one with equivalent semantics. More information on fusion is available [here](https://cloud.google.com/dataflow/docs/guides/deploying-a-pipeline#fusion-optimization). The output is a Directed Acyclic Graph (DAG) with nodes, called stages, and edges, representing data shuffles connecting the stages. Each stage performs roughly the following sequence of operations:
 
