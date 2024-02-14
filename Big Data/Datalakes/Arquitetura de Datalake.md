@@ -10,9 +10,10 @@ A arquitetura de um datalake é multifacetada. A camada de armazenamento é fund
 
 Outra características dos datalakes é a capacidade de combinar formatos em um sistema de arquivos dinâmico sem nenhum tipo de esquema previamente configurados, como em um DataWarehouse ou Database convencional.
 
-Principais vantagens da utilização de uma Datalake:
+# Principais vantagens
 
 - **Centralização do armazenamento de dados**
+- **Datalakes são formatos abertos** e não estão restringidos a nenhum sistema proprietário como é o caso dos DataWareHouses
 - **Flexibilidade**: databases são schema-less.
 - **Escalabilidade**
 - **Análises avançadas e inteligência para o negócio**
@@ -31,6 +32,16 @@ Garantir uma [segurança](https://www.integrate.io/glossary/what-is-big-data-se
 - **Atualizações contínuas:** Mantenha-se à frente das ameaças cibernéticas em evolução, atualizando protocolos de segurança e adotando métodos mais recentes.
 - **Treinamento:** educar os usuários sobre as melhores práticas de segurança, reduzindo erros humanos e garantindo respostas rápidas a violações.
 
+|  | Data lake | Data lakehouse | Data warehouse |
+| ---- | ---- | ---- | ---- |
+| **Types of data** | All types: Structured data, semi-structured data, unstructured (raw) data | All types: Structured data, semi-structured data, unstructured (raw) data | Structured data only |
+| **Cost** | $ | $ | $$$ |
+| **Format** | Open format | Open format | Closed, proprietary format |
+| **Scalability** | Scales to hold any amount of data at low cost, regardless of type | Scales to hold any amount of data at low cost, regardless of type | Scaling up becomes exponentially more expensive due to vendor costs |
+| **Intended users** | Limited: Data scientists | Unified: Data analysts, data scientists, machine learning engineers | Limited: Data analysts |
+| **Reliability** | Low quality, data swamp | High quality, reliable data | High quality, reliable data |
+| **Ease of use** | Difficult: Exploring large amounts of raw data can be difficult without tools to organize and catalog the data | Simple: Provides simplicity and structure of a data warehouse with the broader use cases of a data lake | Simple: Structure of a data warehouse enables users to quickly and easily access data for reporting and analytics |
+| **Performance** | Poor | High | High |
 # Melhores práticos ao construir um Datalake
 
 1. Defina seus objetivos
@@ -45,7 +56,7 @@ São esses objetivos que irão guiar o desenvolvimento do projeto
 - **Data Validation:** Implement validation rules to ensure incoming data meets predefined quality standards.
 - **Metadata Management:** Using metadata to provide context makes data retrieval efficient and user-friendly.
 
-3. Medidas de segurança robustas
+3. Medidas de segurança robusta
 Segurança é um item fundamental na construção de qualquer armazenamento de dados.
 
  - **Data Encryption:** Both at rest and in transit.
@@ -55,6 +66,7 @@ Segurança é um item fundamental na construção de qualquer armazenamento de d
 4. Otimização para escalabilidade
 5. Fomentar interoperabilidade com demais serviços como banco de dados tradicionais, ferramentas de BI.
 6. Abraçar a estratégia de camadas de múltiplas camadas (multi-tier)
+7. Mascarar os dados privados antes da informação entrar no datalake
 
 # Desidentificarão de dados
 O processo de desidentificarão de dados é utilizado para garantir as leis de proteção de dados e não deixar vazar dados de clientes, ao mesmo tempo que conseguimos utilizar os dados para criar visões de negócio com dados reais.
@@ -66,3 +78,5 @@ O processo de desidentificarão de dados é utilizado para garantir as leis de p
 
 - https://www.integrate.io/blog/data-lake-architecture-guide/
 	- Guia inicial de desenvolvimento de uma arquitetura para datalake
+- https://www.databricks.com/discover/data-lakes/history
+	- Apanhado histórico sobre datalakes

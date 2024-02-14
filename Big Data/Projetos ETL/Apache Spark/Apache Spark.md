@@ -17,6 +17,12 @@ The Apache Spark Architecture is founded on Resilient Distributed Datasets (RDDs
 - Cloud
 [[Implementações na AWS]]
 
+# Casos de uso
+
+- Treinamento de modelos de aprendizado de máquina em escala
+- Consultar conjuntos de big data usando SQL
+- Processamento de dados em tempo real com Spark Streaming
+
 # Principais diferenças entre Spark 2 e Spark 3
 Apache Spark 3 foi lançado em 2020 e trouxe várias melhorias em relação ao seu antecessor Apache Spark 2 (2016)
 
