@@ -78,7 +78,8 @@ Por muitas vezes as empresas tomam a atitude de combinar Datalakes e DataWarehou
 - Os usuários do data lake ficam próximos dos dados brutos, mas têm que investir muito tempo na preparação dos dados do que realmente nas regras de negócio. Além disso, a exploração dos dados exige uma expertise em ferramentas de codificação para extrair valor das informações.
 - Manter os dados consistentes entre o DL e o DW é uma tarefa difícil e cara.
 
-Alguns desses problemas podem ser solucionados utilizando alguns serviços de DataWarehouse em cloud. Esses serviços fazem a integração direta entre o datalake e o DataWarehouse, mesmo assim o custo de manutenção e a orquestração do fluxo de dados deve ser mantida.
+Para solucionar esse problema de vez temos as soluções de [[DataLakehouse]], que trazem o melhor dos dois conceitos de uma forma realmente integrada.
+
 # Desidentificarão de dados
 O processo de desidentificarão de dados é utilizado para garantir as leis de proteção de dados e não deixar vazar dados de clientes, ao mesmo tempo que conseguimos utilizar os dados para criar visões de negócio com dados reais.
 
