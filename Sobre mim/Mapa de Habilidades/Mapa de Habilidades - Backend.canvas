@@ -6,10 +6,13 @@
 		{"id":"5e0379c7fe7ea938","type":"text","text":"### Tortoise ORM\n\n- [[Tortoise ORM]]","x":380,"y":-120,"width":280,"height":71},
 		{"id":"0270914f23f200c2","type":"text","text":"### Programação assíncrona\n\n- [[AsyncIO]]","x":-120,"y":60,"width":329,"height":87},
 		{"id":"8f689b8c2c5e3f23","type":"text","text":"### {Tema} \n\n- ","x":-1040,"y":-460,"width":250,"height":80},
-		{"id":"bac6cb20bba7a162","type":"text","text":"### Datalakes\n\n- ","x":-660,"y":-500,"width":329,"height":50}
+		{"id":"bac6cb20bba7a162","type":"text","text":"### Datalakes\n\n- ","x":-660,"y":-500,"width":329,"height":50},
+		{"id":"da60daf61ebfcccb","type":"text","text":"### Gerenciamento de projetos\n\n- ","x":-640,"y":-49,"width":250,"height":80},
+		{"id":"91d106623acf444b","type":"text","text":"### Code Review\n\n- ","x":-640,"y":104,"width":250,"height":50}
 	],
 	"edges":[
 		{"id":"728c79539df3b6e1","fromNode":"29992bf73d3624c3","fromSide":"right","toNode":"36fdf20f86dab1be","toSide":"left"},
-		{"id":"74975d466701a02c","fromNode":"29992bf73d3624c3","fromSide":"right","toNode":"5e0379c7fe7ea938","toSide":"left"}
+		{"id":"74975d466701a02c","fromNode":"29992bf73d3624c3","fromSide":"right","toNode":"5e0379c7fe7ea938","toSide":"left"},
+		{"id":"8d5d744d9dfea9d6","fromNode":"da60daf61ebfcccb","fromSide":"bottom","toNode":"91d106623acf444b","toSide":"top"}
 	]
 }
