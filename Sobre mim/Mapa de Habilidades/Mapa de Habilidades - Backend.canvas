@@ -5,11 +5,15 @@
 		{"id":"21f06953f196d71c","type":"text","text":"### Domain-Driven Design\n\n- [[_Implementing Domain-Driven Design]]","x":-660,"y":-269,"width":329,"height":149},
 		{"id":"5e0379c7fe7ea938","type":"text","text":"### Tortoise ORM\n\n- [[Tortoise ORM]]","x":380,"y":-120,"width":280,"height":87},
 		{"id":"0270914f23f200c2","type":"text","text":"### Programação assíncrona\n\n- [[AsyncIO]]","x":-120,"y":60,"width":329,"height":87},
-		{"id":"8f689b8c2c5e3f23","type":"text","text":"### {Tema} \n\n- ","x":-1040,"y":-460,"width":250,"height":80},
-		{"id":"0c12e913425469c9","type":"text","text":"### ElasticSearch\n\n- [[Elasticsearch]]","x":-660,"y":0,"width":329,"height":86,"color":"6"}
+		{"id":"0c12e913425469c9","type":"text","text":"### ElasticSearch\n\n- [[Elasticsearch]]","x":-1060,"y":18,"width":329,"height":86,"color":"6"},
+		{"id":"3bff75bb8f7d004e","type":"text","text":"### Elastic stack","x":-660,"y":18,"width":329,"height":86},
+		{"id":"8f689b8c2c5e3f23","type":"text","text":"### {Tema} \n\n- ","x":-1060,"y":-480,"width":329,"height":80},
+		{"id":"29eeabd67e8f50fc","type":"text","text":"### Logstash\n\n- [[LogStash]]","x":-1060,"y":160,"width":329,"height":86}
 	],
 	"edges":[
 		{"id":"728c79539df3b6e1","fromNode":"29992bf73d3624c3","fromSide":"right","toNode":"36fdf20f86dab1be","toSide":"left"},
-		{"id":"74975d466701a02c","fromNode":"29992bf73d3624c3","fromSide":"right","toNode":"5e0379c7fe7ea938","toSide":"left"}
+		{"id":"74975d466701a02c","fromNode":"29992bf73d3624c3","fromSide":"right","toNode":"5e0379c7fe7ea938","toSide":"left"},
+		{"id":"49cc5be475b540b5","fromNode":"3bff75bb8f7d004e","fromSide":"left","toNode":"0c12e913425469c9","toSide":"right"},
+		{"id":"32b92504ef41f498","fromNode":"3bff75bb8f7d004e","fromSide":"left","toNode":"29eeabd67e8f50fc","toSide":"right"}
 	]
 }
