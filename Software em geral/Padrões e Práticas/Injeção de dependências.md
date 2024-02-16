@@ -36,9 +36,13 @@ Como você viu acima, a classe `Injector` injeta o serviço (dependência) no cl
 
 # Onde definir a configuração do Container de DI?
 
-A questão importante em tudo isso é garantir que a configuração dos serviços seja separada de seu uso. Na verdade, este é um princípio de design fundamental que se assenta com a separação das interfaces da implementação. É algo que vemos dentro de um programa orientado a objeto quando a lógica condicional decide qual classe instanciar e, em seguida, avaliações futuras dessa condicional são feitas por meio de polimorfismo em vez de código condicional duplicado.
+**A questão importante em tudo isso é garantir que a configuração dos serviços seja separada de seu uso.** Na verdade, este é um princípio de design fundamental que se assenta com a separação das interfaces da implementação. É algo que vemos dentro de um programa orientado a objeto quando a lógica condicional decide qual classe instanciar e, em seguida, avaliações futuras dessa condicional são feitas por meio de polimorfismo em vez de código condicional duplicado.
 
-Se essa separação for útil em uma única base de código, ela será especialmente vital quando você estiver usando elementos externos, como componentes e serviços. A primeira questão é se você deseja adiar a escolha da classe de implementação para implantações específicas. Se assim for, você precisa usar alguma implementação de plugin (IoC). Uma vez que você está usando plugins, então é essencial que a montagem dos plugins seja feita separadamente do resto do aplicativo para que você possa substituir configurações diferentes facilmente para implantações diferentes. A forma como se consegue isso é secundária. Esse mecanismo de configuração pode configurar um localizador de serviço (Service Locator) ou usar injeção para configurar objetos diretamente.
+Se essa separação for útil em uma única base de código, ela será especialmente vital quando você estiver usando elementos externos, como componentes e serviços. 
+
+A primeira questão é se você deseja **adiar a escolha da classe de implementação** para implantações específicas. Se assim for, você precisa usar alguma** implementação de plugin** (IoC). Uma vez que você está usando plugins, então é essencial que a montagem dos plugins seja feita separadamente do resto do aplicativo para que você possa substituir configurações diferentes facilmente para implantações diferentes. 
+
+Esse mecanismo de configuração pode configurar um localizador de serviço (Service Locator) ou usar injeção para configurar objetos diretamente.
 
 # Referências
 
