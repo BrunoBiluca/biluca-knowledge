@@ -21,3 +21,7 @@ Exemplos:
 
 - Porcentagem paga caso o jogo alcance $1M 
 	- Existem algumas exceções, por exemplo se o jogo for publicado na Epic Store essa cobrança não acontece.
+
+# Exemplos
+
+[[Exemplo - Jogador morre e deixa bolsa de itens]]
