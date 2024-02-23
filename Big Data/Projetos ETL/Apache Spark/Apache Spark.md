@@ -17,6 +17,8 @@ The Apache Spark Architecture is founded on Resilient Distributed Datasets (RDDs
 - Cloud
 [[Implementações na AWS]]
 
+O Apache Spark também pode ser utilizado com uma camada escrita para a linguagem Python chamada [[PySpark]]. Atualmente a performance do PySpark é tão boa quando a versão Java/Scala o que é uma ótima alternativa para equipes com habilidade na linguagem.
+
 # Casos de uso
 
 - Treinamento de modelos de aprendizado de máquina em escala
@@ -37,25 +39,7 @@ Prior to 3.0, Spark does the optimization by creating an execution plan before t
 
 Adaptive Query Execution is disabled by default. In order to enable Set `spark.sql.adaptive.enabled` configuration property to `true`.
 
-# PySpark e testes automatizados
 
-### Melhoria de performance nos testes
-
-Initiating a new spark session for each test would dramatically increase the time to run the tests and introduce a ton of boiler-plate code to your tests.
-
-Efficiently, creating and sharing a SparkSession across your tests is vital to keep the performance of your tests at an acceptable level.
-
-# PySpark com VEnv
-
-### Configurações
-
-| Property | Description |
-| ---- | ---- |
-| spark.pyspark.virtualenv.enabled | Property flag to enable virtualenv |
-| spark.pyspark.virtualenv.type | Type of virtualenv. Valid values are “native”, “conda” |
-| spark.pyspark.virtualenv.requirements | Requirements file (optional, not required for interactive mode) |
-| spark.pyspark.virtualenv.bin.path | The location of virtualenv executable file for type native or conda executable file for type conda |
-| spark.pyspark.virtualenv.python_version | Python version for conda. (optional, only required when you use conda in interactive mode) |
 # Referências
 
 - [Using VirtualEnv with PySpark - Cloudera Community - 245932](https://community.cloudera.com/t5/Community-Articles/Using-VirtualEnv-with-PySpark/ta-p/245932)
