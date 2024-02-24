@@ -25,4 +25,5 @@ Exemplos:
 
 # Exemplos
 
-[[Exemplo - Jogador morre e deixa bolsa de itens]]
+[[Exemplo - Raycast de objetos pela câmera]]
+[[Exemplo - Text face camera]]
