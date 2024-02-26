@@ -3,9 +3,11 @@ tags:
   - análise_de_dados
   - engenharia_de_dados
 ---
-[Spark](https://spark.apache.org/) is an open-source distributed general-purpose cluster computing framework. Spark’s in-memory data processing engine conducts analytics, ETL, machine learning and graph processing on data in motion or at rest. It offers high-level APIs for the programming languages: Python, Java, Scala, R, and SQL.
+[Spark](https://spark.apache.org/) é uma estrutura de computação em cluster distribuída de código aberto e de uso geral. O mecanismo de processamento de dados na memória do Spark conduz análises, ETL, aprendizado de máquina e processamento em grafo de dados em movimento ou em repouso. Oferece APIs de alto nível para as linguagens de programação: Python, Java, Scala, R e SQL.
 
-The Apache Spark Architecture is founded on Resilient Distributed Datasets (RDDs). These are distributed immutable tables of data, which are split up and allocated to workers. The worker executors implement the data. The RDD is immutable, so the worker nodes cannot make alterations; they process information and output results.
+A arquitetura Apache Spark é baseada em conjuntos de dados distribuídos resilientes (Resilient Distributed Datasets, RDDs). Estas são tabelas de dados imutáveis ​​​​distribuídas, que são divididas e alocadas aos nós trabalhadores. O RDD é imutável, portanto os nós trabalhadores não podem fazer alterações; eles processam informações e produzem resultados.
+
+Apache Spark utiliza o otimizador Catalyst para automaticamente revelar o plano de execução mais eficiente dado qualquer processamento.
 
 - Funcionalidades
 [[Funções nativas]]
@@ -24,6 +26,21 @@ O Apache Spark também pode ser utilizado com uma camada escrita para a linguage
 - Treinamento de modelos de aprendizado de máquina em escala
 - Consultar conjuntos de big data usando SQL
 - Processamento de dados em tempo real com Spark Streaming
+
+# Plano de execução
+
+O plano de execução é a forma detalhada que o processamento será executado no cluster do Spark. Ele consiste de uma DAG (Direct Acyclic Graph) composta por vários passos que serão distribuídos pelo cluster, planos lógicos, físicos, isso inclui tarefas como análise, otimização e agendamento de operações de processamento de dados para obter o melhor desempenho possível.
+
+Apache Spark ou PySpark usa um otimizador Catalyst, que descobre automaticamente o plano de execução Spark mais eficiente para executar as operações especificadas. Ele produz o fluxo de execução conforme abaixo:
+
+- O código escrito é primeiro anotado como um plano lógico não resolvido; se for válido, o Spark o converte em um plano lógico
+- O plano lógico é passado pelo Catalyst Optimizer para aplicar regras otimizadas.
+- O Plano Lógico Otimizado é então convertido em um Plano Físico
+- O Plano Físico é executado pelos executores do Spark.
+- (Opcional) Adaptive Query Execution pode ser utilizado e permite que o plano de execução físico seja alterado em tempo de execução no cluester. Se utilizando de estatísticas geradas em tempo real o AQE pode alterar o plano para otimizar ainda mais a consulta. Para ver o plano de execução gerado nessa etapa é necessário visualizar a partir do Spark UI.
+
+![[Composição do plano de execução do Apache Spark.webp]]
+
 
 # Principais diferenças entre Spark 2 e Spark 3
 Apache Spark 3 foi lançado em 2020 e trouxe várias melhorias em relação ao seu antecessor Apache Spark 2 (2016)
@@ -47,3 +64,5 @@ Adaptive Query Execution is disabled by default. In order to enable Set `spark.
 	- Bom exemplo de utilização do Pytest para executar os testes
 - [How to Install Apache Spark on Windows 10 (phoenixnap.com)](https://phoenixnap.com/kb/install-spark-on-windows-10)
 	- No passo de instalação do windowutils, não é para criar uma pasta apenas com o .exe sugerido no arquivo, é para baixar a pasta completa
+- [Plano de execuçao do Spark](https://sparkbyexamples.com/spark/spark-execution-plan/)
+	- Exemplo de utilização do plano de execução do spark para otimização de operações

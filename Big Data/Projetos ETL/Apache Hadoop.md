@@ -13,15 +13,17 @@ O HDFS permite que um único conjunto de dados seja armazenado em vários dispos
 
 Foi um dos primeiros frameworks que permitiam a coleção e análise de grandes quantidades de dados não estruturados. Atualmente o Hadoop foi praticamente substituído pelo Apache Spark (mesmo que o Spark utilize o Hadoop por baixo dos panos) por ser complexo, ter uma baixa performance, segurança limitada e falta de suporte para streaming de dados.
 
+Alguns pontos que levaram o Hadoop a não ser mais uma das opções para o armazenamento de dados é a segurança dos dados, que no HDFS não existe nenhum tipo de possibilidade de governança.
+
 # HDFS - Hadoop Distributed File System
 
-Essa é a camada de armazenamento do Hadoop que foi desenvolvido para lidar com grandes volumes de dados e poder usado com arquivos de grandeza nos GBs a TBs.
+Essa é a camada de armazenamento do Hadoop que foi desenvolvido para lidar com grandes volumes de dados na grandeza dos GBs a TBs. Ele oferece um bom rendimento (Throughput, quantidade de trabalho realizado em um tempo unitário) por conseguir de forma independente e paralela executar tarefas em toda a rede de nós.
 
 O Hadoop funciona com a arquitetura Primary-Secondary (Primario-Secundario) em que existe um nó primário e **n** nós escravos onde n pode ser mais de 1000 por exemplo. O Nó primário deve ser configurado em uma boa máquina pois é a peça central do cluster Hadoop.
 
 No nó principal da Arquitetura Hadoop, um daemon chamado `namenode` é executado para o HDFS. Em todos os escravos, um daemon chamado `datanode` é executado para o HDFS. Portanto, os escravos também são chamados de datanodes.
 
-O Namenode armazena meta dados e gerencia os datanodes. Por outro lado, os Datanodes armazenam os dados e executam as tarefas.
+O Namenode armazena meta dados e gerencia os datanodes. Por outro lado, os Datanodes armazenam os dados e executam as tarefas. Também existe o Secondary NameNode que tem a função de fazer o balanceamento para realizar checkpoints nos arquivos e datalogs, além de ser responsável por maximizar processos de otimização do cluster.
 
 > [!info] Daemon
 > Em sistemas operacionais multitarefas, um Daemon é um programa que executa como um processo em plano de fundo, em vez de estar sob o controle direto de um usuário interativo.
