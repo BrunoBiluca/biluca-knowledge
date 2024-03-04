@@ -21,7 +21,7 @@ Efficiently, creating and sharing a SparkSession across your tests is vital to k
 | spark.pyspark.virtualenv.requirements | Requirements file (optional, not required for interactive mode) |
 | spark.pyspark.virtualenv.bin.path | The location of virtualenv executable file for type native or conda executable file for type conda |
 | spark.pyspark.virtualenv.python_version | Python version for conda. (optional, only required when you use conda in interactive mode) |
-# Apache Spark vs Pandas
+# Pypark vs Pandas
 
 Tanto o [[Apache Spark]] quanto o Pandas são frameworks para manipulação de dados com ampla utilização no mercado, mesmo que tenham interfaces parecidas elas tem casos de uso diferentes.
 
