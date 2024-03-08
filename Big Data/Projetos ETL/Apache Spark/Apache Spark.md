@@ -31,8 +31,22 @@ O Apache Spark também pode ser utilizado com uma camada escrita para a linguage
 - Consultar conjuntos de big data usando SQL
 - Processamento de dados em tempo real com Spark Streaming
 
+# Instalação
 
+> [!info] Referência
+> https://sparkbyexamples.com/pyspark/how-to-install-and-run-pyspark-on-windows/
 
+Programas necessários
+- Java 8+
+- Apache Hadoop
+- Apache Spark
+- winutils.exe (todos os arquivos da pasta bin do repositório devem ser copiados)
+- PySpark (pip)
+
+Variáveis de ambiente
+- JAVA_HOME
+- HADOOP_HOME
+- SPARK_HOME
 # Principais diferenças entre Spark 2 e Spark 3
 Apache Spark 3 foi lançado em 2020 e trouxe várias melhorias em relação ao seu antecessor Apache Spark 2 (2016)
 

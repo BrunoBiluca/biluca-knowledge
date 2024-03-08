@@ -3,5 +3,7 @@
   "baseFontSize": 16,
   "enabledCssSnippets": [
     "center-images"
-  ]
+  ],
+  "cssTheme": "",
+  "theme": "obsidian"
 }
