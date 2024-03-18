@@ -49,7 +49,7 @@ Para a criação do Elasticsearch local focado em desenvolvimento pode ser facil
 Nessa versão todas as funcionalidades do Elasticsearch estão disponíveis, porém elas estão limitadas a apenas uma máquina sendo utilizada,
 também não há comunicação entre os nós.
 
-> [!info] Docker para execução single-node do ElasticSearch
+### Docker para execução single-node do ElasticSearch
 ```yml
 version: '2.2'
 services:
@@ -95,7 +95,7 @@ Utilizando o `docker-compose.yml` serão inicializados 2 serviços docker:
 
 ## Criação do Elasticsearch local modo cluster
 
-> [!info] Docker para execução cluster do ElasticSearch
+### Docker para execução cluster do ElasticSearch
 ```yml
 version: '2.2'
 services:

@@ -2,17 +2,39 @@
 tags:
   - engenharia_de_dados
 ---
-O Logstash é o motor central de fluxo de dados do Elastic Stack para coletar, enriquecer e unificar todos os seus dados independentemente do formato ou esquema. O processamento em tempo real é especialmente eficiente quando associado ao Elasticsearch, ao Kibana e ao Beats.
+> [!info] Definição
+> O Logstash é o motor central de fluxo de dados do Elastic Stack para coletar, enriquecer e unificar todos os seus dados independentemente do formato ou esquema.
+
+ O processamento em tempo real é especialmente eficiente quando associado ao Elasticsearch, ao Kibana e ao Beats.
+
+[Como o Logstash funciona?](https://www.elastic.co/guide/en/logstash/current/pipeline.html)
+[Configuração do Logstash](https://www.elastic.co/guide/en/logstash/current/logstash-settings-file.html)
+
+Principais conceitos do Logstash
+
+- [Inputs](https://www.elastic.co/guide/en/logstash/current/input-plugins.html)
+- [Filters](https://www.elastic.co/guide/en/logstash/current/filter-plugins.html)
+- [Outputs](https://www.elastic.co/guide/en/logstash/current/output-plugins.html)
+- [Codecs](https://www.elastic.co/guide/en/logstash/current/codec-plugins.html)
+
+Integrações
+
+[Ingestão de dados por banco de dados relacionais (MySQL)](https://www.elastic.co/guide/en/cloud/current/ec-getting-started-search-use-cases-db-logstash.html)
 
 # Exemplo - Apache web logs
 
-Nesta seção, você cria um pipeline do Logstash que usa o Filebeat para obter logs da web do Apache como entrada, analisa esses logs para criar campos nomeados específicos a partir dos logs e grava os dados analisados ​​em um cluster do Elasticsearch. Esse exemplo será executado localmente.
+Nesta seção:
+- Criação de um pipeline que usa Filebeat para obter logs do servidor web do Apache
+- Análise dos logs para criar campos específicos
+- Persistência dos logs no Elasticsearch para consultadas
 
 Dados de entrada do Apache web server, cada linha representa uma requisição feita ao servidor.
 
-```
+```log
 83.149.9.216 - - [04/Jan/2015:05:13:42 +0000] "GET /presentations/logstash-monitorama-2013/images/kibana-search.png HTTP/1.1" 200 203023 "http://semicomplete.com/presentations/logstash-monitorama-2013/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/32.0.1700.77 Safari/537.36"
+---
 83.149.9.216 - - [04/Jan/2015:05:13:42 +0000] "GET /presentations/logstash-monitorama-2013/images/kibana-dashboard3.png HTTP/1.1" 200 171717 "http://semicomplete.com/presentations/logstash-monitorama-2013/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/32.0.1700.77 Safari/537.36"
+---
 83.149.9.216 - - [04/Jan/2015:05:13:44 +0000] "GET /presentations/logstash-monitorama-2013/plugin/highlight/highlight.js HTTP/1.1" 200 26185 "http://semicomplete.com/presentations/logstash-monitorama-2013/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/32.0.1700.77 Safari/537.36"
 ...
 ```
@@ -41,7 +63,7 @@ output {
 }
 ```
 
-Com a configuração pronta já temos a saída dos dados lidos pelo Filebeats
+Com a configuração pronta já temos a saída dos dados lidos pelo Filebeats. Vários dos campos são gerados automaticamente pelo próprio Logstash, a linha do log do servidor Apache está no campo `message`.
 
 ```json
 {
@@ -68,7 +90,7 @@ Com a configuração pronta já temos a saída dos dados lidos pelo Filebeats
 }
 ```
 
-Um dos filtro padrão do Logstash é o Ngrok que podemos utilizar para parsear dados desestruturados em algo estrutura que já possa ser consultado. Foi utilizado como padrão o formato `COMBINEDAPACHELOG`.
+Um dos filtros padrão disponíveis para a utilização no Logstash é o Ngrok que pode ser utilizado para analisar dados desestruturados em algo estruturado que já possa ser consultado. Foi utilizado como padrão o formato `COMBINEDAPACHELOG`.
 
 ```
 filter {
@@ -116,7 +138,9 @@ A aplicação desse filtro gera a seguinte saída:
 }
 ```
 
-Para indexar os dados no ElastiSearch podemos apenas substituir o output da configuração do Logstash para apontar para o caminho e porta correta.
+Com o uso desse filtro já é possível ter várias das principais informações disponíveis nas linhas do log do servidor Apache como `host`, `clientip`, `agent` e `timestamp` (do evento).
+
+Para indexar os dados no Elasticsearch podemos apenas substituir o output da configuração do Logstash para apontar para o caminho e porta do serviço configurado.
 
 ```
 elasticsearch {
@@ -126,11 +150,36 @@ elasticsearch {
 
 # Criando plugins
 
-To develop a new filter for Logstash, build a self-contained Ruby gem whose source code lives in its own GitHub repository. The Ruby gem can then be hosted and shared on RubyGems.org.
+Um filtro para o Logstash é uma gem Ruby autocontida que pode ser instalado por um dos repositórios padrão (RubyGems.org), repositório privado ou mesmo localmente.
 
-Também é possível utilizar a ferramenta de geração de plugins para o Logstash.
+Para gerar plugins para o Logstash utilizamos a própria ferramenta do Logstash que cria a fundação de um plugin.
+
+```sh
+bin/logstash-plugin generate --type input --name xkcd --path ~/ws/elastic/plugins
+```
+
+- `--type`: Type of plugin - input, filter, output, or codec
+- `--name`: Name for the new plugin
+- `--path`: Directory path where the new plugin structure will be created. If you don’t specify a directory, the plugin is created in the current directory.
+
+> [!info] Como criar um plugin do Logstash?
+> - [Novo plugin de filtro](https://www.elastic.co/guide/en/logstash/current/filter-new-plugin.html)
+
+# Performance
+
+- [Solução de problemas de performance](https://www.elastic.co/guide/en/logstash/current/performance-troubleshooting.html)
+- [Afinando Logstash](https://www.elastic.co/guide/en/logstash/current/tuning-logstash.html)
+
+### JVM heap
+
+Be aware of the fact that Logstash runs on the Java VM. This means that Logstash will always use the maximum amount of memory you allocate to it.
+
+- Heap size should be no less than 4GB and no more than 8GB.
+- CPU utilization can increase unnecessarily if the heap size is too low, resulting in the JVM constantly garbage collecting.
+- Don’t exceed 50-75% of physical memory. The more memory you have, the higher percentage you can use.
+- Set the minimum (Xms) and maximum (Xmx) heap allocation size to the same value to prevent the heap from resizing at runtime
 
 # Referências
 
 - [Pipeline avançado do exemplo de Apache web logs](https://www.elastic.co/guide/en/logstash/current/advanced-pipeline.html)
-- [Criação de plugins do Logstash](https://www.elastic.co/guide/en/logstash/current/filter-new-plugin.html)
+- 
