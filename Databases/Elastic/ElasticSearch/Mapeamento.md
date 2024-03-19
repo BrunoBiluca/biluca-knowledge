@@ -100,6 +100,33 @@ O insert de documentos deve ser feito então da seguinte maneira:
 
 Dessa forma eu garanto que todos os dados do Autor referentes ao ano de 2021 estão no mesmo shard e agregações que utilizem dessa informação serão feitas mais facilmente. Por exemplo analisar todos os comentários em busca de comentários positivos de todos os livros referentes a categoria CategoriaA no ano de 2021.
 
+# Analisadores
+
+Analisadores são ferramentas que permitem a manipulação dos dados no momento de indexação.
+
+- Character filters: remoção de html
+- Tokenizer: pontuação, espaços em branco
+- Token filter: lowercasing, stemming, synonyms, stopwords
+
+Existem uma variedade de analisadores disponíveis no Elasticsearch, também é possível criar seus próprios analisadores utilizando `painless script`.
+
+# Modelagem
+
+> [!warning] Campos aninhados
+> Documentos com muitos campos aninhados podem resultar em problemas de performance para um cluster Elasticsearch.
+> 
+> Uma forma de resolver esses problemas é aplicar um tipo de campo `flattened`, fazendo assim todos os campos internos ao documento ficarem na raiz, o que melhor a performance em pesquisa sobre esses campos.
+
+### Dados normalizados
+
+- Minimiza o tamanho de dados armazenados
+- Pode necessitar mais de uma query para conseguir informações complexas
+
+### Dados desnormalizados
+
+- Ocupam mais espaço
+- Permitem trazer dados mais complexos com menos queries
+
 # Referências
 
 - [Mapeamento explícito](https://www.elastic.co/guide/en/elasticsearch/reference/7.11//explicit-mapping.html)
@@ -109,3 +136,4 @@ Dessa forma eu garanto que todos os dados do Autor referentes ao ano de 2021 est
 - [Eager global ordinals](https://www.elastic.co/guide/en/elasticsearch/reference/7.11//eager-global-ordinals.html#eager-global-ordinals)
 - [Ignore Malformed](https://www.elastic.co/guide/en/elasticsearch/reference/7.11//ignore-malformed.html)
 - [Enabled](https://www.elastic.co/guide/en/elasticsearch/reference/7.11//enabled.html)
+- [Parent join](https://www.elastic.co/guide/en/elasticsearch/reference/8.12/parent-join.html)

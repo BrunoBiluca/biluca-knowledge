@@ -1,3 +1,7 @@
+---
+tags:
+  - banco_de_dados
+---
 # Queries
 
 ## Search
@@ -109,6 +113,14 @@ Elas são divididas em 3 tipos:
 
 Outra questão é que as agregações em uma query são resolvidas de forma sequencial, assim não é possível utilizar o poder de paralelismo do cluster.
 
+## Paginação
+
+> [!warning] Paginação pode resultar em problemas de performance
+> 
+> In a distributed system, the cost of sorting results grows exponentially the deeper we page.
+> 
+> - [Artigo entendendo paginação profunda](https://rimdev.io/elasticsearch-sinking-in-deep-paging-quicksand)
+> - [Documentação sobre Paginação](https://www.elastic.co/guide/en/elasticsearch/guide/current/pagination.html)
 # Referências
 
 - [Boolean query](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-bool-query.html)

@@ -32,7 +32,7 @@ Principais processors utilizados:
 - `append`: adiciona elementos a um array já existem em um documento
 - `json`: converte uma string json para um json estruturado
   - Muito utilizado quando a sua fonte de dados só consegue enviar strings para o Elasticsearch, como é o caso do conector de Hadoop quando enviamos um DataFrame para persistir.
-- `script`: podemos utilizar de uma linguagem de script (por padrão painless) para formatarmos os dados
+- `script`: podemos utilizar de uma linguagem de script (por padrão [painless](https://www.elastic.co/guide/en/elasticsearch/painless/8.12/painless-guide.html)) para formatarmos os dados
 - `pipeline`: podemos chamar um próximo pipeline de execução
 
 ```json

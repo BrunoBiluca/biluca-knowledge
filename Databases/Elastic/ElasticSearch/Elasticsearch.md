@@ -19,7 +19,7 @@ Para contornar esses problemas algumas medidas de otimizações devem ser tomada
 
 Outros conteúdos
 
-[[Dicas de performance]]
+[[Dicas e solução de problemas]]
 [[Infraestrutura]]
 
 Funcionalidades
@@ -34,12 +34,15 @@ Funcionalidades
 - Documentos: quaisquer coisas que você irá pesquisar
 - Índices: coleção de documentos indexados. Cada índice contém um índice invertido que permite pesquisa relacionada a tudo dentro do índice ao mesmo tempo.
 
-> [!info] Índice invertido
+## Índice invertido
+
+> [!info] Objetivo do índice invertido
 > O propósito de um índice invertido, é armazenar textos em uma estrutura a permitir buscas completas de forma muito eficiente e rápida.
-> 
-> Cada campo do documento que seja do tipo `full-text` terá um índice invertido relacionado. Cada índice consiste em termos únicos que aparecem em qualquer documento, assim, quando uma busca é feita cada um desses termos é analisado e sabemos exatamente o documento que esse termo pertence.
-> 
 > [Entendendo o índice invertido no Elasticsearch](https://codingexplained.com/coding/elasticsearch/understanding-the-inverted-index-in-elasticsearch)
+
+Cada campo do documento que seja do tipo `full-text` terá um índice invertido relacionado. Cada índice consiste em termos únicos que aparecem em qualquer documento, assim, quando uma busca é feita cada um desses termos é analisado e sabemos exatamente o documento que esse termo pertence.
+
+O índice invertido também calcula a relevância dos termos pesquisados, levando em consideração sua posição no texto, vezes que o termo se repete e relevância na língua escolhida ([analisadores de línguas](https://www.elastic.co/guide/en/elasticsearch/reference/current/analysis-lang-analyzer.html)).
 
 
 # Referências
