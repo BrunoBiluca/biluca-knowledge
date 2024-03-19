@@ -40,3 +40,7 @@ Utilizando o `docker-compose.yml` serão inicializados 2 serviços docker:
 - Shards: são os containers dos dados. Quando um documento é indexado, o Elasticsearch verifica em qual shard esse documento será armazenado e então ele é persistido lá.
 
 - Réplicas: são replicações dos shards criados, réplicas **podem ser utilizadas para melhorar a performance de consultas e agregações**, já que aumentam a parelelização a execução dessas queries pelo cluster. Uma replica pode espelhar um shard é sempre persistida em um datanode diferente. Outra vantagem do uso de réplicas é a garantia da disponibilidade dos dados no seu sistema. A principal disvantagem de utilizar réplicas é a quantidade de armazenamento necessário, dependendo da quantidade de dados armazenados no Elasticsearch, será necessário gastar o dobro ou mais.
+
+> [!warning] Não é possível adicionar mais shards ao cluster posterior a criação
+> - É possível adicionar mais réplicas 
+> - Caso necessário será necessário reindexar todos os dados do cluster

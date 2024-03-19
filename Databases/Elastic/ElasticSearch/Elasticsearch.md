@@ -29,5 +29,18 @@ Funcionalidades
 [[Queries]]
 [[Monitoramento]]
 
+# Principais conceitos
+
+- Documentos: quaisquer coisas que você irá pesquisar
+- Índices: coleção de documentos indexados. Cada índice contém um índice invertido que permite pesquisa relacionada a tudo dentro do índice ao mesmo tempo.
+
+> [!info] Índice invertido
+> O propósito de um índice invertido, é armazenar textos em uma estrutura a permitir buscas completas de forma muito eficiente e rápida.
+> 
+> Cada campo do documento que seja do tipo `full-text` terá um índice invertido relacionado. Cada índice consiste em termos únicos que aparecem em qualquer documento, assim, quando uma busca é feita cada um desses termos é analisado e sabemos exatamente o documento que esse termo pertence.
+> 
+> [Entendendo o índice invertido no Elasticsearch](https://codingexplained.com/coding/elasticsearch/understanding-the-inverted-index-in-elasticsearch)
+
+
 # Referências
 
