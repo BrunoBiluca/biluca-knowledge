@@ -121,6 +121,72 @@ Outra questão é que as agregações em uma query são resolvidas de forma sequ
 > 
 > - [Artigo entendendo paginação profunda](https://rimdev.io/elasticsearch-sinking-in-deep-paging-quicksand)
 > - [Documentação sobre Paginação](https://www.elastic.co/guide/en/elasticsearch/guide/current/pagination.html)
+
+## Ordenação
+
+> [!tip] Ordenação de campos do tipo `text`
+> Não é possível fazer a ordenação em campos do tipo `text` por se tratar de uma estrutura armazenada no índice invertido.
+> 
+> Para resolver esse problema, podemos armazenar uma versão do campo no formato `keyword` e assim fazer a ordenação pela ordem alfabética.
+
+## Pesquisa de texto
+
+### Fuzziness
+
+Elasticsearch disponibiliza sua implementação da distância Levenshtein:
+
+```json
+// exemplo de query
+{"query": {"match": {"title": "intersteller", "fuzziness": 1}}}
+```
+
+> [!info]- Distância de Levenshtein
+> 
+> Levenshtein distance __is a measure of the similarity between two strings, which takes into account the number of insertion, deletion and substitution operations needed to transform one string into the other.__
+> 
+> - **Insertion:** Adding a character to string A.
+> - **Deletion:** Removing a character from string A.
+> - **Replacement:** Replacing a character in string A with another character.
+> 
+> https://www.geeksforgeeks.org/introduction-to-levenshtein-distance/
+
+### Indexando N-grams e Sugestões de completude
+
+Uma técnica que podemos utilizar a indexação de N-grams para melhor a performance em pesquisas de texto, principalmente em sistema de pesquisas enquanto o usuário digita o termo pesquisado.
+
+Dessa forma além da indexação do termo pesquisado também iremos indexar pedaços desse termo para auxiliar no momento da pesquisa.
+
+> [!tip] Exemplo de implementação da funcionalidade de autocomplete
+> - [Aulas relacionadas a Search as you Type do cruso de Elasticsearch do mano com a boina](https://www.udemy.com/course/elasticsearch-7-and-elastic-stack/learn/lecture/14728954#overview)
+
+O analisador de autocomplete deve ser apenas utilizado durante a indexação enquanto o analisador padrão deve ser utilizado nas consultas. Isso ocorre já que não queremos que o termos digitado na query seja analisado em seus N-grams e sim como um valor completo, coisa que o analisador padrão faz.
+
+```json
+// Exemplo de analisador para autocomplete
+{
+"settings": {
+	"analysis": { 
+		"filter": {
+			"autocomplete_filter": { // define o filtro
+				"type": "edge_ngram",
+				"min_gram": 1,
+				"max_gram": 4
+			}
+		},
+		"analyzer": { // aplica o filtro no processo de indexação
+			"autocomplete": {
+				"type": "custom",
+				"tokenizer": "standard",
+				"filter": ["lowercase", "autocomplete_filter"]
+			}
+		}
+	}
+}
+```
+
+> [!info] Documentação relacionada a N-gram
+> https://www.elastic.co/guide/en/elasticsearch/reference/current/analysis-ngram-tokenizer.html
+
 # Referências
 
 - [Boolean query](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-bool-query.html)
