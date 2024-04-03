@@ -21,6 +21,33 @@ Integrações
 
 [Ingestão de dados por banco de dados relacionais (MySQL)](https://www.elastic.co/guide/en/cloud/current/ec-getting-started-search-use-cases-db-logstash.html)
 
+## Filtros
+
+Filtros úteis para Logstash
+- Anonimizar informações
+- Geolocalização
+
+### Mutate
+
+> [!info] Descrição do filtro Mutate
+> Permite alterar os dados de entrada para um novo mapeamento
+
+# Dead letter queue (DLQ)
+
+> [!info] Definição
+> 
+> A Dead letter queue foi criada para temporariamente escrever eventos que não puderam ser processados. Dessa forma é possível investigar problemas de mapeamento, de análise ou qualquer outro problema com os eventos sem que o fluxo de processamento seja interrompido ou que os dados sejam perdidos.
+> 
+> [Documentação](https://www.elastic.co/guide/en/logstash/current/dead-letter-queues.html)
+
+Essa fila é armazenada no sistema local e não é suportado sistemas por meio de redes (Network File System).
+
+É possível controlar vários aspectos da DLQ como:
+
+- Tamanho máximo de eventos armazenados
+- Política de tempo de retenção dos eventos
+- Limpeza de eventos já consumidos
+
 # Exemplo - Apache web logs
 
 Nesta seção:
@@ -148,7 +175,9 @@ elasticsearch {
 }
 ```
 
-# Criando plugins
+
+# Plugins
+## Criando plugins
 
 Um filtro para o Logstash é uma gem Ruby autocontida que pode ser instalado por um dos repositórios padrão (RubyGems.org), repositório privado ou mesmo localmente.
 
