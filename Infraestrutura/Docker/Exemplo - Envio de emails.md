@@ -1,9 +1,9 @@
 # Exemplo - Envio de emails
 
 > [!info] Definição
-> Esse exemplo se utiliza de várias tecnologias diferentes gerenciadas pelo Docker de forma a demonstrar a flexibilidade na criação de um sistema complexo enquanto mantemos a segurança da aplicação.
+> Esse exemplo tem como objetivo demonstrar a flexibilidade na criação de um sistema complexo enquanto mantemos a segurança da aplicação e melhores práticas de desenvolvimento.
 > 
-> Outro ponto que é interessante de perceber é na capacidade de quebrar trabalho o que é uma mão na roda na hora de separar responsabilidades entre as equipes e balancear o trabalho.
+> Para isso utilizo de um sistema complexo com comunicação em múltiplas camadas e várias tecnologias, demonstrando assim a facilidade de trabalhar com diferentes componentes quando se utiliza uma solução de container.
 
 Componentes
 
@@ -13,6 +13,7 @@ Componentes
 - Processador de mensagens (worker): Daemon de envio de mensagens contidas na fila
 - Fila de mensagens (queue): Fila que retem as mensagens para envio
 
+O arquivo `docker-compose.yml` abaixo tem a descrição completa do sistema que será criado.
 
 ```yml
 version: '3'
@@ -230,12 +231,7 @@ create table emails(
 );
 ```
 
-```sql
-\l
-\c email_sender
-\d emails
-```
-### Worker
+### Processador de mensagens (worker)
 
 Para o container de processamento de mensagens foi utilizada um outro formato de criação do container, nesse caso foi utilizado um arquivo de Dockerfile para garantir a configuração do container.
 
