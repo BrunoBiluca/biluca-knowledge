@@ -1,0 +1,26 @@
+{
+	"nodes":[
+		{"id":"29992bf73d3624c3","type":"text","text":"### Object-Relational Mapper\n\n- [[ORM - Object Relational Mappers]]\n- [[Principais ORM em python]]","x":-120,"y":-269,"width":329,"height":151,"color":"3"},
+		{"id":"36fdf20f86dab1be","type":"text","text":"### SQLAlchemy\n\n- [[SQLAlchemy]]","x":380,"y":-261,"width":280,"height":87},
+		{"id":"5e0379c7fe7ea938","type":"text","text":"### Tortoise ORM\n\n- [[Tortoise ORM]]","x":380,"y":-120,"width":280,"height":87},
+		{"id":"3bff75bb8f7d004e","type":"text","text":"### Elastic stack","x":-660,"y":18,"width":329,"height":86,"color":"3"},
+		{"id":"0270914f23f200c2","type":"text","text":"### Programação assíncrona\n\n- [[AsyncIO]]","x":-120,"y":18,"width":329,"height":87},
+		{"id":"b42d60277e6bb90c","type":"text","text":"### Docker\n\n- [[Docker]]","x":-660,"y":380,"width":329,"height":150,"color":"3"},
+		{"id":"6e81cc046e260ac7","type":"text","text":"### Arquitetura de software\n\n- ","x":-660,"y":-500,"width":329,"height":86},
+		{"id":"21f06953f196d71c","type":"text","text":"### Domain-Driven Design\n\n- [[_Implementing Domain-Driven Design]]","x":-1160,"y":-606,"width":329,"height":149},
+		{"id":"297a389a8bf5374a","type":"text","text":"### Modelagem\n\n- ","x":-1160,"y":-380,"width":329,"height":86},
+		{"id":"e3559f6c68e75341","type":"text","text":"### Diagramação\n\n- [[Modelo C4]]","x":-1620,"y":-380,"width":329,"height":160},
+		{"id":"0c12e913425469c9","type":"text","text":"### ElasticSearch\n\n- [[Elasticsearch]]","x":-1120,"y":-43,"width":329,"height":122,"color":"5"},
+		{"id":"29eeabd67e8f50fc","type":"text","text":"### Logstash\n\n- [[LogStash]]","x":-1120,"y":140,"width":329,"height":86,"color":"3"},
+		{"id":"ab1239f7642e29e9","x":-831,"y":-1120,"width":911,"height":400,"type":"file","file":"Sobre mim/Mapa de Habilidades/Fundamentos de Ciências da Computação.canvas"}
+	],
+	"edges":[
+		{"id":"728c79539df3b6e1","fromNode":"29992bf73d3624c3","fromSide":"right","toNode":"36fdf20f86dab1be","toSide":"left"},
+		{"id":"74975d466701a02c","fromNode":"29992bf73d3624c3","fromSide":"right","toNode":"5e0379c7fe7ea938","toSide":"left"},
+		{"id":"49cc5be475b540b5","fromNode":"3bff75bb8f7d004e","fromSide":"left","toNode":"0c12e913425469c9","toSide":"right"},
+		{"id":"32b92504ef41f498","fromNode":"3bff75bb8f7d004e","fromSide":"left","toNode":"29eeabd67e8f50fc","toSide":"right"},
+		{"id":"b3c0875a81d5b068","fromNode":"6e81cc046e260ac7","fromSide":"left","toNode":"21f06953f196d71c","toSide":"right"},
+		{"id":"045b03182f5b8e41","fromNode":"6e81cc046e260ac7","fromSide":"left","toNode":"297a389a8bf5374a","toSide":"right"},
+		{"id":"6fe9ccada52ed327","fromNode":"297a389a8bf5374a","fromSide":"left","toNode":"e3559f6c68e75341","toSide":"right"}
+	]
+}

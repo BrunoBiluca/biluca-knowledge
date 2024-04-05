@@ -1,0 +1,11 @@
+{
+	"nodes":[
+		{"id":"8f689b8c2c5e3f23","type":"text","text":"### {Tema} \n\n- ","x":-1060,"y":-480,"width":329,"height":86},
+		{"id":"1ccbe589bde0da69","type":"text","text":"### {Tema} \n\n- ","x":-1060,"y":-340,"width":329,"height":86,"color":"3"},
+		{"id":"4970a9058fd5ef2f","type":"text","text":"### {Tema} \n\n- ","x":-1060,"y":-200,"width":329,"height":86,"color":"6"},
+		{"id":"edceb3392cd2f151","type":"text","text":"### {Tema} \n\n- ","x":-1060,"y":-60,"width":329,"height":86,"color":"5"},
+		{"id":"8d1480a6d72fe05d","type":"text","text":"### {Tema} \n\n- ","x":-1060,"y":80,"width":329,"height":86,"color":"4"},
+		{"id":"0b88c88b21d3da8d","type":"text","text":"### {Tema} \n\n- ","x":-1060,"y":-620,"width":329,"height":86,"color":"1"}
+	],
+	"edges":[]
+}
