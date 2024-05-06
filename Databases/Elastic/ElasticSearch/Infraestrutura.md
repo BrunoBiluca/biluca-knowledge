@@ -14,6 +14,12 @@ O **single-node** é uma instância de Elasticsearch contida em uma única máqu
 
 O modo **cluster** é o mais recomendado para grandes massas de dados, assim podemos distribuir nossos dados por uma rede de máquinas ou VMs e então aproveitar de toda essa paralelização para escalar horizontalmente a aplicação.
 
+> [!important] Heap size
+> O tamanho da Heap padrão é 1GB, assim caso o cluster tenha 64GB de RAM, o tamanho da Heap (utilizada pelo Elasticsearch) irá continuar sendo o mesmo.
+> Assim, alterar o tamanho da Heap deve ser metade ou menos da quantidade física de memória disponível.
+> 
+> OBS: não passar de 32 GB, por causar problemas de performance.
+
 ## Criação do Elasticsearch local para desenvolvimento
 
 Para a criação do Elasticsearch local focado em desenvolvimento pode ser facilmente feito utilizando a versão **single-node**. 
@@ -46,16 +52,24 @@ Todo pedido de escrita é roteado para um shard primário e então replicado. Os
 > - Se um sistema demanda muitas operações de leitura (query e searches) ter mais shards réplica pode ajudar na performance
 > 
 
-- Réplicas: são replicações dos shards criados, réplicas **podem ser utilizadas para melhorar a performance de consultas e agregações**, já que aumentam a parelelização a execução dessas queries pelo cluster. Uma replica pode espelhar um shard é sempre persistida em um datanode diferente. Outra vantagem do uso de réplicas é a garantia da disponibilidade dos dados no seu sistema. A principal disvantagem de utilizar réplicas é a quantidade de armazenamento necessário, dependendo da quantidade de dados armazenados no Elasticsearch, será necessário gastar o dobro ou mais.
+- Réplicas: são replicações dos shards criados, réplicas **podem ser utilizadas para melhorar a performance de consultas e agregações**, já que aumentam a paralelização a execução dessas queries pelo cluster. Uma replica pode espelhar um shard é sempre persistida em um datanode diferente. Outra vantagem do uso de réplicas é a garantia da disponibilidade dos dados no seu sistema. A principal disvantagem de utilizar réplicas é a quantidade de armazenamento necessário, dependendo da quantidade de dados armazenados no Elasticsearch, será necessário gastar o dobro ou mais.
 
 > [!warning] Não é possível adicionar mais shards ao cluster posterior a criação
 > - É possível adicionar mais réplicas 
 > - Caso necessário será necessário reindexar todos os dados do cluster
 
+> [!info] Monitoramento de shards
+> Para verificar mais informações sobre a alocação dos shards e das réplicas no cluster podemos utilizar o seguinte endpoint
+> ```
+> /_cat/shards
+> ```
 
 # Rotação de Alias
 
-Alias é uma forma de adicionar identificadores para além do nome aos índices. 
+> [!info] Rotação de Alias
+> Alias é uma forma de adicionar identificadores para além do nome aos índices. 
+> 
+> [Documentação do Elasticsearch](https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-aliases.html)
 
 Utilizando esse recurso podemos definir nomes mais significativos, agrupar índices utilizando o mesmo alias permitindo pesquisa em múltiplos índices e fazer rotação de índices em relação a alguma característica dos dados.
 

@@ -27,7 +27,9 @@ Funcionalidades
 [[Mapeamento]]
 [[Ingestão dos dados]]
 [[Queries]]
-[[Monitoramento]]
+[[Gerenciamento do ElasticSearch]]
+[[X-Pack]]
+
 
 # Principais conceitos
 

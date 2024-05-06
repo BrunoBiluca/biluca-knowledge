@@ -2,19 +2,19 @@
 
 O backlog de tarefas é o conjunto de histórias que serão refinadas em relação a vários aspectos do desenvolvimento para serem elegidas como candidatas para a produção ou descartadas.
 
-O Backlog deve ser um recurso utilizado para facilitar ao time de desenvolvimento a criação de Histórias refinadas. O refinamento de Histórias acontece por parte do time de desenvolvimento, por meio de revisões, reuniões usuários, time técnico, time de negócio e qualquer outro tipo de pessoa envolvida ou impactada pela História.
+O Backlog deve ser um recurso utilizado para facilitar ao time de desenvolvimento a criação de Histórias refinadas. O refinamento de Histórias acontece por parte do time de desenvolvimento, por meio de revisões, reuniões com usuários, clientes, time técnico, time de negócio e qualquer outro tipo de pessoa envolvida ou impactada pela História.
 
 > [!tip] Tenha um Backlog refinado com moderação
 Uma equipe deve ter um Backlog organizado, porém esse Backlog não deve estar demasiadamente refinado. O refinamento deve ser feito em reflexo ao desenvolvimento. Caso muitas Histórias sejam refinadas seu entendimento pode ficar perdido, assim esse tempo foi gasto em vão.
 
 # Propriedades
 
-| Propriedade | Descrição                                                                                                          |
-| ----------- | ------------------------------------------------------------------------------------------------------------------ |
+| Propriedade | Descrição                                                                                                         |
+| ----------- | ----------------------------------------------------------------------------------------------------------------- |
 | Estimativa  | Tempo necessário para o desenvolvimento da 🃏 História                                                            |
-| Valor       | Valor agregado ao projeto com a entrega da 🃏 História                                                             |
-| Escala      | Estado da 🃏 História em relação ao seu refinamento                                                                |
-| 🌟 Valor    | 🌟 Valor associado a 🃏 História. Toda 🃏 História deve estar associado a um Valor para determinar sua prioridade | 
+| Valor       | Valor agregado ao projeto com a entrega da 🃏 História                                                            |
+| Escala      | Estado da 🃏 História em relação ao seu refinamento                                                               |
+| 🌟 Valor    | 🌟 Valor associado a 🃏 História. Toda 🃏 História deve estar associado a um Valor para determinar sua prioridade |
 
 Todas as outras propriedades são iguais as de [[🃏 Histórias]] já que uma História de Backlog é apenas uma História que ainda não foi refinada.
 
