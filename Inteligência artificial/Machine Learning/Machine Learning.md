@@ -31,6 +31,14 @@ Exemplos de modelos:
 - máquinas de vetores de suporte (SVM)
 - k-means clustering
 
+## Modelos multimodais
+
+> [!info] Definição
+> São modelos capazes de processar informações de várias modalidades, incluindo imagens, textos e vídeos.
+> 
+> Por exemplo, é possível enviar para o modelo a foto de um prato de cookies e pedir que ele mostre uma receita disso.
+
+
 # Fluxo de trabalho em Machine Learning
 
 Assim que definimos a tarefa de previsão seguimos os seguintes passos para desenvolver o trabalho

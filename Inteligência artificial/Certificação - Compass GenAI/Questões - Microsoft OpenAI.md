@@ -1,20 +1,21 @@
-# Microsoft OpenAI
-
 
 ### Which Microsoft API is used for speech and user intent customization training?
 
-LUIS
+(Antigamente) LUIS
+Azure AI Language - CLU compreensão de linguagem coloquial
 
 ### What feature of Microsoft Open AI allows the creation of apps that can recognize form data?
 
 Form Recognier.
 ### What feature of Microsoft Open AI allows the creation of apps that naturally understand human intentions? 
 
-LUIS
+(Antigamente) LUIS
+Azure AI Language - CLU compreensão de linguagem coloquial
 
 ### What feature of Microsoft Open AI provides natural language processing APIs for sentiment analysis?
 
-Text Analytics.
+(Antigamente) Text Analytics.
+Azure AI Language
 
 ### What is the name of the Microsoft Open AI neural network model?
 
@@ -33,20 +34,15 @@ Azure AI Bot Service
 
 ### What are Azure Cognitive Services speech services?
 
-- Speech Recognition
-	- Fala para texto
-- Speech Synthesis
-	- Texto para fala
-- Spearker Recognition
-	- Análise de voz
-- Language Understanding
-	- Combina Speech Recognition com entendimento de linguagem natural (NLU)
-- Speech Translation
-	- Tradução da língua falada em tempo real
+- Speech Recognition: fala para texto
+- Speech Synthesis: texto para fala
+- Spearker Recognition: análise de voz
+- Language Understanding: combina Speech Recognition com entendimento de linguagem natural (NLU)
+- Speech Translation: tradução da língua falada em tempo real
 
 ### What is Azure Cognitive Services?
 
-> [!warning] A fazer
+São o conjunto de serviços relacionados a IA disponíveis no Azure.
 
 ### What is Microsoft's Python machine learning library?
 

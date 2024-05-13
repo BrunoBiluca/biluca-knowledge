@@ -45,3 +45,22 @@ Planos de preços para inferência:
 2. Throughput provisionada: esse modo permite provisionar uma throughput suficiente para atender aos requisitos de performance da sua aplicação em troca de um compromisso de prazo baseado em tempo.
 
 [Página de precificação do Bedrock](https://aws.amazon.com/pt/bedrock/pricing/)
+
+
+# Amazon Titan
+
+> [!info] O que é?
+> O Amazon Titan é uma família de modelos exclusiva do Amazon Bedrock.
+> Oferece uma variedade de oções de modelos de imagem, multimodais e de texto.
+> 
+> [Página do produto](https://aws.amazon.com/pt/bedrock/titan)
+
+Casos de uso
+
+- Geração de texto
+- Resumo
+- Pesquisa semântica
+- Geração de imagens
+- Geração aumentada de recuperação (RAG)
+
+

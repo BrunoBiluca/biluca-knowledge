@@ -26,7 +26,7 @@ Modelos disponíveis
 5. [Whisper](https://learn.microsoft.com/pt-br/azure/ai-services/openai/concepts/models#whisper)
 ### Integrações
 
-> [!quote] Comparação com a utilização direta dos serviços do OpenAI
+> [!info] Comparação - Microsoft OpenAI vs OpenAI
 >
 > Com o OpenAI do Azure, os clientes obtêm os recursos de segurança do Microsoft Azure enquanto executam os mesmos modelos que o OpenAI. O OpenAI do Azure oferece rede privada, disponibilidade regional e filtragem de conteúdo de IA responsável.
 ### Precificação

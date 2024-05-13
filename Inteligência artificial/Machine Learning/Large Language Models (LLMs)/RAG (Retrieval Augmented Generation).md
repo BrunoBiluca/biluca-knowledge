@@ -10,21 +10,12 @@ Em português: Geração aumentada de recuperação.
 >   
 >  [Artigo sobre RAG da Amazon](https://aws.amazon.com/pt/what-is/retrieval-augmented-generation/)
 
-O processo de geração de respostas precisas e úteis precisa ser bem sucedido em vários aspectos da pergunta como:
-
-- Compreensão da pergunta
-- Recuperação de informações relevantes
-- Compreensão do contexto
-- Raciocínio e inferência
-- Geração de resposta
-- Avaliação da Qualidade da Resposta
-
 Processo de geração aumentada de recuperação
 
-- Criação de dados externos (Dados externos são todo dado que não faz parte do conjunto de treinamento inicial)
+- Utilização de dados externos para compor a resposta (Dados externos são todo dado que não faz parte do conjunto de treinamento inicial)
 - Recuperação de informações relevantes
 - Enriquecimento de prompts (entrada do usuário) fornecidos ao LLM
-- Atualização de dados externos
+- Atualização por dados dados externos ao modelo
 
 O diagrama a seguir mostra o fluxo conceitual do uso de RAG com LLMs.
 

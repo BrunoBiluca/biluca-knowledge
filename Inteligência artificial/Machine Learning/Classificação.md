@@ -23,7 +23,9 @@ Algumas métricas comuns para a avaliação do modelo de classificação são:
     
 6. **ROC-AUC**: Área sob a curva ROC (Receiver Operating Characteristic). É uma métrica que avalia a capacidade do modelo de distinguir entre as classes. Quanto maior o ROC-AUC, melhor o modelo em distinguir entre as classes.
     
-7. **Matriz de Confusão**: Embora não seja uma única métrica, a matriz de confusão mostra a contagem de verdadeiros positivos, falsos positivos, verdadeiros negativos e falsos negativos, permitindo uma avaliação detalhada do desempenho do modelo.
+7. **Matriz de Confusão**: mostra a contagem de verdadeiros positivos, falsos positivos, verdadeiros negativos e falsos negativos, permitindo uma avaliação detalhada do desempenho do modelo.
+
+> [!tip] [Aritgo com representações visuais para as métricas](https://www.evidentlyai.com/classification-metrics/accuracy-precision-recall)
 
 #### Exemplo - Cálculo das métricas para identificação de cachorros e gatos em um vídeo
 

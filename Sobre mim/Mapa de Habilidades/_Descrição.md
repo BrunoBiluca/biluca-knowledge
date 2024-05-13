@@ -2,7 +2,7 @@
 > [!tip] Objetivo do mapa de habilidades
 > Organizar por temas os conteúdos estudados de forma a ter a visibilidade da minha capacidade de conhecimento sobre o determinado conteúdo.
 
-# Qualidade da informação
+# Qualidade do conhecimento
 
 Cada conteúdo tem um nível de qualidade da informação de um tema contido nesse repositório, de acordo com algumas características relacionadas a cada conteúdo:
 
@@ -12,6 +12,10 @@ Cada conteúdo tem um nível de qualidade da informação de um tema contido nes
 - Dicas e casos de uso específicos: visões e perspectivas próprias sobre o tema
 
 A qualidade da informação é classificada em 5 estrelas para cada tema levando em consideração os estados das características relacionadas.
+
+### 🟥 Vermelho
+Nenhum conteúdo relacionado.
+
 ### 🩶 Cinza
 Início do um acúmulo sobre um determinado tema.
 

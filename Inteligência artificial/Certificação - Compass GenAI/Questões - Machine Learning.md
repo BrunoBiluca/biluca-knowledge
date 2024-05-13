@@ -9,8 +9,8 @@ São um tipo específico de modelo de machine learning que é treinado para ente
 
 Podem ser construídos utilizando diferentes arquiteturas de redes neurais:
 - Redes neurais recorrentes (RNNs)
-- Redes neurais convoucionais (CNNs)
-- Redes neurais transformadores
+- Redes neurais convolucionais (CNNs)
+- Redes neurais transformadores (Transformers)
 
 #### What are Large Language Models?
 
@@ -75,6 +75,7 @@ Esse enviesamento pode ocorrer de várias maneiras:
 5. Especificidade (Specificity)
 6. ROC-AUC
 7. Matriz de Confusão
+
 #### What is the difference between Machine Learning and Deep Learning?
 
 Enquanto nos modelos tradicionais de aprendizado de máquina exigem a extração manual de características relevantes aos dados, um modelo de aprendizado profundo aprende automaticamente extraindo essas características diretamente dos dados brutos.
@@ -82,19 +83,21 @@ Enquanto nos modelos tradicionais de aprendizado de máquina exigem a extração
 Esse processo de aprendizado profundo pode resultar em um melhor resultado para tarefas complexas de reconhecimento de padrões, como classificação de imagens.
 #### What is the difference between supervised and unsupervised learning?
 
-Aprendizado supervisionado é uma forma de desenvolvimento de modelos de aprendizado que o modelo é treinado em um conjunto de entradas e saídas, este então faz o mapeamento de uma determinada entrada para uma saída específica.
+No Aprendizado supervisionado o modelo é treinado em um conjunto de entradas e saídas, este então faz o mapeamento de uma determinada entrada para uma saída específica.
 
-Aprendizado não supervisionado é outra forma de desenvolvimento de modelos de aprendizado que o modelo é treinado com um conjunto de dados sem nenhum tipo de rótulo, o modelo então tenta encontrar padrões como associações ou agrupamentos para identificar os dados.
+No Aprendizado não supervisionado o modelo é treinado com um conjunto de dados sem nenhum tipo de rótulo, ele então tenta encontrar padrões como associações ou agrupamentos para identificar os dados.
+
 #### What is the function of Machine Learning algorithms?
 
 A função dos algoritmos de Machine Learning é criar modelos para predição, tomada de decisões ou realização de tarefas específicas por meio do aprendizado de padrões, associações ou agrupamentos dos dados sem que o modelo seja explicitamente programado para isso.
+
 #### What is the purpose of the "Random Cut-Forest" model?
 
-O modelo Random Cut Forest (RCF) é uma técnica de detecção de anomalias usada em aprendizado de máquina não supervisionado. Seu **propósito principal é identificar padrões anômalos ou comportamentos incomuns em conjuntos de dados, sem a necessidade de exemplos rotulados de anomalias.**
+O modelo Random Cut Forest (RCF) é uma técnica utilizada para identificar padrões anômalos ou comportamentos incomuns em conjuntos de dados, sem a necessidade de exemplos rotulados de anomalias.
 
 #### What is the Turing test, and what is the relevance to language models?
 
-O teste de Turing é um teste proposto por Alan Turing em 1950 para avaliar a inteligência de uma máquina. A ideia principal do teste é determinar se uma máquina pode exibir comportamento inteligente indistinguível do de um ser humano.
+O teste de Turing é um teste proposto por Alan Turing em 1950 para avaliar a inteligência de uma máquina. A ideia principal do teste é determinar se uma máquina pode exibir comportamento inteligente indistinguível de um ser humano.
 
 A relevância do teste de Turing para modelos de linguagem, como os LLMs (Large Language Models), reside no fato de que esses modelos são frequentemente avaliados com base em sua capacidade de gerar textos que se assemelham ao texto humano.
 
@@ -108,9 +111,9 @@ O objetivo da tokenização é preparar o texto para análise por parte do model
 
 #### What does the self-attention mechanism in transformer architecture allow the model to do?
 
-O mecanismo de autoatenção na arquitetura Transformer permite que o modelo capture relações de dependência entre palavras em um texto de forma mais eficaz.
+O mecanismo de autoatenção na arquitetura Transformer permite que o modelo capture relações de dependência entre palavras em um texto de forma mais eficaz, por meio de capturas de relações de longo alcance entre palavras.
 
-Esse modelo permite que pesos sejam atribuídos a diferentes partes do texto dependendo da sua importância. Essa capacidade de autoatenção é fundamental para o sucesso dos modelos baseados em Transformer em tarefas de processamento de linguagem natuaral, pois permite que o modelo capture relações de longo alcance entre palavras e aprenda representações mais ricas e contextuais das sequencias de texto.
+Essa capacidade permite ao modelo criar respostas mais ricas e contextualizadas que os modelos mais tradicionais.
 
 Exemplo da capacidade de autoatenção:
 
