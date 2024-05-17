@@ -1,12 +1,33 @@
 
-> [!tip] Objetivo do mapa de habilidades
-> Organizar por temas os conteúdos estudados de forma a ter a visibilidade da minha capacidade de conhecimento sobre o determinado conteúdo.
+> [!info] Objetivo
+> Mapa de Habilidade é uma forma de representar o conhecimento de forma mais visual com o objetivo de demonstrar o fluxo de conhecimento (um conhecimento que leva a outro), onde o início do fluxo representa as habilidades mais básicas para a atuação na área e ao final temos passado por todos os pontos necessários para considerar a pessoa com alto padrão de conhecimento na área de atuação.
+
+# Ramos
+
+### Linha raiz (única linha 🟩 verde)
+
+- Todos os tópicos principais da área, esses tópicos serão os mais específicos e muito dificilmente serão compartilhados entre outros mapas de habilidades
+- Se dois mapas de habilidades começam a compartilhar vários desses tópicos, talvez estamos falando de um mapa de habilidades específico
+
+### Segundo nível
+
+- O segundo nível é destinado a tópicos auxiliares ou tecnologias vinculadas a linha raiz
+- São compartilhados entre vários mapas de habilidades por se tratarem de tópicos comuns a várias áreas
+- Ex: Linguagens de programação (raiz) - Python (segundo nível), Banco de dados relacionais (raiz) - MySQL (segundo nível)
+
+### Demais níveis
+
+- Outro níveis devem ser criados quando o segundo nível é um tópico agregado
+- **Tentar evitar criar outros níveis**, talvez o segundo nível deveria ser promovido a raiz quando isso ocorre
+- Ex: Nó raiz (Banco de dados), Segundo nível (Banco de dados relacionais), Terceiro nível (MySQL)
+	- Nesse caso o segundo nível pode ser promovido a raiz ou criado um mapa de habilidades interno
+
 
 # Qualidade do conhecimento
 
 Cada conteúdo tem um nível de qualidade da informação de um tema contido nesse repositório, de acordo com algumas características relacionadas a cada conteúdo:
 
-- Consistência: nível de abstração da informação em relação as fontes. Quanto mais próprio o texto mais ele tem uma consistência.
+- Consistência: nível de abstração da informação em relação as fontes. Quanto mais próprio o texto mais ele deve apresentar consistência.
 - Profundidade: nível da informação do mais geral (senso comum) até conceitos mais específicos
 - Exemplos relacionados: tanto em quantidade quanto em diversidade
 - Dicas e casos de uso específicos: visões e perspectivas próprias sobre o tema

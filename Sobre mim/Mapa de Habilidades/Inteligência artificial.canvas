@@ -1,0 +1,35 @@
+{
+	"nodes":[
+		{"id":"2304be872be11a33","type":"text","text":"### Conceitos de Machine Learning\n\n- [[Machine Learning]]","x":-164,"y":-43,"width":329,"height":123},
+		{"id":"d59d63935e0cd850","type":"text","text":"### Aprendizado profundo\n\n- [[Aprendizado profundo (Deep Learning)]]","x":280,"y":-43,"width":329,"height":123},
+		{"id":"8f8c7ca570e68ab4","type":"text","text":"### LLMs\n\n- [[Large Language Models]]","x":-164,"y":500,"width":329,"height":123},
+		{"id":"0a809e20b2694e78","type":"text","text":"### RAG\n\n- [[RAG (Retrieval Augmented Generation)]]","x":280,"y":500,"width":329,"height":123},
+		{"id":"4e70d1974d8ed793","type":"text","text":"### Frameworks","x":-164,"y":802,"width":329,"height":58},
+		{"id":"14ddfe9cdb8d21c9","type":"text","text":"### LangChain\n\n- [[LangChain]]","x":280,"y":782,"width":329,"height":98},
+		{"id":"15437f0956130d68","type":"text","text":"### Tensorflow\n\n- [[TensorFlow]]","x":280,"y":940,"width":329,"height":100},
+		{"id":"ac9bebe2b228a406","type":"text","text":"### Desenvolvimento de Generative AI\n\n- ","x":-164,"y":1100,"width":329,"height":123},
+		{"id":"6a22e2333597c16a","type":"text","text":"### Design de comandos\n\n- [[Design de comandos]]","x":280,"y":1100,"width":329,"height":100},
+		{"id":"6364593b80e46560","type":"text","text":"### Modelos\n\n- ","x":280,"y":140,"width":329,"height":86},
+		{"id":"b5545fbb20efed68","type":"text","text":"### Árvore de decisão\n\n- [[Árvore de decisão]]","x":720,"y":140,"width":329,"height":86},
+		{"id":"edd223b1133bd206","type":"text","text":"### Plataformas em cloud\n\n-  [[Comparação entre plataformas]]","x":-164,"y":1320,"width":329,"height":86},
+		{"id":"4d825ea58f96ea39","type":"text","text":"### VertexAI\n\n- [[Vertex AI]]","x":280,"y":1320,"width":329,"height":86},
+		{"id":"071257b3305961e6","type":"text","text":"### Microsoft OpenAI\n\n- [[Microsoft OpenAI]]\n- [[Azure AI Services]]","x":280,"y":1440,"width":329,"height":86},
+		{"id":"f392a6437ba3dba1","type":"text","text":"### Amazon\n\n- [[Amazon Bedrock]]\n- [[Amazon SageMaker]]","x":280,"y":1560,"width":329,"height":86}
+	],
+	"edges":[
+		{"id":"2a9fb8cbfb7796f6","fromNode":"8f8c7ca570e68ab4","fromSide":"right","toNode":"0a809e20b2694e78","toSide":"left"},
+		{"id":"39ce77942acc2eee","fromNode":"2304be872be11a33","fromSide":"bottom","toNode":"8f8c7ca570e68ab4","toSide":"top","color":"4"},
+		{"id":"edbd9d75ef338267","fromNode":"8f8c7ca570e68ab4","fromSide":"bottom","toNode":"4e70d1974d8ed793","toSide":"top","color":"4"},
+		{"id":"e16f3a2c8c9bac7d","fromNode":"4e70d1974d8ed793","fromSide":"right","toNode":"14ddfe9cdb8d21c9","toSide":"left"},
+		{"id":"becad7ce2861eefb","fromNode":"4e70d1974d8ed793","fromSide":"right","toNode":"15437f0956130d68","toSide":"left"},
+		{"id":"62c7e5f4ea9bd1cb","fromNode":"ac9bebe2b228a406","fromSide":"right","toNode":"6a22e2333597c16a","toSide":"left"},
+		{"id":"b55907d9b1fa8c8a","fromNode":"2304be872be11a33","fromSide":"right","toNode":"d59d63935e0cd850","toSide":"left"},
+		{"id":"d4a9b75bdec283c2","fromNode":"2304be872be11a33","fromSide":"right","toNode":"6364593b80e46560","toSide":"left"},
+		{"id":"9742f220b7dd4e17","fromNode":"6364593b80e46560","fromSide":"right","toNode":"b5545fbb20efed68","toSide":"left"},
+		{"id":"966ce26975ff4679","fromNode":"edd223b1133bd206","fromSide":"right","toNode":"4d825ea58f96ea39","toSide":"left"},
+		{"id":"c448a2e1ac371a10","fromNode":"edd223b1133bd206","fromSide":"right","toNode":"071257b3305961e6","toSide":"left"},
+		{"id":"6fda5dd99e22cd39","fromNode":"edd223b1133bd206","fromSide":"right","toNode":"f392a6437ba3dba1","toSide":"left"},
+		{"id":"492e41a6be7696ea","fromNode":"4e70d1974d8ed793","fromSide":"bottom","toNode":"ac9bebe2b228a406","toSide":"top","color":"4"},
+		{"id":"111537dd72d016c0","fromNode":"ac9bebe2b228a406","fromSide":"bottom","toNode":"edd223b1133bd206","toSide":"top","color":"4"}
+	]
+}

@@ -1,11 +1,10 @@
 {
 	"nodes":[
-		{"id":"ba636fff78d30e71","type":"file","file":"Sobre mim/Mapa de Habilidades/Fundamentos de Ciências da Computação.canvas","x":-895,"y":-1260,"width":329,"height":140},
 		{"id":"334a57cf0a1559bc","type":"text","text":"### Linguagens de programação\n\n- ","x":-895,"y":-1000,"width":329,"height":124},
 		{"id":"4dfc1fc8dd839451","type":"text","text":"### Java\n\n- ","x":-1365,"y":-720,"width":329,"height":88,"color":"1"},
 		{"id":"45a66122c8101ce7","type":"text","text":"### Go\n\n- ","x":-1365,"y":-600,"width":329,"height":86,"color":"1"},
 		{"id":"61fa73a240d5113d","type":"text","text":"### Scala\n\n- ","x":-1365,"y":-840,"width":329,"height":86,"color":"1"},
-		{"id":"f8112e5ea2b3573c","type":"text","text":"### Python\n\n- ","x":-1365,"y":-961,"width":329,"height":86,"color":"1"},
+		{"id":"f8112e5ea2b3573c","type":"text","text":"### Python\n\n- [[Python]]","x":-1365,"y":-961,"width":329,"height":86},
 		{"id":"c043473c63b5583a","type":"text","text":"### Testes\n\n- ","x":-895,"y":-444,"width":329,"height":88},
 		{"id":"326ba4c0558093df","type":"text","text":"### Testes de integração\n\n- ","x":-369,"y":-319,"width":329,"height":86,"color":"1"},
 		{"id":"808e284a2d4e0e9c","type":"text","text":"### Testes funcionais\n\n- ","x":-369,"y":-206,"width":329,"height":86,"color":"1"},
@@ -22,10 +21,9 @@
 		{"id":"4814c6b88ee6864c","type":"text","text":"### Azure Blob Storage\n\n- ","x":-1434,"y":2272,"width":329,"height":86,"color":"1"},
 		{"id":"fb08570c2e87e749","type":"text","text":"### Google Cloud Storage\n\n- ","x":-1434,"y":2420,"width":329,"height":86,"color":"1"},
 		{"id":"d81e82b3b9f11eed","type":"text","text":"### Infraestrutura\n\n- ","x":-274,"y":3574,"width":329,"height":86},
-		{"id":"4061098d84703019","type":"text","text":"### Apache Airflow\n\n- [[Apache Airflow]]","x":-274,"y":3994,"width":245,"height":120,"color":"3"},
+		{"id":"4061098d84703019","type":"text","text":"### Apache Airflow\n\n- [[Apache Airflow]]","x":-274,"y":3994,"width":334,"height":120,"color":"3"},
 		{"id":"43989591cca8a86e","type":"text","text":"### Apache Hadoop\n\n- [[Apache Hadoop]]","x":-274,"y":3394,"width":329,"height":120},
 		{"id":"8415dc833407233a","type":"text","text":"### Apache Spark\n\n- [[Apache Spark]]","x":-274,"y":3204,"width":329,"height":120,"color":"3"},
-		{"id":"ac9a28634dcb3d44","type":"text","text":"### Monitoramento\n\n- ","x":-895,"y":3994,"width":329,"height":87},
 		{"id":"aff759a1eb54bc21","type":"text","text":"### Computação em cluster - Batch\n\n- [[Comparações de ferramentas de integração de ETL]]","x":-895,"y":3174,"width":329,"height":154},
 		{"id":"e66e93bed67ef9d5","type":"text","text":"### Fundamento de Big Data\n\n- ","x":-895,"y":2680,"width":329,"height":86},
 		{"id":"3e832ea45cd857bd","type":"text","text":"### Streaming de dados\n\n- [[Comparações de engines de streaming]]","x":-895,"y":4580,"width":329,"height":117},
@@ -42,9 +40,13 @@
 		{"id":"6b0899e3a01cc344","type":"text","text":"### Amazon EMR\n\n- ","x":200,"y":3574,"width":329,"height":86,"color":"1"},
 		{"id":"a7cef2ab822b2218","type":"text","text":"### Google Dataproc\n\n- ","x":200,"y":3694,"width":329,"height":86,"color":"1"},
 		{"id":"2b99e126378707ab","type":"text","text":"### Azure Data Lake\n\n- ","x":200,"y":3814,"width":329,"height":86,"color":"1"},
-		{"id":"fd9e112889aba756","type":"text","text":"### ElasticSearch\n\n- [[Elasticsearch]]","x":-269,"y":1346,"width":324,"height":122,"color":"5"},
 		{"id":"ac8890ee6fdc9787","type":"text","text":"### Ingestão de dados\n\n- ","x":-274,"y":2860,"width":334,"height":86},
-		{"id":"c6ab8983e8d89770","type":"text","text":"### Logstash\n\n- [[LogStash]]","x":200,"y":2860,"width":329,"height":86,"color":"3"}
+		{"id":"c6ab8983e8d89770","type":"text","text":"### Logstash\n\n- [[LogStash]]","x":200,"y":2860,"width":329,"height":86,"color":"3"},
+		{"id":"ba636fff78d30e71","type":"file","file":"Sobre mim/Mapa de Habilidades/Fundamentos de Ciências da Computação.canvas","x":-895,"y":-1480,"width":329,"height":380},
+		{"id":"fd9e112889aba756","type":"text","text":"### ElasticSearch\n\n- [[Elasticsearch]]","x":-269,"y":1363,"width":324,"height":122,"color":"5"},
+		{"id":"96fa2b445d21d611","type":"text","text":"### FSCrawler\n\n- [[FSCrawler]]","x":620,"y":2860,"width":329,"height":86},
+		{"id":"ac9a28634dcb3d44","type":"text","text":"### Orquestração\n\n- ","x":-895,"y":4071,"width":329,"height":87},
+		{"id":"d7462befc6dcb142","type":"text","text":"### Monitoramento\n\n- ","x":-895,"y":3814,"width":329,"height":87}
 	],
 	"edges":[
 		{"id":"e6c711b92b26afac","fromNode":"e5e67eabdbef399a","fromSide":"right","toNode":"649bdbae1222ce60","toSide":"left"},
@@ -85,11 +87,13 @@
 		{"id":"1d31b9a7852e39ad","fromNode":"e66e93bed67ef9d5","fromSide":"right","toNode":"ed548f60afcd1068","toSide":"left"},
 		{"id":"addf0da30d981fcc","fromNode":"a42b5894ab48dd7e","fromSide":"bottom","toNode":"e66e93bed67ef9d5","toSide":"top","color":"4"},
 		{"id":"9707a7debb401892","fromNode":"e66e93bed67ef9d5","fromSide":"bottom","toNode":"aff759a1eb54bc21","toSide":"top","color":"4"},
-		{"id":"34656c677c95bdee","fromNode":"aff759a1eb54bc21","fromSide":"bottom","toNode":"ac9a28634dcb3d44","toSide":"top","color":"4"},
+		{"id":"34656c677c95bdee","fromNode":"aff759a1eb54bc21","fromSide":"bottom","toNode":"d7462befc6dcb142","toSide":"top","color":"4"},
 		{"id":"3b9f17d87e0ee7ae","fromNode":"ac9a28634dcb3d44","fromSide":"bottom","toNode":"1e0a679b0c489a66","toSide":"top","color":"4"},
 		{"id":"25d2c8cacff2a446","fromNode":"1e0a679b0c489a66","fromSide":"bottom","toNode":"3e832ea45cd857bd","toSide":"top","color":"4"},
 		{"id":"7c66a3341132212b","fromNode":"6b83cb6dd50d8448","fromSide":"right","toNode":"fd9e112889aba756","toSide":"left"},
 		{"id":"de5085751cd16c54","fromNode":"e66e93bed67ef9d5","fromSide":"right","toNode":"ac8890ee6fdc9787","toSide":"left"},
-		{"id":"4dfb8a411ef9a2cf","fromNode":"ac8890ee6fdc9787","fromSide":"right","toNode":"c6ab8983e8d89770","toSide":"left"}
+		{"id":"4dfb8a411ef9a2cf","fromNode":"ac8890ee6fdc9787","fromSide":"right","toNode":"c6ab8983e8d89770","toSide":"left"},
+		{"id":"b6cf6d1e7ea17a3f","fromNode":"c6ab8983e8d89770","fromSide":"right","toNode":"96fa2b445d21d611","toSide":"left"},
+		{"id":"a003174150fee116","fromNode":"d7462befc6dcb142","fromSide":"bottom","toNode":"ac9a28634dcb3d44","toSide":"top","color":"4"}
 	]
 }
