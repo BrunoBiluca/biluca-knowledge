@@ -113,6 +113,62 @@ Elas são divididas em 3 tipos:
 
 Outra questão é que as agregações em uma query são resolvidas de forma sequencial, assim não é possível utilizar o poder de paralelismo do cluster.
 
+### Filtros gerais vs filtros nas agregações
+
+> [!tip] Melhoria de performance
+> Uma coisa para ter atenção na hora de utilizar agregações é garantir que a varredura de itens será a menor possível dentro do Elasticsearch. Qualquer filtro dentro da query pode melhorar muito a performance de uma agregação.
+
+Exemplo de query utilizando um filtro geral, será executado antes dos filtros de agregações:
+
+```json
+// Agregação geral
+{
+  "size": 0, 
+  "query": {"bool": {"must": [{"terms": { "categories": ["A"]}}]}},
+  "aggs": {"count": { "value_count": { "field": ""}}
+}
+```
+
+Exemplo de query utilizando filtros nas agregações
+
+```json
+// Agregação separada (por agregregação)
+{
+  "size": 0, 
+  "aggs": {
+    "filter": {
+        "bool": {"must": [{"terms": { "categories": ["A"]}}]}      
+    },
+    "aggs": {"count": { "value_count": { "field": ""}}
+  }
+}
+```
+
+Esses dois exemplos tem uma diferença de tempo na execução da consulta.
+### Paralelismo de agregações
+
+> [!tip] Estratégia de paralelização de agregações
+> Uma boa estratégia pode ser quebrar as agregações em várias queries e enviar essas queries todas de uma vez utilizando da api do `msearch`.
+
+```json
+// Agregação por msearch
+{"index": "test-index"}
+{
+  "size": 0, 
+  "query": {"bool": {"must": [{"terms": { "categories": ["A"]}}]}},
+  "aggs": {"count": { "value_count": { "field": ""}}
+}
+{"index": "test-index"}
+{
+  "size": 0, 
+  "query": {"bool": {"must": [{"terms": { "categories": ["B"]}}]}},
+  "aggs": {"count": { "value_count": { "field": ""}}
+}
+```
+
+Dessa forma fazemos cada query ser referente a apenas um tipo de categoria, isso nos permite utilizar o poder de paralelismo do cluster e retornar a consulta de forma mais rápida.
+
+
 ## Paginação
 
 > [!warning] Paginação pode resultar em problemas de performance
@@ -187,6 +243,23 @@ O analisador de autocomplete deve ser apenas utilizado durante a indexação enq
 > [!info] Documentação relacionada a N-gram
 > https://www.elastic.co/guide/en/elasticsearch/reference/current/analysis-ngram-tokenizer.html
 
+# Profile API
+
+É possível utilizar a api de profile para identificar pontos de melhores em queries lentas.
+
+[Documentação da Profile API](https://www.elastic.co/guide/en/elasticsearch/reference/current/search-profile.html)
+
+```json
+GET /my-index-000001/_search
+{
+  "profile": true,
+  "query" : {
+    "match" : { "message" : "GET /search" }
+  }
+}
+```
+
+Nesse caso serão retornadas informações relacionadas a query e cada etapa feita durante a execução da query.
 # Referências
 
 - [Boolean query](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-bool-query.html)
