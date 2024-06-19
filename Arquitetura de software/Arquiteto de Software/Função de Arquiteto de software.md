@@ -18,3 +18,4 @@ Ele é responsável por:
 	- Dependências
 	- Infraestrutura
 
+Durante as fases de planejamento e desenvolvimento o arquiteto de software é responsável também por pensar em diversos aspectos do projeto ([[Considerações de arquitetura de dados]]).

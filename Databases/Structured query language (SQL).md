@@ -4,7 +4,9 @@ tags:
   - banco_de_dados
   - mineração
 ---
-> [!info] Essa página tem como objetivo registrar conceitos gerais utilizados para a execução de consultas utilizando SQL que são implementadas por uma grande variedade de ferramentas, banco de dados, processadores de dados e aplicações.
+SQL é uma linguagem declarativa, em vez de codificar o processamento dos dados, escritores de SQL estipulam as características do resultado final, enquanto que o compilador e o otimizador determinam os passos para chegar nesse resultado.
+
+Uma das principais limitações do SQL é que ele não inclui o conceito de bibliotecas e de código reutilizável.
 
 # Diferença entre GROUP BY e WINDOW
 
