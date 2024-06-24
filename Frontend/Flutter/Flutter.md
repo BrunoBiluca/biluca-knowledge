@@ -33,6 +33,7 @@ Integração com Windows
 	- Esse artigo apresenta algumas limitações que o desenvolvimento de aplicações para Windows possui
 
 Deploy
+
 - Empacotamento do sistema de identificação com o app
     - [https://dev.to/maximsaplin/integrating-flutter-all-6-platforms-and-python-a-comprehensive-guide-4ipo](https://dev.to/maximsaplin/integrating-flutter-all-6-platforms-and-python-a-comprehensive-guide-4ipo)
     - [https://github.com/maxim-saplin/flutter_python_starter](https://github.com/maxim-saplin/flutter_python_starter)
@@ -47,6 +48,14 @@ Componentes prontos
 
 - AppBar: barra superior do app utilizado em todas as páginas
 
+# Utilizando SQLite
+
+Windows
+- https://pub.dev/packages/sqflite_common_ffi
+- [Tutorial de como utilizar SQLite no Windows](https://dev.to/ayoubzulfiqar/how-to-use-sqflite-on-windows-flutter-ggm)
+
+Testes automatizados
+- [Documentação para implementação de testes do sqflite utilizando o sqflite_common_ffi](https://github.com/tekartik/sqflite/blob/master/sqflite_common_ffi/doc/testing.md)
 
 # Desenvolvimento
 
