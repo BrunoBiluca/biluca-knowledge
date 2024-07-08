@@ -2,7 +2,8 @@
 tags:
   - engenharia_de_dados
 ---
-Stages são conjuntos de tarefas. Cada Stage é referente a um processamento específico executado em cada partição, cada execução é uma tarefa.
+> [!info] O que são?
+> Stages são conjuntos de tarefas. Cada Stage é referente a um processamento específico executado em cada partição, cada execução é uma tarefa.
 
 # Operações
 

@@ -7,6 +7,7 @@ tags:
 > Utiliza a linguagem [Dart](https://dart.dev/overview) para desenvolvimento
 > 
 > [Documentação](https://docs.flutter.dev/)
+> [Tutorial de Flutter](https://www.youtube.com/watch?v=1ukSR1GRtMU&list=PL4cUxeGkcC9jLYyp2Aoh6hcWuxFDX6PBJ)
 
 Flutter é muito inspirado pelo React, tanto em seus componentes quanto no formato de desenvolvimento.
 
@@ -20,7 +21,6 @@ Funcionalidades
 
 - [Material components](https://docs.flutter.dev/ui/widgets/material)
 - [Temas](https://docs.flutter.dev/cookbook/design/themes)
-- [Testes](https://docs.flutter.dev/testing/overview)
 
 Gráficos
 
@@ -48,6 +48,16 @@ Componentes prontos
 
 - AppBar: barra superior do app utilizado em todas as páginas
 
+
+## Testes automatizados
+
+- [Testes](https://docs.flutter.dev/testing/overview)
+
+### Mocks
+
+> [!info] Bibliotecas utilizadas
+> - [Mockito](https://pub.dev/packages/mockito)
+
 # Utilizando SQLite
 
 Windows
@@ -65,8 +75,6 @@ Injeção de dependências
 ORM
 - https://pub.dev/packages/orm
 	- funciona apenas com iOS/Android e banco de dados SQLite
-
-
 ### sqflite_migration
 
 Biblioteca para utilização de migrações utlizando o plugin sqflite
@@ -77,6 +85,27 @@ Biblioteca para utilização de migrações utlizando o plugin sqflite
 > [!info] Para windows
 > Verificar se essa biblioteca funciona para windows já que o plugin do SQLite é diferente.
 
+
+# Padrão BLoC (Business Logic Component)
+
+Esse é um padrão recomendado no desenvolvimento de aplicações com Flutter, sua ideia é separar o estado da apresentação por meio de uma camada chamada bloc.
+
+Essa arquitetura visa resolver alguns problemas do desenvolvimento de aplicativos:
+
+- Gerenciamento de estado
+	- Gerenciar estado pode ser um problema quando passamos dados entre widgets, como por exemplo um carrinho de compras que pode estar definido em várias páginas e então seu estado deve ser mantido.
+- Separação e reusabilidade de componentes
+	- Esse padrão separa a apresentação da lógica, sendo possível assim reutilizar as vezes o visão de um componente enquanto a lógica é centralizada.
+- Facilidade de criar testes
+
+O plugin [flutter_bloc](https://pub.dev/packages/flutter_bloc) já define todas as classes principais para a utilização do padrão guiando assim a implementação.
+
+![[flutter-bloc-communication-diagram.webp|Diagrama de comunicação entre as camadas em uma arquitetura BLoC|500]]
+
+
+### Testes automatizados para BLoC
+
 # Referências
 
-- [Tutorial de Flutter](https://www.youtube.com/watch?v=1ukSR1GRtMU&list=PL4cUxeGkcC9jLYyp2Aoh6hcWuxFDX6PBJ)
+- [Filledstacks](https://www.filledstacks.com/)
+	- Site voltado a tutoriais simples e diretos de flutter

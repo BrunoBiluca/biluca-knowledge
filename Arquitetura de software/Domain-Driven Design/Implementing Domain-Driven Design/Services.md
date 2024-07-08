@@ -10,7 +10,7 @@ Também apresenta uma discussão de quando é necessário criar esse o serviço 
 
 Um Serviço no modelo de domínio é quando uma operação performada parece fora do lugar e não pertence nem a uma Agregador nem a um Objeto Valor.
 
-Um Serviço de domínio é utilizado para:>
+Um Serviço de domínio é utilizado para:
 - Processar alguma execução do negócio
 - Transformação de um objeto do domínio de uma composição para outra
 - Calcular um valor requisitando informações de outro objeto de domínio.
@@ -79,4 +79,3 @@ public class DefaultEncryptionAuthenticationService implements AuthenticationSer
 }
 ```
 
-# Referências
