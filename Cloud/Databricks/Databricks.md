@@ -78,6 +78,12 @@ spark.udf.register("sql_udf", example_fn)
 SELECT sql_udf(thing) as transformed_thing from table_a
 ```
 
+## Auto Loader
+
+> [!info] O que é?
+> O Auto Loader processa de forma progressiva e eficiente novos arquivos de dados à medida que chegam ao armazenamento em nuvem sem qualquer configuração adicional.
+> 
+> [Documentação](https://docs.databricks.com/pt/ingestion/auto-loader/index.html)
 
 # Delta lake
 
@@ -179,7 +185,7 @@ Existem dois tipos de tabelas que podem ser criadas com DLT:
 > 	# Implementação
 > ```
 
-### Como criar uma DLT
+## Como criar uma DLT
 
 Passos para a criação de uma DLT
 - Criar a live table
@@ -203,7 +209,7 @@ EXPECT (timestamp > '2021-01-01')
 ON VIOLATION DROP
 ```
 
-### Streaming
+## Streaming
 
 Também é possível ingerir dados por meio de uma tabela de Streaming
 
@@ -224,7 +230,12 @@ AS SELECT current_timestamp() processing_time, input_file_name() source_file, *
 FROM cloud_files("${source}/orders", "json", map("cloudFiles.inferColumnTypes", "true"))
 ```
 
-### Configurações
+### Manutenção de estado
+
+Algumas operações são específicas para manter estado durante o processo de streaming, como: deduplicação, agregação e stream-stream joins. O progresso e estado são armazenados nos checkpoints e gerenciados pelo driver durante o processamento da consulta.
+
+Streaming queries não mantém estado, todos os dados são computados apenas uma vez.
+## Configurações
 
 Configurações podem ser aplicadas diretamente ao código, essas configurações são cadastradas na plataforma Databricks e pode ser chamados no código tanto SQL quanto Python.
 
@@ -240,7 +251,7 @@ def data():
 	spark.readStream.format("cloud_files").load(input_path)
 ```
 
-### DLT com Change data capture
+## DLT com Change data capture
 
 É possível aplicar alterações em uma tabela a partir de eventos.
 
@@ -256,7 +267,7 @@ Necessário definir algum campo como uma sequência:
  - Timestamp
  - Tempo de ingestão
 
-### Python vs SQL
+## Python vs SQL
 
 Cada uma das linguagens tem suas vantagens e desvantagens.
 
@@ -267,7 +278,6 @@ Cada uma das linguagens tem suas vantagens e desvantagens.
 | Importação explícita           | Não                                  | Em python o módulo `dlt` deve ser importado explicitamente enquanto no SQL não.                                                                                              |
 | Tabelas como Dataframes        | Tabelas como resultados de consultas | Em python podemos aplicar múltiplas transformações em uma única operação. <br>Em SQL essas transformações são persistidas em tabelas temporárias que são então transformadas |
 | `@dlt.table()`                 | `SELECT statement`                   | Lógica da query e sintaxe são diferentes                                                                                                                                     |
-
 
 # Workflows
 

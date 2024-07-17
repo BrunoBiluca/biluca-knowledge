@@ -16,6 +16,7 @@ Apache Spark utiliza o otimizador Catalyst para automaticamente revelar o plano 
 
 - Conceitos
 [[Stages]]
+[[Resilient Distributed Dataset (RDD)]]
 
 - Desenvolvimento e fluxo de trabalho
 [[Docker básico para submits locais]]
@@ -49,6 +50,7 @@ Variáveis de ambiente
 - HADOOP_HOME
 - SPARK_HOME
 # Principais diferenças entre Spark 2 e Spark 3
+
 Apache Spark 3 foi lançado em 2020 e trouxe várias melhorias em relação ao seu antecessor Apache Spark 2 (2016)
 
 - Performance: o Adaptive Query Execution é uma funcionalidade que automaticamente otimiza consultadas baseadas em várias características dos dados além das melhorias com o Apache Arrow para integração.
@@ -58,23 +60,12 @@ Apache Spark 3 foi lançado em 2020 e trouxe várias melhorias em relação ao s
 - Nova interface para Streaming de dados
 
 ### Adaptive Query Execution
+
 Prior to 3.0, Spark does the optimization by creating an execution plan before the query starts executing, once execution starts Spark doesn’t do any further optimization which is based on metrics it collects during runtime. AQE bridges this gap by applying the second level of optimization based on the metrics it sees with each stage.
 
 Adaptive Query Execution is disabled by default. In order to enable Set `spark.sql.adaptive.enabled` configuration property to `true`.
 
-# Spark web UI
-
-O Apache Spark fornece um conjunto de UI/interfaces de usuário da Web ([Jobs](https://sparkbyexamples.com/spark/spark-web-ui-understanding/#spark-jobs), [Stages](https://sparkbyexamples. com/spark/spark-web-ui-understanding/#spark-stages), [Tarefas](https://sparkbyexamples.com/spark/spark-web-ui-understanding/#tasks), [Armazenamento](https: //sparkbyexamples.com/spark/spark-web-ui-understanding/#storage), [Ambiente](https://sparkbyexamples.com/spark/spark-web-ui-understanding/#environment), [Executores]( https://sparkbyexamples.com/spark/spark-web-ui-understanding/#executors) e [SQL](https://sparkbyexamples.com/spark/spark-web-ui-understanding/#sql)) para monitorar o status do seu aplicativo Spark/PySpark, o consumo de recursos do cluster Spark e as configurações do Spark.
-
-Telas que o Spark disponibiliza:
-- Resource Manager: http://localhost:9870
-- Spark JobTracker: http://localhost:8088/
-- Node Specific Info: http://localhost:8042/
-
-### Spark Application UI (http://localhost:4040/)
-
-- Jobs: São exibidos nessa tela todos os jobs. Jobs são ativados por ações como por exemplo `count()` ou `saveAsTextFile()`.
-- [[Stages]]: São exibidos as informações de Stages como DAG criado, cada tarefa.
+[[Spark web UI]]
 
 
 # Diferença entre estruturas de dados
@@ -106,3 +97,4 @@ Existe principalmente 3 estruturas de dados que podem ser utilizadas para o proc
 - [Plano de execuçao do Spark](https://sparkbyexamples.com/spark/spark-execution-plan/)
 	- Exemplo de utilização do plano de execução do spark para otimização de operações
 - [Exemplo de execução do Spark com sua representação no Spark UI](://sparkbyexamples)
+
