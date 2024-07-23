@@ -230,7 +230,7 @@ AS SELECT current_timestamp() processing_time, input_file_name() source_file, *
 FROM cloud_files("${source}/orders", "json", map("cloudFiles.inferColumnTypes", "true"))
 ```
 
-### Manutenção de estado
+### Manutenção de estado (watermark)
 
 Algumas operações são específicas para manter estado durante o processo de streaming, como: deduplicação, agregação e stream-stream joins. O progresso e estado são armazenados nos checkpoints e gerenciados pelo driver durante o processamento da consulta.
 
