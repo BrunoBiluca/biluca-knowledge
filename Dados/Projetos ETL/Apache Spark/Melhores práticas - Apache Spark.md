@@ -57,3 +57,29 @@ No Spark UI ([artigo com exemplos da Spark UI](https://medium.com/road-to-data-e
 Esses valores aparecem em várias partes da Spark UI como: Summary metrics, Aggregated metrics by executor, Tasks table e na tela de [[Plano de execução]].
 
 Sempre os dados em disco serão menores que os dados me memória devido ao ganho de compressão durante o processo de serialização.
+
+
+# Broadcast tabelas de referência
+
+Podemos transmitir tabelas de referência que sejam pequenas para todos os executores. Essa otimização garante uma acesso mais rápidos a esses dados evitando carregamentos desnecessários.
+
+```python
+import pyspark.sql import functions as F
+
+#  Tabela: customers
+#  | name             | country_code |
+#  | ---------------- | ------------ |
+#  | Bruno            | BR           |
+#  | Comandante Fidel | CU           |
+
+result = spark.readStream
+	.table("customers")
+	.join(F.broadcast(df_country_lookup), F.col("country_code") == F.col("code"), "inner")
+
+display(result)
+
+#  | name             | country_code | country |
+#  | ---------------- | ------------ | ------- |
+#  | Bruno            | BR           | Brasil  |
+#  | Comandante Fidel | CU           | Cuba    |
+```

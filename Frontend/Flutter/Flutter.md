@@ -24,10 +24,7 @@ Funcionalidades
 - [Material components](https://docs.flutter.dev/ui/widgets/material)
 - [Temas](https://docs.flutter.dev/cookbook/design/themes)
 
-Gráficos
 
-- [https://github.com/imanneo/fl_chart](https://github.com/imanneo/fl_chart)
-- [https://pub.dev/packages/fl_chart/install](https://pub.dev/packages/fl_chart/install)
 
 Integração com Windows
 
@@ -72,3 +69,9 @@ ORM
 	- funciona apenas com iOS/Android e banco de dados SQLite
 
 [[SQLite para Flutter]]
+
+
+# Gráficos (Charts)
+
+- [https://github.com/imanneo/fl_chart](https://github.com/imanneo/fl_chart)
+- [https://pub.dev/packages/fl_chart/install](https://pub.dev/packages/fl_chart/install)

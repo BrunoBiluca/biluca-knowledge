@@ -2,8 +2,6 @@
 tags:
   - engenharia_de_dados
 ---
-# Melhores práticas
-
 ### Datalake foundation e dados brutos
 
 Os dados devem ser salvos em seu formato nativo, para que nenhuma informação seja perdida inadvertidamente por agregação ou modificação. Até mesmo limpar os dados de valores nulos, por exemplo, pode ser prejudicial para bons cientistas de dados, que aparentemente conseguem extrair valor analítico adicional não apenas dos dados, mas até mesmo da falta deles.
@@ -27,3 +25,5 @@ Delta Lake baseia-se na velocidade e confiabilidade do Parquet de código aberto
 O catálogo de dados é um armazenamento organizado e abrangente de metadados de tabelas, incluindo descrições de tabelas e colunas, esquema, informações de linhagem de dados e muito mais.
 
 No momento da ingestão, os usuários devem “identificar” (tag) novas fontes de dados ou tabelas com informações sobre elas – incluindo unidade de negócios, projeto, proprietário, nível de qualidade dos dados e assim por diante – para que possam ser classificados e descobertos facilmente.
+
+

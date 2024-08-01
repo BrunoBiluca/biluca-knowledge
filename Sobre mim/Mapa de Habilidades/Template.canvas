@@ -6,7 +6,7 @@
 		{"id":"edceb3392cd2f151","type":"text","text":"### {Tema} \n\n- ","x":-1060,"y":-60,"width":329,"height":86,"color":"5"},
 		{"id":"8d1480a6d72fe05d","type":"text","text":"### {Tema} \n\n- ","x":-1060,"y":80,"width":329,"height":86,"color":"4"},
 		{"id":"0b88c88b21d3da8d","type":"text","text":"### {Tema} \n\n- ","x":-1060,"y":-620,"width":329,"height":86,"color":"1"},
-		{"id":"4c2d0ea6f203b718","type":"file","file":"Sobre mim/Mapa de Habilidades/_Descrição.md","x":-1980,"y":-620,"width":800,"height":400}
+		{"id":"4c2d0ea6f203b718","type":"file","file":"Sobre mim/Mapa de Habilidades/_Descrição.md","x":-1980,"y":-620,"width":800,"height":786}
 	],
 	"edges":[]
 }

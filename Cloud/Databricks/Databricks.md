@@ -101,8 +101,6 @@ VACUUM students RETAIN 0 HOURS
 VACUUM students RETAIN 0 HOURS DRY RUN
 ```
 
-
-
 ### CTAS (Create Tables as Select)
 
 Automaticamente inferem o esquema sendo uma boa forma de consumir dados externos bem estruturados como parquet. Porém CTAS não suportam declaração de esquema.
@@ -110,7 +108,6 @@ Automaticamente inferem o esquema sendo uma boa forma de consumir dados externos
 Para outros tipos de fontes de dados menos estruturados podemos criar uma tabela temporária fazer as transformações necessárias e importar na tabela principal.
 
 Como Delta Lake força esquema na escrita, restrições em cada coluna são suportadas durante a escrita das tabelas.
-
 
 #### Exemplo demonstrando a definição de um esquema em CTAS
 
@@ -298,4 +295,26 @@ Databricks tem duas formas de orquestração
 > - Agendamento (Quando?)
 > - Cluster (Como?)
 
+
+# CDC (Change data capture)
+
+Para mais informações sobre [[Change Data Capture]].
+
+O processo de CDC no Databricks pode ser feito fazendo a junção dos dados de uma fonte de dados para uma tabela.
+
+```sql
+MERGE INTO target_table t
+USING source_updates s
+ON t.key = s.key
+WHEN MATCHED and t.sequence_field < s.sequence_field
+	THEN UPDATE SET *
+WHEN MATCHED and s.operation_field = "DELETE"
+	THEN DELETE
+WHEN NOT MATCHED
+	THEN INSERT **
+```
+
+Cada linha da tabela deve definir um valor de sequência, esse valor é utilizado para definir qual a linha válida naquela janela de tempo. **Apenas uma entrada é capturada por janela (múltiplas entradas atualizadas geram uma exceção).**
+
+Para garantir que apenas uma entrada seja capturada podemos utilizar a função `rank().over(window)` por exemplo ou outras funções [[Funções nativas#Window Functions]].
 

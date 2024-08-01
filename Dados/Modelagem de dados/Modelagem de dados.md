@@ -120,6 +120,8 @@ Alguns tipos de estratégias de atualização das tabelas dimensão são:
 
 ### Exemplo em um ecommerce
 
+Esse exemplo utiliza [[Mudança lenta de dimensões]] para definir as mudanças de estados.
+
 Tabela Fato:
 
 | OrderID | CustomerKey | DateKey  | ValorBruto |
@@ -142,7 +144,7 @@ Dimensão do cliente:
 | 5           | Judas     | Escariotes | 33333-666 | 0033-03-12    | 9999-01-01  |
 | 6           | Jesus     | -          | 33333-666 | 0001-01-01    | 0033-03-31  |
 | 6           | Jesus     | -          | 00000-000 | 0033-03-31    | 9999-01-01  |
-Perceba como nesse modelo é permitido dados duplicados, quando Jesus ressucita na Páscoa ele muda de endereço para o céu, uma nova linha é adicionada a dimensão do cliente definindo o novo estado dos atributos do cliente, e então o valor `EFF_EndDate` (Effective End Date) é atualizado para o momento da alteração.
+Perceba como nesse modelo é permitido dados duplicados, quando Jesus ressucita na Páscoa ele muda de endereço para o céu, uma nova linha é adicionada a dimensão do cliente definindo o novo estado dos atributos do cliente, e então o valor `EFF_EndDate` (Effective End Date) é atualizado para o momento da alteração. 
 
 Com esse formato podemos facilmente responder perguntas como:
 

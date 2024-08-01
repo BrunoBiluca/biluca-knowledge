@@ -1,2 +1,4 @@
 > [!tip] Adição de restrição
-> É necessário que a base de dados se comporte de acordo com a nova restrição adicionada, caso contrário o processo falha e devemos resolver esses problemas antes de adicionar a restrição.
+> Quando adicionado uma nova restrição a base é necessário que a base de dados se comporte de acordo com essa restrição, caso contrário o processo falha e devemos resolver esses problemas antes de adicionar a restrição.
+
+
