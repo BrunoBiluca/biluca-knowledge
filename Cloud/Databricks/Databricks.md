@@ -15,7 +15,42 @@ Tipos de persona disponíveis:
 - Machine Learning
 - SQL
 
+# Governança
+## Permissões
+
+> [!info] Documentação
+> - [Permissões de computação](https://docs.databricks.com/pt/compute/clusters-manage.html#cluster-level-permissions)
+
+Existem dois tipos de permissões de cluster
+
+- **Allow cluster creation**: permite criar cluster
+- **Permissões em nível de cluster**
+
+| Habilidade                                | CAN ATTACH TO | CAN RESTART | CAN MANAGE |
+| ----------------------------------------- | ------------- | ----------- | ---------- |
+| Adicionar um notebook para processamento  | ✅             | ✅           | ✅          |
+| Ver o Spark UI                            | ✅             | ✅           | ✅          |
+| Ver a telemetria do cluster               | ✅             | ✅           | ✅          |
+| Ver logs do driver                        |               |             | ✅          |
+| Encerrar o processamento                  |               | ✅           | ✅          |
+| Iniciar e reiniciar o processamento       |               | ✅           | ✅          |
+| Editar o processamento                    |               |             | ✅          |
+| Adicionar uma biblioteca ao processamento |               |             | ✅          |
+| Redimensionar o processamento             |               |             | ✅          |
+| Modificar permissões                      |               |             | ✅          |
+## Databricks secrets
+
+> [!info] Documentação
+> - [Redaction]([https://docs.databricks.com/security/secrets/redaction.html](https://docs.databricks.com/security/secrets/redaction.html))
+> - [Secrets]([https://docs.databricks.com/security/secrets/index.html](https://docs.databricks.com/security/secrets/index.html))
+
+Databricks secrets permitem que você armazene credenciais e as referencie em notebooks e jobs.
+
+Para manter as credenciais secretas quando lidas utilizando o comando `dbutils.secrets.get()` e exibidas como saída de uma célula os valores serão alterados para uma string [REDACTED].
+
 # Notebooks
+
+### Comandos mágicos
 
 Comandos mágicos que podem ser utilizados nos notebooks do databricks para várias funcionalidades
 
@@ -28,15 +63,37 @@ Comandos mágicos que podem ser utilizados nos notebooks do databricks para vár
 %pip                      # instala novas bibliotecas python
 ```
 
+Sobre o `%sh`:
+- Reinicia o interpretador do Python
+- Executa o código shell sobre a máquina driver local aumentando a sobrecarga de trabalho
+- não pode acessar o armazenamento para persistir a saída
+
+### Adicionando parâmetros aos Notebooks
+
+[Widgets](https://docs.databricks.com/pt/notebooks/widgets.html)
+
+```python
+​​dbutils.widgets.text("param1", "default")
+param1 = dbutils.widgets.get("param1")
+```
+
+Esse parâmetros podem ser configurados pela interface gráfica do Databricks.
+
+
 # Ingestão
 
-### Extraindo dados de fontes externas
+### Fontes externas
 
+> [!info] Documentação
+> [Objetos de banco de dados em Databrics - Tabelas não gerenciadas](https://docs.databricks.com/pt/database-objects/index.html#what-is-an-unmanaged-table)
+
+Tabelas externas não são gerenciadas pelo Databricks, assim apenas os metadados dessas tabelas são armazenados pela Databrics.
+
+Fontes externas podem ser extraídas por:
 - Sistema de arquivos
 - JDBC
 
 É possível definir vários tipos de opções na hora de ingerir dados de fontes externas, tanto relacionado a SQL quanto pelo próprio Spark.
-
 
 ### SQL UDF
 
@@ -103,7 +160,7 @@ VACUUM students RETAIN 0 HOURS DRY RUN
 
 ### CTAS (Create Tables as Select)
 
-Automaticamente inferem o esquema sendo uma boa forma de consumir dados externos bem estruturados como parquet. Porém CTAS não suportam declaração de esquema.
+Automaticamente inferem o esquema sendo uma boa forma de consumir dados externos bem estruturados como parquet. São criadas a partir do resultado de uma consulta e não tem nenhum tipo de ligação com a tabela fonte, assim mesmo que ela for removida as tabelas criadas como CTAS continuam operando normalmente.
 
 Para outros tipos de fontes de dados menos estruturados podemos criar uma tabela temporária fazer as transformações necessárias e importar na tabela principal.
 
@@ -151,7 +208,6 @@ WHEN NOT MATCHED THEN INSERT *
 
 - Deep clone: copia tudo
 - Shallow clone: copia apenas os logs de transações do Delta Lake, assim qualquer alteração aos dados na tabela copiada serão armazenados separadamente, pode ser utilizado principalmente para testar consultas.
-
 
 # Delta live tables
 
@@ -295,6 +351,17 @@ Databricks tem duas formas de orquestração
 > - Agendamento (Quando?)
 > - Cluster (Como?)
 
+# Jobs
+
+> [!info] Documentação
+> - [Criar e executar jobs do Databricks](https://docs.databricks.com/pt/workflows/jobs/create-run-jobs.html#choose-the-correct-cluster-type-for-your-job)
+
+Tipos de clusters:
+- All-purpose clusters: cluster gerais que servem principalmente para o desenvolvimento.
+- Job clusters: encerram quando o job é finalizado
+
+> [!tip] Jobs em produção
+> Para jobs que já estão em estágio de produção a Databricks recomenda utilizar cluster do tipo *Job Clusters*.
 
 # CDC (Change data capture)
 

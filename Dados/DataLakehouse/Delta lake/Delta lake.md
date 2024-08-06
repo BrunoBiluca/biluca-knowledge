@@ -74,6 +74,7 @@ Delta Lake File Statistics.
 
 Delta Lake analisa as primeiras 32 colunas de uma tabela para determinar:
 
+- Total número de registros
 - Mínimo valor de cada coluna
 - Máximo valor de cada coluna
 - Contagem de valores nulls em cada coluna
