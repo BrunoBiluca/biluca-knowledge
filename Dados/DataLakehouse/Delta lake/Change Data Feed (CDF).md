@@ -1,18 +1,14 @@
 
 Automaticamente gera atualizações CDC para todas as tabelas Delta Lake.
 
-```sql
-SELECT *
-FROM table_changes('table_name', start_version, [end_version])
-```
+Quando usar ou não CDF
 
-Quando usar CDF
-- 🟩 Tabelas que incluem atualizações e deleções
-- 🟩 Apenas uma pequena parcela dos registros são atualizados por vez
-
-Quando não usar CDF
-- 🛑 Tabelas que apenas inserem registros
-- 🛑 A maioria dos registros são atualizados por vez
+| ✅ Usar quando                                                    | 🛑 Não usar quando                                                      | Justificativa                                                                                                                                |
+| ---------------------------------------------------------------- | ----------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| Tabelas que incluem atualizações e deleções                      | Tabelas que apenas inserem registros                                    | Não existe ganho nenhum em catalogar apenas inserções já que não existe nenhum registro de alteração                                         |
+| Apenas uma pequena parcela dos registros são atualizados por vez | A maioria dos registros são atualizados por vez                         | Não existem ganhos caso todos os registros forem atualizados ou sobreescritos já que o CDF seria apenas um processo a mais no pipelines sem. |
+| Dados são recebidos por fontes externas no formato CDC           | Dados recebidos compreendem carregamentos destrutivos (dados faltantes) |                                                                                                                                              |
+| Envia dados para aplicações consumidoras                         | Descobre e ingere dados fora do Lakehouse                               |                                                                                                                                              |
 
 ### Habilitando CDF
 
@@ -32,13 +28,19 @@ DESCRIBE TABLE EXTENDED customers
 | ---------------- | -------------------------------------- | ------- |
 | ...              | ...                                    | ...     |
 | Table Properties | [delta.enableChangeDataFeed=true, ...] |         
+Lendo as alterações
+
+```sql
+SELECT *
+FROM table_changes('table_name', start_version, [end_version])
+```
 
 > [!tip] Leitura na versão python
 > Também é possível fazer a mesma consulta com a API do PySpark
 > ```python
 >  cdf_df = (spark.readStream
 >		  .format("delta")
->		  .option("readChangeData", True)
+>		  .option("readChangeData", True) # Habilita a leitura das alterações capturas pelo CDF
 >		  .option("startingVersion", 2)
 >		  .table("customers"))
 > ```

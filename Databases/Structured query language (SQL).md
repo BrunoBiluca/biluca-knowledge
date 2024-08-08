@@ -78,3 +78,7 @@ FROM products;
 Nesse exemplo, `AVG(price) OVER (PARTITION BY category)` calcula a média dos preços para cada categoria, mas retorna a média para cada linha individualmente, sem agrupar os resultados.
 
 Em resumo, a diferença principal é que o `GROUP BY` é usado para agrupar e resumir dados em grupos, enquanto as funções de janela operam em conjuntos de linhas individuais, permitindo calcular estatísticas relacionadas a cada linha individualmente.
+
+# Operações entre conjuntos
+
+- [MINUS](https://www.1keydata.com/pt/sql/sql-minus.php)

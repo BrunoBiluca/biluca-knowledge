@@ -39,7 +39,7 @@ delta-table
 		- Dificuldade em operações em tempo real, permite micro-batch atômicas
 		- Custo de manter histórico de versões
 - Manipulação escalonável de metadados: aproveita o poder de processamento distribuído do Spark para lidar com todos os metadados de tabelas em escala de petabytes com bilhões de arquivos com facilidade.
-- [Streaming](https://docs.delta.io/latest/delta-streaming.html) e [lote](https://docs.delta.io/latest/delta-batch.html) unificação: uma tabela em Delta Lake há uma tabela de lote, bem como uma fonte e um coletor de streaming. Ingestão de dados de streaming, preenchimento de histórico em lote e consultas interativas funcionam imediatamente.
+- [[Structured Streaming]]
 - Aplicação de esquema: trata automaticamente variações de esquema para evitar a inserção de registros inválidos durante a ingestão.
 - [Versionamento](https://docs.delta.io/latest/delta-batch.html#-deltatimetravel) de dados permite reversões, trilhas de auditoria históricas completas e experimentos de aprendizado de máquina reproduzíveis.
 - [Atualizações](https://docs.delta.io/latest/delta-update.html#-delta-merge) e [exclusões](https://docs.delta.io/latest/delta-update.html #-delta-delete): oferece suporte a operações mais complexas de mesclagem de dados como **atualizações condicionais**.
@@ -97,12 +97,16 @@ Visualizações materialização são tabelas pré-processadas que mantem o esta
 > 
 > Mesmo assim não é garantido por quanto tempo esse estado será mantido.
 
-# Streaming vs Static
+## Clonar tabelas
 
-- Tabelas Streaming são sempre fontes de dados apenas de apêndice
-- Tabelas Estáticas podem ser alteradas ou sobrescritas
+> [!info] Documentação
+> - [Clonar uma tabela no Databricks](https://docs.databricks.com/pt/delta/clone.html)
 
-Em junções do tipo streaming o responsável por ativar o processamento a adição de registros é a tabela Streaming. A tabela estática pode ser alterada e isso não resultará em nenhum tipo de processamento. **Stream-Static Joins dependem do estado no momento da operação.**
+Existem 2 formas de clonar tabelas Delta:
+
+- Deep clone (clonagem profunda): copia tudo
+	- Pode ocorrer de forma incremental utilizando a expressão `CREATE OR REPLACE TABLE`.
+- Shallow clone (clonagem rasa): copia apenas os logs de transações do Delta Lake, assim qualquer alteração aos dados na tabela copiada serão armazenados separadamente, pode ser utilizado principalmente para testar consultas.
 
 # Particionamento
 
@@ -125,3 +129,23 @@ Utilizando Delta Lake podemos fazer a seguinte forma:
 	- Cada tabela que existe o dado deve ser processada para o pedido de deleção
 - Atualizamos o estado de cada pedido de deleção para deletado
 - Como no Delta Lake temos a funcionalidade de Viagem no Tempo é necessário executar o VACUUM em cada tabela para remover os dados de versões anteriores
+
+# Mesclagem de dados
+
+> [!info] Documentação
+> - [Mesclagem](https://docs.databricks.com/pt/delta/merge.html)
+
+O Delta lake suporta operações de inserção, atualização e exclusões na mesclagem  de dados.
+
+No [[Exemplo - Loja de livros#Livros]] vemos esse tipo de mesclagem de dados, onde o estado atual do livro é alterado cada vez que seu preço é modificado, isso nos permite manter um histórico de preços.
+
+# Otimizações
+
+> [!info] Documentação
+> - [Otimizações](https://docs.delta.io/latest/optimizations-oss.html)
+
+Auto Optimize é uma funcionalidade que permite ao Delta Lake automaticamente compactar arquivos pequenos. Ele é composto de dois processos:
+
+- Optimized writes: com essa funcionalidade ativa, Databricks tenta escrever arquivos de 128MB por repartição.
+- Auto compaction: verifica se o arquivo pode ser ainda mais compactado. Em caso positivo, executa um processo OPTIMIZE (não suporta Z-Ordering) com arquivos de tamanho 128MB (em vez de 1GB do tamanho padrão do processo OPTIMIZE).
+

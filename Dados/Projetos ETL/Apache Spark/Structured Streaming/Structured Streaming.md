@@ -1,6 +1,4 @@
 
-# Principais conceitos
-
 ```python
 # exemplo de um job de processamento streaming
 spark.readStream.format("kafka")
@@ -32,8 +30,21 @@ Triggers
 > [!info] Operações sobre streaming Dataframes vs Dataframes estáticos
 > A maioria das operações são compatíveis entre os dois, existem algumas exceções como o caso da ordenação que não é possível em casos de dados streaming.
 
+## Streaming join Streaming
 
-# Stream Agregações
+Spark retem entradas antigas como streaming para ambas fontes, dessa forma é possível comparar para cada nova entradas com entradas antigas.
+
+## Streaming vs Static
+
+> [!info] Documentação
+> - [Realizando junções Stream-Static](https://docs.databricks.com/pt/structured-streaming/delta-lake.html#performing-stream-static-joins)
+
+- Tabelas Streaming são sempre fontes de dados apenas de apêndice
+- Tabelas Estáticas podem ser alteradas ou sobrescritas
+
+Em junções do tipo streaming o responsável por ativar o processamento a adição de registros é a tabela Streaming. A tabela estática pode ser alterada e isso não resultará em nenhum tipo de processamento. **Stream-Static Joins dependem do estado no momento da operação.**
+
+## Agregações
 
 O processamento de streaming pode ser feito com ou sem manutenção do estado.
 
@@ -68,3 +79,13 @@ Para a construção dessas janelas de tempo é necessário entender o conceito d
 > Melhorias para não deixar isso acontecer:
 > - Aumentar o tamanho das janelas, dessa forma agregando mais eventos
 > - Adicionar um limite de atraso, e jogar fora eventos que já não teria mais relevância
+
+
+# Checkpoits
+
+Características
+
+- Armazenam o estado atual do processo de streaming para um armazenamento em cloud
+- Permitem que o motor de streaming rastreie o progresso do processamento
+- Não podem ser compartilhados entre streams
+- Verificando com o mecanismo de escrita a frente garante tolerância a falhas para o processo de streaming

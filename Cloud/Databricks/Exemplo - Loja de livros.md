@@ -174,6 +174,11 @@ Esquema do livros após a decodificação da base64:
 - price
 - updated
 
+> [!tip] UNION ALL e duplicação de registros
+> Pode parecer estranho utilizar o UNION ALL para fazer o levantamento de todos os registros atualizados, isso irá gerar uma duplicação no registro, e é exatamente isso que precisamos.
+> 
+> O primeiro registro gerado pela consulta `staged_updates` é utilizando para atualizar o estado atual na tabela `livros` para descontinuado. O segundo registro irá criar a nova versão atual do livro na tabela.
+
 ```sql
 MERGE INTO livros
 USING (
@@ -191,11 +196,11 @@ USING (
 ) 
 staged_updates ON livros.book_id = merge_key
 
--- Caso preço seja diferente atualiza a versão atual
-WHEN MATCHED AND livros.current = true AND livros.price <> staged_updates.price THEN
+-- Caso preço seja diferente atualiza a versão atual para uma versão descontinuada
+WHEN MATCHED
 	UPDATE SET current = false, end_date = staged_updates.updated
 
--- Caso livro não exista cria o livro na base
+-- Cria a nova versão (atual) do livro na base
 WHEN NOT MATCHED THEN
 	INSERT (book_id, title, author, price, current, effective_date, end_date)
 	VALUES (
@@ -208,6 +213,9 @@ WHEN NOT MATCHED THEN
 		NULL
 	)
 ```
+
+> [!warning] Múltiplas atualização em um microbatch
+> Caso mais de um evento de atualização venha em um microbatch para o mesmo livro irá ocorrer um erro. Nesse casos é necessário garantir que tenha apenas uma única `merge_key`, que pode ser feita utilizando algum tipo de operação temporal ([[Funções nativas#Window Functions]]).
 
 A query acima podem ser utilizada no processamento de cada micro_batch:
 

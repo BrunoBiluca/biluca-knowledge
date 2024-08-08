@@ -24,8 +24,6 @@ Funcionalidades
 - [Material components](https://docs.flutter.dev/ui/widgets/material)
 - [Temas](https://docs.flutter.dev/cookbook/design/themes)
 
-
-
 Integração com Windows
 
 - [https://dzone.com/articles/build-great-windows-desktop-apps-with-flutter](https://dzone.com/articles/build-great-windows-desktop-apps-with-flutter)
@@ -58,7 +56,7 @@ Componentes prontos
 
 Para utilizar o Navigator é necessário que o contexto passado seja provido por builder de um `MaterialApp` ou de um `WidgetsApp`
 
-Caso o erro `Navigator operation requested with a context that does not include a Navigator` está ocorrendo o contexto utilizado pode ser referência ao pai dos widgets necessários. 
+Caso o **erro: Navigator operation requested with a context that does not include a Navigator** está ocorrendo o contexto utilizado pode ser referência ao pai dos widgets necessários. 
 
 Exemplo de uma versão que ocorre o erro:
 
