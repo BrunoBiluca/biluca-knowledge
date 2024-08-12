@@ -16,9 +16,17 @@ Tipos de persona disponíveis:
 - SQL
 
 # Governança
+
+## Hive metastore (legado)
+
+O Hive metastore é uma modelo de controle de privilégios para objetos armazenados no Hive, esse modelo já está definido como legado e será substituído pelo [[Unity Catalog]]
+
+> [!info] Documentação
+> - [Privilégios do Hive metastore e objetos protegíveis](https://docs.databricks.com/pt/data-governance/table-acls/object-privileges.html#privilege-types)
 ## Permissões
 
 > [!info] Documentação
+> - [Lista de acesso de controle](https://docs.databricks.com/pt/security/auth/access-control/index.html)
 > - [Permissões de computação](https://docs.databricks.com/pt/compute/clusters-manage.html#cluster-level-permissions)
 
 Existem dois tipos de permissões de cluster
@@ -364,6 +372,10 @@ Tipos de clusters:
 
 > [!tip] Jobs em produção
 > Para jobs que já estão em estágio de produção a Databricks recomenda utilizar cluster do tipo *Job Clusters*.
+
+> [!warning] Permissões para Jobs
+> Jobs não pode ser atribuídos a grupos de usuários, eles devem ser atribuídos a um dono que deve ser um indivíduo.
+> - [https://docs.databricks.com/security/auth-authz/access-control/jobs-acl.html#job-permissions](https://docs.databricks.com/security/auth-authz/access-control/jobs-acl.html#job-permissions)
 
 # CDC (Change data capture)
 

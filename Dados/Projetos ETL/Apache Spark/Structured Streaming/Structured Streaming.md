@@ -20,15 +20,17 @@ spark.readStream.format("kafka")
   .start()
 ```
 
-Triggers
+> [!info] Operações sobre streaming Dataframes vs Dataframes estáticos
+> A maioria das operações são compatíveis entre os dois, existem algumas exceções como o caso da ordenação que não é possível em casos de dados streaming.
+### Triggers
+
+> [!info] Documentação
+> - [Configuração de gatilhos para Structured Streaming](https://docs.databricks.com/pt/structured-streaming/triggers.html#configure-structured-streaming-trigger-intervals)
 
 - Intervalo fixo (default, intervalo de 500ms)
 - Ativado uma única vez para uma micro-batch
 - Ativado uma única vez para múltiplas micro-batches
 - Contínua
-
-> [!info] Operações sobre streaming Dataframes vs Dataframes estáticos
-> A maioria das operações são compatíveis entre os dois, existem algumas exceções como o caso da ordenação que não é possível em casos de dados streaming.
 
 ## Streaming join Streaming
 

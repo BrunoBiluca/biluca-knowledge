@@ -59,6 +59,16 @@ Apenas os metadados da tabela serão removidos enquanto os dados são mantidos n
 [[Databricks#Fontes externas]]
 
 ---
+
+
+> [!info] Pergunta
+> The data engineering team is using the LOCATION keyword for every new Delta Lake table created in the Lakehouse.
+> 
+> Which of the following describes the purpose of using the LOCATION keyword in this case ?
+
+`LOCATION` é a palavra utilizada para configurar a tabela Delta criada como uma tabela externa, ou seja, essa tabela tem seus dados armazenados em um armazenamento externo ao Databricks.
+
+---
 ## Configuração de Jobs
 
 > [!info] Pergunta
@@ -130,6 +140,19 @@ A string *REDACTED* será exibida.
 Watermark.
 
 [[Structured Streaming#Manipulação de dados atrasados (Watermark)]]
+
+---
+
+> [!info] Pergunta
+> The data engineering team created a new Databricks job for processing sensitive financial data. A financial analyst asked the team to transfer the "Owner" privilege of this job to the “finance” group.
+> 
+> A junior data engineer that has the “CAN MANAGE” permission on the job is attempting to make this privilege transfer via Databricks Job UI, but it keeps failing.
+> 
+> Which of the following explains the cause of this failure?
+
+Usuário não podem ser dono de um Databricks Job. O dono deve ser um indivíduo.
+
+---
 ### CDC e CDF
 
 > [!info] Pergunta
@@ -246,6 +269,41 @@ Consideramos utilizar tabelas quando:
 - Consultas devem ser computadas incrementalmente a partir da fonte de dados que cresce continuamente.
 
 ---
+
+
+> [!info] Pergunta
+> A data engineer wants to create a Delta Lake table for storing user activities of a website. The table has the following schema:
+> 
+> `user_id LONG, page STRING, activity_type LONG, ip_address STRING, activity_time TIMESTAMP, activity_date DATE`
+> 
+> Based on the above schema, which column is a good candidate for partitioning the Delta Table?
+
+`activity_date`
+
+Para escolher a coluna de partição é importante pensar qual o formato que os dados serão incrementados e então escolher uma coluna que otimize o tamanho da partição para não ser muito grande e que também consiga facilmente arquivar partições que já não sejam mais tão relevantes. 
+
+Nesse caso os dados chegam com o passar do tempo, assim utilizar a `activity_date` como a coluna de partição nos permite criar um tamanho limitado de registros para cada partição (registros do dia) e facilmente arquivar partições antigas  que já não estão sendo relevantes para a análise corrente.
+
+[[Delta lake#Particionamento]]
+
+---
+
+> [!info] Pergunta
+> The data engineering team has a large Delta table named ‘users’. A recent query on the table returned some entries with negative values in the ‘age’ column.
+> 
+> To avoid this issue and enforce data quality, a junior data engineer decided to add a CHECK constraint to the table with the following command:
+> 
+> `ALTER TABLE users ADD CONSTRAINT valid_age CHECK (age> 0);`
+> 
+> However, the command fails when executed.
+> 
+> Which statement explains the cause of this failure?
+
+A tabela já apresenta registros que violam essa nova regra. Deve então adequar a tabela a nova regra antes de definir a restrição.
+
+[[Qualidade de dados]]
+
+---
 # Governança
 
 > [!info] Pergunta
@@ -272,6 +330,18 @@ Consideramos utilizar tabelas quando:
 
 Privilégio "Can Manage"
 [[Databricks#Permissões]]
+
+---
+
+
+> [!info] Pergunta
+> A data engineer uses the following SQL query:
+> 
+> `GRANT USAGE ON DATABASE sales_db TO finance_team`
+> 
+> Which of the following is the benefit of the USAGE privilege ?
+
+Não acontece nada, porém é necessário para fazer qualquer operação sobre a base de dados `sales_db`. A partir dessa permissão podem ser atribuídas outras permissões ao time de finanças.
 
 ---
 # Delta Table
@@ -330,6 +400,28 @@ Auto Optimize é uma funcionalidade que permite ao Delta Lake automaticamente co
 
 ---
 
+> [!info] Pergunta
+> A data engineer has added a CHECK constraint to the **sales** table using the following command:
+> 
+> ```sql
+> ALTER TABLE sales ADD CONSTRAINT valid_date CHECK (item_date >= '2024-01-01');
+> ```
+> 
+> In addition, they have added a comment on the **item_date** column using the following command:
+> 
+> ```sql
+> ALTER TABLE sales ALTER COLUMN item_date COMMENT "Date must be newer than Jan 1, 2024";
+> ```
+> 
+> Which of the following commands allows the data engineer to verify that both the constraint and the column comment have been successfully added on the table ?
+
+`DESCRIBE EXTENDED sales` ou `DESCRIBE TABLE EXTENDED`.
+
+Exibe
+- A condição atual da restrição imposta a tabela
+- Também mostra as informações detalhadas da tabela
+
+---
 ### Batch
 
 
@@ -451,6 +543,50 @@ Spark retem entradas antigas como streaming para ambas fontes, dessa forma é po
 A última versão da tabela estática será retornada cada vez que for consultada. O spark não faz nenhum tipo de cache em relação a tabela.
 
 ---
+
+> [!info] Pergunta
+> A data engineer wants to ingest input json data into a target Delta table. They want the data ingestion to happen incrementally in near real-time.
+> Which option correctly meets the specified requirement?
+
+```python
+spark.readStream
+           .format("cloudFiles")
+           .option ("cloudFiles.format", "json")
+           .load(source_path)
+.writeStream
+           .option("checkpointLocation", checkpointPath)
+           .start("target_table")
+```
+
+Para ingerir dados em quase tempo real utilizamos o Auto Loader. Ele provê uma fonte Structured Streaming chamada `cloudFiles` que por padrão fazer o processamento a cada 500 ms equivalente a opção `tigger(processingTime="500ms")`.
+
+[[Structured Streaming#Triggers]]
+
+---
+
+> [!info] Pergunta
+> Given the following Structured Streaming query:
+> ```python
+> (spark.table("orders")
+>         .withColumn("total_after_tax", col("total")+col("tax"))
+>     .writeStream
+>         .option("checkpointLocation", checkpointPath)
+>         .outputMode("append")
+>         ._____________
+>         .table("new_orders")
+> )
+> ```
+> Fill in the blank to make the query executes a micro-batch to process data every 2 minutes
+
+```python
+...
+.trigger(processingTime="2 minutes")
+...
+```
+
+[[Structured Streaming#Triggers]]
+
+---
 ## Clonagem de tabelas
 
 
@@ -503,120 +639,6 @@ DEEP CLONE orders
 
 
 
-> [!info] Pergunta
-> A data engineer wants to ingest input json data into a target Delta table. They want the data ingestion to happen incrementally in near real-time.
-> Which option correctly meets the specified requirement ?
-
-
-
-
----
-> [!info] Pergunta
-> Given the following Structured Streaming query:
-> ```python
-> (spark.table("orders")
->         .withColumn("total_after_tax", col("total")+col("tax"))
->     .writeStream
->         .option("checkpointLocation", checkpointPath)
->         .outputMode("append")
->         ._____________
->         .table("new_orders")
-> )
-> ```
-> Fill in the blank to make the query executes a micro-batch to process data every 2 minutes
-
-? Verificar se a sintaxe do trigger é essa mesmo
-
-```python
-...
-.trigger(processingTime="2 minutes")
-...
-```
-
----
-> [!info] Pergunta
-> Which statement regarding Delta Lake File Statistics is correct?
-> 
-
-
-
----
-> [!info] Pergunta
-> A data engineer uses the following SQL query:
-> 
-> `GRANT USAGE ON DATABASE sales_db TO finance_team`
-> 
-> Which of the following is the benefit of the USAGE privilege ?
-
-
-
----
-> [!info] Pergunta
-> The data engineering team is using the LOCATION keyword for every new Delta Lake table created in the Lakehouse.
-> 
-> Which of the following describes the purpose of using the LOCATION keyword in this case ?
-
-
-
----
-> [!info] Pergunta
-> A data engineer wants to create a Delta Lake table for storing user activities of a website. The table has the following schema:
-> 
-> user_id LONG, page STRING, activity_type LONG, ip_address STRING, activity_time TIMESTAMP, activity_date DATE
-> 
-> Based on the above schema, which column is a good candidate for partitioning the Delta Table?
-
-
-
----
-> [!info] Pergunta
-> The data engineering team has a large Delta table named ‘users’. A recent query on the table returned some entries with negative values in the ‘age’ column.
-> 
-> To avoid this issue and enforce data quality, a junior data engineer decided to add a CHECK constraint to the table with the following command:
-> 
-> `ALTER TABLE users ADD CONSTRAINT valid_age CHECK (age> 0);`
-> 
-> However, the command fails when executed.
-> 
-> Which statement explains the cause of this failure?
-
-A tabela já apresenta registros que violam essa nova regra. Deve então adequar a tabela a nova regra antes de definir a restrição.
-
----
-> [!info] Pergunta
-> A data engineer has added a CHECK constraint to the **sales** table using the following command:
-> 
-> ```sql
-> ALTER TABLE sales ADD CONSTRAINT valid_date CHECK (item_date >= '2024-01-01');
-> ```
-> 
-> In addition, they have added a comment on the **item_date** column using the following command:
-> 
-> ```sql
-> ALTER TABLE sales ALTER COLUMN item_date COMMENT "Date must be newer than Jan 1, 2024";
-> ```
-> 
-> Which of the following commands allows the data engineer to verify that both the constraint and the column comment have been successfully added on the table ?
-
-
-
----
-> [!info] Pergunta
-> Which of the following is the benefit of Delta Lake File Statistics ?
-
-? Verificar as características do Delta Lake File Statistics
-Utilizar o Delta Lake File Statistics permite possibilitar o pulo de arquivos de dados em algumas queries para melhor performance.
-
----
-> [!info] Pergunta
-> The data engineering team created a new Databricks job for processing sensitive financial data. A financial analyst asked the team to transfer the "Owner" privilege of this job to the “finance” group.
-> 
-> A junior data engineer that has the “CAN MANAGE” permission on the job is attempting to make this privilege transfer via Databricks Job UI, but it keeps failing.
-> 
-> Which of the following explains the cause of this failure?
-
-
----
 > [!info] Pergunta
 > The data engineering team noticed that a partitioned Delta Lake table is suffering greatly. They are experiencing slowdowns for most general queries on this table.
 > 

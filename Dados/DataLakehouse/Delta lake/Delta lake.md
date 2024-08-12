@@ -51,6 +51,7 @@ delta-table
 # Funcionalidades
 
 - [[Change Data Feed (CDF)]]
+- [[Qualidade de dados]]
 ## Visualizações dinâmicas
 
 Para garantir [[Dados/DataLakehouse/Melhores práticas#Garantir a segurança do Lakehouse com acesso baseado a funções e controles de visualizações|Acesso limitado a visualizações em LakeHouse]] o Delta Lake nos permite criar visualizações dinâmicas dependendo do papel do usuário. Isso é muito importante para garantir que determinados tipos de papéis dentro da organização não tenham acesso a mais informações do que eles precisam (princípio do mínimo privilégio), por exemplo PII(Person Identification Information).
