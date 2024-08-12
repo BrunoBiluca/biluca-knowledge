@@ -8,7 +8,10 @@
 !.obsidian/core-plugins.json
 !.obsidian/community-plugins.json
 !.obsidian/templates.json
+!.obsidian/hotkeys.json
 !.obsidian/snippets
+!.obsidian/themes
+!.obsidian/plugins
 
 # Exclude consultant specific files "personal"
 05*-*Personal/
