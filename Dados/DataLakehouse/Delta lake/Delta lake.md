@@ -116,6 +116,8 @@ Podemos particionar os dados em relação a campos da base. Isso melhora conside
 > [!warning] Evitar excesso de particionamento
 > - Particionar pequenas tabelas pode levar a um aumento de armazenamento e o número total de arquivos para escaneamento
 > - Se a maioria das partições tem < 1GB de dados a tabela está superparticionada
+> 
+> Nesses casos executar um processo de Optimize não surte nenhum efeito, já que o particionamento já está altamente compactado e mal definido.
 
 # Governança
 

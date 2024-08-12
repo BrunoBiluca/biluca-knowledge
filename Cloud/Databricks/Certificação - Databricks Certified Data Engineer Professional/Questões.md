@@ -29,6 +29,60 @@ Para versões posteriores podemos apenas utilizar o comando `spark.sql()`.
 
 ---
 
+> [!info] Pergunta
+> 
+> A data engineer is using Databricks REST API to send a GET request to the endpoint ‘api/2.1/jobs/runs/get’ to retrieve the run’s metadata of a multi-task job using its run_id.
+> Which statement correctly describes the response structure of this API call?
+
+Ele irá retornar as informações da task com o `run_id` providenciado. Cada task tem um `run_id`.
+
+---
+
+> [!info] Pergunta
+> Which of the following statements best describes DBFS ?
+
+Abstração sobre armazenamento de objetos escalável que mapeia chamadas de sistema do tipo Unix para chamadas nativas ao armazenamento em nuvem.
+
+É um sistema disponível nos clusters Databricks montado sobre os workspaces Databricks.
+
+---
+
+### Notebooks
+
+> [!info] Pergunta
+> A data engineer wants to install a Python wheel scoped to the current notebook’s session, so only the current notebook and any jobs associated with this notebook have access to that library.
+> 
+> Which of the following commands can the data engineer use to complete this task?
+
+
+```
+%pip install my_package.whl
+```
+
+---
+
+> [!info] Pergunta
+> A data engineer has noticed the comment ‘# Databricks notebook source’ on the first line of each Databricks Python file’s source code pushed to Github.
+> 
+> Which of the following explain the purpose of this comment ?
+
+Esse comentário estabelece que o arquivo python age como um notebook do Databricks.
+
+---
+
+> [!info] Pergunta
+> Which of the following statements correctly describes the sys.path Python variable ?
+> 
+
+Contém uma lista dos diretórios que o interpretador python procura por módulos.
+
+To import modules from another directory, you must add it to sys.path
+
+```python
+import sys
+sys.path.append("/path/to/dir")
+```
+---
 ### Fontes externas
 
 > [!info] Pergunta
@@ -69,6 +123,26 @@ Apenas os metadados da tabela serão removidos enquanto os dados são mantidos n
 `LOCATION` é a palavra utilizada para configurar a tabela Delta criada como uma tabela externa, ou seja, essa tabela tem seus dados armazenados em um armazenamento externo ao Databricks.
 
 ---
+
+> [!info] Pergunta
+> Given the following commands:
+> 
+> ```sql
+> CREATE DATABASE db_hr;
+> LOCATION '/mnt/hr_external';
+> 
+> USE db_hr;
+> CREATE TABLE employees;
+> ```
+> 
+> In which of the following locations will the employees table be located?
+
+Como estamos criando uma tabela utilizando Location, ela é tratada como uma tabela externa no caminho informado.
+
+Nesse caso a tabela `employees` irá ser criada sob o diretório do banco de dados definido `/mnt/hr_external/db_hr.db`. O `.db` é um sufixo adicionado a pasta que contem uma base de dados.
+
+---
+
 ## Configuração de Jobs
 
 > [!info] Pergunta
@@ -151,6 +225,13 @@ Watermark.
 > Which of the following explains the cause of this failure?
 
 Usuário não podem ser dono de um Databricks Job. O dono deve ser um indivíduo.
+
+---
+
+> [!info] Pergunta
+> Which of the following is **Not** part of the Ganglia UI ?
+
+O Ganglia UI apresenta todos os recursos computacionais do cluster, porém não tem informações específicas de eventos que estão ocorrendo no cluster.
 
 ---
 ### CDC e CDF
@@ -250,7 +331,7 @@ Databricks suporta gatilhos para o Delta Lake e fontes providas por Auto Loader.
 > 
 > They want to create a new Gold-layer entity against the ‘sales_cleaned’ table to calculate the year-to-date (YTD) of the sales amount. The new entity will have the following schema:
 > 
-> country_code STRING, category STRING, ytd_total_sales FLOAT, updated TIMESTAMP
+> `country_code STRING, category STRING, ytd_total_sales FLOAT, updated TIMESTAMP`
 > 
 > It’s enough for these metrics to be recalculated once daily. But since they will be queried very frequently by several business teams, the data engineering team wants to cut down the potential costs and latency associated with materializing the results.
 > 
@@ -304,7 +385,37 @@ A tabela já apresenta registros que violam essa nova regra. Deve então adequar
 [[Qualidade de dados]]
 
 ---
+
+
+> [!info] Pergunta
+> The data engineering team noticed that a partitioned Delta Lake table is suffering greatly. They are experiencing slowdowns for most general queries on this table.
+> 
+> The team tried to run an OPTIMIZE command on the table, but this did not help to resolve the issue.
+> 
+> Which of the following likely explains the cause of these slowdowns?
+
+A tabela está superparticionada ou particionada incorretamente. Isso necessita uma reescrita de todos os dados para resolver o problema.
+
+[[Delta lake#Particionamento]]
+
+---
+
+> [!info] Pergunta
+> Which of the following statements correctly describes assertions in unit testing ?
+
+Uma asserção é uma expressão booleana que verifica se as premissas feitas no código ainda permanecem verdadeiras após o desenvolvimento.
+
+---
+
+> [!info] Pergunta
+> Which of the following statements correctly describes End-to-End Testing ?
+> 
+
+É uma abordagem que simula a experiência do usuário para garantir que a aplicação rode sobre cenários baseados no mundo real
+
 # Governança
+
+## Permissões
 
 > [!info] Pergunta
 > Which of the following describes the minimal permissions a data engineer needs to view the metrics and Spark UI of an existing cluster ?
@@ -344,6 +455,36 @@ Privilégio "Can Manage"
 Não acontece nada, porém é necessário para fazer qualquer operação sobre a base de dados `sales_db`. A partir dessa permissão podem ser atribuídas outras permissões ao time de finanças.
 
 ---
+
+> [!info] Pergunta
+> The data engineering team has a secret scope named ‘DataOps-Prod’ that contains all secrets needed by DataOps engineers in a production workspace.
+> 
+> Which of the following is the minimum permission required for the DataOps engineers to use the secrets in this scope ?
+
+READ para o escopo inteiro do DataOps-Prod.
+
+[[Databricks#Databricks secrets]]
+
+---
+### Remoção de dados
+
+> [!info] Pergunta
+> The data engineering team has the following query for processing customers’ requests to be forgotten:
+> 
+> ```sql
+> DELETE FROM customers
+> WHERE customer_id IN
+> (SELECT customer_id FROM delete_requests)
+> ```
+> 
+> Which statement describes the results of executing this query ?
+
+Esse é um caso de utilizar o VACUUM, já que os dados irão continuar no histórico e de acordo com a legislação é necessário remover todo o histórico do usuário.
+
+[[Delta lake#Propagando deleções]]
+
+---
+
 # Delta Table
 
 > [!info] Pergunta
@@ -636,113 +777,3 @@ DEEP CLONE orders
 
 
 # Não rotuladas
-
-
-
-> [!info] Pergunta
-> The data engineering team noticed that a partitioned Delta Lake table is suffering greatly. They are experiencing slowdowns for most general queries on this table.
-> 
-> The team tried to run an OPTIMIZE command on the table, but this did not help to resolve the issue.
-> 
-> Which of the following likely explains the cause of these slowdowns?
-
-
-
----
-> [!info] Pergunta
-> The data engineering team has the following query for processing customers’ requests to be forgotten:
-> 
-> ```sql
-> DELETE FROM customers
-> WHERE customer_id IN
-> (SELECT customer_id FROM delete_requests)
-> ```
-> 
-> Which statement describes the results of executing this query ?
-
-Esse é um caso de utilizar o VACCUM, já que os dados irão continuar no histórico e de acordo com a legislação é necessário remover todo o histórico do usuário.
-
----
-> [!info] Pergunta
-> Given the following commands:
-> 
-> ```sql
-> CREATE DATABASE db_hr;
-> LOCATION '/mnt/hr_external';
-> 
-> USE db_hr;
-> CREATE TABLE employees;
-> ```
-> 
-> In which of the following locations will the employees table be located?
-
-
-
----
-> [!info] Pergunta
-> The data engineering team has a secret scope named ‘DataOps-Prod’ that contains all secrets needed by DataOps engineers in a production workspace.
-> 
-> Which of the following is the minimum permission required for the DataOps engineers to use the secrets in this scope ?
-
-
-
----
-> [!info] Pergunta
-> Which of the following is **Not** part of the Ganglia UI ?
-
-O Ganglia UI apresenta todos os recursos computacionais do cluster, porém não tem informações específicas de eventos que estão ocorrendo no cluster.
-
----
-> [!info] Pergunta
-> 
-> A data engineer is using Databricks REST API to send a GET request to the endpoint ‘api/2.1/jobs/runs/get’ to retrieve the run’s metadata of a multi-task job using its run_id.
-> Which statement correctly describes the response structure of this API call?
-
-
-
----
-> [!info] Pergunta
-> A data engineer has noticed the comment ‘# Databricks notebook source’ on the first line of each Databricks Python file’s source code pushed to Github.
-> 
-> Which of the following explain the purpose of this comment ?
-
-Esse comentário estabelece que o arquivo python age como um notebook do Databricks.
-
----
-> [!info] Pergunta
-> Which of the following statements best describes DBFS ?
-
-Abstração sobre o Lakehouse da Databricks que provê uma solução aberta para compartilhar dados entre qualquer plataforma de computação.
-
----
-> [!info] Pergunta
-> A data engineer wants to install a Python wheel scoped to the current notebook’s session, so only the current notebook and any jobs associated with this notebook have access to that library.
-> 
-> Which of the following commands can the data engineer use to complete this task?
-
-? Verificar se pacotes wheel são instalados dessa forma mesmo
-
-```
-%pip install my_package.whl
-```
-
----
-> [!info] Pergunta
-> Which of the following statements correctly describes the sys.path Python variable ?
-> 
-
-?
-
----
-> [!info] Pergunta
-> Which of the following statements correctly describes assertions in unit testing ?
-
-Uma asserção é uma expressão booleana que verifica se as premissas feitas no código ainda permanecem verdadeiras após o desenvolvimento.
-
----
-> [!info] Pergunta
-> Which of the following statements correctly describes End-to-End Testing ?
-> 
-
-É uma técnica de testes que verificar se os sub-sistemas funcionam como esperado quando testados como um grupo.
-

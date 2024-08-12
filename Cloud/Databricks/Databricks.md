@@ -56,6 +56,11 @@ Databricks secrets permitem que você armazene credenciais e as referencie em no
 
 Para manter as credenciais secretas quando lidas utilizando o comando `dbutils.secrets.get()` e exibidas como saída de uma célula os valores serão alterados para uma string [REDACTED].
 
+As permissões de acesso ao secrets são:
+
+- MANAGE: permite alterar toda a lista de controle de acesso, e escrever e ler do escopo do secret.
+- WRITE: permite ler e escrever do escopo do secret
+- READ: permite ler de todo o escopo do secrete e lista os secrets disponíveis.
 # Notebooks
 
 ### Comandos mágicos
