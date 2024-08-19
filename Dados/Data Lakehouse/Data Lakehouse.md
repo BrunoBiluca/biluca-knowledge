@@ -2,7 +2,7 @@
 tags:
   - engenharia_de_dados
 ---
-# DataLakehouse
+# Data Lakehouse
 
 > [!info] Definição
 > A arquitetura do Data Lakehouse tem como objetivo resolver estes desafios enfrentados no DW e DL para reduzir os custos operacionais, simplificar o processo de transformação e melhorar a governança. O lakehouse se tornou uma forma de centralizar e unificar as fontes de dados e esforços de engenharia na organização. Essencialmente, o uso do lakehouse permite que todos os usuários possam explorar os dados, independente de suas capacidades técnicas.
@@ -25,3 +25,17 @@ Como os lakehouses também separam o processamento de armazenamento, diferentes 
 	- Artigo comparando Data Lakehouse com DataLakes e DataWarehouses
 	- Também discute uma comparação entre os frameworks de criação de DataLakehouse
 	- Por fim o artigo apresenta uma arquitetura na AWS de referência
+
+# Melhores práticas
+
+- Dados brutos devem ser armazenados sem perdas
+	- [[Arquitetura medalhão#Bronze]]
+- Garantir a segurança do Lakehouse com acesso baseado a funções e controles de visualizações
+	- [[Delta lake#Visualizações dinâmicas]]
+-  Construir resiliência e transações ACID no Lakehouse
+	- [[ACID]]
+	- [[Serialização e compressão para dados]]
+-  Catalogue seus dados
+	- [[Unity Catalog]]
+- Qualidade de dados
+	- [[Delta lake#Restrições dos dados]]

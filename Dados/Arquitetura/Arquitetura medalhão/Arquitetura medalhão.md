@@ -1,4 +1,6 @@
-# Camadas
+A separação por camadas nos permite definir objetivos bem claros para cada conjunto de dados armazenado.
+
+- [[Exemplo - Loja de livros]]
 
 # Bronze
 
@@ -7,6 +9,9 @@ Objetivos da camada bronze são:
 - Receber os dados com pouca ou nenhuma alteração
 - Particionar os dados para facilitar o processamento dos dados na camada Prata.
 
+Os dados devem ser salvos em seu formato nativo, para que nenhuma informação seja perdida inadvertidamente por agregação ou modificação. Até mesmo limpar os dados de valores nulos, por exemplo, pode ser prejudicial para bons cientistas de dados, que aparentemente conseguem extrair valor analítico adicional não apenas dos dados, mas até mesmo da falta deles.
+
+A única exceção são pelos dados de identificação pessoal que podem ser substituídos por IDs para evitar problemas de identificação.
 # Prata
 
 Objetivos da camada prata são:

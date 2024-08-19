@@ -33,7 +33,7 @@ Esse livro foca em preencher uma vazio no campo da engenharia de dados em relaç
 
 # Resumo
 
-Durante todo o livro algumas [[Considerações de arquitetura de dados]] são apresentadas para tentar levantar questões relevantes na hora da tomada de decisões.
+Durante todo o livro algumas [[Considerações na arquitetura de dados]] são apresentadas para tentar levantar questões relevantes na hora da tomada de decisões.
 
 ![[Ciclo de vida de engenharia de dados.png|Todas as etapas do ciclo de vida de engnharia de dados|500]]
 ### Chapter 1. Data Engineering Described

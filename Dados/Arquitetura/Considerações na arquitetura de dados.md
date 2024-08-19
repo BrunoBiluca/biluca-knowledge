@@ -2,7 +2,7 @@
 tags:
   - arquitetura_software
 ---
-erAqui serão apresentadas algumas questões ou considerações que podem impactar em tomadas de decisões durante o processo de ciclo de vida de engenharia de dados (CVED).
+Aqui serão apresentadas algumas questões ou considerações que podem impactar em tomadas de decisões durante o processo de ciclo de vida de engenharia de dados (CVED).
 
 > [!tip] Dados são melhores quando levam a uma ação.
 

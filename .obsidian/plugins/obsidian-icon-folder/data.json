@@ -50,9 +50,5 @@
     "iconIdentifier": ":",
     "lucideIconPackType": "native",
     "debugMode": false
-  },
-  "Dados/DataLakehouse/Melhores práticas.md": {
-    "iconName": "LiBookmark",
-    "iconColor": "#a882ff"
   }
 }

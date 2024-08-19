@@ -3,7 +3,7 @@ tags:
   - arquitetura_software
   - engenharia_de_dados
 ---
-O AWS Lake Formation centraliza o gerenciamento de permissões de seus dados e facilita o compartilhamento em toda a organização e externamente. É uma forma da AWS de criar uma arquitetura de [[DataLakehouse]].
+O AWS Lake Formation centraliza o gerenciamento de permissões de seus dados e facilita o compartilhamento em toda a organização e externamente. É uma forma da AWS de criar uma arquitetura de [[Data Lakehouse]].
 
 ![[lake formation.png|Diagrama de exemplificação do que o lake formation abstrai quando utilizado|center|500]]
 

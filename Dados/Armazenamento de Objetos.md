@@ -9,7 +9,7 @@ Esse tipo de armazenamento são do tipo chave-valor. Eles utilizam algum contain
 Exemplos desse tipo de armazenamento
 - [[Amazon S3]]
 - [[Azure Blob Storage]]
-- [[Google Cloud Storage (GCS]]
+- [[Google Cloud Storage (GCS)]]
 
 São formas de armazenamento muito performáticas no que diz respeito a aplicação batch por permitirem grandes taxas de leitura e escrita.
 

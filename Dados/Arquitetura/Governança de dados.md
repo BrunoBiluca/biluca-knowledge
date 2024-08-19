@@ -28,6 +28,8 @@ A governança de dados se compromete a definir vários elementos entre eles:
 - Método de Tokenização
 É criada uma tabela de relação entre os campos identificadores e um token é criado para cada registro. Esse método ainda permite ter acesso aos dados originais.
 
+Também é possível criar tabelas dinâmicas de acordo com o papel do usuário para exibir apenas informações necessárias a cada papel, como é o caso de [[Delta lake#Visualizações dinâmicas]].
+
 # Anonimização
 
 - Protege toda a base de dados

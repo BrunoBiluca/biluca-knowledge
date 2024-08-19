@@ -3,7 +3,7 @@ tags:
   - arquitetura_software
   - engenharia_de_dados
 ---
-# Datalake
+# Data Lake
 
 > [!info] Definição
 > Um datalake é um reservatório dinâmico capaz de armazenar diversos tipos de dados, desde conjuntos de dados estruturados até conversas não estruturadas em mídias sociais e arquivos semiestruturados. Essa versatilidade é sustentada por sua arquitetura e estrutura de dados exclusivas.
@@ -78,7 +78,7 @@ Por muitas vezes as empresas tomam a atitude de combinar Datalakes e DataWarehou
 - Os usuários do data lake ficam próximos dos dados brutos, mas têm que investir muito tempo na preparação dos dados do que realmente nas regras de negócio. Além disso, a exploração dos dados exige uma expertise em ferramentas de codificação para extrair valor das informações.
 - Manter os dados consistentes entre o DL e o DW é uma tarefa difícil e cara.
 
-Para solucionar esse problema de vez temos as soluções de [[DataLakehouse]], que trazem o melhor dos dois conceitos de uma forma realmente integrada.
+Para solucionar esse problema de vez temos as soluções de [[Data Lakehouse]], que trazem o melhor dos dois conceitos de uma forma realmente integrada.
 
 # Desidentificarão de dados
 O processo de desidentificarão de dados é utilizado para garantir as leis de proteção de dados e não deixar vazar dados de clientes, ao mesmo tempo que conseguimos utilizar os dados para criar visões de negócio com dados reais.

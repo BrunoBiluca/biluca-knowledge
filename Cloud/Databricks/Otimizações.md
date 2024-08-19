@@ -18,12 +18,12 @@ Principais gargalhos de performance para big data e sistemas MPP:
 - Contenção de recursos: processar diferentes fluxos ao mesmo tempo utilizando os mesmos recursos
 
 
-# Desconsideração de dados para Delta Lake
+# Salto de dados para Delta Lake
 
 > [!info] Documentação
 > - [Data skipping](https://docs.databricks.com/en/delta/data-skipping.html)
 
-As informações de desconsideração de dados são coletados no processo de escrita da Delta Table.
+As informações de salto de dados são coletados no processo de escrita da Delta Table.
 
 Leva em consideração
 - Valores máximos e mínimos

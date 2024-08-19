@@ -1,5 +1,5 @@
 
-Automaticamente gera atualizações CDC para todas as tabelas Delta Lake.
+Automaticamente gera atualizações [[Change Data Capture]] para todas as tabelas Delta Lake.
 
 | ✅ Usar quando                                                    | 🛑 Não usar quando                                                      | Justificativa                                                                                                                                |
 | ---------------------------------------------------------------- | ----------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |

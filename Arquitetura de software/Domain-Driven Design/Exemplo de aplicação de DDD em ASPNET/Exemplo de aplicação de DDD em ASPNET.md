@@ -1,6 +1,6 @@
 #programação/padrões 
 
-# Domain Driven Backend
+# Exemplo de aplicação de DDD em ASPNET
 
 Um backend desenvolvido utilizando separação por domínio aumenta a flexibilidade em relação a implementação.
 
