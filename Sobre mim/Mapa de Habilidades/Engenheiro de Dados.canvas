@@ -13,7 +13,7 @@
 		{"id":"382342000c2423a5","type":"text","text":"### Bancos de dados relacionais\n\n- ","x":-895,"y":910,"width":329,"height":125},
 		{"id":"6b83cb6dd50d8448","type":"text","text":"### Bancos de dados NoSQL\n\n- ","x":-895,"y":1380,"width":329,"height":88},
 		{"id":"e5e67eabdbef399a","type":"text","text":"### Armazenamento de Big Data\n\n- ","x":-895,"y":1700,"width":329,"height":124},
-		{"id":"649bdbae1222ce60","type":"text","text":"### Data Lakehouse\n\n- [[Data Lakehouse]]\n- [[Delta lake]]","x":-269,"y":1615,"width":324,"height":121,"color":"3"},
+		{"id":"649bdbae1222ce60","type":"text","text":"### Data Lakehouse\n\n- [[Data Lakehouse]]","x":-269,"y":1615,"width":324,"height":121,"color":"3"},
 		{"id":"bac6cb20bba7a162","type":"text","text":"### Datalakes\n\n- [[Data Lake]]","x":-269,"y":1840,"width":324,"height":86,"color":"3"},
 		{"id":"ba51f9fde33153a3","type":"text","text":"### Data Warehouse\n\n- [[DataWarehouse]]","x":-269,"y":2000,"width":324,"height":86},
 		{"id":"a42b5894ab48dd7e","type":"text","text":"### Armazenamento de objetos\n\n- ","x":-895,"y":2132,"width":329,"height":124},
@@ -26,14 +26,12 @@
 		{"id":"8415dc833407233a","type":"text","text":"### Apache Spark\n\n- [[Apache Spark]]","x":-274,"y":3204,"width":329,"height":120,"color":"3"},
 		{"id":"aff759a1eb54bc21","type":"text","text":"### Computação em cluster - Batch\n\n- [[Comparações de ferramentas de integração de ETL]]","x":-895,"y":3174,"width":329,"height":220},
 		{"id":"e66e93bed67ef9d5","type":"text","text":"### Fundamento de Big Data\n\n- ","x":-895,"y":2680,"width":329,"height":86},
-		{"id":"3e832ea45cd857bd","type":"text","text":"### Streaming de dados\n\n- [[Comparações de engines de streaming]]","x":-895,"y":4580,"width":329,"height":117},
-		{"id":"1e0a679b0c489a66","type":"text","text":"### Governança de dados\n\n- [[Governança de dados]]","x":-895,"y":4280,"width":329,"height":86},
-		{"id":"48155aeac5faf1fc","type":"text","text":"### Apache Kafka\n\n- [[Apache Kafka]]","x":-1360,"y":4580,"width":329,"height":87},
+		{"id":"3e832ea45cd857bd","type":"text","text":"### Streaming de dados\n\n- [[Comparações de engines de streaming]]","x":-895,"y":4580,"width":329,"height":117,"color":"3"},
+		{"id":"1e0a679b0c489a66","type":"text","text":"### Governança de dados\n- [[Governança de dados]]\n- [[Segurança]]","x":-895,"y":4280,"width":329,"height":120,"color":"3"},
 		{"id":"a7dd7cba2312af25","type":"text","text":"### Escalonamento vertical vs horizontal\n\n- ","x":-1365,"y":520,"width":329,"height":125,"color":"1"},
 		{"id":"cc81ace5c8ac1b9c","type":"text","text":"### Modelagem dimensional\n\n- [[Kimball]]\n- [[Inmon]]\n- [[Data vault]]","x":-1365,"y":680,"width":329,"height":180},
 		{"id":"cf26e94fcc9a6d6c","type":"text","text":"### Teorema CAP\n\n- ","x":-1365,"y":280,"width":329,"height":86,"color":"1"},
 		{"id":"4a5221d75088533e","type":"text","text":"### OLTP vs OLAP\n\n- ","x":-1365,"y":394,"width":329,"height":86,"color":"1"},
-		{"id":"ed548f60afcd1068","type":"text","text":"### Arquiteturas de Big Data \n\n- [[Arquiteturas Big Data]]","x":-274,"y":2680,"width":334,"height":87},
 		{"id":"6b0899e3a01cc344","type":"text","text":"### Amazon EMR\n\n- ","x":200,"y":3574,"width":329,"height":86,"color":"1"},
 		{"id":"a7cef2ab822b2218","type":"text","text":"### Google Dataproc\n\n- ","x":200,"y":3694,"width":329,"height":86,"color":"1"},
 		{"id":"2b99e126378707ab","type":"text","text":"### Azure Data Lake\n\n- ","x":200,"y":3814,"width":329,"height":86,"color":"1"},
@@ -46,7 +44,13 @@
 		{"id":"d7462befc6dcb142","type":"text","text":"### Monitoramento\n\n- ","x":-895,"y":3814,"width":329,"height":87},
 		{"id":"49bf4cfc43c2ade1","type":"text","text":"### SQL\n\n- [[Structured query language (SQL)]]","x":-1365,"y":-163,"width":329,"height":88},
 		{"id":"2dd8b471354f1ae3","type":"text","text":"### Normalização\n\n- [[Normalização]]","x":-1365,"y":-40,"width":329,"height":86},
-		{"id":"e9e63253563f3805","type":"text","text":"### Consistência dos dados\n\n- [[ACID]]\n- [[BASE]]","x":-1365,"y":85,"width":329,"height":135}
+		{"id":"e9e63253563f3805","type":"text","text":"### Consistência dos dados\n\n- [[ACID]]\n- [[BASE]]","x":-1365,"y":85,"width":329,"height":135},
+		{"id":"4e1eaf0395f01989","type":"text","text":"### Databricks\n- [[Databricks]]","x":280,"y":1628,"width":329,"height":96,"color":"3"},
+		{"id":"ed548f60afcd1068","type":"text","text":"### Arquiteturas de Big Data \n\n- [[Arquiteturas Big Data]]\n- [[Arquitetura medalhão]]","x":-279,"y":2560,"width":334,"height":163,"color":"3"},
+		{"id":"48155aeac5faf1fc","type":"text","text":"### Apache Kafka\n\n- [[Apache Kafka]]","x":-1480,"y":4493,"width":329,"height":87},
+		{"id":"b8560cbb8601329c","x":-1480,"y":4627,"width":329,"height":126,"type":"text","text":"### Apache Spark Structured Streaming\n- [[Structured Streaming]]"},
+		{"id":"4d352a27bdd5f72c","x":-1480,"y":4813,"width":329,"height":100,"type":"text","text":"### Delta live tables\n- [[Delta live tables]]"},
+		{"id":"22ccc26b61601e30","x":289,"y":1797,"width":320,"height":86,"color":"3","type":"text","text":"### Delta Lake\n- [[Delta lake]]"}
 	],
 	"edges":[
 		{"id":"e6c711b92b26afac","fromNode":"e5e67eabdbef399a","fromSide":"right","toNode":"649bdbae1222ce60","toSide":"left"},
@@ -94,6 +98,10 @@
 		{"id":"de5085751cd16c54","fromNode":"e66e93bed67ef9d5","fromSide":"right","toNode":"ac8890ee6fdc9787","toSide":"left"},
 		{"id":"4dfb8a411ef9a2cf","fromNode":"ac8890ee6fdc9787","fromSide":"right","toNode":"c6ab8983e8d89770","toSide":"left"},
 		{"id":"b6cf6d1e7ea17a3f","fromNode":"c6ab8983e8d89770","fromSide":"right","toNode":"96fa2b445d21d611","toSide":"left"},
-		{"id":"a003174150fee116","fromNode":"d7462befc6dcb142","fromSide":"bottom","toNode":"ac9a28634dcb3d44","toSide":"top","color":"4"}
+		{"id":"a003174150fee116","fromNode":"d7462befc6dcb142","fromSide":"bottom","toNode":"ac9a28634dcb3d44","toSide":"top","color":"4"},
+		{"id":"7f870cc7b5273ccc","fromNode":"649bdbae1222ce60","fromSide":"right","toNode":"4e1eaf0395f01989","toSide":"left"},
+		{"id":"b7e136d7925df1ff","fromNode":"3e832ea45cd857bd","fromSide":"left","toNode":"b8560cbb8601329c","toSide":"right"},
+		{"id":"dbc56b6decf29427","fromNode":"3e832ea45cd857bd","fromSide":"left","toNode":"4d352a27bdd5f72c","toSide":"right"},
+		{"id":"ba7f0f1f14cb486a","fromNode":"649bdbae1222ce60","fromSide":"right","toNode":"22ccc26b61601e30","toSide":"left"}
 	]
 }
