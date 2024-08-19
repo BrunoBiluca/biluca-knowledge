@@ -1,13 +1,93 @@
-# Funções nativas
 
 > [!tip] When possible try to leverage Spark SQL standard library functions as they are a little bit more compile-time safety, handles null and perform better when compared to UDF’s.
 
+# Leitura
+
+## Streaming
+
+> [!info] Documentação
+> - [DataStreamReader](https://spark.apache.org/docs/latest/api/python/reference/pyspark.ss/api/pyspark.sql.streaming.DataStreamReader.html)
+
+```python
+df = (spark.readStream
+	  .option("XXX"))
+```
+
+Opções
+- `maxFilesPerTrigger`: máximo de arquivos por gatilho
+
+# Escrita
+
+## Streaming
+
+> [!info] Documentação
+> - [DataStreamWriter](https://spark.apache.org/docs/latest/api/python/reference/pyspark.ss/api/pyspark.sql.streaming.DataStreamWriter.html)
+
+```python
+coupon_sales_df
+  .writeStream
+  .outputMode("append")
+  .format("delta")
+  .queryName("coupon_sales")
+  .trigger(processingTime="1 second")
+  .option("checkpointLocation", coupons_checkpoint_path)
+  .start(coupons_output_path)
+```
+
+OutputModes
+
+Format
+
+Trigger
+
+Opções
+- `checkpointLocation`: localização de armazenamento dos checkpoints
+
+
+# Funções
+
 - [String Functions](https://sparkbyexamples.com/spark/spark-sql-functions/#string)
 - [Date & Time Functions](https://sparkbyexamples.com/spark/spark-sql-functions/#date-time)
-- [Collection Functions](https://sparkbyexamples.com/spark/spark-sql-functions/#collection)
 - [Math Functions](https://sparkbyexamples.com/spark/spark-sql-functions/#math)
 - [Aggregate Functions](https://sparkbyexamples.com/spark/spark-sql-functions/#aggregate)
 - Sorting functions
+
+## Collection functions
+- [Collection Functions](https://sparkbyexamples.com/spark/spark-sql-functions/#collection)
+
+### explode()
+
+`explode()` explode um conjunto de dados aninhados para que cada item desse conjunto forme uma linha exclusiva.
+
+```python
+# exemplo: explode a coluna de itens para cada linha ser um item
+df.withColumn("items", explode(col("items")))
+```
+
+Antes
+
+| pedido | itens                                                                                                                                                                                                                                                                  |
+| ------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1      | [{"coupon":null,"item_id":"M_PREM_F","item_name":"Premium Full Mattress","item_revenue_in_usd":1695,"price_in_usd":1695,"quantity":1},{"coupon":null,"item_id":"P_FOAM_S","item_name":"Standard Foam Pillow","item_revenue_in_usd":59,"price_in_usd":59,"quantity":1}] |
+Depois do `explode()`:
+
+| pedido | itens                                                                                                                                |
+| ------ | ------------------------------------------------------------------------------------------------------------------------------------ |
+| 1      | {"coupon":null,"item_id":"M_PREM_F","item_name":"Premium Full Mattress","item_revenue_in_usd":1695,"price_in_usd":1695,"quantity":1} |
+| 1      | {"coupon":null,"item_id":"P_FOAM_S","item_name":"Standard Foam Pillow","item_revenue_in_usd":59,"price_in_usd":59,"quantity":1}      |
+
+
+## WithColumn
+
+`WithColumn` é usada para criar uma nova coluna a partir de uma transformação de uma ou mais colunas no mesmo conjunto.
+
+```python
+df.withColumn(<nome>, <função>)
+
+# exemplo: substitui a coluna items por uma com os valores explodidos
+df.withColumn("items", explode(col("items")))
+```
+
 ## Window Functions
 
 > [!info] Documentação
