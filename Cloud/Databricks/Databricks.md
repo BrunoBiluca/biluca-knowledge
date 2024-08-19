@@ -19,7 +19,7 @@ Tipos de persona disponíveis:
 
 ## Hive metastore (legado)
 
-O Hive metastore é uma modelo de controle de privilégios para objetos armazenados no Hive, esse modelo já está definido como legado e será substituído pelo [[Unity Catalog]]
+O Hive metastore é uma modelo de controle de privilégios para objetos armazenados no Hive, esse modelo já está definido como legado e será substituído pelo [[Unity Catalog]].
 
 > [!info] Documentação
 > - [Privilégios do Hive metastore e objetos protegíveis](https://docs.databricks.com/pt/data-governance/table-acls/object-privileges.html#privilege-types)
@@ -187,6 +187,9 @@ Para outros tipos de fontes de dados menos estruturados podemos criar uma tabela
 
 Como Delta Lake força esquema na escrita, restrições em cada coluna são suportadas durante a escrita das tabelas.
 
+> [!tip] Tabelas gerenciadas
+> Caso a tabela seja criada sem especificar o LOCATION, essa tabela passa a ser gerenciada pelo Databricks (metadados e dados).
+
 #### Exemplo demonstrando a definição de um esquema em CTAS
 
 ```sql
@@ -303,6 +306,18 @@ FROM cloud_files("${source}/orders", "json", map("cloudFiles.inferColumnTypes", 
 Algumas operações são específicas para manter estado durante o processo de streaming, como: deduplicação, agregação e stream-stream joins. O progresso e estado são armazenados nos checkpoints e gerenciados pelo driver durante o processamento da consulta.
 
 Streaming queries não mantém estado, todos os dados são computados apenas uma vez.
+
+### Política de re-tentativas
+
+Caso um job de streaming falhe é recomendável configurar uma política de re-tentativa da seguinte maneira:
+
+- Retries: Ilimitado
+- Maximum concurrent runs: 1. Deve ter apenas uma instância de cada query concorrentemente ativa
+- Cluster: Usar um novo cluster com a versão mais recente do Spark
+- Notificações: pode configurar notificações por email em caso de falhas
+- Agendamento (schedule): não configurar
+- Timeout: não configurar. Queries de streaming executando por longos tempos indeterminados.
+
 ## Configurações
 
 Configurações podem ser aplicadas diretamente ao código, essas configurações são cadastradas na plataforma Databricks e pode ser chamados no código tanto SQL quanto Python.
@@ -404,3 +419,14 @@ Cada linha da tabela deve definir um valor de sequência, esse valor é utilizad
 
 Para garantir que apenas uma entrada seja capturada podemos utilizar a função `rank().over(window)` por exemplo ou outras funções [[Funções nativas#Window Functions]].
 
+# Visualizações
+
+> [!info] Documentação
+> - [Conceitos gerais de visualizações](https://docs.databricks.com/en/views/index.html)
+
+- Visualizações materializadas
+	- Incrementalmente calcula e atualiza os resultados retornados por uma consulta
+- Visualizações temporárias
+	- tem um escopo e persistência limitada
+- Visualizações dinâmicas
+	- Podem ser usadas para prover linhas e colunas com controle de acesso e mascaramento de dados

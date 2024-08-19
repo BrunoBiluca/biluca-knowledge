@@ -154,7 +154,7 @@ O método `withWatermark(field, timeout)` define que o driver do spark irá mant
 Na camada Prata também já podemos definir algumas métricas de qualidade de dados. No caso do Pedidos é importante que processemos apenas os que são válidos, ou seja, com a quantidade de produtos escolhidos maiores do que zero.
 
 ```sql
-ALTER TABLE pedidos ADD CONSTRAINT valid_ CHECK (quantidade > 0);
+ALTER TABLE pedidos ADD CONSTRAINT valid_qty CHECK (quantidade > 0);
 ```
 
 > [!tip] Erro ao alterar a tabela para uma nova restrição

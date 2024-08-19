@@ -1,8 +1,6 @@
 
 Automaticamente gera atualizações CDC para todas as tabelas Delta Lake.
 
-Quando usar ou não CDF
-
 | ✅ Usar quando                                                    | 🛑 Não usar quando                                                      | Justificativa                                                                                                                                |
 | ---------------------------------------------------------------- | ----------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
 | Tabelas que incluem atualizações e deleções                      | Tabelas que apenas inserem registros                                    | Não existe ganho nenhum em catalogar apenas inserções já que não existe nenhum registro de alteração                                         |

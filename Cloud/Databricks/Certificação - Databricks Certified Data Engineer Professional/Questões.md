@@ -1,7 +1,6 @@
 
 # Databricks especificidades
 
-
 > [!info] Pergunta
 > A data engineer is using a foreachBatch logic to upsert data in a target Delta table.
 > 
@@ -234,6 +233,18 @@ Usuário não podem ser dono de um Databricks Job. O dono deve ser um indivíduo
 O Ganglia UI apresenta todos os recursos computacionais do cluster, porém não tem informações específicas de eventos que estão ocorrendo no cluster.
 
 ---
+
+> [!info] Pergunta
+> For production Structured Streaming jobs, which of the following retry policies is recommended to use ?
+
+Re-tentativas ilimitadas com no máximo uma execução concorrente
+
+[[Databricks#Política de re-tentativas]]
+
+---
+
+
+
 ### CDC e CDF
 
 > [!info] Pergunta

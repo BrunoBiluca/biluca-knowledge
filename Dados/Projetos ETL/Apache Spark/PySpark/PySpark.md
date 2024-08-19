@@ -10,7 +10,7 @@ Initiating a new spark session for each test would dramatically increase the tim
 
 Efficiently, creating and sharing a SparkSession across your tests is vital to keep the performance of your tests at an acceptable level.
 
-# PySpark com VEnv
+# PySpark com Venv
 
 ### Configurações
 
@@ -28,3 +28,13 @@ Tanto o [[Apache Spark]] quanto o Pandas são frameworks para manipulação de d
 Quando pensamos em escalabilidade e desempenho para grandes volumes de dados o mais indicado é o [[Apache Spark]], já que o Pandas é normalmente executado em apenas uma máquina.
 
 Para análise exploratória e pela performance em bases dados menores o Pandas pode ser uma ótima opção. Apenas essa análise ser levantada podemos então implementar os jobs Spark para a execução da massa completa.
+
+# DataFrameWriter
+
+Modos de escrita
+
+- `append`: apende conteúdo aos dados existente
+- `overwrite`: sobrescreve os dados
+- `error` ou `errorifexists`: lança exceção se o dado já existe
+- `ignore`: ignora operações quando dados já existem
+
