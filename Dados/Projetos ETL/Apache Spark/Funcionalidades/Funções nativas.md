@@ -1,49 +1,6 @@
 
 > [!tip] When possible try to leverage Spark SQL standard library functions as they are a little bit more compile-time safety, handles null and perform better when compared to UDF’s.
 
-# Leitura
-
-## Streaming
-
-> [!info] Documentação
-> - [DataStreamReader](https://spark.apache.org/docs/latest/api/python/reference/pyspark.ss/api/pyspark.sql.streaming.DataStreamReader.html)
-
-```python
-df = (spark.readStream
-	  .option("XXX"))
-```
-
-Opções
-- `maxFilesPerTrigger`: máximo de arquivos por gatilho
-
-# Escrita
-
-## Streaming
-
-> [!info] Documentação
-> - [DataStreamWriter](https://spark.apache.org/docs/latest/api/python/reference/pyspark.ss/api/pyspark.sql.streaming.DataStreamWriter.html)
-
-```python
-coupon_sales_df
-  .writeStream
-  .outputMode("append")
-  .format("delta")
-  .queryName("coupon_sales")
-  .trigger(processingTime="1 second")
-  .option("checkpointLocation", coupons_checkpoint_path)
-  .start(coupons_output_path)
-```
-
-OutputModes
-
-Format
-
-Trigger
-
-Opções
-- `checkpointLocation`: localização de armazenamento dos checkpoints
-
-
 # Funções
 
 - [String Functions](https://sparkbyexamples.com/spark/spark-sql-functions/#string)

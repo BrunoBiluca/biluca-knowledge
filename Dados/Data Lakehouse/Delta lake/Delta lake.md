@@ -162,6 +162,19 @@ Utilizando Delta Lake podemos fazer a seguinte forma:
 - Atualizamos o estado de cada pedido de deleção para deletado
 - Como no Delta Lake temos a funcionalidade de Viagem no Tempo é necessário executar o VACUUM em cada tabela para remover os dados de versões anteriores
 
+Exemplo simples de propagação de deleções para apenas uma tabela. Nesse caso é propagado a deleção da tabela `user_lookup` para a tabela `users`.
+
+```sql
+CREATE OR REPLACE TEMPORARY VIEW user_lookup_deletes as (
+  select * from table_changes("user_lookup", 2) where _change_type = "delete"
+);
+
+MERGE INTO users u
+USING user_lookup_deletes ud
+ON u.alt_id = ud.alt_id
+  when matched then delete;
+```
+
 ### Restrições aos dados
 
 ```sql

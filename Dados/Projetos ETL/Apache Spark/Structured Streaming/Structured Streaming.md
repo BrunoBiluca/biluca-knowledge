@@ -22,6 +22,39 @@ spark.readStream.format("kafka")
 
 > [!info] Operações sobre streaming Dataframes vs Dataframes estáticos
 > A maioria das operações são compatíveis entre os dois, existem algumas exceções como o caso da ordenação que não é possível em casos de dados streaming.
+
+# Leitura
+
+> [!info] Documentação
+> - [DataStreamReader](https://spark.apache.org/docs/latest/api/python/reference/pyspark.ss/api/pyspark.sql.streaming.DataStreamReader.html)
+
+```python
+df = (spark.readStream
+	  .option("XXX"))
+```
+
+Opções
+- `maxFilesPerTrigger`: máximo de arquivos por gatilho
+
+# Escrita
+
+> [!info] Documentação
+> - [DataStreamWriter](https://spark.apache.org/docs/latest/api/python/reference/pyspark.ss/api/pyspark.sql.streaming.DataStreamWriter.html)
+
+```python
+coupon_sales_df
+  .writeStream
+  .outputMode("append")
+  .format("delta")
+  .queryName("coupon_sales")
+  .trigger(processingTime="1 second")
+  .option("checkpointLocation", coupons_checkpoint_path)
+  .start(coupons_output_path)
+```
+
+### Opções
+- `checkpointLocation`: localização de armazenamento dos checkpoints
+
 ### Triggers
 
 > [!info] Documentação

@@ -33,16 +33,20 @@ SELECT *
 FROM table_changes('table_name', start_version, [end_version])
 ```
 
-> [!tip] Leitura na versão python
-> Também é possível fazer a mesma consulta com a API do PySpark
-> ```python
->  cdf_df = (spark.readStream
->		  .format("delta")
->		  .option("readChangeData", True) # Habilita a leitura das alterações capturas pelo CDF
->		  .option("startingVersion", 2)
->		  .table("customers"))
-> ```
+> [!info] Lendo uma versão anterior a habilitação do CDF
+> Não é possível ler versões anteriores a habilitação do CDF, nesses casos será lançado uma exceção:
+> 
+> `AnalysisException: Error getting change data for range [0 , 2] as change data was not recorded for version [0]...`
+### Leitura na versão python
+Também é possível fazer a mesma consulta com a API do PySpark
 
+```python
+ cdf_df = (spark.readStream
+.format("delta")
+.option("readChangeData", True) # Habilita a leitura das alterações capturas pelo CDF
+.option("startingVersion", 2)
+.table("customers"))
+```
 ### Campos
 
 Quando consultamos as alterações dos dados temos 3 novas colunas:
