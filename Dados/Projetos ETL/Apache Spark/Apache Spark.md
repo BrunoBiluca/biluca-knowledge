@@ -87,6 +87,19 @@ Existe principalmente 3 estruturas de dados que podem ser utilizadas para o proc
 | Data types                   | Suitable for structured and semi-structured data processing with a higher level of abstraction.                             | DataFrames supports most of the available dataTypes                                                      | Datasets support all of the same data types as DataFrames, but they also support user-defined types. Datasets are more flexible when it comes to working with complex data types. |
 | Use Cases                    | Suitable for low-level data processing and batch jobs that require fine-grained control over data                           | Suitable for structured and semi-structured data processing with a higher-level of abstraction.          | Suitable for high-performance batch and stream processing with strong typing and functional programming.                                                                          |
 
+
+# Configurações
+
+Podemos fazer configurações sobre os aspectos que a sessão do spark é executada.
+
+```python
+spark.conf.set("<opção>", <valor>)
+```
+
+Opções:
+- `spark.sql.shuffle.partitions`: configura o embaralhamento dos dados no cluster
+	- Pode ser setado para o número de cores para melhorar a performance (`spark.sparkContext.defaultParallelism` )
+
 # Referências
 
 - [Using VirtualEnv with PySpark - Cloudera Community - 245932](https://community.cloudera.com/t5/Community-Articles/Using-VirtualEnv-with-PySpark/ta-p/245932)

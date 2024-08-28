@@ -1,49 +1,6 @@
 
 > [!tip] When possible try to leverage Spark SQL standard library functions as they are a little bit more compile-time safety, handles null and perform better when compared to UDF’s.
 
-# Leitura
-
-## Streaming
-
-> [!info] Documentação
-> - [DataStreamReader](https://spark.apache.org/docs/latest/api/python/reference/pyspark.ss/api/pyspark.sql.streaming.DataStreamReader.html)
-
-```python
-df = (spark.readStream
-	  .option("XXX"))
-```
-
-Opções
-- `maxFilesPerTrigger`: máximo de arquivos por gatilho
-
-# Escrita
-
-## Streaming
-
-> [!info] Documentação
-> - [DataStreamWriter](https://spark.apache.org/docs/latest/api/python/reference/pyspark.ss/api/pyspark.sql.streaming.DataStreamWriter.html)
-
-```python
-coupon_sales_df
-  .writeStream
-  .outputMode("append")
-  .format("delta")
-  .queryName("coupon_sales")
-  .trigger(processingTime="1 second")
-  .option("checkpointLocation", coupons_checkpoint_path)
-  .start(coupons_output_path)
-```
-
-OutputModes
-
-Format
-
-Trigger
-
-Opções
-- `checkpointLocation`: localização de armazenamento dos checkpoints
-
-
 # Funções
 
 - [String Functions](https://sparkbyexamples.com/spark/spark-sql-functions/#string)
@@ -54,6 +11,39 @@ Opções
 
 ## Collection functions
 - [Collection Functions](https://sparkbyexamples.com/spark/spark-sql-functions/#collection)
+
+- `size()`
+- `array_distinct()`: remove valores duplicados do array
+
+### flatten()
+
+Nivela elementos de lista dentro de listas para uma lista única
+
+```python
+from pyspark.sql import Row
+from pyspark.sql.functions import flatten
+
+df = spark.createDataFrame([
+    Row(column=[[1,2,3], [4, 5], [6, 7,8, 9]]),
+])
+
+display(df.select(flatten("column")))
+
+| flatten(column)     |
++ ------------------- +
+| [1,2,3,4,5,6,7,8,9] |
+```
+
+### collect_set() 
+Retorna todos os valores de uma coluna de entrada com os valores duplicados removidos.
+
+```python
+df.select(collect_set("salary"))
+
+|collect_set(salary)                 |
++------------------------------------+
+|[4600, 3000, 3900, 4100, 3300, 2000]|
+```
 
 ### explode()
 
@@ -75,8 +65,40 @@ Depois do `explode()`:
 | ------ | ------------------------------------------------------------------------------------------------------------------------------------ |
 | 1      | {"coupon":null,"item_id":"M_PREM_F","item_name":"Premium Full Mattress","item_revenue_in_usd":1695,"price_in_usd":1695,"quantity":1} |
 | 1      | {"coupon":null,"item_id":"P_FOAM_S","item_name":"Standard Foam Pillow","item_revenue_in_usd":59,"price_in_usd":59,"quantity":1}      |
+### Manipulação de dados aninhados
 
+- [Artigo de apresentação da funcionalidade de manipulação nativa de dados aninhados](https://www.databricks.com/blog/2017/05/24/working-with-nested-data-using-higher-order-functions-in-sql-on-databricks.html)
 
+Acessando elementos dentros de um campo aninhado:
+```sql
+SELECT * FROM events where value:event_name = "finalize"
+```
+
+Transformando campos aninhados:
+```sql
+SELECT key,
+values,
+TRANSFORM(values, value -> value + 1) AS values_plus_one
+FROM nested_data
+```
+
+outras funções disponíveis:
+- `exists`
+- `filter`
+- `reduce`
+- `aggregate`
+
+```sql
+-- média geométrica de todos os valores do array
+SELECT key,
+	values,
+	AGGREGATE(values,
+	   (1.0 AS product, 0 AS N), -- define o valor inicial da agregação
+	   (buffer, value) -> (value * buffer.product, buffer.N + 1),
+	   buffer -> Power(buffer.product, 1.0 / buffer.N)
+	) geomean
+FROM nested_data
+```
 ## WithColumn
 
 `WithColumn` é usada para criar uma nova coluna a partir de uma transformação de uma ou mais colunas no mesmo conjunto.
