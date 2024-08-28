@@ -174,3 +174,239 @@ val aggDF = df
 +----------+------+-----+----+----+
 
 ```
+
+
+# Mesclagens (join)
+
+- Emp Dataset (empDF)
+
+| emp_id | name     | superior_emp_id | year_joined | emp_dept_id | gender | salary |
+| ------ | -------- | --------------- | ----------- | ----------- | ------ | ------ |
+| 1      | Smith    | -1              | 2018        | 10          | M      | 3000   |
+| 2      | Rose     | 1               | 2010        | 20          | M      | 4000   |
+| 3      | Williams | 1               | 2010        | 10          | M      | 1000   |
+| 4      | Jones    | 2               | 2005        | 10          | F      | 2000   |
+| 5      | Brown    | 2               | 2010        | 40          |        | -1     |
+| 6      | Brown    | 2               | 2010        | 50          |        | -1     |
+
+- Dept Dataset (deptDF)
+
+| dept_name | dept_id |
+|-----------|---------|
+| Finance   | 10      |
+| Marketing | 20      |
+| Sales     | 30      |
+| IT        | 40      |
+
+### Inner join
+
+A junção padrão que é usado para juntar dois databases por uma coluna definida.
+
+```python
+empDF.join(deptDF, empDF["emp_dept_id"] ==  deptDF["dept_id"], "inner")
+```
+
+| emp_id | name     | superior_emp_id | year_joined | emp_dept_id | gender | salary | dept_name | dept_id |
+| ------ | -------- | --------------- | ----------- | ----------- | ------ | ------ | --------- | ------- |
+| 1      | Smith    | -1              | 2018        | 10          | M      | 3000   | Finance   | 10      |
+| 2      | Rose     | 1               | 2010        | 20          | M      | 4000   | Marketing | 20      |
+| 3      | Williams | 1               | 2010        | 10          | M      | 1000   | Finance   | 10      |
+| 4      | Jones    | 2               | 2005        | 10          | F      | 2000   | Finance   | 10      |
+| 5      | Brown    | 2               | 2010        | 40          |        | -1     | IT        | 40      |
+
+### Outer join
+
+Mesclagens do tipo Outer, full, fullouter retornam todas as linhas de ambos Dataframes, quando a expressão não casa é retornado null.
+
+```python
+empDF.join(deptDF, empDF["emp_dept_id"] == deptDF["dept_id"], "outer").show(truncate=False)
+empDF.join(deptDF, empDF["emp_dept_id"] == deptDF["dept_id"], "full").show(truncate=False)
+empDF.join(deptDF, empDF["emp_dept_id"] == deptDF["dept_id"], "fullouter").show(truncate=False)
+```
+
+| emp_id | name     | superior_emp_id | year_joined | emp_dept_id | gender | salary | dept_name | dept_id |
+| ------ | -------- | --------------- | ----------- | ----------- | ------ | ------ | --------- | ------- |
+| 1      | Smith    | -1              | 2018        | 10          | M      | 3000   | Finance   | 10      |
+| 2      | Rose     | 1               | 2010        | 20          | M      | 4000   | Marketing | 20      |
+| 3      | Williams | 1               | 2010        | 10          | M      | 1000   | Finance   | 10      |
+| 4      | Jones    | 2               | 2005        | 10          | F      | 2000   | Finance   | 10      |
+| 5      | Brown    | 2               | 2010        | 40          |        | -1     | IT        | 40      |
+| 6      | Brown    | 2               | 2010        | 50          |        | -1     | null      | null    |
+| null   | null     | null            | null        | null        | null   | null   | Sales     | 30      |
+Até a linha 5 o outer join tem o mesmo comportamento do inner join, na linha 6 não foi possível encontrar uma correspondência em `deptDF` para o `emp_dept_id = 50` e na linha 7 não foi possível encontrar uma correspondência em `empDF` para o `dept_id = 30`.
+
+### Left e Right Outer Join
+
+Funcionam como o [[#Outer join]], porém retornam apenas as linhas relacionadas a direção do Dataframe desejado.
+
+### Left Semi Join
+
+É similar ao [[#Inner join]] porém retorna apenas as colunas do Dataframe á esquerda para as linhas que correspondem a expressão.
+
+```python
+empDF.join(deptDF, empDF["emp_dept_id"] ==  deptDF["dept_id"], "leftsemi")
+```
+
+| emp_id | name     | superior_emp_id | year_joined | emp_dept_id | gender | salary |
+| ------ | -------- | --------------- | ----------- | ----------- | ------ | ------ |
+| 1      | Smith    | -1              | 2018        | 10          | M      | 3000   |
+| 2      | Rose     | 1               | 2010        | 20          | M      | 4000   |
+| 3      | Williams | 1               | 2010        | 10          | M      | 1000   |
+| 4      | Jones    | 2               | 2005        | 10          | F      | 2000   |
+| 5      | Brown    | 2               | 2010        | 40          |        | -1     |
+### Left anti join
+
+É exatamente o oposto do [[#Left Semi Join]], `leftanti` retorna apenas as colunas do Dataframe à esquerda que não correspondem a expressão definida.
+
+```python
+empDF.join(deptDF, empDF["emp_dept_id"] ==  deptDF["dept_id"], "leftanti")
+```
+
+| emp_id | name  | superior_emp_id | year_joined | emp_dept_id | gender | salary |
+| ------ | ----- | --------------- | ----------- | ----------- | ------ | ------ |
+| 6      | Brown | 2               | 2010        | 50          |        | -1     |
+### Self join
+
+Não existe um tipo específico de auto mesclagem disponível no Spark, porém podemos utilizar qualquer um dois outros tipos para fazer essa operação.
+
+```scala
+empDF.as("emp1").join(
+  empDF.as("emp2"),
+  col("emp1.superior_emp_id") === col("emp2.emp_id"),
+  "inner"
+)
+.select(
+  col("emp1.emp_id"),col("emp1.name"),
+  col("emp2.emp_id").as("superior_emp_id"),
+  col("emp2.name").as("superior_emp_name")
+)
+```
+
+No caso acima estamos buscando os contratados superiores de cada empregado.
+
+| emp_id | name     | superior_emp_id | superior_emp_name |
+| ------ | -------- | --------------- | ----------------- |
+| 2      | Rose     | 1               | Smith             |
+| 3      | Williams | 1               | Smith             |
+| 4      | Jones    | 2               | Rose              |
+| 5      | Brown    | 2               | Rose              |
+| 6      | Brown    | 2               | Rose              |
+
+### Cross join
+
+Retorna o produto cartesiano de dois Dataframes, ou seja, cada possibilidade de combinação entre duas linhas
+
+```python
+df1 = spark.createDataFrame([(1, 'Alice', 25), (2, 'Bob', 30)], ['id', 'name', 'age']) 
+df2 = spark.createDataFrame([('Tom', 80), ('Bob', 85), ('Alice', 70)], ['name', 'height']) 
+
+cross_join_result = df1.crossJoin(df2) cross_join_result.show()
+```
+
+Nesse caso todas as combinações entre os dois Dataframes são 2 (linhas em df1) e 3 (linhas em df2) assim 6 no total.
+
+| id  | name  | age | name  | height |
+| --- | ----- | --- | ----- | ------ |
+| 1   | Alice | 25  | Tom   | 80     |
+| 1   | Alice | 25  | Bob   | 85     |
+| 1   | Alice | 25  | Alice | 70     |
+| 2   | Bob   | 30  | Tom   | 80     |
+| 2   | Bob   | 30  | Bob   | 85     |
+| 2   | Bob   | 30  | Alice | 70     |
+### Expressões SQL
+
+Também é possível fazer qualquer operação de mesclagem a partir da notação SQL.
+
+```scala
+empDF.createOrReplaceTempView("EMP")
+deptDF.createOrReplaceTempView("DEPT")
+
+spark.sql("select * from EMP e, DEPT d where e.emp_dept_id == d.dept_id")
+
+spark.sql("select * from EMP e INNER JOIN DEPT d ON e.emp_dept_id == d.dept_id")
+```
+
+
+# Pivoteamento
+
+A função `pivot()` é utilizada para rotacionar ou transpor dados de uma coluna para várias colunas, ou o contrário utilizando `stack()`.
+
+Síntaxe
+
+```python
+pivot_df = original_df
+	.groupBy("grouping_column")
+	.pivot("pivot_column")
+	.agg({"agg_column": "agg_function"})
+```
+
+Operações de pivoteamento exigem combinações únicas de agrupamento e as colunas pivôs. No exemplo abaixo fazermos o agrupamento dos produtos e o pivoteamento pelo País, ou seja, entre essas colunas não existem valores duplicados já que cada produto irá ser mostrado para cada país, caso existissem produtos ou países duplicados seria necessário utilizar algum outro tipo de agrupamento para resover esses conflitos.
+
+Exemplo
+
+| Product | Amount | Country |
+| ------- | ------ | ------- |
+| Banana  | 1000   | USA     |
+| Carrots | 1500   | USA     |
+| Beans   | 1600   | USA     |
+| Orange  | 2000   | USA     |
+| Orange  | 2000   | USA     |
+| Banana  | 400    | China   |
+| Carrots | 1200   | China   |
+| Beans   | 1500   | China   |
+| Orange  | 4000   | China   |
+| Banana  | 2000   | Canada  |
+| Carrots | 2000   | Canada  |
+| Beans   | 2000   | Mexico  |
+Podemos fazer a transposição desse conjunto de dados para saber por País a quantidade de produtos.
+
+```python
+pivotDF = df.groupBy("Product").pivot("Country").sum("Amount")
+```
+
+| Product | Canada | China | Mexico | USA  |
+|---------|--------|-------|--------|------|
+| Orange  | null   | 4000  | null   | 4000 |
+| Beans   | null   | 1500  | 2000   | 1600 |
+| Banana  | 2000   | 400   | null   | 1000 |
+| Carrots | 2000   | 1200  | null   | 1500 |
+Todos os países que não tem correspondente de produto são identificados por `null`.
+
+Podemos fazer a operação inversa utilizando a função `stack`.
+
+Sintaxe
+
+```python
+stack(n, expr1, expr2.. exprn)
+```
+
+onde `n` é o número de linhas que serão criadas para cada linha da tabela pivô, os outros atributos são expressões SQL que podem ser utilizadas, como adicionar um texto literal `'Texto literal'` ou utilizar o valor da coluna `<nome da coluna>`.
+
+```python
+from pyspark.sql.functions import expr
+unpivotExpr = "stack(3, 'Canada', Canada, 'China', China, 'Mexico', Mexico) as (Country,Total)"
+unPivotDF = pivotDF
+	.select("Product", expr(unpivotExpr))
+    .where("Total is not null")
+```
+
+Decomposição da expressão stack utilizada
+
+```python
+stack(
+	  3, # número de linhas criadas para cada linha da tabela pivoteada
+	  'Canada', Canada, # primeira linha
+	  'China', China,   # segunda linha
+	  'Mexico', Mexico  # terceira linha
+) as (Country,Total)
+```
+
+|Product|Country|Total|
+|---|---|---|
+|Orange|China|4000|
+|Beans|China|1500|
+|Beans|Mexico|2000|
+|Banana|Canada|2000|
+|Banana|China|400|
+|Carrots|Canada|2000|
+|Carrots|China|1200|

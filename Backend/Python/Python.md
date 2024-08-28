@@ -6,7 +6,7 @@ tags:
 
 # Herança múltipla
 
-Herança múltipla é um mecânismo fornecido por linguagens de programação que visa a reusabilidade de código, já que classes compartilham implementações e podem passar por meio da herança.
+Herança múltipla é um mecanismo fornecido por linguagens de programação que visa a reusabilidade de código, já que classes compartilham implementações e podem passar por meio da herança.
 
 Por mais que parece um recurso útil ele várias vezes é tratado como uma prática ruim, já que pode deixar o código mais complexo, já que o desenvolvedor passa a ter que gerenciar as heranças das classes para garantir que conflitos não aconteçam entre suas implementações.
 
@@ -75,4 +75,10 @@ A diferença entre Mixins e herança múltipla é sutíl e semântica, porém sa
 > Python wheel é um formato de distribuição binário de pacotes em Python.
 > 
 > - [Página do padrão](https://pythonwheels.com/)
+
+# Empacotamento
+
+Podemos empacotar um servidor python para executar como uma programa independente.
+
+- [PyInstaller](https://pyinstaller.org/en/stable/)
 

@@ -4,7 +4,7 @@
 > [!info] Documentação
 > - [Página do pacote](https://pub.dev/packages/get_it)
 
-GetIt é uma alternativa para a utilização de injeção de dependências. Essa biblioteca utiliza o padrão Service Locator e é muito simples de configurar.
+GetIt é uma alternativa para a utilização de injeção de dependências. Essa biblioteca utiliza o **padrão Service Locator** e é muito simples de configurar.
 
 Exemplo de configuração
 

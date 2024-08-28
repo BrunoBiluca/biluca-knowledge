@@ -29,12 +29,6 @@ Integração com Windows
 - [https://dzone.com/articles/build-great-windows-desktop-apps-with-flutter](https://dzone.com/articles/build-great-windows-desktop-apps-with-flutter)
 	- Esse artigo apresenta algumas limitações que o desenvolvimento de aplicações para Windows possui
 
-Deploy
-
-- Empacotamento do sistema de identificação com o app
-    - [https://dev.to/maximsaplin/integrating-flutter-all-6-platforms-and-python-a-comprehensive-guide-4ipo](https://dev.to/maximsaplin/integrating-flutter-all-6-platforms-and-python-a-comprehensive-guide-4ipo)
-    - [https://github.com/maxim-saplin/flutter_python_starter](https://github.com/maxim-saplin/flutter_python_starter)
-
 Padrões
 
 - [[Padrão BLoC]]
