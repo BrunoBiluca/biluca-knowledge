@@ -18,11 +18,11 @@ Principais funcionalidades
 ### Precificação
 [Página de precificação](https://aws.amazon.com/pt/sagemaker/pricing/?nc=sn&loc=4)
 
-Cada funcionalidade do SageMaker é cobrada de acordo com suas necessidades, principalmente a cobrança é feito pelas instância selecionadas para cada serviços, alguns serviços são cobrados de forma diferente.
+Cada funcionalidade do SageMaker é cobrada de acordo com suas necessidades, principalmente a cobrança é feita pelas instâncias selecionadas para cada serviços, alguns serviços são cobrados de forma diferente.
 
 ### Concorrentes
 
-- Vertex AI
+- Google Vertex AI
 - Amazon Bedrock
 
 Diferente dos seus concorrentes o SageMaker é um serviço de machine learning de propósito geral, enquanto os demais focam no desenvolvimento de IA generativas.
