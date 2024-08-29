@@ -1,3 +1,4 @@
+Para conceitos gerais de [[IA generativa]].
 
 ![[AWS componentes para desenvolvimento de generative AI.png|Principais componentes da AWS relacionados a aplicações que utilizam generative AI|500]]
 
@@ -24,3 +25,19 @@ São serviços que oferecem soluções prontas para uso.
 
 # Frameworks ML
 - [[Amazon SageMaker]]
+
+
+# Casos de uso
+
+Varejo
+
+- Resumo de avaliações de produtos
+- Otimizações da definição de preços: aumento de lucro
+- Otimização do layout da loja
+
+Saúde
+
+- AWS HealthScribe: observações clínicas automáticas a partir de conversas
+- Personalizar o medicamento: planos de tratamento a partir da composição genética do paciente
+- Melhorar os exames a partir de reconstrução ou geração de imagens médicas como radiografias, ressonâncias entre outras
+
