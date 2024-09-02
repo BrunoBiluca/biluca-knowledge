@@ -13,6 +13,10 @@ Principais funcionalidades
 - Interface visual SageMaker Canvas voltada a analista de negócios
 - Acesso a notebooks pelo SageMaker Studio para cientistas de dados
 - Implantação, depuração e gerenciamento de modelos em escala com o SageMaker MLOps para Engenheiros de ML
+- Amazon SageMaker Clarify: serviço de avaliação de modelos base como detecção de possíveis viesses.
+- Amazon SageMaker Data Wrangler: serviço de balanceamento de dados.
+- Amazon SageMaker Model Monitor: monitora a qualidade dos modelos em produção.
+- Amazon SageMaker Autopilot: pode ser usado para fornecer informações explicáveis sobre como os modelos fazem previsões.
 
 
 ### Precificação
@@ -23,6 +27,6 @@ Cada funcionalidade do SageMaker é cobrada de acordo com suas necessidades, pri
 ### Concorrentes
 
 - Vertex AI
-- Amazon Bedrock
+- Amazon Bedrock (não é bem um concorrente, mais um serviços em um nível maior de abstração dentro da AWS)
 
 Diferente dos seus concorrentes o SageMaker é um serviço de machine learning de propósito geral, enquanto os demais focam no desenvolvimento de IA generativas.

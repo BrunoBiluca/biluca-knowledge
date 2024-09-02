@@ -29,6 +29,7 @@ Serviços relacionados
 - AWS Lambda para invocar ações
 - Amazon S3 para dados de treinamento e validação
 - Amazon CloudWatch para monitorar métricas
+- Guardrails for Amazon Bedrock: serviço de avaliação para fornecer uma camada adicional de proteção contra conteúdos e entradas do usuário indesejados.
 
 O serviço Amazon Bedrock pode ser integrado utilizando a Amazon Bedrock API ([Documentação](https://docs.aws.amazon.com/bedrock/latest/APIReference/welcome.html)). Com essa API é possível criar automações para acesso aos principais componentes do Bedrock como:
 - `bedrock`: managing, training, and deploying models
@@ -46,7 +47,12 @@ Planos de preços para inferência:
 
 [Página de precificação do Bedrock](https://aws.amazon.com/pt/bedrock/pricing/)
 
+# Avaliação de modelos
 
+O Amazon Bedrock oferece dois tipos de avaliação de modelos: automática e humana.
+
+- Automática: oferece métricas predefinidas, como precisão, robustez e toxicidade.
+- Humana: oferece métricas subjetivas e personalizadas, como simpatia, estilo e alinhamento com a voz da marca.
 # Amazon Titan
 
 > [!info] O que é?
