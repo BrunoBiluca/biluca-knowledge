@@ -8,6 +8,11 @@ Casos de uso da aplicação de Machine Learning
 
 - [[Classificação]]
 
+Os algoritmos são principalmente recomendados para casos onde:
+
+- Codificar as regras é um desafio: são muitas variáveis e um conjunto de regras fixo seria ineficiente como solução.
+- Escalar o projeto é difícil: extrair informações de um conjunto limitado de documentos é possível aplicando heurísticas, para milhões de documentos seria ineficiente e muito oneroso.
+
 # Fluxo de trabalho em Machine Learning
 
 Assim que definimos a tarefa de previsão seguimos os seguintes passos para desenvolver o trabalho
@@ -40,16 +45,19 @@ Com os dados de treinamento escolhemos os algoritmos que iremos aplicar ao probl
 
 Existem vários tipos de algoritmos de acordo com o domínio do problema que queremos resolver. Basicamente eles são divididos em 3 tipos de algoritmos:
 
-- supervisionados são treinados com pares de entrada-saída, onde o algoritmo aprende a mapear entradas para saídas
-- não supervisionados são treinados em dados sem rótulos e buscam encontrar estrutura nos dados, como agrupamentos ou associações
-- semi-supervisionados são uma combinação de ambos, usando dados rotulados e não rotulados durante o treinamento
+- **supervisionados** são treinados com pares de entrada-saída, onde o algoritmo aprende a mapear entradas para saídas
+	- [[Regressão]]
+	- [[Árvore de decisão]]
 
-Exemplos de algoritmos:
-- regressão linear
-- [[Árvore de decisão]]
-- redes neurais
-- máquinas de vetores de suporte (SVM)
-- k-means clustering
+- **não supervisionados** são treinados em dados sem rótulos e buscam encontrar padrões e estruturas nos dados, como agrupamentos ou associações
+	- Agrupamento em clusters, exemplo k-means clustering
+	- Redução da dimensionalidade usada para reduzir o número de atributos ou dimensões em um conjunto de dados, preservando as informações ou padrões mais importantes.
+
+- **semi-supervisionados** são uma combinação de ambos, usando dados rotulados e não rotulados durante o treinamento
+
+- **aprendizado por reforço** é outro tipo de algoritmo que foca em melhorar o modelo continuamente extraindo informações pertinentes de repetições anteriores. É amplamente útil quando a recompensa de um resultado desejado é conhecida, mas o caminho para alcançá-la não é. Por exemplo, no simulador do AWS DeepRacer, o agente é o carro virtual, e o ambiente é uma pista de corrida virtual. As ações são aceleração e direção do carro. O objetivo é completar a pista o mais rápido possível e sem se desviar dela.
+	- redes neurais
+	- máquinas de vetores de suporte (SVM)
 
 ## Modelo
 
