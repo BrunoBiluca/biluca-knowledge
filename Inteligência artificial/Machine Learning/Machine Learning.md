@@ -13,20 +13,7 @@ Os algoritmos são principalmente recomendados para casos onde:
 - Codificar as regras é um desafio: são muitas variáveis e um conjunto de regras fixo seria ineficiente como solução.
 - Escalar o projeto é difícil: extrair informações de um conjunto limitado de documentos é possível aplicando heurísticas, para milhões de documentos seria ineficiente e muito oneroso.
 
-# Fluxo de trabalho em Machine Learning
-
-Assim que definimos a tarefa de previsão seguimos os seguintes passos para desenvolver o trabalho
-
-- Ingest
-- Analyze
-- Transform
-- Train
-- Model
-- Evaluate
-- Deploy
-- Predict
-
-## Dados de treinamento
+# Dados de treinamento
 
 O processo de aprendizado de máquina começa com a coleta e o processamento de dados de treinamento. Esse é sem dúvida o estágio mais crítico do fluxo de trabalho de ML, pois o modelo irá se comportar de acordo com a qualidade dos dados de treinamento utilizados.
 
@@ -39,7 +26,7 @@ A disposição desses dados também influencia no processo de treinamento:
 
 - Dados estruturados: dados organizados e formatados em algum forma predefinida, por exemplo: arquivos tabulares ou séries temporais
 - Dados não-estruturados: não apresentação uma estrutura ou formato predefinida, por exemplo: imagens, áudios, vídeos e texto não formatado. Para dados não-estruturados é necessário um tipo de aplicação mais complexa de algoritmo chamado [[Aprendizado profundo (Deep Learning)]].
-## Algoritmo de ML
+# Algoritmos de ML
 
 Com os dados de treinamento escolhemos os algoritmos que iremos aplicar ao problema que queremos resolver.
 
@@ -59,7 +46,7 @@ Existem vários tipos de algoritmos de acordo com o domínio do problema que que
 	- redes neurais
 	- máquinas de vetores de suporte (SVM)
 
-## Modelo
+# Modelo
 
 > [!info] Definição
 > Um modelo de machine learning é uma representação matemática de um processo ou sistema, desenvolvida com base em algoritmos de aprendizado de máquina e dados de treinamento. Ele é usado para fazer previsões ou tomar decisões sem ser explicitamente programado para fazê-lo.
@@ -98,3 +85,21 @@ Existem alguma técnicas para superar os erros entre viés e variância:
 - Modelos mais simples: modelos mais simples ajudam no sobreajuste, modelos simples demais podem estar subajustados
 - Redução de dimensão (análise de componentes principais)
 - Interrupção do treinamento: encerrar o treinamento mais cedo para que o modelo não memorize os dados.
+
+Um boa analogia para entender o viés e a variância é um alvo.
+
+![[Exemplo entre viés e variância com  um alvo.png|Aqui um exemplo da relação entre viés e variância de um modelo ML|500]]
+
+# Fluxo de trabalho em Machine Learning
+
+Assim que definimos a tarefa de previsão seguimos os seguintes passos para desenvolver o trabalho
+
+- Identificação e definição dos problemas
+- Processamento de dados (coleta dos dados, transformações e análises)
+- Desenvolvimento do modelo (treinamento, ajustes e avaliação)
+- Implantação do modelo (publicação e utilização)
+- Monitoramento
+- Retreinamento do modelo
+
+> [!tip] Qualidade do modelo
+> Usando testes A/B ou a técnica de implantações canárias, os desenvolvedores podem experimentar duas ou mais variantes de um modelo e ajudar a atingir as metas de negócios.

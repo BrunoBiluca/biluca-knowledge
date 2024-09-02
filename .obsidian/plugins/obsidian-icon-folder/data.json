@@ -11,7 +11,7 @@
     "recentlyUsedIconsSize": 5,
     "rules": [
       {
-        "rule": "(.png)|(.webp)",
+        "rule": "(.png)|(.PNG)|(.webp)",
         "icon": "LiImage",
         "for": "everything",
         "order": 0,

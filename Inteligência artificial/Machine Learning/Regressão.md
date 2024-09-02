@@ -8,3 +8,8 @@
 - Previsão do mercado
 - Estimativa da expectativa de vida
 - Previsão do crescimento populacional
+
+Algumas das principais métricas utilizadas para avaliar a qualidade da regressão são:
+
+- Erro quadrático médio: comparação entre valores da previsão e o resultado real. Quanto menor esse valor, melhor a acurácia preditiva do modelo.
+- R-quadrado: fornece uma medida de qualidade do ajuste do modelo aos dados.
