@@ -42,7 +42,7 @@ flutter pub run build_runner build
 > [!info] O que é?
 > - [Página do pacote](https://pub.dev/packages/mocktail)
 
-O Mocktail vem para flexibilizar um pouco mais a utilização de mocks em comparação com o Mockito, afinal ele é totalmente dinâmico e não ele não utiliza nenhuma geração de código para possibilitar a criação dos Mocks.
+O Mocktail vem para flexibilizar um pouco mais a utilização de mocks em comparação com o Mockito, afinal ele é **totalmente dinâmico e não ele não utiliza nenhuma geração de código para possibilitar a criação dos Mocks.**
 
 ```dart
 import 'package:mocktail/mocktail.dart';
@@ -60,3 +60,24 @@ void main() {
   final cat = MockCat();
 }
 ```
+
+## Requisições HTTP
+
+Para fazer o mock de requisições HTTP precisamos definir um cliente HTTP (`MockClient` do pacote `http`) que será mockado e definir seu comportamento:
+
+```dart
+import 'package:http/http.dart';
+
+var client = MockClient((req) async {
+  if (req.url.pathSegments.last != "predict") {
+	return Response("", 404);
+  }
+
+  return Response(jsonEncode({body...}), 200);
+});
+    
+final service = PredictService(client, repo);
+```
+
+- `req.url`: captura as informações da url como querystring, caminho, domínio e outros parâmetros
+- `req.body`: captura as informações enviadas no corpo da requisição
