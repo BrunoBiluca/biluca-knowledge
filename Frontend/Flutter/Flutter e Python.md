@@ -78,16 +78,23 @@ Outra consideração é o nome do processo, ele é definido pelo nome do arquivo
 ```dart
 // app.dart
 class App extends StatelessWidget with WidgetsBindingObserver {
-  const App({super.key});
-
-  @override
-  Future<AppExitResponse> didRequestAppExit() async{
-    print("Encerrando servidor de predição...");
-    await Process.run('taskkill', ['/F', '/IM', "server_win.exe"]); 
-    print("Servidor de predição encerrado com sucesso");
-    return super.didRequestAppExit();
-  }
-  // ... demais código
+	const App({super.key});
+	
+	@override
+		Future<AppExitResponse> didRequestAppExit() async{
+		print("Encerrando servidor de predição...");
+		await Process.run('taskkill', ['/F', '/IM', "server_win.exe"]); 
+		print("Servidor de predição encerrado com sucesso");
+		return super.didRequestAppExit();
+	}
+	
+	// ... demais código
+	
+	@override
+	Widget build(BuildContext context) {
+		WidgetsBinding.instance.addObserver(this); // adiciona esta instância para ser notificada
+		return ...widget
+	}
 }
 ```
 
@@ -103,4 +110,5 @@ void main() {
 	WidgetsFlutterBinding.ensureInitialized();
 	// ...demais inicializações
 	runApp(const App());
+}
 ```
