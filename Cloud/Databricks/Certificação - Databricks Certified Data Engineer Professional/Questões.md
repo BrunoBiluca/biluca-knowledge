@@ -223,28 +223,25 @@ Watermark.
 > 
 > Which of the following explains the cause of this failure?
 
-Usuário não podem ser dono de um Databricks Job. O dono deve ser um indivíduo.
+Grupo de usuário não podem ser dono de um Databricks Job. O dono deve ser um indivíduo.
 
 ---
 
 > [!info] Pergunta
-> Which of the following is **Not** part of the Ganglia UI ?
+> Que tipo de informação é exibida na Ganglia UI? E que tipo não é?
 
-O Ganglia UI apresenta todos os recursos computacionais do cluster, porém não tem informações específicas de eventos que estão ocorrendo no cluster.
+O Ganglia UI apresenta todos os recursos computacionais do cluster, porém não tem informações específicas de eventos que estão ocorrendo no cluster. Por exemplo as tasks do Spark
 
 ---
 
 > [!info] Pergunta
 > For production Structured Streaming jobs, which of the following retry policies is recommended to use ?
 
-Re-tentativas ilimitadas com no máximo uma execução concorrente
+Re-tentativas ilimitadas com no máximo uma execução concorrente.
 
 [[Databricks#Política de re-tentativas]]
 
 ---
-
-
-
 ### CDC e CDF
 
 > [!info] Pergunta

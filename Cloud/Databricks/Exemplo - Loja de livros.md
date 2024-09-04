@@ -63,7 +63,9 @@ Livros_Vendas -.-> Estatísticas_Autores_VW
 
 # Implementação
 
-A loja de livros cataloga todos os eventos em um servidor com [[Apache Kafka]], esse tipo de ingestão é chamada de Multiplex, já que uma única fonte consolida vários tipos diferentes de informações. O formato dos eventos no Kafka são o seguinte:
+A loja de livros cataloga todos os eventos em um servidor com [[Apache Kafka]], esse tipo de ingestão é chamada de Multiplex, já que uma única fonte consolida vários tipos diferentes de informações. 
+
+O formato dos eventos no Kafka são o seguinte:
 
 | key  | topic     | value                    | partition | timestamp |
 | ---- | --------- | ------------------------ | --------- | --------- |
@@ -87,7 +89,7 @@ Campos
 A camada bronze é a responsável por receber os dados sem alterações e organiza-los a fim de facilitar o processamento subsequente.
 ### Ingestão para a Bronze
 
-Para a ingestão iremos utilizar uma única tabela que recebe todos os eventos disponíveis no Kafka da Loja.
+Para a ingestão iremos utilizar uma única tabela que recebe todos os eventos disponíveis no Kafka da Loja. Os dados são provenientes do sistema de arquivos e estão no formato json. 
 
 ```python
 (spark
@@ -106,14 +108,14 @@ Para a ingestão iremos utilizar uma única tabela que recebe todos os eventos d
 		 .table("bronze"))
 ```
 
-A ingestão dos dados foi feita para uma tabela chamada `bronze` que está particionada em relação ao mês e ano que é obtido a partir do campo `timestamp` quando um evento é persistido no Kafka.
+A ingestão dos dados foi feita para uma tabela chamada `bronze` que está *particionada em relação ao mês e ano* (`year_month`) que é obtido a partir do campo `timestamp` quando um evento é persistido no Kafka.
 
 ## Prata
 
 Com a camada Bronze já configurada podemos avançar para criar o processamento da camada Prata ([[Arquitetura medalhão#Prata|Características da camada Prata]]). 
 
 Nessa camadas estamos preocupados em
-- Definir a granularidade dos dados para iniciar a extração de informações relevantes dos dados
+- Definir a granularidade dos dados para iniciar a extração de informações relevantes
 - Garantir a qualidade das informações, por meio de testes, restrições e filtros
 ### Pedidos
 
@@ -164,20 +166,36 @@ ALTER TABLE pedidos ADD CONSTRAINT valid_qty CHECK (quantidade > 0);
 
 ### Livros
 
-Para a tabela Livros vamos criar uma estrutura baseada nos conceitos de [[Mudança lenta de dimensões]] do tipo 2. Nesse caso cada alteração das informações do Livro será catalogada e apenas a versão mais recente é considerada a ativa. **Isso irá nos permitir ter informações de alterações dos preços dos livros ao longo do tempo.**
+Para a tabela Livros vamos criar uma estrutura baseada nos conceitos de [[Mudança lenta de dimensões]] do tipo 2. Nesse caso cada alteração das informações do Livro será catalogada e apenas a versão mais recente é considerada a ativa. **Isso irá nos permitir ter informações de alterações dos preços dos livros ao longo do tempo, por exemplo.**
 
-Esquema do livros após a decodificação da base64:
 
-- book_id
-- title
-- author
-- price
-- updated
 
-> [!tip] UNION ALL e duplicação de registros
-> Pode parecer estranho utilizar o UNION ALL para fazer o levantamento de todos os registros atualizados, isso irá gerar uma duplicação no registro, e é exatamente isso que precisamos.
-> 
-> O primeiro registro gerado pela consulta `staged_updates` é utilizando para atualizar o estado atual na tabela `livros` para descontinuado. O segundo registro irá criar a nova versão atual do livro na tabela.
+```python
+def type2_upsert(microBatchDF, batch):
+	microBatchDF.createOrReplaceTempView("updates") # Tabela temporária updates
+	sql_query = """query""" # query definida no código abaixo
+
+bronze_books = (spark.readStream
+		.table("bronze")
+		.filter("topic = 'books'")
+		.select(F.from_json(F.col("value").cast("string"), schema).alias("v"))
+		.select("v.*"))
+
+
+schema = "book_id STRING, title STRING, author STRING, price DOUBLE, updated TIMESTAMP"
+query = (bronze_books
+	.writeStream
+		.foreachBatch(type2_upsert)
+		.option("checkpointLocation", "dbfs: /mnt/demo_pro/checkpoints/livros")
+		.trigger(availableNow=True)
+		.table("livros")
+	.start())
+```
+
+Para cada micro batch vamos executar a junção das informações dos livros e analisar dois casos:
+
+- Caso o preço do livro esteja diferente do preço atual ele é atualizado
+- Caso contrário um novo registro do livro é criado (isso vale para livros que não existiam ou que existiam na base mas a versão atual foi descontinuada).
 
 ```sql
 MERGE INTO livros
@@ -194,7 +212,7 @@ USING (
 	JOIN livros ON updates.book_id = livros.book_id
 	WHERE livros.current = true AND updates.price <> livros.price
 ) 
-staged_updates ON livros.book_id = merge_key
+staged_updates ON livros.book_id = merge_key -- staged_updates são todas as altualizações de livros
 
 -- Caso preço seja diferente atualiza a versão atual para uma versão descontinuada
 WHEN MATCHED
@@ -214,36 +232,15 @@ WHEN NOT MATCHED THEN
 	)
 ```
 
+> [!tip] UNION ALL e duplicação de registros
+> Pode parecer estranho utilizar o UNION ALL para fazer o levantamento de todos os registros atualizados, isso irá gerar uma duplicação no registro, e é exatamente isso que precisamos.
+> 
+> Essa duplicação gera dois registros para o mesmo livro. Com isso fazemos:
+> - O primeiro registro gerado é utilizando para atualizar o estado atual na tabela `livros` para descontinuado
+> - O segundo registro irá criar a nova versão atual do livro na tabela
+
 > [!warning] Múltiplas atualização em um microbatch
 > Caso mais de um evento de atualização venha em um microbatch para o mesmo livro irá ocorrer um erro. Nesse casos é necessário garantir que tenha apenas uma única `merge_key`, que pode ser feita utilizando algum tipo de operação temporal ([[Funções nativas#Window Functions]]).
-
-A query acima podem ser utilizada no processamento de cada micro_batch:
-
-```python
-def type2_upsert(microBatchDF, batch):
-	microBatchDF.createOrReplaceTempView("updates") # Tabela temporária updates
-	sql_query = """query""" # query definida no código anterior
-
-
-schema = "book_id STRING, title STRING, author STRING, price DOUBLE, updated TIMESTAMP"
-query = (spark.readStream
-		.table("bronze")
-		.filter("topic = 'books'")
-		.select(F.from_json(F.col("value").cast("string"), schema).alias("v"))
-		.select("v.*")
-	.writeStream
-		.foreachBatch(type2_upsert)
-		.option("checkpointLocation", "dbfs: /mnt/demo_pro/checkpoints/livros")
-		.trigger(availableNow=True)
-		.table("livros")
-	.start())
-```
-
-Para cada micro batch vamos executar a junção das informações dos livros e analisar dois casos:
-
-- Caso o preço do livro esteja diferente do preço atual ele é atualizado
-- Caso contrário um novo registro do livro é criado (isso vale para livros que não existiam ou que existiam na base mas a versão atual foi descontinuada).
-
 #### Livros atuais
 
 Como podemos ter livros descontinuados em nossa loja, queremos garantir que os novos pedidos sejam comparados apenas com os livros atualmente disponíveis.

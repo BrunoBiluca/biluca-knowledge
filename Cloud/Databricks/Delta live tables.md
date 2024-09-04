@@ -1,31 +1,22 @@
 # Delta live tables
 
-Delta live tables (DTL) são uma forma do Databricks de implementar ETL de uma forma ágil, consistente e que escale de acordo com as necessidades. Elas são views materializadas para o lakehouse definidas por SQL Query e criadas e atualizadas por pipelines.
+> [!info] O que é?
+> 
+> Delta live tables (DTL) são uma forma do Databricks de implementar ETL de uma forma ágil, consistente e que escale de acordo com as necessidades e fluxo de dados. Elas são views materializadas para o lakehouse definidas por SQL Query e atualizadas por pipelines.
 
 Principais características que as DLT implementam:
 
-- Melhores práticas Delta Lake automaticamente aplicadas: otimização, compactação automática
-- DLT automaticamente gerencia os dados físicos: automaticamente executa vacuum e otimizações diárias
-- Evolução de esquema: quando removidos colunas valores antigos são preservados.
+- Melhores práticas Delta Lake automaticamente aplicadas: **otimização, compactação automática**
+- Automaticamente **gerenciam os dados físicos**: automaticamente executa vacuum e otimizações diárias
+- **Evolução de esquema**: quando removidos colunas valores antigos são preservados.
 
 Existem dois tipos de tabelas que podem ser criadas com DLT:
-- Live tables: são views materializadas para o lakehouse, retornam os resultados atuais de qualquer query a cada intervalo de tempo de atualização
-- Streaming live tables: são projetadas para processamento de dados perto de tempo real e incremental
+- **Live tables**: são views materializadas para o Lakehouse, retornam os resultados atuais de qualquer query a cada intervalo de tempo de atualização
+- **Streaming live tables**: são projetadas para processamento de dados perto de tempo real e incremental
 	- Existe a opção de utilizar [Autoloader](https://docs.databricks.com/pt/ingestion/auto-loader/index.html) que otimiza carregamento de dados incrementais a partir do cloud object storage
 
-> [!tip] DLT e notebooks
+> [!warning] DLT e notebooks
 > DLT não foi criada para utilizar em notebooks de maneira iterativa, assim que o DLT é implementado deve fazer parte de um workflow. O que pode ser feito é criar a lógica utilizando uma sintaxe comum e depois converter para DLT quando estiver pronto para a criação do pipeline.
-
-> [!tip] Comentários e Propriedades de tabela
-> Podemos utilizar esses recursos para facilitar a organização dentro do Databricks. Comentário são bons em descrever cada tabela enquanto propriedades pode ser utilizadas para rotular tabelas
-> ```python
-> @dlt.table(
-> 	comment = "Append only orders with valid timestamps",
-> 	table_properties = {"quality": "silver"}
-> )
-> def orders_silver():
-> 	# Implementação
-> ```
 
 ## Como criar uma DLT
 
@@ -89,6 +80,18 @@ Caso um job de streaming falhe é recomendável configurar uma política de re-t
 - Agendamento (schedule): não configurar
 - Timeout: não configurar. Queries de streaming executando por longos tempos indeterminados.
 
+### Comentários e Propriedades de tabela
+
+Podemos utilizar esses recursos para facilitar a organização dentro do Databricks. Comentário são bons em descrever cada tabela enquanto propriedades pode ser utilizadas para rotular tabelas
+```python
+@dlt.table(
+	comment = "Append only orders with valid timestamps",
+	table_properties = {"quality": "silver"}
+)
+def orders_silver():
+	# Implementação
+```
+
 ## Configurações
 
 Configurações podem ser aplicadas diretamente ao código, essas configurações são cadastradas na plataforma Databricks e pode ser chamados no código tanto SQL quanto Python.
@@ -132,3 +135,12 @@ Cada uma das linguagens tem suas vantagens e desvantagens.
 | Importação explícita           | Não                                  | Em python o módulo `dlt` deve ser importado explicitamente enquanto no SQL não.                                                                                              |
 | Tabelas como Dataframes        | Tabelas como resultados de consultas | Em python podemos aplicar múltiplas transformações em uma única operação. <br>Em SQL essas transformações são persistidas em tabelas temporárias que são então transformadas |
 | `@dlt.table()`                 | `SELECT statement`                   | Lógica da query e sintaxe são diferentes                                                                                                                                     |
+
+# Engenharia de software e DLT
+
+Etapas de desenvolvimento
+- Desenvolvimento do código em ambiente de desenvolvimento
+- Testes unitários
+- Testes de implementação
+- Pipeline de produção
+

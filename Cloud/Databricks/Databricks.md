@@ -26,13 +26,16 @@ Tipos de persona disponíveis:
 
 O Hive metastore é uma modelo de controle de privilégios para objetos armazenados no Hive, esse modelo já está definido como legado e será substituído pelo [[Unity Catalog]].
 
-> [!info] Documentação
-> - [Privilégios do Hive metastore e objetos protegíveis](https://docs.databricks.com/pt/data-governance/table-acls/object-privileges.html#privilege-types)
+- [Privilégios do Hive metastore e objetos protegíveis](https://docs.databricks.com/pt/data-governance/table-acls/object-privileges.html#privilege-types)
 ## Permissões
 
-> [!info] Documentação
-> - [Lista de acesso de controle](https://docs.databricks.com/pt/security/auth/access-control/index.html)
-> - [Permissões de computação](https://docs.databricks.com/pt/compute/clusters-manage.html#cluster-level-permissions)
+- [Lista de acesso de controle](https://docs.databricks.com/pt/security/auth/access-control/index.html)
+
+> [!important] Grupos de usuários vs Usuários
+> - Grupo de usuário não podem ser dono de um Databricks Job. O dono deve ser um indivíduo.
+### Cluster 
+
+ - [Permissões de computação](https://docs.databricks.com/pt/compute/clusters-manage.html#cluster-level-permissions)
 
 Existem dois tipos de permissões de cluster
 
@@ -51,6 +54,8 @@ Existem dois tipos de permissões de cluster
 | Adicionar uma biblioteca ao processamento |               |             | ✅          |
 | Redimensionar o processamento             |               |             | ✅          |
 | Modificar permissões                      |               |             | ✅          |
+
+
 ## Databricks secrets
 
 > [!info] Documentação
@@ -59,18 +64,18 @@ Existem dois tipos de permissões de cluster
 
 Databricks secrets permitem que você armazene credenciais e as referencie em notebooks e jobs.
 
-Para manter as credenciais secretas quando lidas utilizando o comando `dbutils.secrets.get()` e exibidas como saída de uma célula os valores serão alterados para uma string [REDACTED].
+Para manter as credenciais secretas quando lidas utilizando o comando `dbutils.secrets.get()` e exibidas como saída de uma célula os valores serão alterados para uma string `[REDACTED]`.
 
 As permissões de acesso ao secrets são:
 
-- MANAGE: permite alterar toda a lista de controle de acesso, e escrever e ler do escopo do secret.
-- WRITE: permite ler e escrever do escopo do secret
-- READ: permite ler de todo o escopo do secrete e lista os secrets disponíveis.
+- **MANAGE**: permite alterar toda a lista de controle de acesso, e escrever e ler do escopo do secret.
+- **WRITE**: permite ler e escrever do escopo do secret
+- **READ**: permite ler de todo o escopo do secrete e lista os secrets disponíveis.
 # Notebooks
 
 ### Comandos mágicos
 
-Comandos mágicos que podem ser utilizados nos notebooks do databricks para várias funcionalidades
+Comandos mágicos que podem ser utilizados nos notebooks do Databricks para várias funcionalidades
 
 ```python
 %python, %r, %scala, %sql # troca a linguagem na célula de comando
@@ -96,22 +101,6 @@ param1 = dbutils.widgets.get("param1")
 ```
 
 Esse parâmetros podem ser configurados pela interface gráfica do Databricks.
-
-
-# Ingestão
-
-### Fontes externas
-
-> [!info] Documentação
-> [Objetos de banco de dados em Databrics - Tabelas não gerenciadas](https://docs.databricks.com/pt/database-objects/index.html#what-is-an-unmanaged-table)
-
-Tabelas externas não são gerenciadas pelo Databricks, assim apenas os metadados dessas tabelas são armazenados pela Databrics.
-
-Fontes externas podem ser extraídas por:
-- Sistema de arquivos
-- JDBC
-
-É possível definir vários tipos de opções na hora de ingerir dados de fontes externas, tanto relacionado a SQL quanto pelo próprio Spark.
 
 ### SQL UDF
 
@@ -153,6 +142,21 @@ spark.udf.register("sql_udf", example_fn)
 SELECT sql_udf(thing) as transformed_thing from table_a
 ```
 
+# Ingestão
+
+## Fontes externas
+
+> [!info] Documentação
+> [Objetos de banco de dados em Databrics - Tabelas não gerenciadas](https://docs.databricks.com/pt/database-objects/index.html#what-is-an-unmanaged-table)
+
+Tabelas externas não são gerenciadas pelo Databricks, assim apenas os metadados dessas tabelas são armazenados pela Databrics.
+
+Fontes externas podem ser extraídas por:
+- Sistema de arquivos
+- JDBC
+
+É possível definir vários tipos de opções na hora de ingerir dados de fontes externas, tanto relacionado a SQL quanto pelo próprio Spark.
+
 ## Auto Loader
 
 > [!info] O que é?
@@ -168,13 +172,15 @@ Opções:
 - `AvailableNow`: consome todos os registros disponíveis como lotes incrementais
 - [Descontinuada] `Once`
 
-# Delta lake
+# [[Delta lake]]
+
+Essa seção está interessada em discutir os principais conceitos, funcionalidades e otimizações disponíveis apenas na plataforma da Databricks.
 
 ### Otimização no Delta lake
 
 Como o Delta lake trabalha com logs de transação para definir seu estado, são criados vários arquivos pequenos com cada transformação feita, isso pode ocasionar problemas de performance nas consultas já que quando uma consulta é feita ela consulta esse histórico para definir o estado da base de dados.
 
-Dessa forma é indicado utilizar o versionamento do Delta lake para versões mais recente e de tempos em tempos remover esse versionamento dos registros mais antigos.
+Dessa forma é indicado utilizar o versionamento do Delta lake apenas para versões mais recentes e de tempos em tempos remover os registros mais antigos.
 
 ```sql
 -- exemplo de limpeza de base
@@ -186,19 +192,9 @@ VACUUM students RETAIN 0 HOURS DRY RUN
 
 ### CTAS (Create Tables as Select)
 
-Automaticamente inferem o esquema sendo uma boa forma de consumir dados externos bem estruturados como parquet. São criadas a partir do resultado de uma consulta e não tem nenhum tipo de ligação com a tabela fonte, assim mesmo que ela for removida as tabelas criadas como CTAS continuam operando normalmente.
-
-Para outros tipos de fontes de dados menos estruturados podemos criar uma tabela temporária fazer as transformações necessárias e importar na tabela principal.
-
-Como Delta Lake força esquema na escrita, restrições em cada coluna são suportadas durante a escrita das tabelas.
-
-> [!tip] Tabelas gerenciadas
-> Caso a tabela seja criada sem especificar o LOCATION, essa tabela passa a ser gerenciada pelo Databricks (metadados e dados).
-
-#### Exemplo demonstrando a definição de um esquema em CTAS
+Automaticamente inferem o esquema sendo uma boa forma de consumir dados externos bem estruturados como parquet. Essas tabelas são criadas a partir do resultado de uma consulta e **não tem nenhum tipo de ligação com a tabela fonte**, assim mesmo que as tabelas utilizadas como fontes forem removidas as tabelas criadas como CTAS continuam operando normalmente.
 
 ```sql
-
 -- Definição da tabela purchases através de CTAS
 -- As colunas timestamp são definidas como timestamp do Unix, o que não é interessante para análises
 CREATE OR REPLACE TABLE purchases AS
@@ -208,7 +204,11 @@ FROM sales;
 -- | id  | transaction_timestamp | price |
 -- | --- | --------------------- | ----- |
 -- | 1   | 600000000             | 42.0  |
+```
 
+Para outros tipos de fontes de **dados menos estruturados** podemos criar uma tabela temporária fazer as transformações necessárias e importar na tabela principal.
+
+```sql
 -- Definição da tabela com o esquema desejado
 CREATE OR REPLACE TABLE purchase_dates (
   id STRING,
@@ -232,6 +232,10 @@ WHEN NOT MATCHED THEN INSERT *
 -- | 1   | 600000000             | 42.0  | "2020-06-18" |
 ```
 
+Como Delta Lake força esquema na escrita, **restrições em cada coluna são suportadas** durante a escrita das tabelas.
+
+> [!tip] Tabelas gerenciadas
+> Caso a tabela seja criada sem especificar o LOCATION, essa tabela passa a ser gerenciada pelo Databricks (metadados e dados).
 
 # Workflows
 
@@ -248,9 +252,13 @@ Databricks tem duas formas de orquestração
 ![[Exemplo de utilização de workflow para ML dentro do Databricks.png|Exemplo de utilização de workflow para ML dentro do Databricks|500]]
 
 > [!tip] Componentes de um fluxo de processamento
+> Quando pensamos em um fluxo de processamento é crucial pensar basicamente em 3 coisas:
+> 
 > - Tarefas (O que?)
 > - Agendamento (Quando?)
 > - Cluster (Como?)
+>   
+> Com essas 3 perguntas respondidas podemos definir então o projeto.
 
 ## Databricks CLI
 
@@ -296,8 +304,8 @@ except:
 > - [Criar e executar jobs do Databricks](https://docs.databricks.com/pt/workflows/jobs/create-run-jobs.html#choose-the-correct-cluster-type-for-your-job)
 
 Tipos de clusters:
-- All-purpose clusters: cluster gerais que servem principalmente para o desenvolvimento.
-- Job clusters: encerram quando o job é finalizado
+- **All-purpose clusters**: cluster gerais que servem principalmente para o desenvolvimento.
+- **Job clusters**: encerram quando o job é finalizado
 
 > [!tip] Jobs em produção
 > Para jobs que já estão em estágio de produção a Databricks recomenda utilizar cluster do tipo *Job Clusters*.
@@ -306,9 +314,7 @@ Tipos de clusters:
 > Jobs não pode ser atribuídos a grupos de usuários, eles devem ser atribuídos a um dono que deve ser um indivíduo.
 > - [https://docs.databricks.com/security/auth-authz/access-control/jobs-acl.html#job-permissions](https://docs.databricks.com/security/auth-authz/access-control/jobs-acl.html#job-permissions)
 
-# CDC (Change data capture)
-
-Para mais informações sobre [[Change Data Capture]].
+# [[Change Data Capture]]
 
 O processo de CDC no Databricks pode ser feito fazendo a junção dos dados de uma fonte de dados para uma tabela.
 
@@ -330,7 +336,9 @@ Para garantir que apenas uma entrada seja capturada podemos utilizar a função 
 
 # Visualizações
 
-> [!info] Documentação
+> [!info] Definição
+> Visualizações são tabelas que definem um tipo específico de informação assim facilitando a leitura pelo consumidor. Na plataforma do Databricks temos vários tipos de visualizações que podemos utilizar.
+> 
 > - [Conceitos gerais de visualizações](https://docs.databricks.com/en/views/index.html)
 
 - Visualizações materializadas

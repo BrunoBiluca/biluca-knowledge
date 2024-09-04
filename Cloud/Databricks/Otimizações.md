@@ -1,4 +1,6 @@
 
+# Principais considerações de performance
+
 Características que impactam na performance de consultas:
 
 - Número de bytes lidos
