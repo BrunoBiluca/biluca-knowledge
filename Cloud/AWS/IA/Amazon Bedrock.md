@@ -15,14 +15,6 @@ Funcionalidades
 - Suporte nativo para RAG
 - Certificações de segurança e conformidade de dados
 
-Modelos disponíveis
-
-- Claude da Anthropic
-- Jurassic-2 da AI21 Labs
-- Stable Diffusion da Stability AI
-- Command e Embed da Cohere
-- Llama 2 da Meta
-- Linguagem e os modelos de incorporação do Amazon Titan.
 
 Serviços relacionados
 
@@ -31,11 +23,15 @@ Serviços relacionados
 - Amazon CloudWatch para monitorar métricas
 - Guardrails for Amazon Bedrock: serviço de avaliação para fornecer uma camada adicional de proteção contra conteúdos e entradas do usuário indesejados.
 
-O serviço Amazon Bedrock pode ser integrado utilizando a Amazon Bedrock API ([Documentação](https://docs.aws.amazon.com/bedrock/latest/APIReference/welcome.html)). Com essa API é possível criar automações para acesso aos principais componentes do Bedrock como:
-- `bedrock`: managing, training, and deploying models
-- `bedrock-runtime` – making inference requests for models hosted in Amazon Bedrock
-- `bedrock-agent` – creating and managing agents and knowledge bases
-- `bedrock-agent-runtime` – invoking agents and querying knowledge bases
+### Modelos disponíveis
+
+- **AI21 Labs - Série Jurassic-2**: texto
+- **Amazon - Titan**: uso geral
+- **AnthropP/C - Claude**: texto e visão
+- **Cohere - Command XL**: texto
+- **Meta - Llama**: texto
+- **Mistral AI - Mistral Large**: texto com foco em tarefas que exigem muito raciocínio
+- **Stability AI - Stable Diffusion**: geração de imagens
 
 ### Precificação
 
@@ -53,6 +49,15 @@ O Amazon Bedrock oferece dois tipos de avaliação de modelos: automática e hum
 
 - Automática: oferece métricas predefinidas, como precisão, robustez e toxicidade.
 - Humana: oferece métricas subjetivas e personalizadas, como simpatia, estilo e alinhamento com a voz da marca.
+
+# Amazon Bedrock API
+
+O serviço Amazon Bedrock pode ser integrado utilizando a Amazon Bedrock API ([Documentação](https://docs.aws.amazon.com/bedrock/latest/APIReference/welcome.html)). Com essa API é possível criar automações para acesso aos principais componentes do Bedrock como:
+- `bedrock`: managing, training, and deploying models
+- `bedrock-runtime` – making inference requests for models hosted in Amazon Bedrock
+- `bedrock-agent` – creating and managing agents and knowledge bases
+- `bedrock-agent-runtime` – invoking agents and querying knowledge bases
+
 # Amazon Titan
 
 > [!info] O que é?

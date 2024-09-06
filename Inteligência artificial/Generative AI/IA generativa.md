@@ -1,4 +1,4 @@
-
+IA generativo é um subconjunto de [[Machine Learning]] que visa utilizar um modelo ML pré-treinado a fim de gerar saídas para os usuários, sejam essas texto, imagens, vídeos ou um conjunto de todas essas.
 # IA Responsável
 
 > [!info] O que é?

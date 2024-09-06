@@ -41,3 +41,69 @@ Saúde
 - Personalizar o medicamento: planos de tratamento a partir da composição genética do paciente
 - Melhorar os exames a partir de reconstrução ou geração de imagens médicas como radiografias, ressonâncias entre outras
 
+# Desenvolvimento de uma aplicação de IA generativa
+
+Ciclo de vida ds aplicações de IA generativa
+
+- Defina um caso de uso
+- Selecione um modelo de base
+- Melhore o desempenho
+- Avalie os resultados
+- Implante a aplicação
+
+É importante observar que o ciclo de vida da aplicação de IA generativa é um processo iterativo, devemos levar em consideração as métricas de desempenho, avaliações dos usuários e qualquer outro tipo de dado que possa ser coletado para melhorar o modelo.
+
+## Defina um caso de uso
+
+Uma forma de fazer a definição é utilizar a abordagem de caso de uso comercial.
+
+> [!info]- Caso de uso comercial
+> É uma narrativa estruturada qeu descreve como um sistema ou processo deve se comportar a partir da perspectiva de um ator ou stakeholder.
+> 
+> É composto geralmente das seguintes partes
+> - Nome do caso de uso
+> - Breve descrição
+> - Atores
+> - Condições prévias
+> - Fluxo básico (principal cenário de sucesso)
+> - Fluxos alternativos (extensões)
+> - Pós-condições
+> - Regras de negócios
+> - Requisitos não funcionais
+> - Pressuposições
+> - Observações ou informações adicionais
+
+## Selecione um modelo de base
+
+Principais considerações
+
+- Custo: questões de licenciamento
+- Modalidade: formato que o modelo foi treinado a replicar, como texto, áudio, vídeos ou multimodal
+- Latência
+- Suporte a vários idiomas
+- Tamanho do modelo
+- Complexidade do modelo
+- Personalização
+- Comprimento de entrada/saída: modelos podem ter limitações em relação a isso
+- Considerações sobre responsabilidade ([[IA generativa#Principais desafios]])
+- Implantação e integração
+
+Os principais modelos no mercado podem ser encontrados no [[Amazon Bedrock#Modelos disponíveis]]
+
+
+
+## Melhore o desempenho
+
+Após a seleção do modelo base é preciso concentrar em melhorar o desempenho do modelo para o caso de uso definido. Isso pode ser feito a partir de algumas técnicas como:
+
+- [[Design de comandos (Engenharia de prompts)]]
+- [[RAG (Retrieval Augmented Generation)]]
+- Ajuste fino
+- Agentes de automação
+
+O [[Amazon Bedrock]] é um serviço que pode ser utilizado para reunir fontes de dados de vários domínios e melhorar o desempenho do modelo escolhido.
+## Avalie os resultados
+
+
+
+## Implante a aplicação

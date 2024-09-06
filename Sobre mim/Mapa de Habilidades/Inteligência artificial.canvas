@@ -8,7 +8,7 @@
 		{"id":"14ddfe9cdb8d21c9","type":"text","text":"### LangChain\n\n- [[LangChain]]","x":280,"y":782,"width":329,"height":98},
 		{"id":"15437f0956130d68","type":"text","text":"### Tensorflow\n\n- [[TensorFlow]]","x":280,"y":940,"width":329,"height":100},
 		{"id":"ac9bebe2b228a406","type":"text","text":"### Desenvolvimento de Generative AI\n\n- ","x":-164,"y":1100,"width":329,"height":123},
-		{"id":"6a22e2333597c16a","type":"text","text":"### Design de comandos\n\n- [[Design de comandos]]","x":280,"y":1100,"width":329,"height":100},
+		{"id":"6a22e2333597c16a","type":"text","text":"### Design de comandos\n\n- [[Design de comandos (Engenharia de prompts)]]","x":280,"y":1100,"width":329,"height":100},
 		{"id":"6364593b80e46560","type":"text","text":"### Modelos\n\n- ","x":280,"y":140,"width":329,"height":86},
 		{"id":"b5545fbb20efed68","type":"text","text":"### Árvore de decisão\n\n- [[Árvore de decisão]]","x":720,"y":140,"width":329,"height":86},
 		{"id":"edd223b1133bd206","type":"text","text":"### Plataformas em cloud\n\n-  [[Comparação entre plataformas]]","x":-164,"y":1320,"width":329,"height":86},
