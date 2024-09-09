@@ -7,7 +7,9 @@
   "image-captions",
   "markdown-table-editor",
   "translate",
-  "advanced-cursors",
   "mermaid-tools",
-  "obsidian-icon-folder"
+  "obsidian-icon-folder",
+  "advanced-cursors",
+  "obsidian-git",
+  "obsidian-version-history-diff"
 ]
