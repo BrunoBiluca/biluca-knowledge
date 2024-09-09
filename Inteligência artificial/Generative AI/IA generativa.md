@@ -59,3 +59,88 @@ Para além dos [[Machine Learning#Desafios|desafios em relação a criação de 
 - Explicações da interface de usuário
 
 
+# Modelos generativos
+
+- [[Large Language Models]]
+- **Modelos de difusão:** modelos que começam com um ruído aleatório e adicionam informação até obterem uma saída clara e coerente
+- **Redes adversárias generativas (GANs):** duas redes neurais competem entre si uma sendo a geradora e a outra sendo a discriminadora, até a geradora produzir dados indistinguíveis dos dados reais.
+	- geradora: gera novos dados a partir dos ruídos aleatórios e os transformam em dados que se assemelham à distribuição de dados de treinamento
+	- discriminadora: seu objetivo é distinguir entre os dados reais (providos no treinamento) e os dados sintéticos da geradora
+- **Codificadores automáticos variacionais (VAEs):** combina codificadores automáticos e inferência variacional (técnica de estatística bayesiana).
+	- Codificadora: captura as características essenciais dos dados de treinamento
+	- Decodificadora: reconstrói a representação criada pela codificadora para gerar os dados reais
+
+
+# Desenvolvimento de uma aplicação de IA generativa
+
+Ciclo de vida ds aplicações de IA generativa
+
+- Defina um caso de uso
+- Selecione um modelo de base
+- Melhore o desempenho
+- Avalie os resultados
+- Implante a aplicação
+
+É importante observar que o ciclo de vida da aplicação de IA generativa é um processo iterativo, devemos levar em consideração as métricas de desempenho, avaliações dos usuários e qualquer outro tipo de dado que possa ser coletado para melhorar o modelo.
+
+## Defina um caso de uso
+
+Uma forma de fazer a definição é utilizar a abordagem de caso de uso comercial.
+
+> [!info]- Caso de uso comercial
+> É uma narrativa estruturada qeu descreve como um sistema ou processo deve se comportar a partir da perspectiva de um ator ou stakeholder.
+> 
+> É composto geralmente das seguintes partes
+> - Nome do caso de uso
+> - Breve descrição
+> - Atores
+> - Condições prévias
+> - Fluxo básico (principal cenário de sucesso)
+> - Fluxos alternativos (extensões)
+> - Pós-condições
+> - Regras de negócios
+> - Requisitos não funcionais
+> - Pressuposições
+> - Observações ou informações adicionais
+
+## Selecione um modelo de base
+
+Principais considerações
+
+- Custo: questões de licenciamento
+- Modalidade: formato que o modelo foi treinado a replicar, como texto, áudio, vídeos ou multimodal
+- Latência
+- Suporte a vários idiomas
+- Tamanho do modelo
+- Complexidade do modelo
+- Personalização
+- Comprimento de entrada/saída: modelos podem ter limitações em relação a isso
+- Considerações sobre responsabilidade ([[IA generativa#Principais desafios]])
+- Implantação e integração
+
+Os principais modelos no mercado podem ser encontrados no [[Amazon Bedrock#Modelos disponíveis]]
+## Melhore o desempenho
+
+Após a seleção do modelo base é preciso concentrar em melhorar o desempenho do modelo para o caso de uso definido. Isso pode ser feito a partir de algumas técnicas como:
+
+- [[Design de comandos (Engenharia de prompts)]]
+- [[RAG (Retrieval Augmented Generation)]]
+- Ajuste fino
+- Agentes de automação
+
+O [[Amazon Bedrock]] é um serviço que pode ser utilizado para reunir fontes de dados de vários domínios e melhorar o desempenho do modelo escolhido.
+
+### Ajuste fino
+
+O ajuste fino é um processo mais direcionado, em que um modelo pré-treinado é adaptado para tr um bom desempenho em uma tarefa específica ou em uma área específica.
+
+- Especificidade: o conjunto de dados no ajuste fino é muito mais focado
+- Alta relevância
+- Qualidade mais importante que quantidade
+
+## Avalie os resultados
+
+- Avaliação humana
+- Uso de conjuntos de dados de referência
+
+## Implante a aplicação

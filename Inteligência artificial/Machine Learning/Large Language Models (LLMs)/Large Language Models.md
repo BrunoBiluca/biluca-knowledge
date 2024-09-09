@@ -76,3 +76,12 @@ Quando o modelo processa essa frase usando o mecanismo de autoatenção, ele é 
 - Para a palavra "dormindo", o modelo pode atribuir alta atenção às palavras "gato" e "sofá", pois elas estão intimamente relacionadas ao ato de dormir.
 - Para a palavra "brincava", o modelo pode atribuir alta atenção às palavras "cachorro" e "lá fora", pois elas estão relacionadas à atividade de brincar.
 - Além disso, o modelo também pode capturar relações entre palavras em diferentes partes da frase. Por exemplo, ele pode relacionar "gato" e "cachorro" como sendo animais, mesmo estando separados por outras palavras.
+
+
+# Avaliação de modelos de linguagem
+
+Três métricas comumente usadas para essa finalidade são:
+- **Recall-Oriented Understudy for Gisting Evaluation (ROUGE):** métrica utilizada para avaliar fluência, coerência e a ordem da narrativa dos textos gerados. Ela é determinada a partir da sobreposição de partes do texto com um texto referência criado por humanos.
+- **Bilingual Evaluation Understudy (BLEU):** mede a qualidade da tradução de um texto gerado comparando com textos traduzidos por humanos.
+- **BERTScore:** calcula a semelhança de cosseno entre as palavras geradas e dos textos de referência. Essa métrica é capaz de capturar mais significado já que utiliza as correspondências semânticas do texto em vez das léxicas utilizadas por métricas como BLEU e ROUGE.
+
