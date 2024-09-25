@@ -58,37 +58,13 @@ Podemos fazer predições de duas formas:
 - Inferências em lotes: quando pegamos uma grande quantidade de dados para analisar de uma única vez.
 - Inferências em tempo real: quando tomamos decisões em resposta a novas informações a medida que elas chegam.
 
+Os modelos são calibrados a partir das [[Métricas de avaliação de modelos]]. Por meio das métricas podemos verificar a qualidade do modelo e se este é suficiente para nosso caso de uso.
 ### Modelos multimodais
 
 > [!info] Definição
 > São modelos capazes de processar informações de várias modalidades, incluindo imagens, textos e vídeos.
 > 
 > Por exemplo, é possível enviar para o modelo a foto de um prato de cookies e pedir que ele mostre uma receita disso.
-
-
-### Desafios
-
-#### Precisão
-
-Um dos principais problemas em aplicações com IA generativa é a precisão do modelo. O **objetivo** é obter um modelo treinado com o menor viés e a menor compensação de variância para um conjunto de dados.
- 
-Em relação a precisão do modelo podemos ter problemas relacionados ao **viés dos dados** utilizados para o treinamento do modelo, resultando em um modelo muito básico que não possui recursos para uma atuação mais ampla. Também podemos ter problema relacionado a **variância (sensibilidade)** do modelo, que resulta em modelos que apresentam flutuações nos índices de precisão, principalmente quando o modelo é bom para os dados de treinamento e ruim para os dados de avaliação (problema do sobreajuste). 
-
-
-![[Exemplos de compensação entre viés e variância.png|Exemplos de compensação entre viés e variância, perceba o modelo que queremos construir é o balanceado|500]]
-
-Existem alguma técnicas para superar os erros entre viés e variância:
-
-- Validação cruzada (teste e validação): principalmente utilizada para detectar sobreajustes, avaliar modelos por meio de um subconjunto dos dados de entrada e avalia no subconjunto complementar dos dados
-- Aumentas os dados
-- Regularização: método para penalizar valores extremos e ajudar a evitar modelos lineares
-- Modelos mais simples: modelos mais simples ajudam no sobreajuste, modelos simples demais podem estar subajustados
-- Redução de dimensão (análise de componentes principais)
-- Interrupção do treinamento: encerrar o treinamento mais cedo para que o modelo não memorize os dados.
-
-Um boa analogia para entender o viés e a variância é um alvo.
-
-![[Exemplo entre viés e variância com  um alvo.png|Aqui um exemplo da relação entre viés e variância de um modelo ML|500]]
 
 # Fluxo de trabalho em Machine Learning
 

@@ -1,13 +1,4 @@
-# Classificação
-
-> [!info] O que é?
-> Classificação é um modelo de ML que foca em rotular um conjunto de dados não conhecido a partir dos atributos do conjunto de testes utilizado em seu desenvolvimento
-
-Atributos (features) são uma parte crítica de qualquer classificador. Os atributos capturam características importantes sobre a natureza dos dados.
-
-Para avaliar o desempenho de um classificador, você deve sempre testar o modelo em dados não visualizados. Portanto, antes da construção de um modelo, divida seus dados em duas partes: um conjunto de _treinamento_ e um conjunto de *testes*.
-
-Você usa o conjunto de testes para treinar e avaliar o modelo durante o estágio de desenvolvimento. Então você usa o modelo treinado para fazer previsões no conjunto de testes não visualizado. Essa abordagem lhe dá uma noção do desempenho e robustez do modelo.
+# Métricas de avaliação de modelos
 
 Geralmente as métricas são avaliadas em relação a 4 categorias de informações:
 
@@ -41,6 +32,7 @@ Algumas métricas comuns para a avaliação do modelo de classificação são:
 
 > [!tip] [Aritgo com representações visuais para as métricas](https://www.evidentlyai.com/classification-metrics/accuracy-precision-recall)
 
+8. **Latência:** o tempo necessário para o modelo fazer uma previsão, que é uma medida importante de seu desempenho prático.
 #### Exemplo - Cálculo das métricas para identificação de cachorros e gatos em um vídeo
 
 Suponha que um classificador para o reconhecimento de cães em cenas de um vídeo identifica 7 cães em uma cena contendo 9 cães e alguns gatos. Se 4 das identificações estão corretas, mas 3 são, na verdade, gatos, temos:
@@ -72,3 +64,25 @@ Suponha que um classificador para o reconhecimento de cães em cenas de um víd
 - False Positives (FP): 3 (previsões incorretas de cães)
 - True Negatives (TN): Não fornecido
 - False Negatives (FN): 5 (cães não identificados)
+
+# Ajuste do modelo
+
+Um dos principais problemas em aplicações com IA generativa é a precisão do modelo. O **objetivo** é obter um modelo treinado com o menor viés e a menor compensação de variância para um conjunto de dados.
+ 
+Em relação a precisão do modelo podemos ter problemas relacionados ao **viés dos dados** utilizados para o treinamento do modelo, resultando em um modelo muito básico que não possui recursos para uma atuação mais ampla. Também podemos ter problema relacionado a **variância (sensibilidade)** do modelo, que resulta em modelos que apresentam flutuações nos índices de precisão, principalmente quando o modelo é bom para os dados de treinamento e ruim para os dados de avaliação (problema do sobreajuste). 
+
+
+![[Exemplos de compensação entre viés e variância.png|Exemplos de compensação entre viés e variância, perceba o modelo que queremos construir é o balanceado|500]]
+
+Existem alguma técnicas para superar os erros entre viés e variância:
+
+- Validação cruzada (teste e validação): principalmente utilizada para detectar sobreajustes, avaliar modelos por meio de um subconjunto dos dados de entrada e avalia no subconjunto complementar dos dados
+- Aumentas os dados
+- Regularização: método para penalizar valores extremos e ajudar a evitar modelos lineares
+- Modelos mais simples: modelos mais simples ajudam no sobreajuste, modelos simples demais podem estar subajustados
+- Redução de dimensão (análise de componentes principais)
+- Interrupção do treinamento: encerrar o treinamento mais cedo para que o modelo não memorize os dados.
+
+Um boa analogia para entender o viés e a variância é um alvo.
+
+![[Exemplo entre viés e variância com  um alvo.png|Aqui um exemplo da relação entre viés e variância de um modelo ML|500]]

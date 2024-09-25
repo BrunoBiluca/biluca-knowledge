@@ -50,6 +50,8 @@ Quando fazemos um pedido para uma IA podemos utilizar os seguintes elementos par
 > # formato de saída
 > Status de atendimento:
 > ```
+
+# Técnicas na criação de prompts
 ### Técnicas do ponto de vista do usuário para melhorar o resultado obtido
 
 - **Especificar as instruções:** quanto mais clara e objetiva uma instrução é mais chances a IA tem de fazer o que foi pedido

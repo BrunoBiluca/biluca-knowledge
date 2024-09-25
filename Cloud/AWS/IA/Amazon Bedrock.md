@@ -14,6 +14,7 @@ Funcionalidades
 - Fácil personalização do modelo com seus dados
 - Suporte nativo para RAG
 - Certificações de segurança e conformidade de dados
+- Modelo de responsabilidade compartilhada, AWS entra com infra e o desenvolvedor com a governança dos dados.
 
 
 Serviços relacionados
@@ -22,6 +23,7 @@ Serviços relacionados
 - Amazon S3 para dados de treinamento e validação
 - Amazon CloudWatch para monitorar métricas
 - Guardrails for Amazon Bedrock: serviço de avaliação para fornecer uma camada adicional de proteção contra conteúdos e entradas do usuário indesejados.
+- AWS PrivateLink para a integração com redes corporativas.
 
 ### Modelos disponíveis
 
@@ -42,6 +44,8 @@ Planos de preços para inferência:
 2. Throughput provisionada: esse modo permite provisionar uma throughput suficiente para atender aos requisitos de performance da sua aplicação em troca de um compromisso de prazo baseado em tempo.
 
 [Página de precificação do Bedrock](https://aws.amazon.com/pt/bedrock/pricing/)
+
+Cada plano irá definir uma **quantidade limite de uso do serviço (cotas)**, relacionadas ao número de trabalhos simultâneos, número de chamadas por minuto a API e número total de tokens consumidos. 
 
 # Avaliação de modelos
 

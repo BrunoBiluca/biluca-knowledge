@@ -20,10 +20,10 @@ Os modelos de aprendizado profundo são frequentemente usados em uma variedade d
 
 O aprendizado profundo tem sido impulsionado pelo aumento na disponibilidade de dados rotulados, avanços na capacidade computacional e o desenvolvimento de algoritmos de treinamento eficientes, como a retropropagação (backpropagation) e técnicas de regularização.
 
-> [!tip] Machine Learning tradicional vs Deep Learning
+> [!tip]- Machine Learning tradicional vs Deep Learning
 > Suponha que temos um conjunto de dados de imagens de gatos e cachorros, e queremos construir um classificador para distinguir entre as duas classes.
 > 
-> ### Extração Manual de Características (Modelo Tradicional):
+> **Extração Manual de Características (Modelo Tradicional):**
 > 
 > Neste caso, para um modelo tradicional de aprendizado de máquina, um engenheiro de dados ou cientista de dados teria que identificar manualmente características relevantes das imagens, como cor da pelagem, formato das orelhas, comprimento do focinho, entre outros. Essas características seriam extraídas manualmente e transformadas em um conjunto de características numéricas que o modelo tradicional poderia entender, como por exemplo:
 > 
@@ -33,7 +33,7 @@ O aprendizado profundo tem sido impulsionado pelo aumento na disponibilidade de 
 >   
 > Essas características seriam então alimentadas em um modelo de aprendizado de máquina, como uma máquina de vetores de suporte (SVM) ou uma árvore de decisão, que aprenderia a distinguir entre gatos e cachorros com base nessas características.
 > 
-> ### Aprendizado Automático de Características (Aprendizado Profundo):
+> **Aprendizado Automático de Características (Aprendizado Profundo):**
 > 
 > Por outro lado, em um modelo de aprendizado profundo, como uma rede neural convolucional (CNN), o próprio modelo é capaz de aprender automaticamente a partir dos dados brutos, sem a necessidade de extração manual de características. 
 > 

@@ -23,6 +23,8 @@ Aqui serão apresentadas algumas questões ou considerações que podem impactar
 
 # Gerenciamento de dados
 
+- [[Governança de dados]]
+
 - Como você está protegendo os dados contra brechas internas ou externas?
 - Qual sua conformidade em relação a regulações de privacidade?
 - Como é garantido a qualidade dos dados e que os dados corretos estão sendo exibidos na solução?
@@ -40,6 +42,8 @@ Aqui serão apresentadas algumas questões ou considerações que podem impactar
 - Os dados serão acessados de forma bruta ou serão ofuscados?
 
 # Segurança
+
+- [[Segurança]]
 
 ### Fontes de dados
 

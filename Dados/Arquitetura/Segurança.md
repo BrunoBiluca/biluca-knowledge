@@ -2,7 +2,41 @@
 tags:
   - segurança
 ---
+> [!info] Definição
+> A segurança garante o sigilo, a integridade e a disponibilidade dos dados da organização e dos ativos e infraestrutura de informações. Essa função é geralmente chamada de segurança da informação ou segurança cibernética nas organizações.
+
+Há também o aspecto de **conformidade** que garante cumprir os requisitos normativos em todas as funções da organização. O papel de conformidade pode ou não se desempenhado pelo tipo de segurança.
+
+### Considerações sobre segurança
+
+> [!info] Documentação
+> - [Perspectiva da AWS sobre segurança de aplicações focadas em IA](https://docs.aws.amazon.com/whitepapers/latest/aws-caf-for-ai/security-perspective-compliance-and-assurance-of-aiml-systems.html#threat-detection)
+
+As principais considerações sobre segurança caem sobre os seguintes aspectos:
+
+- Detecção de ameaças
+- Gerenciamento de vulnerabilidade
+- Proteção de infraestrutura
+- Injeção de prompt
+- Criptografia de dados
+
+# Defesa detalhada
+
+A defesa detalhada é um paradigma de construção de várias camadas de defesa redundantes que são utilizadas para proteger contas, workloads, dados e ativos.
+
+Camadas
+
+1. **Proteção de dados**
+2. **Gerenciamento de identidade e acesso**
+3. **Proteção de aplicações**
+4. **Proteção de rede e borda**
+5. **Proteção de infraestrutura**
+6. **Detecção de ameaças e resposta a incidentes**
+7. **Políticas, procedimentos e conscientização**
+
 # Exemplo de política de segurança
+
+Esse é um exemplo de política de segurança aplicado a uma organização.
 
 ### Protect Your Credentials
 

@@ -4,6 +4,8 @@ tags:
 ---
 # Python
 
+Para fazer agruparmos os arquivos de um sistema python e gerar um executável podemos utilizar o [[PyInstaller]].
+
 # Herança múltipla
 
 Herança múltipla é um mecanismo fornecido por linguagens de programação que visa a reusabilidade de código, já que classes compartilham implementações e podem passar por meio da herança.
@@ -76,71 +78,67 @@ A diferença entre Mixins e herança múltipla é sutíl e semântica, porém sa
 > 
 > - [Página do padrão](https://pythonwheels.com/)
 
-# PyInstaller
 
-Podemos empacotar um servidor python para executar como uma programa independente.
-
-- [PyInstaller](https://pyinstaller.org/en/stable/)
-
-### Empacotamento de arquivos
-
-Junto ao código que será empacotado muitas vezes precisamos ter acesso a outros arquivos para o funcionamento do servidor, como arquivos de logs, csvs e outros. Nesses casos precisamos declarar esses arquivos ou pastas para que o processo tenha acesso. Fazemos isso pela linha de comando ou pelo arquivo de configuração criado:
+# Modos de abertura de arquivos
 
 ```python
-a = Analysis(
-    ['src/api.py'],
-    pathex=['src'],
-    datas=[('./resources/classification_train.csv', './resources')], # classification_train.csv -> resources
-    # ... demais configurações
-)
-pyz = PYZ(a.pure)
-
-# ... demais configurações
+‘r’      # leitura
+‘r+’     # leitura e escrita
+‘w’      # escrita
+‘w+’     # escrita e leitura
+‘a’      # apêndices apenas
+‘rb’     # leitura em arquivo binário
+‘wb’     # escrita em arquivo binário
 ```
 
-- `pathex`: define o caminho raiz do pacote. Necessário para definir o contexto e garantir que todos os links não quebrem
-- `datas`: define os arquivos de extras carregados no pacote
+# Formatação espacial de strings
 
-Porém se apenas fizermos isso não garantimos que estamos acessando o contexto correto do arquivo, já que a hierarquia do pacote é criada da seguinte maneira:
-
-```
-- server_win
-	- _internal
-		- resources
-			- classification_train.csv
-	- server_win.exe
-```
-
-Ou seja, é adicionado uma pasta chamada `_internal` que não utilizamos durante o desenvolvimento. Para contornar esse problema precisamos definir se estamos acessando algo de um pacote ou do próprio código fonte.
-
-Foi definido um módulo python chamado `bundle_resources.py` que será utilizado em todos os pontos do código que irão acessar algum tipo de recurso. 
+A formatação espacial de strings pode ser utilizado em vários aspectos como prints e como writelines de arquivos em texto.
 
 ```python
-# bundle_resources.py
-import os
-import sys
-
-
-def base_path():
-    if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS'):
-        print('running in a PyInstaller bundle')
-        return os.path.abspath(os.path.dirname(__file__)) + "/"
-
-    print('running in a normal Python process')
-    return ""
-
-
-def open_file(file_name):
-    return open(base_path() + file_name, encoding="utf8")
-
-
-def exists(file_name):
-    return os.path.isfile(base_path() + file_name)
+self.nova_linha(f"{'Informação':<25}{'Minerado':>10}{'Sucesso':>10}")
+for i in info_mineradas:
+	self.nova_linha(f"{f'{i[0]}:':<25}{f'{i[1]}%':>10}{f'{i[2]}%':>10}")
 ```
 
-O caminho base é então definido de acordo com o tipo de processo:
-- caso seja um processo do tipo `frozen` sabemos que estamos executando a partir do pacote e então precisamos definir o caminho base como a pasta `_internal`
-- caso estejamos executando a partir de um teste ou pelo próprio código fonte o caminho base é o contexto da execução
+Tipos de alinhamento
+- `<`   :    alinhamento à esquerda
+- `^`   :    alinhamento ao centro
+- `>`   :    alinhamento à direita
 
-> [!warning] Cuidado com os caminhos que tomamos
-> Esse caso só funciona pois o módulo `bundle_resources.py` é empacotado na raiz do diretório com o código fonte, caso ele seja alterado para outro caminho esse código para de funcionar e deve ser necessário outro tipo de solução.
+O número após o tipo de alinhamento determina a quantidade de espaços serão utilizados para esse campo.
+
+# Comparadores
+
+### Comparadores de palavras
+
+| Função          | Descrição                                                                                        |
+| --------------- | ------------------------------------------------------------------------------------------------ |
+| s.startswith(t) | test if s starts with t                                                                          |
+| s.endswith(t)   | test if s ends with t                                                                            |
+| t in s          | test if t is a substring of s                                                                    |
+| s.islower()     | test if s contains cased characters and all are lowercase                                        |
+| s.isupper()     | test if s contains cased characters and all are uppercase                                        |
+| s.isalpha()     | test if s is non-empty and all characters in s are alphabetic                                    |
+| s.isalnum()     | test if s is non-empty and all characters in s are alphanumeric                                  |
+| s.isdigit()     | test if s is non-empty and all characters in s are digits                                        |
+| s.istitle()     | test if s contains cased characters and is titlecased (i.e. all words in s have initial capitals |
+
+# Operações
+
+### Operações de strings
+
+| Method          | Functionality                                                     |
+| --------------- | ----------------------------------------------------------------- |
+| s.find(t)       | index of first instance of string t inside s (-1 if not found)    |
+| s.rfind(t)      | index of last instance of string t inside s (-1 if not found)     |
+| s.index(t)      | like s.find(t) except it raises ValueError if not found           |
+| s.rindex(t)     | like s.rfind(t) except it raises ValueError if not found          |
+| s.join(text)    | combine the words of the text into a string using s as the glue   |
+| s.split(t)      | split s into a list wherever a t is found (whitespace by default) |
+| s.splitlines()  | split s into a list of strings, one per line                      |
+| s.lower()       | a lowercased version of the string s                              |
+| s.upper()       | an uppercased version of the string s                             |
+| s.title()       | a titlecased version of the string s                              |
+| s.strip()       | a copy of s without leading or trailing whitespace                |
+| s.replace(t, u) | replace instances of t with u inside s                            |

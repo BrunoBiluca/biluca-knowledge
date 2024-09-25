@@ -14,6 +14,26 @@ A governança de dados se compromete a definir vários elementos entre eles:
 - Tecnologia: a política de governança deve definir as tecnologias utilizadas.
 - Supervisão: toda organização deve ter processos que garantem o cumprimento das políticas de governança.
 - Interação e feedback: governança é algo vivo e deve ser formatado de acordo com as necessidades da organização.
+
+Principais conceitos relacionados a governança de dados:
+
+- Ciclos de vida dos dados
+- Registro de dados
+- Residência de dados
+- Monitoramento de dados
+- Análise de dados
+- Retenção de dados
+
+Estratégias de governança
+
+- Políticas
+	- Devem cobrir áreas como gerenciamento de dados, treinamento de modelos, validação de resultados, segurança e supervisão humana.
+	- Devem abranger aspectos como propriedade intelectual, mitigação de viés e proteção da privacidade.
+	- Devem ser regularmente analisadas e atualizadas de acordo com os avanços na tecnologia e nos requisitos regulatórios.
+- Frequência de revisão
+- Estratégias de análise
+- Padrões de transparência
+- Treinamento em equipe necessário
 # Pseudonimização
 
 > [!info] PII (Person Identifiable Informações)

@@ -41,3 +41,52 @@ Saúde
 - Personalizar o medicamento: planos de tratamento a partir da composição genética do paciente
 - Melhorar os exames a partir de reconstrução ou geração de imagens médicas como radiografias, ressonâncias entre outras
 
+# Defesa detalhada na AWS
+
+O desenvolvimento de aplicações de IA generativa também adicionam vários desafios no âmbito da [[Segurança]] e [[Governança de dados]], uma estratégia muito utilizada é a [[Segurança#Defesa detalhada|Defesa detalhada]].
+
+1. **Proteção de dados**
+	- Dados estacionários: criptografia a partir do AWS KMS
+	- Dados em trânsito: ACM e AWS Private CA para proteção
+
+2. **Gerenciamento de identidade e acesso**
+	- AWS IAM para controle de acesso
+
+3. **Proteção de aplicações**
+	- AWS Shield: ataques DoS
+	- Amazon Cognito: defesa contra acesso não autorizado
+
+4. **Proteção de rede e borda**
+	- Amazon VPC
+	- AWS WAF
+
+5. **Proteção de infraestrutura**
+	- AWS IAM
+	- Grupos de usuário e Listas de Controle de Acesso (ACL)
+
+6. **Detecção de ameaças e resposta a incidentes**
+	- Detecção de ameaças:
+		- AWS Security Hub
+		- Amazon GuardDuty: detecção de comportamentos mal intencionados e não autorizados
+	- Respostas a incidentes
+		- AWS Lambda
+		- Amazon EventBridge
+
+7. **Políticas, procedimentos e conscientização**
+	- Políticas de menor privilégio com AWS IAM (IAM Access Analyzer)
+	- Amazon SageMaker Role Manager para criar e gerenciar perfis para tarefas comuns de ML.
+	- Varredura de perfis e recursos com permissões excessivas
+
+## Governança e conformidade
+
+Além dos serviços utilizados para garantir a defesa detalhada da aplicação também é necessário definir as normas para os fluxos de trabalhos durante o desenvolvimento. Para isso a AWS disponibiliza também uma série de serviços:
+
+- **AWS Config:** exibição detalhada dos recursos da conta da AWS
+- **Amazon Inspector:** verifica continuamente os workloads da AWS para encontrar possíveis vulnerabilidades
+	- Vulnerabilidade de pacote
+	- Vulnerabilidade de código
+	- Acessibilidade de rede
+- **AWS Audit Manager:** automatiza a coleta de evidências para você avaliar se suas políticas, procedimentos e atividades (também chamados de controles) estão funcionando corretamente
+- **AWS Artifact:** disponibiliza para download os documentos de segurança e conformidade da AWS, como certificações ISO e relatórios de PCI e de SOC.
+- **AWS CloudTrail:** as ações de usuários, perfis ou serviços são registradas como eventos no CloudTrail a fim de ajudar na realização de auditorias
+- **AWS Trusted Advisor:** ajuda a otimizar custos, aumentar o desempenho, melhorar a segurança e a resiliência e operar em grande escala na nuvem
