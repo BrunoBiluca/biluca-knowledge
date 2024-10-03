@@ -13,11 +13,11 @@ Principais funcionalidades
 - Interface visual SageMaker Canvas voltada a analista de negócios
 - Acesso a notebooks pelo SageMaker Studio para cientistas de dados
 - Implantação, depuração e gerenciamento de modelos em escala com o SageMaker MLOps para Engenheiros de ML
-- Amazon SageMaker Clarify: serviço de avaliação de modelos base como detecção de possíveis viesses.
-- Amazon SageMaker Data Wrangler: serviço de balanceamento de dados.
-- Amazon SageMaker Model Monitor: monitora a qualidade dos modelos em produção.
-- Amazon SageMaker Autopilot: pode ser usado para fornecer informações explicáveis sobre como os modelos fazem previsões.
-- Amazon SageMaker Canvas: recurso para desenvolvimento de aplicações de ML com pouco ou sem código.
+- **Amazon SageMaker Clarify:** serviço de avaliação de modelos base como detecção de possíveis viesses.
+- **Amazon SageMaker Data Wrangler:** serviço de balanceamento de dados.
+- **Amazon SageMaker Model Monitor:** monitora a qualidade dos modelos em produção.
+- **Amazon SageMaker Autopilot:** pode ser usado para fornecer informações explicáveis sobre como os modelos fazem previsões.
+- **Amazon SageMaker Canvas:** recurso para desenvolvimento de aplicações de ML com pouco ou sem código.
 
 
 ### Precificação

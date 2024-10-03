@@ -46,6 +46,8 @@ Existem vários tipos de algoritmos de acordo com o domínio do problema que que
 	- redes neurais
 	- máquinas de vetores de suporte (SVM)
 
+Por meio de feature engineering os cientistas de dados podem alterar o comportamento dos algoritmos de ML de forma a criar, transformar, extrair e selecionar variáveis. Essas variáveis são utilizadas para alterar o algoritmo a fim de criar modelos mais complexos.
+
 # Modelo
 
 > [!info] Definição
@@ -59,6 +61,7 @@ Podemos fazer predições de duas formas:
 - Inferências em tempo real: quando tomamos decisões em resposta a novas informações a medida que elas chegam.
 
 Os modelos são calibrados a partir das [[Métricas de avaliação de modelos]]. Por meio das métricas podemos verificar a qualidade do modelo e se este é suficiente para nosso caso de uso.
+
 ### Modelos multimodais
 
 > [!info] Definição

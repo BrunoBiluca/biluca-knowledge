@@ -81,7 +81,10 @@ Quando o modelo processa essa frase usando o mecanismo de autoatenção, ele é 
 # Avaliação de modelos de linguagem
 
 Três métricas comumente usadas para essa finalidade são:
+
 - **Recall-Oriented Understudy for Gisting Evaluation (ROUGE):** métrica utilizada para avaliar fluência, coerência e a ordem da narrativa dos textos gerados. Ela é determinada a partir da sobreposição de partes do texto com um texto referência criado por humanos.
+
 - **Bilingual Evaluation Understudy (BLEU):** mede a qualidade da tradução de um texto gerado comparando com textos traduzidos por humanos.
+
 - **BERTScore:** calcula a semelhança de cosseno entre as palavras geradas e dos textos de referência. Essa métrica é capaz de capturar mais significado já que utiliza as correspondências semânticas do texto em vez das léxicas utilizadas por métricas como BLEU e ROUGE.
 

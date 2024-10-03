@@ -117,8 +117,9 @@ Principais considerações
 - Comprimento de entrada/saída: modelos podem ter limitações em relação a isso
 - Considerações sobre responsabilidade ([[IA generativa#Principais desafios]])
 - Implantação e integração
+- [[Large Language Models#Avaliação de modelos de linguagem|Avaliação de modelos de linguagem]]
 
-Os principais modelos no mercado podem ser encontrados no [[Amazon Bedrock#Modelos disponíveis]]
+Os principais modelos no mercado podem ser encontrados no [[Amazon Bedrock#Modelos disponíveis]].
 ## Melhore o desempenho
 
 Após a seleção do modelo base é preciso concentrar em melhorar o desempenho do modelo para o caso de uso definido. Isso pode ser feito a partir de algumas técnicas como:
@@ -127,12 +128,13 @@ Após a seleção do modelo base é preciso concentrar em melhorar o desempenho 
 - [[RAG (Retrieval Augmented Generation)]]
 - Ajuste fino
 - Agentes de automação
+- ROUGE (Recall-Oriented Understudy for Gisting Evaluation) é uma métrica utilizada para avaliar a qualidade de geração de textos e resumo de textos.
 
 O [[Amazon Bedrock]] é um serviço que pode ser utilizado para reunir fontes de dados de vários domínios e melhorar o desempenho do modelo escolhido.
 
 ### Ajuste fino
 
-O ajuste fino é um processo mais direcionado, em que um modelo pré-treinado é adaptado para tr um bom desempenho em uma tarefa específica ou em uma área específica.
+O ajuste fino é um processo mais direcionado, em que um modelo pré-treinado é adaptado para ter um bom desempenho em uma tarefa específica ou em uma área específica.
 
 - Especificidade: o conjunto de dados no ajuste fino é muito mais focado
 - Alta relevância

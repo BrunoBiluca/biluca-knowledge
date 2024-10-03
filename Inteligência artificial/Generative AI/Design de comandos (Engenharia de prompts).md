@@ -2,7 +2,12 @@
 tags:
   - inteligência_artificial
 ---
-A utilização de IAs generativas depende bastante da forma que as ações são especificadas, pode-se mudar completamente o resultado do que foi pedido dependendo da forma que foi descrito esse pedido.
+> [!info] O que é?
+> Design ou engenharia de comandos (Prompt engineering) é o processo de definir e refinar as entradas para o modelo a fim de estimular um resultado específico. Esse processo involve definir palavras chave, contexto e formatos de entrada para encorajar o modelo a produzir a resposta desejada.
+> 
+> Técnicas de engenharia de comandos podem ser utilizados para definir estilo, tom e formato da escrita na resposta gerada pelo modelo, por exemplo.
+
+A utilização de IAs generativas dependem bastante da forma que as ações são especificadas, pode-se mudar completamente o resultado do que foi pedido dependendo da forma que foi descrito esse pedido.
 
 > [!tip] Estratégias de design de comandos
 > - [Estratégias gerais de comandos (Google)](https://cloud.google.com/vertex-ai/generative-ai/docs/learn/prompts/prompt-design-strategies?hl=pt-br)
@@ -20,10 +25,9 @@ Quando fazemos um pedido para uma IA podemos utilizar os seguintes elementos par
 > ```python
 > # Instruções
 > Gere um relatório de análise de mercado para uma nova categoria de produto.
-> 
-> # Não foi indicado nem contexto, nem entradas nem formato de saída
 > ```
 > 
+> Esse comando não foi indicado nem contexto, nem entradas nem formato de saída
 
 > [!tip]- Comando bem estruturado
 > 
@@ -50,6 +54,7 @@ Quando fazemos um pedido para uma IA podemos utilizar os seguintes elementos par
 > # formato de saída
 > Status de atendimento:
 > ```
+> Aqui já temos todos os principais componentes definidos para encorajar o modelo a produzir uma resposta.
 
 # Técnicas na criação de prompts
 ### Técnicas do ponto de vista do usuário para melhorar o resultado obtido
@@ -68,6 +73,7 @@ Quando fazemos um pedido para uma IA podemos utilizar os seguintes elementos par
 
 - Elaboração de prompts zero-shot
 - Elaboração de prompts few-shot
+	- Pode ser principalmente utilizado para definir padrões personalizados de respostas, por exemplo o tom e estilo de escrita da resposta pode ser personalizado a partir de alguns exemplos fornecidos.
 - Elaboração de prompts com cadeia de pensamento (CoT)
 - Autoconsistência
 - Árvore de pensamentos (ToT)

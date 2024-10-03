@@ -18,12 +18,15 @@ São serviços que oferecem soluções prontas para uso.
 - **Amazon Lex**: serviço para criação de interfaces de conversação por texto ou voz.
 - **Amazon Polly**: transforma texto em voz.
 - **Amazon Transcribe**: transforma fala em texto.
+	- Pode ser configurado para melhorar a acurácia em relação a termos específicos de cada domínio, como nomes, marcas, acrônimos, palavras técnicas e jargões.
 - **Amazon Rekognition**: análise de imagens e vídeos.
+	- Para treinar o modelo é necessário um conjunto de imagens rotuladas.
 - **Amazon Kendra**: serviço de pesquisa.
 - **Amazon Personalize**: serviço de criação de recomendações para usuários.
 - **Amazon DeepRacer**: serviço de treinamento para novos desenvolvedores de ML
 
 # Frameworks ML
+
 - [[Amazon SageMaker]]
 
 
