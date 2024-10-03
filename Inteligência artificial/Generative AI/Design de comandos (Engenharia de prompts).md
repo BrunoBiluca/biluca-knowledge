@@ -86,12 +86,16 @@ Quando fazemos um pedido para uma IA podemos utilizar os seguintes elementos par
 Ao interagir com modelos base, podemos configurar parâmetros de inferência para limitar ou influenciar a resposta do modelo. Estes se encaixam em diversas categorias, sendo *aleatoriedade e diversidade* e *comprimento* as duas mais comuns.
 
 - *aleatoriedade e diversidade*: influenciam a variação nas respostas geradas, limitando as saídas a resultados mais prováveis ou alterando a forma da distribuição de probabilidade das saídas.
-	- Temperatura: controla a aleatoriedade do modelo
-	- Top P: limita o número de palavras que o modelo pode escolher de acordo com as probabilidades
-	- Top K: limita as palavras mais prováveis, independentemente de suas probabilidades percentuais
+	- **Temperatura:** controla a aleatoriedade do modelo
+	- **Top P:** limita o número de palavras que o modelo pode escolher de acordo com as probabilidades
+	- **Top K:** limita as palavras mais prováveis, independentemente de suas probabilidades percentuais
 - *comprimento*: configurações que controlam o comprimento máximo de saída gerada
-	- Comprimento máximo: 
-	- Sequências de interrupção: As sequências de interrupção são tokens ou sequências de tokens especiais que sinalizam ao modelo para parar de gerar outras saídas
+	- **Comprimento máximo**
+	- **Sequências de interrupção (stop sentences):** As sequências de interrupção são tokens ou sequências de tokens especiais que sinalizam ao modelo para parar de gerar outras saídas
+	- **Janela de contexto:** é a quantidade de tokens que um modelo pode aceitar para o contexto.e
+
+> [!info] Documentações
+> - [Influência dos parâmetros em respostas geradas com exemplos](https://docs.aws.amazon.com/bedrock/latest/userguide/inference-parameters.html)
 
 # Riscos e usos indevidos de comandos
 

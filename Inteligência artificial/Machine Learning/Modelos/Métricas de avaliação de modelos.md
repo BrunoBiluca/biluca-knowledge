@@ -13,9 +13,11 @@ Algumas métricas comuns para a avaliação do modelo de classificação são:
 	- Acurácia = `(TP + TN) / (TP + TN + FP + FN)`
     
 2. **Precisão (Precision)**: A proporção de exemplos positivos corretamente identificados pelo modelo em relação ao total de exemplos identificados como positivos pelo modelo. É útil quando o foco está na minimização de falsos positivos.
+	- Podem ser usados para casos de classificação, não para casos de regressão.
 	- Precisão = `TP / (TP + FP)`
     
 3. **Revocação (Recall ou Sensibilidade)**: A proporção de exemplos positivos corretamente identificados pelo modelo em relação ao total de exemplos positivos no conjunto de dados. É útil quando o foco está na minimização de falsos negativos.
+	- Podem ser usados para casos de classificação, não para casos de regressão.
 	- Revocação = `TP / (TP + FN)`
     
 4. **F1-Score**: A média harmônica entre precisão e revocação. É útil para encontrar um equilíbrio entre as duas métricas quando elas têm importância semelhante. Quanto mais próximo de 1 indica uma maior perfeição entre precisão e revocação, quando mais próxima de 0 indica que ou precisão ou revocação são 0.

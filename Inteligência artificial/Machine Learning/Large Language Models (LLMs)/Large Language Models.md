@@ -55,8 +55,10 @@ O modelo Transformer tem um componente chave definido pela atenção de múltipl
 
 > [!info] Definição
 > Vetores de embedding são representações dos pesos das palavras que quantifica o quão bem o modelo está em um determinada tarefa, como prever a próxima palavra em uma sequência de texto.
+> 
+> Esse formato de vetores podem capturar relações semânticas entre as palavras e são um componente essencial para modelos de geração de texto.
 
-Abordagens comuns para aprender os vetores de embedding de palavras:
+Abordagens comuns para criar os vetores de embedding de palavras:
 
 1. **Embeddings de palavras pré-treinados**: Utilizar embeddings de palavras pré-treinados, como Word2Vec, GloVe ou FastText, que foram treinados em grandes quantidades de texto não rotulado. 
     

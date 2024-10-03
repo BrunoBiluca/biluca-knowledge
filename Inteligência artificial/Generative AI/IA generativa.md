@@ -80,6 +80,7 @@ Ciclo de vida ds aplicações de IA generativa
 - Melhore o desempenho
 - Avalie os resultados
 - Implante a aplicação
+- Monitoramento da aplicação
 
 É importante observar que o ciclo de vida da aplicação de IA generativa é um processo iterativo, devemos levar em consideração as métricas de desempenho, avaliações dos usuários e qualquer outro tipo de dado que possa ser coletado para melhorar o modelo.
 
@@ -129,6 +130,7 @@ Após a seleção do modelo base é preciso concentrar em melhorar o desempenho 
 - Ajuste fino
 - Agentes de automação
 - ROUGE (Recall-Oriented Understudy for Gisting Evaluation) é uma métrica utilizada para avaliar a qualidade de geração de textos e resumo de textos.
+- **Pré-treinamento continuado de modelos base:** pode ser utilizado para ajudar o modelo a entender terminologia específica de um domínio.
 
 O [[Amazon Bedrock]] é um serviço que pode ser utilizado para reunir fontes de dados de vários domínios e melhorar o desempenho do modelo escolhido.
 
@@ -139,6 +141,8 @@ O ajuste fino é um processo mais direcionado, em que um modelo pré-treinado é
 - Especificidade: o conjunto de dados no ajuste fino é muito mais focado
 - Alta relevância
 - Qualidade mais importante que quantidade
+
+O ajuste fino depende de uma base de **dados rotuladas.**
 
 ## Avalie os resultados
 

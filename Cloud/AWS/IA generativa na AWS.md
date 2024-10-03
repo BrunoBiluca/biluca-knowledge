@@ -8,6 +8,7 @@ Para conceitos gerais de [[IA generativa]].
 - [[Amazon Bedrock]]: disponibiliza modelos base (FM) da Amazon de das principais startups de IA por meio de uma API.
 - **Amazon Q**: serviços de perguntas e respostas gerais
 - **Amazon Q Developer**: serviço de recomendação de código
+- **Amazon Q Business:** serviço de perguntas e respostas utilizando os dados do próprio cliente. É possível configurar uma solução RAG para consultar documentos e arquivos no S3 e gerar respostas.
 # Serviços AI/ML
 
 São serviços que oferecem soluções prontas para uso.
@@ -24,10 +25,13 @@ São serviços que oferecem soluções prontas para uso.
 - **Amazon Kendra**: serviço de pesquisa.
 - **Amazon Personalize**: serviço de criação de recomendações para usuários.
 - **Amazon DeepRacer**: serviço de treinamento para novos desenvolvedores de ML
+- **Amazon Macie:** utiliza ML para descobrir, monitorar e proteger dados sensíveis armazenados no [[Amazon S3]]
+- **Amazon A2I:** provê um fluxo de trabalho para audição humana a respostas selecionadas. A partir das avaliações humanas pode-se ajudar na avaliação de toxicidade e tom das respostas enviadas pelo modelo.
 
 # Frameworks ML
 
-- [[Amazon SageMaker]]
+- [[Amazon SageMaker]] é um serviço e um framework de desenvolvimento de IA para múltiplas aplicações
+- **Generative AI Security Scoping Matrix:** é um framework que pode ser utilizado para classificar casos de uso de IA Generativa. Podemos utilizar esse serviço para determinar o nível de propriedade de um caso de uso.
 
 
 # Casos de uso
