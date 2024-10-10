@@ -10,7 +10,6 @@ tags:
 > - [Tutorial de Flutter](https://www.youtube.com/watch?v=1ukSR1GRtMU&list=PL4cUxeGkcC9jLYyp2Aoh6hcWuxFDX6PBJ)
 >- [Filledstacks - Site voltado a tutoriais simples e diretos de flutter](https://www.filledstacks.com/)
 
-
 Flutter é muito inspirado pelo React, tanto em seus componentes quanto no formato de desenvolvimento.
 
 Vantagens
@@ -42,7 +41,6 @@ Layouts
 Componentes prontos
 
 - AppBar: barra superior do app utilizado em todas as páginas
-
 
 ## Navigator
 
@@ -109,90 +107,6 @@ ORM
 - https://pub.dev/packages/orm
 	- funciona apenas com iOS/Android e banco de dados SQLite
 
-# Gráficos (Charts)
-
-### fl_chart
-
->[!info] Documentação
-> - [Página do pacote](https://github.com/imanneo/fl_chart)
-
-Biblioteca para a renderização de gráficos. Possui um grande número de tipos de gráficos disponíveis e várias opções.
-
-Exemplo de um gráfico de barras
-
-```dart
-// ...
-BarChart(
-  BarChartData(
-	alignment: BarChartAlignment.spaceEvenly,
-	titlesData: FlTitlesData(
-	  show: true,
-	  bottomTitles: AxisTitles(
-		sideTitles: SideTitles(
-		  showTitles: true,
-		  reservedSize: 28,
-		  getTitlesWidget: bottomTitles,
-		),
-	  ),
-	  leftTitles: const AxisTitles(
-		sideTitles: SideTitles(
-		  showTitles: true,
-		  reservedSize: 40,
-		),
-	  ),
-	  // os títulos são exibidos por padrão
-	  topTitles: const AxisTitles(
-		sideTitles: SideTitles(showTitles: false),
-	  ),
-	  rightTitles: const AxisTitles(
-		sideTitles: SideTitles(showTitles: false),
-	  ),
-	),
-	gridData: FlGridData(
-	  show: true,
-	  checkToShowHorizontalLine: (value) => value % 5 == 0,
-	  getDrawingHorizontalLine: (value) => FlLine(
-		color: Colors.grey.withOpacity(.5),
-		strokeWidth: 1,
-	  ),
-	  drawVerticalLine: false,
-	),
-	borderData: FlBorderData(
-	  show: false,
-	),
-	barGroups: barGroups(),
-  ),
-)
-// ...
-
-// Exemplo de instanciação de grupos para exibir as barras
-// Aqui uma lista é iterada para criar cada grupo uma barra
-List<BarChartGroupData> barGroups() {
-	return accountabilityByIdentification
-		.asMap()
-		.map(
-		  (i, e) => MapEntry(
-			i,
-			BarChartGroupData(
-			  x: i,
-			  barRods: [
-				BarChartRodData(
-				  toY: e.total.abs(),
-				  color: e.field.color,
-				  borderSide: e.total < 0
-					  ? const BorderSide(color: Colors.redAccent, width: 3)
-					  : const BorderSide(color: Colors.green, width: 3),
-				  width: barWidth,
-				),
-			  ],
-			),
-		  ),
-		)
-		.values
-		.toList();
-}
-```
-
 
 # Visual e estilo
 
@@ -233,3 +147,62 @@ class MyCustomClass {
   }
 }
 ```
+
+# Formulários
+
+### Máscara monetária em reais
+
+```dart
+import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
+
+class RealInputFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    if (newValue.selection.baseOffset == 0) {
+      return newValue;
+    }
+
+    String currText = newValue.text;
+    if (newValue.text == "-") {
+      currText = "-0";
+    }
+
+    final formatter = NumberFormat.simpleCurrency(locale: "pt_Br");
+    String newText = formatter.format(parse(currText)).replaceAll('\u00A0', " ");
+    return newValue.copyWith(text: newText, selection: TextSelection.collapsed(offset: newText.length));
+  }
+
+  double parse(String value) =>
+      double.parse(
+        value.replaceAll('.', '').replaceAll(",", "").replaceAll("R\$", "").replaceAll(" ", "").trim(),
+      ) /
+      100;
+}
+
+// uso em um componente de campo
+TextField(
+  inputFormatters: [RealInputFormatter()],
+);
+```
+
+# Publicação
+
+A publicação de um app em flutter deve ser feito pelo comando:
+
+```powershell
+flutter build <plataforma>
+```
+
+Nesse processo o flutter busca todos os arquivos definido no `pubspec.yaml`.
+
+> [!info]- Especificidades do windows
+> - `*.dll(s)` específicas devem ser copiadas para a pasta de `./build\windows\x64\runner\Release`.
+
+> [!tip] Logging
+> Logging é uma funcionalidade crucial principalmente após a publicação já que perdemos a possibilidade de verificar o console para as mensagens da aplicação e é necessário exibir essas informações em um formato de texto.
+> 
+> Para isso podemos utilizar a implementação definida em [[Logging]]
