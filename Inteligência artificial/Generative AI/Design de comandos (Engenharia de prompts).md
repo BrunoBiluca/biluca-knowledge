@@ -104,3 +104,26 @@ Ao interagir com modelos base, podemos configurar parâmetros de inferência par
 - Exposição e vazamento de comandos: divulgação de dados ou entradas que sejam sensíveis ao modelo e não deveriam ser informadas a nenhum usuário.
 - Jailbreak é a prática de modificar ou contornar as restrições e medidas de segurança implementadas em um modelo.
 
+### Injeção de comandos
+
+Injeção de comandos pode resultar na geração de conteúdo danoso pelo modelo por meio de comandos impróprios adicionados pelos usuários.
+
+Para solucionar esse tipo de problema podemos adicionar instruções ao template dos comandos enviados para o modelo de forma a limpar requisições que consideramos indesejadas. Por exemplo, especificar como tratar requisições a tópicos não relacionados ou identificar ataques mais comuns.
+
+Ataques comuns de injeção de comandos:
+
+- **Troca de personas:** podemos fazer o modelo adotar uma persona específica em suas respostas (ex: responda como um desenvolvedor experiente), um ataque é o de trocar essa persona.
+- **Extração do template de comandos:** nesse ataque é pedido para exibir todos as instruções definidas no template. Isso oferece riscos ao modelo para ataques futuros sobre vulnerabilidades.
+- **Ignorar o template de comandos:** esse ataque consiste em fazer o modelo ignorar o template de comandos definido.
+- **Alterar linguagens e caracteres escapados:** utiliza várias linguagens e caracteres escapados para alimentar o modelo de instruções conflituosas.
+- **Extrair histórico de conversas:** pode conter informações sensíveis.
+- **Adição ao template de comandos:** causa o modelo a adicionar instruções ao seu próprio template.
+- **Falsa conclusão:** nesse ataque o comando enviado para o modelo é abruptamente encerrado, o que pode fazer o modelo ignorar suas próprias instruções.
+- **Ataques comuns por ofuscações e reformulações** 
+- **Alteração do formato de resposta**
+- **Alteração do formato de entrada**
+- **Exploração de simpatia e confiança:** explora a boa vontade do modelo para fazer suas próprias vontades e ignorar seu template de instruções.
+
+
+> [!info] Documentação
+> - [Ataques comuns de injeção de comandos](https://docs.aws.amazon.com/prescriptive-guidance/latest/llm-prompt-engineering-best-practices/common-attacks.html)

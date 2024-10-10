@@ -31,7 +31,42 @@ São serviços que oferecem soluções prontas para uso.
 # Frameworks ML
 
 - [[Amazon SageMaker]] é um serviço e um framework de desenvolvimento de IA para múltiplas aplicações
-- **Generative AI Security Scoping Matrix:** é um framework que pode ser utilizado para classificar casos de uso de IA Generativa. Podemos utilizar esse serviço para determinar o nível de propriedade de um caso de uso.
+- **Generative AI Security Scoping Matrix:** 
+
+### Generative AI Security Scoping Matrix
+
+É um framework que pode ser utilizado para classificar casos de uso de IA Generativa. Podemos utilizar esse framework para identificar a partir do nosso caso de uso quais são os pontos que devem ser considerados para garantir a segurança. [Artigo de descrição do framewok](https://aws.amazon.com/pt/blogs/security/securing-generative-ai-an-introduction-to-the-generative-ai-security-scoping-matrix/).
+
+O framework trabalha com 5 tipos de escopo das aplicações, dependendo da complexidade e personalização dos modelos de ML.
+
+1. **App para usuário**
+	- Uso público de serviços de IA generativa
+	- Ex: ChatGPT, Midjourney
+
+2. **App para empresas**
+	- Uso restrito a apps e SaaS com funções de IA generativa
+	- Ex: Salesforce Einstein GPT, Amazon CodeWhisperer (que pode ser restrito a pessoas de uma empresa)
+
+3. **Modelos pré-treinados**
+	- Construção do app a partir de um modelo já treinado
+	- Ex: Amazon Bedrock
+
+4. **Modelos com ajuste fino**
+	- Ajuste fino de um modelo com dados próprios
+	- Ex: Amazon Bedrock com modelos personalizados, Amazon SageMaker Jumpstart
+
+5. **Modelos próprios**
+	- Criação de um modelo do zero
+	- Ex: Amazon SageMaker
+
+Requisitos de segurança aplicados aos escopos
+
+- Governança e compliance
+- Privacidade e Legislação
+- Gerenciamento de riscos
+- Controladores
+- Resiliência
+
 
 
 # Casos de uso

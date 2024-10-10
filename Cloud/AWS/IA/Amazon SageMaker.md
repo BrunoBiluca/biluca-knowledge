@@ -18,7 +18,11 @@ Principais funcionalidades
 - **Amazon SageMaker Model Monitor:** monitora a qualidade dos modelos em produção.
 - **Amazon SageMaker Autopilot:** pode ser usado para fornecer informações explicáveis sobre como os modelos fazem previsões.
 - **Amazon SageMaker Canvas:** recurso para desenvolvimento de aplicações de ML com pouco ou sem código.
+- **Amazon SageMaker Model Cards:** cria registros e documentos detalhados sobre os modelos ML em um único local. Ele suporta a transparência e explicabilidade do modelo.
+- **Amazon SageMaker Ground Truth:** usa avaliações humanas para criar bases de dados rotuladas.
+- **Amazon SageMaker Model Registry:** registro de modelos ML.
 
+Com o SageMaker Jump Start é possível ter acesso a vários modelos base open source apenas fazendo o host desses modelos e controle dos endpoints.
 
 ### Precificação
 [Página de precificação](https://aws.amazon.com/pt/sagemaker/pricing/?nc=sn&loc=4)

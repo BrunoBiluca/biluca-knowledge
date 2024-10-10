@@ -130,10 +130,16 @@ Após a seleção do modelo base é preciso concentrar em melhorar o desempenho 
 - Ajuste fino
 - Agentes de automação
 - ROUGE (Recall-Oriented Understudy for Gisting Evaluation) é uma métrica utilizada para avaliar a qualidade de geração de textos e resumo de textos.
-- **Pré-treinamento continuado de modelos base:** pode ser utilizado para ajudar o modelo a entender terminologia específica de um domínio.
+- **Pré-treinamento continuado de modelos base:** pode ser utilizado para ajudar o modelo a entender terminologia específica de um domínio com dados não rotulados, diferente do Ajuste fino.
 
 O [[Amazon Bedrock]] é um serviço que pode ser utilizado para reunir fontes de dados de vários domínios e melhorar o desempenho do modelo escolhido.
 
+Cada uma das técnicas de otimização do desempenho do modelo tem um custo (tempo de desenvolvimento e recursos) significante que deve ser levado em consideração. As técnicas de otimização do menor custo para o maior são
+
+➕                 Design de comandos
+➕➕            RAG
+➕➕➕       Ajuste fino das instruções enviadas para o modelo
+➕➕➕➕  Ajuste fino do modelo
 ### Ajuste fino
 
 O ajuste fino é um processo mais direcionado, em que um modelo pré-treinado é adaptado para ter um bom desempenho em uma tarefa específica ou em uma área específica.
@@ -142,7 +148,9 @@ O ajuste fino é um processo mais direcionado, em que um modelo pré-treinado é
 - Alta relevância
 - Qualidade mais importante que quantidade
 
-O ajuste fino depende de uma base de **dados rotuladas.**
+O ajuste fino depende de uma base de **dados rotuladas** de domínio específico.
+
+Outro tipo de ajuste fino é baseado nas instruções enviadas para o modelo, também é utilizado uma base de dados rotulados só que estes são formatados como pares de comandos-respostas fraseados como instruções, melhorando assim o entendimento do modelo sobre sua tarefa e consequentemente a assertividade da resposta.
 
 ## Avalie os resultados
 

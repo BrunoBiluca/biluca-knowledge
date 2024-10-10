@@ -9,3 +9,14 @@ A certificação **AWS Certified AI Practitioner** valida o conhecimento requi
 Conteúdos preparatórios
 - [AWS-Certified-AI-Practitioner_Exam-Guide.pdf](https://prod-files-secure.s3.us-west-2.amazonaws.com/7c4213f1-a5a9-4b17-8555-03adde7f2175/24ce6a4a-8f59-41c6-b01a-74677210d61d/AWS-Certified-AI-Practitioner_Exam-Guide.pdf)
 - [https://explore.skillbuilder.aws/learn/learning_plan/view/2194/plan](https://explore.skillbuilder.aws/learn/learning_plan/view/2194/plan)
+
+
+Tópicos relacionados
+
+- [[IA generativa na AWS]]
+	- [[Amazon SageMaker]]
+- [[IA generativa]]
+	- [[Design de comandos (Engenharia de prompts)]] 
+- [[Machine Learning]]
+	- [[Métricas de avaliação de modelos]]
+- [[Large Language Models]]

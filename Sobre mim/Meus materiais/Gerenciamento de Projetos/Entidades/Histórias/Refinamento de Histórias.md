@@ -8,6 +8,7 @@ Qualquer pessoa envolvida no desenvolvimento ou impactada pela história deve te
 - Possuem uma estimativa para implementação
 Esse ponto é muito importante, o ponto de implementação não é apenas uma estimativa de tempo de desenvolvimento em relação a programação, mas do ponto que a História foi iniciada até o valor ter sido entregue para o usuário final.
 
+Esse aspectos são trabalhados na [[💎 Reunião de refinamento de Histórias]].
 # Método INVEST
 
 Uma ótima forma de pensar em Histórias de Usuário é utilizando o método INVEST:
