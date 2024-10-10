@@ -4,6 +4,15 @@ Podemos empacotar um servidor python para executar como uma programa independent
 
 - [PyInstaller](https://pyinstaller.org/en/stable/)
 
+### Arquivo spec
+
+Quando um projeto é empacotado para gerar o executável ele chama 4 funções:
+
+- **Analysis**
+- **EXE**
+- **PYZ**
+- **COLL** utilizado para gerar o resultado como um diretório (remover isso monta o executável em um único arquivo).
+
 ### Empacotamento de arquivos
 
 Junto ao código que será empacotado muitas vezes precisamos ter acesso a outros arquivos para o funcionamento do servidor, como arquivos de logs, csvs e outros. Nesses casos precisamos declarar esses arquivos ou pastas para que o processo tenha acesso. Fazemos isso pela linha de comando ou pelo arquivo de configuração criado:
