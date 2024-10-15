@@ -206,3 +206,36 @@ Nesse processo o flutter busca todos os arquivos definido no `pubspec.yaml`.
 > Logging é uma funcionalidade crucial principalmente após a publicação já que perdemos a possibilidade de verificar o console para as mensagens da aplicação e é necessário exibir essas informações em um formato de texto.
 > 
 > Para isso podemos utilizar a implementação definida em [[Logging]]
+
+
+# Uso de teclado (windows)
+
+Para utilizar teclados e outros periféricos utilizamos a biblioteca `service`.
+
+```dart
+import 'package:flutter/services.dart';
+  
+// ... demais código
+@override
+void initState() {
+	ServicesBinding.instance.keyboard.addHandler(_onKey);
+}
+
+@override
+void dispose() {
+	ServicesBinding.instance.keyboard.removeHandler(_onKey);
+}
+
+bool _onKey(KeyEvent event) {
+	String key = event.logicalKey.keyLabel;	
+	if (event is KeyDownEvent && key == "Arrow Down") {
+		// ...
+	} else if (event is KeyDownEvent && key == "Arrow Up") {
+		// ...
+	} else if (event is KeyDownEvent && key == "Enter") {
+		// ...
+	}
+	return false;
+}
+// ... demais código
+```
