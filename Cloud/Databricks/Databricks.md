@@ -55,16 +55,15 @@ Existem dois tipos de permissões de cluster
 | Redimensionar o processamento             |               |             | ✅          |
 | Modificar permissões                      |               |             | ✅          |
 
-
 ## Databricks secrets
 
-> [!info] Documentação
+> [!info] O que é?
+> Databricks secrets permitem que você armazene credenciais e as referencie em notebooks e jobs.
+> 
 > - [Redaction]([https://docs.databricks.com/security/secrets/redaction.html](https://docs.databricks.com/security/secrets/redaction.html))
 > - [Secrets]([https://docs.databricks.com/security/secrets/index.html](https://docs.databricks.com/security/secrets/index.html))
 
-Databricks secrets permitem que você armazene credenciais e as referencie em notebooks e jobs.
-
-Para manter as credenciais secretas quando lidas utilizando o comando `dbutils.secrets.get()` e exibidas como saída de uma célula os valores serão alterados para uma string `[REDACTED]`.
+Para manter as credenciais secretas quando lidas utilizando o comando `dbutils.secrets.get()`. Qualquer leitura a partir da API de segredos garante a confidencialidade da informação, mesmo que um usuário exiba como saída de uma célula os valores serão alterados para uma string `[REDACTED]`.
 
 As permissões de acesso ao secrets são:
 
@@ -89,11 +88,11 @@ Comandos mágicos que podem ser utilizados nos notebooks do Databricks para vár
 Sobre o `%sh`:
 - Reinicia o interpretador do Python
 - Executa o código shell sobre a máquina driver local aumentando a sobrecarga de trabalho
-- não pode acessar o armazenamento para persistir a saída
+- Não pode acessar o armazenamento para persistir a saída
 
 ### Adicionando parâmetros aos Notebooks
 
-[Widgets](https://docs.databricks.com/pt/notebooks/widgets.html)
+Para adicionarmos parâmetros os notebook utilizamos a funcionalidade de [Widgets](https://docs.databricks.com/pt/notebooks/widgets.html)
 
 ```python
 ​​dbutils.widgets.text("param1", "default")
@@ -118,6 +117,7 @@ RETURN CASE
 	ELSE "É isso ai"
 END;
 
+-- exemplo de uso da função
 SELECT *, item_preference(name, price) FROM item_lookup
 ```
 
@@ -144,12 +144,14 @@ SELECT sql_udf(thing) as transformed_thing from table_a
 
 # Ingestão
 
+A plataforma Databricks permite múltiplas formas de gerenciar dados por meio de ingestão.
+
 ## Fontes externas
 
 > [!info] Documentação
-> [Objetos de banco de dados em Databrics - Tabelas não gerenciadas](https://docs.databricks.com/pt/database-objects/index.html#what-is-an-unmanaged-table)
+> [Objetos de banco de dados em Databricks - Tabelas não gerenciadas](https://docs.databricks.com/pt/database-objects/index.html#what-is-an-unmanaged-table)
 
-Tabelas externas não são gerenciadas pelo Databricks, assim apenas os metadados dessas tabelas são armazenados pela Databrics.
+Tabelas externas não são gerenciadas pelo Databricks, assim apenas os metadados dessas tabelas são armazenados pela Databricks.
 
 Fontes externas podem ser extraídas por:
 - Sistema de arquivos
@@ -178,9 +180,9 @@ Essa seção está interessada em discutir os principais conceitos, funcionalida
 
 ### Otimização no Delta lake
 
-Como o Delta lake trabalha com logs de transação para definir seu estado, são criados vários arquivos pequenos com cada transformação feita, isso pode ocasionar problemas de performance nas consultas já que quando uma consulta é feita ela consulta esse histórico para definir o estado da base de dados.
+O Delta lake pode sofrer com **problemas de performance** a medida que seu estado é alterado. Isso ocorre porque são criados vários arquivos pequenos a cada transformação feita, o que faz a consulta desse histórico ser mais onerosa a cada consulta feita.
 
-Dessa forma é indicado utilizar o versionamento do Delta lake apenas para versões mais recentes e de tempos em tempos remover os registros mais antigos.
+É indicado utilizar o **versionamento do Delta lake apenas para versões mais recentes** e de tempos em tempos remover os registros mais antigos.
 
 ```sql
 -- exemplo de limpeza de base
@@ -192,7 +194,7 @@ VACUUM students RETAIN 0 HOURS DRY RUN
 
 ### CTAS (Create Tables as Select)
 
-Automaticamente inferem o esquema sendo uma boa forma de consumir dados externos bem estruturados como parquet. Essas tabelas são criadas a partir do resultado de uma consulta e **não tem nenhum tipo de ligação com a tabela fonte**, assim mesmo que as tabelas utilizadas como fontes forem removidas as tabelas criadas como CTAS continuam operando normalmente.
+CTAS são tabelas que automaticamente inferem seu esquema quando criadas a partir dados externos bem estruturados como parquet. Essas tabelas são criadas a partir do resultado de uma consulta e **não tem nenhum tipo de ligação com a tabela fonte**, assim mesmo que as tabelas utilizadas como fontes forem removidas as tabelas criadas como CTAS continuam operando normalmente.
 
 ```sql
 -- Definição da tabela purchases através de CTAS
@@ -258,11 +260,11 @@ Databricks tem duas formas de orquestração
 > - Agendamento (Quando?)
 > - Cluster (Como?)
 >   
-> Com essas 3 perguntas respondidas podemos definir então o projeto.
+> Essas 3 perguntas são importantes para definirmos o projeto a fim de otimizarmos sua eficiência, seja na questão dos custos, performance, qualidade entre outras questões.
 
 ## Databricks CLI
 
-Criando um workflow programaticamente utilizando a própria API do databricks:
+Criando um workflow programaticamente utilizando a própria API do Databricks:
 
 ```python
 import time
@@ -334,10 +336,10 @@ Cada linha da tabela deve definir um valor de sequência, esse valor é utilizad
 
 Para garantir que apenas uma entrada seja capturada podemos utilizar a função `rank().over(window)` por exemplo ou outras funções [[Funções nativas#Window Functions]].
 
-# Visualizações
+# Visualizações (Views)
 
 > [!info] Definição
-> Visualizações são tabelas que definem um tipo específico de informação assim facilitando a leitura pelo consumidor. Na plataforma do Databricks temos vários tipos de visualizações que podemos utilizar.
+> Visualizações são tabelas que definem um tipo específico de informação assim facilitando a leitura pelo consumidor. Essa tabelas podem ter os mais diversos formatos e configurações como: visualizações materializadas, dinâmicas ou temporárias.
 > 
 > - [Conceitos gerais de visualizações](https://docs.databricks.com/en/views/index.html)
 

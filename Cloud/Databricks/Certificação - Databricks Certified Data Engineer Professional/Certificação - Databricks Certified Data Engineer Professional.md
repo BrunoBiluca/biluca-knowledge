@@ -33,3 +33,14 @@ O exame cobre:
 E repositórios de questões
 
 - [Examtopics](https://www.examtopics.com/exams/databricks/certified-data-engineer-professional/view/)
+
+### Tópicos relacionados
+
+Principais conceitos
+
+- [[Databricks]]
+- [[Apache Spark]]
+
+Exemplos de implementações
+
+- [[Exemplo - Loja de livros]]

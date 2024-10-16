@@ -7,8 +7,8 @@ Esse exemplo visa demonstrar a implementação de uma arquitetura completa de pr
 
 Ao final desse exemplo teremos obtidos as seguintes visualizações de dados:
 
-- Estatísticas de vendas por países
-- Estatísticas de vendas por autores
+- Estatísticas de vendas por países quando requisitado
+- Estatísticas de vendas por autores em tempo real
 
 ### Arquitetura
 
@@ -63,7 +63,7 @@ Livros_Vendas -.-> Estatísticas_Autores_VW
 
 # Implementação
 
-A loja de livros cataloga todos os eventos em um servidor com [[Apache Kafka]], esse tipo de ingestão é chamada de Multiplex, já que uma única fonte consolida vários tipos diferentes de informações. 
+A loja de livros cataloga todos os eventos em um servidor com [[Apache Kafka]], esse tipo de ingestão é chamada de *Multiplex*, já que uma única fonte consolida vários tipos diferentes de informações. 
 
 O formato dos eventos no Kafka são o seguinte:
 
@@ -108,13 +108,13 @@ Para a ingestão iremos utilizar uma única tabela que recebe todos os eventos d
 		 .table("bronze"))
 ```
 
-A ingestão dos dados foi feita para uma tabela chamada `bronze` que está *particionada em relação ao mês e ano* (`year_month`) que é obtido a partir do campo `timestamp` quando um evento é persistido no Kafka.
+A ingestão dos dados foi feita para uma tabela chamada `bronze` que está *particionada em relação ao mês e ano* (`year_month`), obtido a partir do campo `timestamp` quando um evento é persistido no Kafka, e ao tópico (`topic`).
 
 ## Prata
 
 Com a camada Bronze já configurada podemos avançar para criar o processamento da camada Prata ([[Arquitetura medalhão#Prata|Características da camada Prata]]). 
 
-Nessa camadas estamos preocupados em
+Nessa camadas estamos preocupados em:
 - Definir a granularidade dos dados para iniciar a extração de informações relevantes
 - Garantir a qualidade das informações, por meio de testes, restrições e filtros
 ### Pedidos
@@ -169,7 +169,6 @@ ALTER TABLE pedidos ADD CONSTRAINT valid_qty CHECK (quantidade > 0);
 Para a tabela Livros vamos criar uma estrutura baseada nos conceitos de [[Mudança lenta de dimensões]] do tipo 2. Nesse caso cada alteração das informações do Livro será catalogada e apenas a versão mais recente é considerada a ativa. **Isso irá nos permitir ter informações de alterações dos preços dos livros ao longo do tempo, por exemplo.**
 
 
-
 ```python
 def type2_upsert(microBatchDF, batch):
 	microBatchDF.createOrReplaceTempView("updates") # Tabela temporária updates
@@ -195,7 +194,7 @@ query = (bronze_books
 Para cada micro batch vamos executar a junção das informações dos livros e analisar dois casos:
 
 - Caso o preço do livro esteja diferente do preço atual ele é atualizado
-- Caso contrário um novo registro do livro é criado (isso vale para livros que não existiam ou que existiam na base mas a versão atual foi descontinuada).
+- Caso contrário um novo registro do livro é criado (isso vale para livros que não existiam ou que existiam na base que a versão atual foi descontinuada).
 
 ```sql
 MERGE INTO livros
@@ -214,7 +213,7 @@ USING (
 ) 
 staged_updates ON livros.book_id = merge_key -- staged_updates são todas as altualizações de livros
 
--- Caso preço seja diferente atualiza a versão atual para uma versão descontinuada
+-- Caso preço seja diferente: atualiza a versão atual para uma versão descontinuada
 WHEN MATCHED
 	UPDATE SET current = false, end_date = staged_updates.updated
 
@@ -236,7 +235,7 @@ WHEN NOT MATCHED THEN
 > Pode parecer estranho utilizar o UNION ALL para fazer o levantamento de todos os registros atualizados, isso irá gerar uma duplicação no registro, e é exatamente isso que precisamos.
 > 
 > Essa duplicação gera dois registros para o mesmo livro. Com isso fazemos:
-> - O primeiro registro gerado é utilizando para atualizar o estado atual na tabela `livros` para descontinuado
+> - O primeiro registro gerado é utilizado para atualizar o estado atual na tabela `livros` para descontinuado
 > - O segundo registro irá criar a nova versão atual do livro na tabela
 
 > [!warning] Múltiplas atualização em um microbatch
@@ -276,7 +275,10 @@ from pyspark.sql import functions as F
 
 from pyspark.sql.window import Window
 def batch_upsert(microBatchDF, batchId):
-	window = Window.partitionBy("customer_id").orderBy(F.col("row_time").desc())
+	window = (Window
+		.partitionBy("customer_id")
+		.orderBy(F.col("row_time").desc()))
+		
 	(microBatchDF
 		.filter(F.col("row_status").isin(["insert", "update"]))
 		.withColumn("rank", F.rank().over(window))
@@ -315,12 +317,12 @@ query = (spark.readStream
 Nesse caso estamos utilizando a função [[Funções nativas#Window Functions|rank()]], nativa do próprio pyspark, para fazer o ranking do evento considerando a ordenação do campo `row_time`. Assim iremos pegar apenas o evento mais recente dentro da janela de tempo.
 
 > [!warning] Funções de janela não são suportadas por Dataframes de streaming
-> Nesse caso podemos criar uma função para o processamento de cada micro batch. Dentro de cada micro batch podemos utilizar as funções de janela.
+> Não é possível utilizar funções de janela ([[Funções nativas#Window Functions]]) em Dataframes de streaming, já que não temos um conceito fixo de tempo. Nesses casos quebramos o processamento em microbatch transformando o processamento em lote permitindo assim a utlização dessa funções.
 
 > [!tip] Tabelas de referência
 > Tabelas de referência podem ser utilizadas para enriquecer os dados. Caso a tabela seja pequena é possível fazer o espalhamento de seus dados por meio da função `broadcast`, melhorando assim a performance do sistema como um todo.
 
-Por fim podemos definir um teste automatizado para garantir que apenas clientes distintos estejam armazenados na tabela de clientes.
+Por fim podemos definir um teste automatizado para garantir que apenas clientes distintos estejam armazenados na tabela de clientes. Caso este teste falhe podemos tomar medidas para verificar o problema no processamento.
 
 ```python
 count = spark.table("clientes").count()
@@ -431,7 +433,7 @@ books_df = spark.read.table("livros_atuais")
 
 query = (orders_df.join(books_df, orders_df.book.book_id == books_df.book_id, "inner") 
 		.writeStream
-		.outputMode ("append")
+		.outputMode("append")
 		.option("checkpointLocation", "dbfs: /mnt/demo_pro/checkpoints/livros_vendas") 
 		.trigger(availableNow=True)
 		.table("livros_vendas"))
@@ -454,6 +456,10 @@ CREATE VIEW IF NOT EXISTS estatistica_paises_vw AS (
 	FROM customers_orders
 	GROUP BY country, order_date
 ```
+
+Podemos definir essa visualização de duas formas:
+- Execução a partir de um Job com a periodicidade desejada
+- Execução por demanda, assim cada vez que a consulta for feita a visualização é atualizada para os dados mais recentes
 
 ### Estatística_Autores_VW
 
