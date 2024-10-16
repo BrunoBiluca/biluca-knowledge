@@ -10,5 +10,6 @@
   },
   "newFileLocation": "current",
   "readableLineLength": true,
-  "showUnsupportedFiles": true
+  "showUnsupportedFiles": true,
+  "showRibbon": false
 }
