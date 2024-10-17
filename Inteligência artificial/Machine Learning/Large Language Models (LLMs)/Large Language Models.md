@@ -16,6 +16,18 @@ Exemplos de modelos que utilizam esse paradigma são:
 Formas de melhoria de respostas gerados por LLMs:
 - [[RAG (Retrieval Augmented Generation)]]
 
+Algumas das aplicações de LLMs são:
+- Reconhecimento de entidade nomeada
+- Classificação de texto
+- Geração de texto
+- Análise de sentimento
+- Tradução
+- Respostas às perguntas
+- Resumo
+- Detecção de sentenças
+- Detecção de idioma
+- Marcação de parte do discurso
+
 ### Aspectos necessários para uma resposta precisa e útil de uma LLM
 
 O processo de geração de respostas precisas e úteis precisa ser bem sucedido em vários aspectos da pergunta como:

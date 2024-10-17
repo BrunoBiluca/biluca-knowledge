@@ -1,0 +1,11 @@
+{
+	"nodes":[
+		{"id":"a092eb55ccfd4ad7","type":"text","text":"Administração e Configuração (Elementos incidentais)","x":-140,"y":-220,"width":580,"height":60},
+		{"id":"fb0dc255bed9ff17","type":"text","text":"Desenvolvimento do Modelo","x":280,"y":-26,"width":360,"height":60},
+		{"id":"dc805eaf4c1b4e13","type":"text","text":"Implantação do Modelo","x":-135,"y":34,"width":360,"height":58},
+		{"id":"8aa58333de1f992f","type":"text","text":"Monitoramento","x":-10,"y":194,"width":360,"height":58},
+		{"id":"bcf4a73de41b2d77","type":"text","text":"### Papéis de trabalho\n- 🟡 Engenheiro de dados\n- 🟢 Cientista de dados\n- 🔵 Infraestrutura\n- 🟣 Engenheiro de ML\n\nCada etapa do fluxo de trabalho é responsabilidade de uma função.","x":-765,"y":-584,"width":340,"height":264},
+		{"id":"ffcf34d69df5c3af","type":"text","text":"Acervo de dados","x":-765,"y":-280,"width":250,"height":60}
+	],
+	"edges":[]
+}

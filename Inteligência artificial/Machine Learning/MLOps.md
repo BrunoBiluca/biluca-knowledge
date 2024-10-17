@@ -1,6 +1,6 @@
 
 > [!info] Definição
-> MLOps se refere à prática de operacionalizar e simplificar o ciclo de vida de machine learning de ponta a ponta, desde o desenvolvimento e implantação do modelo até o monitoramento e a manutenção
+> MLOps se refere à união de pessoas, processos e produtos aplicados ao ciclo de vida de machine learning de ponta a ponta, desde o desenvolvimento e implantação do modelo até o monitoramento e a manutenção.
 
 Os princípios chave do MLOps são:
 
@@ -12,7 +12,7 @@ Os princípios chave do MLOps são:
 #### Fluxo do tempo de um ciclo com desenvolvimento MLOps
 
 ```mermaid
-%%{init: { 'logLevel': 'debug', 'theme': 'default' , 'themeVariables': { 'cScale0': '#ff0000', 'cScaleLabel0': '#ffffff', 'cScale1': '#00ff00', 'cScale2': '#0000ff', 'cScaleLabel2': '#ffffff' } } }%%
+%%{init: { 'logLevel': 'debug', 'theme': 'default' , 'themeVariables': { 'cScale0': '#B92929', 'cScaleLabel0': '#ffffff', 'cScale1': '#39D26A', 'cScale2': '#2596BE', 'cScaleLabel2': '#ffffff', 'cScale3': '#AE39D2', 'cScaleLabel3': '#ffffff' } } }%%
 
 timeline
 
@@ -22,4 +22,23 @@ Implantação : Testes automatizados : Testes A/B : Promoção para produção :
 Monitoramento : Métricas de performance : Reavaliação do modelo
 ```
 
+
+# Arquitetura proposta
+
+A arquitetura proposta busca acelerar o processo inicial de implantações de práticas MLOps em uma operação sem nenhum fluxo definido. 
+
+Principais casos de uso:
+- [[Machine Learning]]
+- Pesquisa visual computacional
+- [[Large Language Models]]
+
+> [!info] Documentação
+> - [Arquitetura de inspiração](https://learn.microsoft.com/pt-br/azure/architecture/ai-ml/guide/machine-learning-operations-v2)
+
+Componentes
+
+- Acervo de dados
+- Administração e configuração
+- Desenvolvimento de modelo
+- Implantação de modelo
 
