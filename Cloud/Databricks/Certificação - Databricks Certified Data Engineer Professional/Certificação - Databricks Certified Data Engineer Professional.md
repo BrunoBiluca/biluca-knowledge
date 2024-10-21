@@ -40,6 +40,8 @@ Principais conceitos
 
 - [[Databricks]]
 - [[Apache Spark]]
+	- [[Spark Structured Streaming]]
+- [[Delta lake]]
 
 Exemplos de implementações
 

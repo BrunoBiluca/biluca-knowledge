@@ -48,7 +48,7 @@
 		{"id":"4e1eaf0395f01989","type":"text","text":"### Databricks\n- [[Databricks]]","x":280,"y":1628,"width":329,"height":96,"color":"3"},
 		{"id":"ed548f60afcd1068","type":"text","text":"### Arquiteturas de Big Data \n\n- [[Arquiteturas Big Data]]\n- [[Arquitetura medalhão]]","x":-279,"y":2560,"width":334,"height":163,"color":"3"},
 		{"id":"48155aeac5faf1fc","type":"text","text":"### Apache Kafka\n\n- [[Apache Kafka]]","x":-1480,"y":4493,"width":329,"height":87},
-		{"id":"b8560cbb8601329c","x":-1480,"y":4627,"width":329,"height":126,"type":"text","text":"### Apache Spark Structured Streaming\n- [[Structured Streaming]]"},
+		{"id":"b8560cbb8601329c","x":-1480,"y":4627,"width":329,"height":126,"type":"text","text":"### Apache Spark Structured Streaming\n- [[Spark Structured Streaming]]"},
 		{"id":"4d352a27bdd5f72c","x":-1480,"y":4813,"width":329,"height":100,"type":"text","text":"### Delta live tables\n- [[Delta live tables]]"},
 		{"id":"22ccc26b61601e30","x":289,"y":1797,"width":320,"height":86,"color":"3","type":"text","text":"### Delta Lake\n- [[Delta lake]]"}
 	],

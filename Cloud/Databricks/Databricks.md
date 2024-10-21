@@ -27,33 +27,6 @@ Tipos de persona disponíveis:
 O Hive metastore é uma modelo de controle de privilégios para objetos armazenados no Hive, esse modelo já está definido como legado e será substituído pelo [[Unity Catalog]].
 
 - [Privilégios do Hive metastore e objetos protegíveis](https://docs.databricks.com/pt/data-governance/table-acls/object-privileges.html#privilege-types)
-## Permissões
-
-- [Lista de acesso de controle](https://docs.databricks.com/pt/security/auth/access-control/index.html)
-
-> [!important] Grupos de usuários vs Usuários
-> - Grupo de usuário não podem ser dono de um Databricks Job. O dono deve ser um indivíduo.
-### Cluster 
-
- - [Permissões de computação](https://docs.databricks.com/pt/compute/clusters-manage.html#cluster-level-permissions)
-
-Existem dois tipos de permissões de cluster
-
-- **Allow cluster creation**: permite criar cluster
-- **Permissões em nível de cluster**
-
-| Habilidade                                | CAN ATTACH TO | CAN RESTART | CAN MANAGE |
-| ----------------------------------------- | ------------- | ----------- | ---------- |
-| Adicionar um notebook para processamento  | ✅             | ✅           | ✅          |
-| Ver o Spark UI                            | ✅             | ✅           | ✅          |
-| Ver a telemetria do cluster               | ✅             | ✅           | ✅          |
-| Ver logs do driver                        |               |             | ✅          |
-| Encerrar o processamento                  |               | ✅           | ✅          |
-| Iniciar e reiniciar o processamento       |               | ✅           | ✅          |
-| Editar o processamento                    |               |             | ✅          |
-| Adicionar uma biblioteca ao processamento |               |             | ✅          |
-| Redimensionar o processamento             |               |             | ✅          |
-| Modificar permissões                      |               |             | ✅          |
 
 ## Databricks secrets
 
@@ -85,10 +58,7 @@ Comandos mágicos que podem ser utilizados nos notebooks do Databricks para vár
 %pip                      # instala novas bibliotecas python
 ```
 
-Sobre o `%sh`:
-- Reinicia o interpretador do Python
-- Executa o código shell sobre a máquina driver local aumentando a sobrecarga de trabalho
-- Não pode acessar o armazenamento para persistir a saída
+Sobre o `%sh` é um comando mágico que deve ser utilizado com cautela já que ele executa o código shell sobre a máquina driver local **aumentando a sobrecarga de trabalho**.
 
 ### Adicionando parâmetros aos Notebooks
 
@@ -194,7 +164,7 @@ VACUUM students RETAIN 0 HOURS DRY RUN
 
 ### CTAS (Create Tables as Select)
 
-CTAS são tabelas que automaticamente inferem seu esquema quando criadas a partir dados externos bem estruturados como parquet. Essas tabelas são criadas a partir do resultado de uma consulta e **não tem nenhum tipo de ligação com a tabela fonte**, assim mesmo que as tabelas utilizadas como fontes forem removidas as tabelas criadas como CTAS continuam operando normalmente.
+CTAS são tabelas que automaticamente inferem seu esquema quando criadas a partir dados externos bem estruturados como parquet. Essas tabelas são criadas a partir do resultado de uma consulta e **não tem nenhum tipo de ligação com a tabela fonte (base)**, assim mesmo que as tabelas utilizadas como fontes forem removidas as tabelas criadas como CTAS continuam operando normalmente.
 
 ```sql
 -- Definição da tabela purchases através de CTAS
@@ -304,17 +274,39 @@ except:
 
 > [!info] Documentação
 > - [Criar e executar jobs do Databricks](https://docs.databricks.com/pt/workflows/jobs/create-run-jobs.html#choose-the-correct-cluster-type-for-your-job)
+> - [Lista de acesso de controle](https://docs.databricks.com/pt/security/auth/access-control/index.html)
+> - [Permissões para Jobs](https://docs.databricks.com/security/auth-authz/access-control/jobs-acl.html#job-permissions)
+
+### Cluster 
+
+ [Permissões de computação](https://docs.databricks.com/pt/compute/clusters-manage.html#cluster-level-permissions) são as políticas definidas para controlar os clusters criados em nível de cluster e jobs.
+
+Existem dois tipos de permissões de cluster:
+
+- **Allow cluster creation**: permite criar cluster
+- **Permissões em nível de cluster:** são permissões definidas para operar os clusters criados.
+
+| Habilidade                                    | CAN ATTACH TO | CAN RESTART | CAN MANAGE |
+| --------------------------------------------- | ------------- | ----------- | ---------- |
+| Adicionar um notebook para processamento      | ✅             | ✅           | ✅          |
+| Ver o Spark UI                                | ✅             | ✅           | ✅          |
+| Ver a telemetria do cluster                   | ✅             | ✅           | ✅          |
+| Ver logs do driver                            |               |             | ✅          |
+| Encerrar o processamento (cluster)            |               | ✅           | ✅          |
+| Iniciar e reiniciar o processamento (cluster) |               | ✅           | ✅          |
+| Editar o processamento                        |               |             | ✅          |
+| Adicionar uma biblioteca ao processamento     |               |             | ✅          |
+| Redimensionar o processamento                 |               |             | ✅          |
+| Modificar permissões                          |               |             | ✅          |
 
 Tipos de clusters:
 - **All-purpose clusters**: cluster gerais que servem principalmente para o desenvolvimento.
-- **Job clusters**: encerram quando o job é finalizado
+- **Job clusters**: encerram quando o job é finalizado, são principalmente utilizado em produção.
+
+Jobs **não pode ser atribuídos a grupos de usuários**, eles devem ser atribuídos a um dono que deve ser um indivíduo.
 
 > [!tip] Jobs em produção
 > Para jobs que já estão em estágio de produção a Databricks recomenda utilizar cluster do tipo *Job Clusters*.
-
-> [!warning] Permissões para Jobs
-> Jobs não pode ser atribuídos a grupos de usuários, eles devem ser atribuídos a um dono que deve ser um indivíduo.
-> - [https://docs.databricks.com/security/auth-authz/access-control/jobs-acl.html#job-permissions](https://docs.databricks.com/security/auth-authz/access-control/jobs-acl.html#job-permissions)
 
 # [[Change Data Capture]]
 

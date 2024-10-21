@@ -204,7 +204,6 @@ hr {
 /* code blocks in preview */
 
 pre code {
-  padding: 5px !important;
   color: var(--dracula-foreground);
   line-height: normal;
   display: block;

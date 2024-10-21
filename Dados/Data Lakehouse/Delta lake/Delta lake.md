@@ -42,7 +42,7 @@ O transaction log (`_delta_log`) é o sistema de versionamento de uma Delta Tabl
 		- Dificuldade em operações em tempo real, permite micro-batch atômicas
 		- Custo de manter histórico de versões
 - Manipulação escalonável de metadados: aproveita o poder de processamento distribuído do Spark para lidar com todos os metadados de tabelas em escala de petabytes com bilhões de arquivos com facilidade.
-- [[Structured Streaming]]
+- [[Spark Structured Streaming]]
 - Aplicação de esquema: trata automaticamente variações de esquema para evitar a inserção de registros inválidos durante a ingestão.
 - [Versionamento](https://docs.delta.io/latest/delta-batch.html#-deltatimetravel) de dados permite reversões, trilhas de auditoria históricas completas e experimentos de aprendizado de máquina reproduzíveis.
 - [Atualizações](https://docs.delta.io/latest/delta-update.html#-delta-merge) e [exclusões](https://docs.delta.io/latest/delta-update.html #-delta-delete): oferece suporte a operações mais complexas de mesclagem de dados como **atualizações condicionais**.
@@ -92,9 +92,9 @@ Visualizações materialização são tabelas pré-processadas que mantem o esta
 
 Existem 2 formas de clonar tabelas Delta:
 
-- Deep clone (clonagem profunda): copia tudo
-	- Pode ocorrer de forma incremental utilizando a expressão `CREATE OR REPLACE TABLE`.
-- Shallow clone (clonagem rasa): copia apenas os logs de transações do Delta Lake, assim qualquer alteração aos dados na tabela copiada serão armazenados separadamente, pode ser utilizado principalmente para testar consultas.
+- **Deep clone (clonagem profunda):** copia tudo
+	- *Pode ocorrer de forma incremental* utilizando a expressão `CREATE OR REPLACE TABLE`.
+- **Shallow clone (clonagem rasa):** copia apenas os logs de transações do Delta Lake, assim qualquer alteração aos dados na tabela copiada serão armazenados separadamente, pode ser utilizado principalmente para testar consultas.
 
 Ambas as abordagens quando são modificadas persistem essas alterações independentes da fonte, ou seja, qualquer alteração na tabela clonada não altera a tabela original.
 ## Particionamento
@@ -123,10 +123,9 @@ No [[Exemplo - Loja de livros#Livros]] vemos esse tipo de mesclagem de dados, on
 
 Auto Optimize é uma funcionalidade que permite ao Delta Lake automaticamente compactar arquivos pequenos. Ele é composto de dois processos:
 
-- Optimized writes: com essa funcionalidade ativa, Databricks tenta escrever arquivos de 128MB por repartição.
-- Auto compaction: verifica se o arquivo pode ser ainda mais compactado. Em caso positivo, executa um processo OPTIMIZE (não suporta Z-Ordering) com arquivos de tamanho 128MB (em vez de 1GB do tamanho padrão do processo OPTIMIZE).
-
-Auto compactation não suporta Z-Ordering já que Z-Ordering é mais caro computacionalmente que apenas compactação.
+- **Optimized writes:** com essa funcionalidade ativa, Databricks tenta escrever arquivos de 128MB por repartição.
+- **Auto compaction:** verifica se o arquivo pode ser ainda mais compactado. Em caso positivo, executa um processo OPTIMIZE (não suporta Z-Ordering) com arquivos de tamanho 128MB (em vez de 1GB do tamanho padrão do processo OPTIMIZE).
+	- Auto compaction não suporta Z-Ordering já que Z-Ordering é mais caro computacionalmente que apenas compactação.
 
 # Governança
 
