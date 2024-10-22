@@ -291,3 +291,19 @@ db[(Database)] -- Dados brutos --> local
 ```
 
 Cada uma dessa camadas são independentes das camadas inferiores. Essa arquitetura utiliza os conceitos da [[Architecture|Arquitetura DDD]].
+
+### Apresentação
+
+- **Widgets:** componentes que o usuário irá interagir durante todo o uso da aplicação.
+	- Podemos ter widgets específicos de cada funcionalidade ou gerais para toda a aplicação.
+- **Lógica de apresentação ([[Padrão BLoC]])**
+
+### Domínio
+
+- **Casos de uso:** são entidade que devem encapsular uma única funcionalidade alto nível que o usuário pode acionar.
+- **Repositórios:** contratos de funcionalidades do acesso de dados
+
+### Data (Infraestrutura)
+
+- **Implementação dos repositórios:** a camada de infraestrutura é responsável por implementar os acessos concretos as fontes de dados a fim de executar as funcionalidades da interface
+- **Acesso a fontes de dados:** cada módulo de infraestrutura irá implementar um tipo diferente de acesso concreto as fontes de dados. Por exemplo: acesso ao banco de dados local SQLite quando o acesso a um banco de dados remoto por chamada HTTP não está disponível.
