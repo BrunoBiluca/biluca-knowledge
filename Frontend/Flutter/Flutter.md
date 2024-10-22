@@ -239,3 +239,55 @@ bool _onKey(KeyEvent event) {
 }
 // ... demais código
 ```
+
+# Arquitetura limpa para Flutter
+
+Como estamos trabalhando com um aplicativo voltado a interação do usuário, uma boa forma de organizarmos a arquitetura do código é seguindo o **fluxo de chamada**. O fluxo de chamada é o caminho que o sistema toma para atualizar o estado da aplicação que o usuário está utilizando.
+
+```mermaid
+flowchart BT
+
+classDef f stroke:#f00 
+classDef s stroke:#0f0
+
+w["Widgets"]
+l["Lógica de apresentação : ChangeNotifier"]
+
+subgraph a[Apresentação]
+l --> w
+end
+style a color:#f66,stroke:#f66
+
+c["Casos de uso"]
+r["Repositórios (interface)"]
+subgraph d[Domínio]
+c --> l
+r -- Entidades --> c
+end
+style d color:#6f6,stroke:#6f6
+
+
+rImpl["Repositório (implementação)"]
+rImpl2["Repositório (implementação)"]
+
+remoto["Fonte de dados remota"]
+local["Fonte de dados local (ex: SQLite)"]
+subgraph da[Data - Remoto]
+rImpl .-> r
+remoto -- Modelos --> rImpl
+end
+style da color:#66f,stroke:#66f
+
+subgraph da2[Data - Local]
+rImpl2 .-> r
+local -- Modelos --> rImpl2
+end
+style da color:#66f,stroke:#66f
+style da2 color:#66f,stroke:#66f
+
+api(Servidor HTTP) -- Dados brutos --> remoto
+db[(Database)] -- Dados brutos --> local
+
+```
+
+Cada uma dessa camadas são independentes das camadas inferiores. Essa arquitetura utiliza os conceitos da [[Architecture|Arquitetura DDD]].
