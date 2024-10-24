@@ -44,7 +44,7 @@ O transaction log (`_delta_log`) é o sistema de versionamento de uma Delta Tabl
 - Manipulação escalonável de metadados: aproveita o poder de processamento distribuído do Spark para lidar com todos os metadados de tabelas em escala de petabytes com bilhões de arquivos com facilidade.
 - [[Spark Structured Streaming]]
 - Aplicação de esquema: trata automaticamente variações de esquema para evitar a inserção de registros inválidos durante a ingestão.
-- [Versionamento](https://docs.delta.io/latest/delta-batch.html#-deltatimetravel) de dados permite reversões, trilhas de auditoria históricas completas e experimentos de aprendizado de máquina reproduzíveis.
+- [Versionamento ou Viagem no tempo](https://docs.delta.io/latest/delta-batch.html#-deltatimetravel) de dados permite reversões, trilhas de auditoria históricas completas e experimentos de aprendizado de máquina reproduzíveis.
 - [Atualizações](https://docs.delta.io/latest/delta-update.html#-delta-merge) e [exclusões](https://docs.delta.io/latest/delta-update.html #-delta-delete): oferece suporte a operações mais complexas de mesclagem de dados como **atualizações condicionais**.
 
 ### O que não suporta?
@@ -112,20 +112,76 @@ Podemos particionar os dados em relação a campos da base. Isso melhora conside
 > [!info] Documentação
 > - [Mesclagem](https://docs.databricks.com/pt/delta/merge.html)
 
-O Delta lake suporta operações de inserção, atualização e exclusões na mesclagem  de dados.
+O Delta lake suporta operações de inserção, atualização e exclusões na mesclagem de dados. No [[Exemplo - Loja de livros#Livros]] vemos esse tipo de mesclagem de dados, onde o estado atual do livro é alterado cada vez que seu preço é modificado, isso nos permite manter um histórico de preços.
 
-No [[Exemplo - Loja de livros#Livros]] vemos esse tipo de mesclagem de dados, onde o estado atual do livro é alterado cada vez que seu preço é modificado, isso nos permite manter um histórico de preços.
+Um caso que acontece comumente no processo de ingestão de dados é a necessidade de tratar dados duplicados na fonte. Esses dados devem ser mantidos apenas uma única vez.
+
+```sql
+-- exemplo de inserção apenas de logs novos na tabela
+MERGE INTO logs
+USING newDedupedLogs
+ON logs.uniqueId = newDedupedLogs.uniqueId
+WHEN NOT MATCHED
+  THEN INSERT *
+```
+
+Sabendo um pouco mais sobre a natureza da tabela podemos otimizar o código criado. Utilizando o exemplo de logs acima, se soubermos que na fontes os registros podem ser duplicados apenas por alguns dias, podemos fazer um filtro que especifica o intervalo de datas relevante ao nosso caso.
+
+```sql
+-- abordagem mais eficiênte, pois busca logs cadastrados para os últimos 7 dias em vez da tabela inteira
+MERGE INTO logs
+USING newDedupedLogs
+ON logs.uniqueId = newDedupedLogs.uniqueId AND logs.date > current_date() - INTERVAL 7 DAYS
+WHEN NOT MATCHED AND newDedupedLogs.date > current_date() - INTERVAL 7 DAYS
+  THEN INSERT *
+```
 
 ## Otimizações
 
 > [!info] Documentação
 > - [Otimizações](https://docs.delta.io/latest/optimizations-oss.html)
+>
 
-Auto Optimize é uma funcionalidade que permite ao Delta Lake automaticamente compactar arquivos pequenos. Ele é composto de dois processos:
+#### Comando OPTIMIZE
+
+[OPTIMIZE](https://docs.databricks.com/pt/sql/language-manual/delta-optimize.html) é um comando que pode ser utilizado para otimizar o layout do Delta Lake (arquivos contidos no `_delta_log`).  Com a execução desse comando podemos reduzir consideravelmente a quantidade de arquivos armazenado no `_delta_log` e melhor a performance em consultas que varrem uma grande quantidade de dados.
+
+```sql
+-- otimiza geral
+> OPTIMIZE events;
+
+-- otimiza a tabela de eventos também para dados previamente clusterizados
+-- pode ser especificada apenas para tabelas que usam clusterização líquida
+> OPTIMZIE events FULL;
+
+-- otimização com filtros
+> OPTIMIZE events WHERE date >= '2017-01-01';
+
+-- otimização utilizada junto a algoritmos de salto (skipping) de dados
+> OPTIMIZE events
+    WHERE date >= current_timestamp() - INTERVAL 1 day
+    ZORDER BY (eventType);
+```
+
+#### Z-Order
+
+Delta Lake automaticamente armazena como parte dos metadados os valores mínimos e máximos das primeiras 32 colunas de uma tabela. Utilizando essas informações o Delta Lake é capaz de saltar informações foram desses intervalos a fim de melhorar a performance de consultas, esse processo é chamado de **Data Skipping**.
+
+A fim de manter a eficiência, os dados podem ser agrupados por colunas Z-Order de forma que os intervalos de valores mínimos e máximos de cada grupo sejam menores e não se sobrepõem.
+
+```sql
+OPTIMIZE ENGAGEMENT_DATA ZORDER BY (<coluna>)})
+```
+
+[No artigo de exemplo de melhoria de performance para um caso de uma tabela de registros de engajamento que é constantemente modificada](https://engineering.salesforce.com/boost-delta-lake-performance-with-data-skipping-and-z-order-75c7e6c59133/) os autores demonstram como a modificação do formato de particionamento para a utilização de uma coluna Z-Order altera consideravelmente a performance do processamento. Nesse artigo os autores tem um grave problema de [[Inclinação de dados (Data Skew)]] **provocado pela natureza dos dados** de engajamento das empresas que podem variar muito entre empresas pequenas e grandes. Como solução a estratégia de particionamento utilizada(`orgId,engagement_date` como chaves), que resultava em grande inclinação dos dados dependendo do  `orgId`, para o particionamento apenas do `orgId` e a coluna `engagement_date` como Z-Order, que resultou em um agrupamento dos dados mais sem perder a funcionalidade de salto de dados já que o Z-Order mantinha os intervalos de tempos necessários.
+
+#### Auto Optimize
+
+**Auto Optimize** é uma funcionalidade que permite ao Delta Lake automaticamente compactar arquivos pequenos. Ele é composto de dois processos:
 
 - **Optimized writes:** com essa funcionalidade ativa, Databricks tenta escrever arquivos de 128MB por repartição.
 - **Auto compaction:** verifica se o arquivo pode ser ainda mais compactado. Em caso positivo, executa um processo OPTIMIZE (não suporta Z-Ordering) com arquivos de tamanho 128MB (em vez de 1GB do tamanho padrão do processo OPTIMIZE).
-	- Auto compaction não suporta Z-Ordering já que Z-Ordering é mais caro computacionalmente que apenas compactação.
+	- Auto compaction não suporta Z-Ordering já que Z-Ordering é mais caro computacionalmente que apenas compactação. Para utilizar o Z-Ordering ele deve ser executado independente do processo de compactação.
 
 # Governança
 
