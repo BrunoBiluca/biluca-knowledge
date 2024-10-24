@@ -192,15 +192,15 @@ Ou seja, para alcançar o que o princípio nos diz em toda a sua totalidade é n
 >[!tip] Spoiler
 >Não, Polimorfismo é utilizado para alcançar DIP
 
-Depois de aprender sobre o princípio DIP, aplicaremos interfaces ou abstrações para gerenciar as dependências de nossos módulos. Por exemplo, injetaremos interfaces como uma dependência em nossos módulos. Além disso, podemos injetar várias implementações da mesma interface em nosso _ClassA_. Por exemplo, digamos que agora temos _ClassB1_ e _ClassB2_ estendendo o _InterfaceB_:
+Depois de aprender sobre o princípio DIP, aplicaremos interfaces ou abstrações para gerenciar as dependências de nossos módulos. Por exemplo, injetaremos interfaces como uma dependência em nossos módulos. Além disso, podemos injetar várias implementações da mesma interface em nossa _ClassA_. Por exemplo, digamos que agora temos _ClassB1_ e _ClassB2_ estendendo a _InterfaceB_:
 
 ![[class_diagram_4.webp| Exemplo de polimorfismo de uma InterfaceB implementada por várias classes concretas |center]]
 
 No entanto, isso não é apenas polimorfismo?
 
-O polimorfismo de fato desempenha um papel no princípio. No entanto, não é apenas o princípio em si. É aí que entra o conceito de inversão de dependência. **O polimorfismo está em uso para alcançar a inversão**.
+O polimorfismo de fato desempenha um papel no princípio. No entanto, não é todo o princípio em si. É aí que entra o conceito de inversão de dependência. **O polimorfismo está em uso para alcançar a inversão**.
 
-Observe que estamos seguindo o Princípio da Substituição de Liskov. Desta forma, podemos substituir o _ClassB_ por outras implementações da mesma interface sem qualquer quebra.
+Observe que estamos seguindo o **Princípio da Substituição de Liskov**. Desta forma, podemos substituir o _ClassB_ por outras implementações da mesma interface sem qualquer quebra.
 
 Apenas o polimorfismo não garante que estamos utilizando o princípio já que pela definição, além de utilizar abstrações entre os módulos, que o polimorfismo nos ajuda a alcançar, também temos um outro ponto a considerar: "Módulos alto nível devem depender apenas de módulos baixo nível", só o polimorfismo não nos garante esse ponto.
 

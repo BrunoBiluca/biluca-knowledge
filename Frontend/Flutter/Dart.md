@@ -7,18 +7,21 @@ tags:
 >
 >- [Documentação](https://dart.dev/overview)
 
-# Interface e Abstrações
+# Interfaces e Abstrações
 
-Em Dart não existem interface como em outras linguagens (explicitamente declaradas), todas as declarações de classes são interfaces. Para mais informações [Interfaces implícitas](https://dart.dev/language/classes#implicit-interfaces)
+> [!info] Documentação
+> - 
 
-O que diferencia principalmente as duas são no uso da classe filha.
+Em Dart todos os objetos são definidos na declaração de classes possibilitando a uma classe filha implementar qualquer método da classe pai ([Interfaces implícitas](https://dart.dev/language/classes#implicit-interfaces)).
+
+Para outros tipos de comportamento desejado podemos utilizar os diversos [Modificadores de classes](https://dart.dev/language/class-modifiers)  providos na linguagem. [Tabela referência de modificadores de classes](https://dart.dev/language/modifier-reference) .
+
+Por exemplo para definir uma interface clássica (no sentido de linguagens como C# ou Java) podemos criar a seguinte definição:
 
 ```dart
-abstract class A {
-    void sayHello() {
-       print("Hello");
-    }
-    void sayBye();
+abstract interface class A {
+    void sayHello();
+	void sayBye();
 }
 
 // B class implements A interface, so it has to implements all methods of A.
@@ -31,11 +34,24 @@ class B implements A {
     }
 }
 
-// C class extends A class, so it has to implement all abstract methods of A. (Not all). 
-// C is inherited the sayHello() methods from A class.
-class C extends A {
-   void sayBye() {
-       print("C say Bye");
-   }
+var a = A(); // ERROR: acusa erro de inicialização já que não possui construtor
+```
+
+# Classes executáveis (callable classes)
+
+É uma função simples que poder ser utilizada sempre que uma classe implementa o método `call`, esse método pode ter parâmetros também.
+
+```dart
+class Greeter {
+  String name;
+
+  Greeter(this.name);
+
+  dynamic call() {
+    print('Hello, $name!');
+  }
 }
+
+var greeter = Greeter('Jane');
+greeter(); // Output: Hello, Jane!
 ```

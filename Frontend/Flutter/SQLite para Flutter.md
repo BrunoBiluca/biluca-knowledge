@@ -1,7 +1,7 @@
 # SQLite
 
 Windows
-- https://pub.dev/packages/sqflite_common_ffi
+- [Pacote - sqflite_common_ffi](https://pub.dev/packages/sqflite_common_ffi)
 - [Tutorial de como utilizar SQLite no Windows](https://dev.to/ayoubzulfiqar/how-to-use-sqflite-on-windows-flutter-ggm)
 
 Testes automatizados
@@ -9,10 +9,10 @@ Testes automatizados
 
 ### sqflite_migration
 
-Biblioteca para utilização de migrações utlizando o plugin sqflite
+Biblioteca para utilização de migrações utilizando o plugin sqflite.
 
-- https://medium.com/flutter-community/migrating-a-mobile-database-in-flutter-sqlite-44ac618e4897
-- https://github.com/flutterings/sqflite_migration
+- [Artigo com a utilização da biblioteca](https://medium.com/flutter-community/migrating-a-mobile-database-in-flutter-sqlite-44ac618e4897)
+- [Repositório da biblioteca](https://github.com/flutterings/sqflite_migration)
 
 > [!info] Para windows
 > Verificar se essa biblioteca funciona para windows já que o plugin do SQLite é diferente.

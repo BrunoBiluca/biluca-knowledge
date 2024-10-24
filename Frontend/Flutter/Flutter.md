@@ -4,7 +4,7 @@ tags:
 ---
 > [!info] O que é?
 > Flutter é um framework multiplataforma para a criação de aplicações.
-> Utiliza a linguagem [Dart](https://dart.dev/overview) para desenvolvimento
+> Utiliza a linguagem [[Dart]] para desenvolvimento.
 > 
 > - [Documentação](https://docs.flutter.dev/)
 > - [Tutorial de Flutter](https://www.youtube.com/watch?v=1ukSR1GRtMU&list=PL4cUxeGkcC9jLYyp2Aoh6hcWuxFDX6PBJ)
@@ -244,6 +244,12 @@ bool _onKey(KeyEvent event) {
 
 Como estamos trabalhando com um aplicativo voltado a interação do usuário, uma boa forma de organizarmos a arquitetura do código é seguindo o **fluxo de chamada**. O fluxo de chamada é o caminho que o sistema toma para atualizar o estado da aplicação que o usuário está utilizando.
 
+Com o fluxo de chamada do usuário como guia do desenvolvimento em flutter a aplicação é  utilizando as seguintes camadas:
+
+- Apresentação
+- Domínio
+- Dados
+
 ```mermaid
 flowchart BT
 
@@ -302,6 +308,9 @@ Cada uma dessa camadas são independentes das camadas inferiores. Essa arquitetu
 
 - **Casos de uso:** são entidade que devem encapsular uma única funcionalidade alto nível que o usuário pode acionar.
 - **Repositórios:** contratos de funcionalidades do acesso de dados
+
+> [!tip] Casos de uso
+> A utilização de casos de uso aqui são chave para esse tipo de arquitetura, já que podemos focar o desenvolvimento diretamente nas interações do usuário com a aplicação e evitar assim implementação de funcionalidades que não agregam nenhum valor para o usuário.
 
 ### Data (Infraestrutura)
 
