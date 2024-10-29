@@ -2,13 +2,22 @@
 tags:
   - engenharia_de_dados
 ---
+# PySpark
+
+Exemplos
+- [[Exemplo - Criando uma coluna baseada no retorno de uma função]]
+- [[Exemplo - Valores mínimos]]
+
+Melhores práticas
+- [[Empacotamento de arquivo do PySpark]]
+
 # PySpark e testes automatizados
 
 ### Melhoria de performance nos testes
 
-Initiating a new spark session for each test would dramatically increase the time to run the tests and introduce a ton of boiler-plate code to your tests.
+Quando estamos implementando testes automatizados para o desenvolvimento de projetos com PySpark um dos principais problemas encontrados é na **performance da execução**. Criar uma nova sessão do spark a cada teste pode impactar profundamente na performance do sistema.
 
-Efficiently, creating and sharing a SparkSession across your tests is vital to keep the performance of your tests at an acceptable level.
+Uma solução para esse problema é criar e **compartilhar a mesma sessão do spark sobre toda a bateria de testes**.
 
 # PySpark com Venv
 
@@ -31,7 +40,14 @@ Para análise exploratória e pela performance em bases dados menores o Pandas p
 
 # DataFrameWriter
 
-Modos de escrita
+[DataFrameWriter](https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.DataFrameWriter.html) é a interface utilizada para escrever um dataframe a um sistema de armazenamento externo.
+
+Por meio dessa interface podemos definir vários comportamentos de escrita.
+
+#### .mode()
+
+Especifica o comportamento quando os dados ou a tabela já existem. 
+Ele pode ser configurado com os seguintes valores
 
 - `append`: apende conteúdo aos dados existente
 - `overwrite`: sobrescreve os dados

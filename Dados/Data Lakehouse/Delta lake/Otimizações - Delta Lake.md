@@ -50,3 +50,18 @@ OPTIMIZE ENGAGEMENT_DATA ZORDER BY (<coluna>)})
 - **Optimized writes:** com essa funcionalidade ativa, Databricks tenta escrever arquivos de 128MB por repartição.
 - **Auto compaction:** verifica se o arquivo pode ser ainda mais compactado. Em caso positivo, executa um processo OPTIMIZE (não suporta Z-Ordering) com arquivos de tamanho 128MB (em vez de 1GB do tamanho padrão do processo OPTIMIZE).
 	- Auto compaction não suporta Z-Ordering já que Z-Ordering é mais caro computacionalmente que apenas compactação. Para utilizar o Z-Ordering ele deve ser executado independente do processo de compactação.
+
+
+### Considerações sobre versionamento
+
+O Delta lake pode sofrer com **problemas de performance** a medida que seu estado é alterado. Isso ocorre porque são criados vários arquivos pequenos a cada transformação feita, o que faz a consulta desse histórico ser mais onerosa a cada consulta feita.
+
+É indicado utilizar o **versionamento do Delta lake apenas para versões mais recentes** e de tempos em tempos remover os registros mais antigos.
+
+```sql
+-- exemplo de limpeza de base
+VACUUM students RETAIN 0 HOURS
+
+-- para exibir os resultados removidos antes da operação
+VACUUM students RETAIN 0 HOURS DRY RUN
+```

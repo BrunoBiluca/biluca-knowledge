@@ -8,7 +8,7 @@ tags:
 - Evitar operações que são executadas no nó driver como código python/pandas unithread.
 - Evitar UDFs que executem linha a linha. No lugar utilizar funções nativas do pyspark ou Pandas UDFs para UDFs vetorizados.
 - Usar Dataframes e Datasets em vez de RDDs.
-
+- Ter atenção a casos de [[Derramamento de dados (Spill)]]
 # Esquema definido vs Não definido
 
 ### Esquema definido
@@ -33,31 +33,6 @@ Não definir um esquema tem suas vantagens principalmente durante a exploração
 - **Desvantagens:**
     - **Menos Otimização:** A ausência de um esquema pode resultar em menos otimizações durante a execução das consultas.
     - **Possíveis Erros:** Pode ser mais suscetível a erros de tipo durante a execução, já que não há garantia de tipagem forte.
-
-
-# Problema de derramamento (Spill)
-
-Esse problema ocorre quanto a base de dados é grande demais para caber na memória RAM. Caso esse problema não seja resolvido pode ocorrer erro OOM (Out of Memory).
-
-Exemplos comuns de ocorrer derramamento
-
-- `spark.sql.files.maxPartictionBytes` muito grande
-- `explode()` de até listas pequenas
-- `join()` ou `crossJoin()` de tabelas que geram muitos dados novos
-- `join()` ou `crossJoin()` de tabelas por uma chave desbalanceada
-- `groupBy()` onde a coluna tem baixa cardinalidade
-- `countDistinct()` e `size(collect_set())`
-- `spark.sql.shuffle_partitions` baixo demais ou uso errado do `repartition()`
-
-No Spark UI ([artigo com exemplos da Spark UI](https://medium.com/road-to-data-engineering/spark-performance-optimization-series-2-spill-685126e9d21f)), o derramamento é exibido como dois valores:
-
-- Spill (Memory)
-- Spill (Disk)
-
-Esses valores aparecem em várias partes da Spark UI como: Summary metrics, Aggregated metrics by executor, Tasks table e na tela de [[Plano de execução]].
-
-Sempre os dados em disco serão menores que os dados me memória devido ao ganho de compressão durante o processo de serialização.
-
 
 # Broadcast tabelas de referência
 

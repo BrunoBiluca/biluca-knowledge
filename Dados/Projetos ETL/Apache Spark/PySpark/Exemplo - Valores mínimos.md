@@ -2,7 +2,7 @@
 tags:
   - engenharia_de_dados
 ---
-### Valores mínimos
+# Valores mínimos
 
 Nesse exemplo temos um dataset estruturado para fazer uma operação de buscar os valores mínimos para um determinado identificador.
 
@@ -50,31 +50,3 @@ df\
 # +-----------+----------------+
 ```
 
-### Criando uma coluna baseada no retorno de uma função
-
-Existem duas formas de fazer essa operação em pyspark
-
-- **Dataframe.withColumn** method:
- 
-```python
-# predict_udf é uma função
-test_df.withColumn("prediction", predict_udf(*column_list))
-```
-
-- Or using **Dataframe.select** method:
-    
-```python
-# predict_udf é uma função
-test_df.select(
-	predict_udf(*column_list).allas("prediction")
-)
-
-test_df.select('*', predict_udf(*column_list).allas("prediction"))
-
-test_df.select(
-			   'record_id', 
-			   predict_udf(*column_list).allas("prediction")
-			   )
-```
-
-`Dataframe.select` permite que selecione uma coluna ou muitas pelo símbolo `*`

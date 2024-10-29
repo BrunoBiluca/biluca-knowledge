@@ -39,9 +39,15 @@ E repositórios de questões
 Principais conceitos
 
 - [[Databricks]]
+	- [[CTAS (Create Tables as Select)]]
 - [[Apache Spark]]
 	- [[Structured Streaming]]
+	- [[Spark web UI]]
+- [[PySpark]]
+	- (Apenas uma questão sobre MLFlow e UDFs) [[Exemplo - Criando uma coluna baseada no retorno de uma função]] 
 - [[Delta lake]]
+	- [[Change Data Feed (CDF)]]
+	- [[Otimizações - Delta Lake]]
 
 Exemplos de implementações
 

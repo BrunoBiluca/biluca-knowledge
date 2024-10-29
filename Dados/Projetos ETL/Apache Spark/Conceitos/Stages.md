@@ -2,8 +2,10 @@
 tags:
   - engenharia_de_dados
 ---
+# Stages
+
 > [!info] O que são?
-> Stages são conjuntos de tarefas. Cada Stage é referente a um processamento específico executado em cada partição, cada execução é uma tarefa.
+> Stages são conjuntos de tarefas executadas no [[Apache Spark]]. Cada Stage é referente a um processamento específico executado em cada partição, cada execução é uma tarefa.
 
 # Operações
 

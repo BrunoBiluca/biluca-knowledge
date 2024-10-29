@@ -100,23 +100,29 @@ Existem 2 formas de [clonar uma tabela Delta](https://docs.databricks.com/pt/del
 Ambas as abordagens quando são modificadas persistem essas alterações independentes da fonte, ou seja, qualquer alteração na tabela clonada não altera a tabela original.
 ## Particionamento
 
-Uma forma de organizar os dados é dividi-los em partições definidas por campos específicos da nossa base de dados. Isso melhora consideravelmente a performance em queries que utilizam filtros nesses campos utilizados no particionamento, já que menos dados deverão ser carregados para o processamento.
+Uma forma de organizar os dados é dividi-los em partições definidas por campos específicos da nossa base de dados. Isso melhora consideravelmente a performance em queries que utilizam filtros nesses campos, já que menos dados deverão ser carregados para o processamento.
 
 Um exemplo simples de particionamento seria, se o processamento varre uma faixa de dados por data de ingestão, podemos fazer partições por data de ingestão o que limita a quantidade de dados escaneados para o filtro consequentemente carregamos menos dados para memória.
 
 Mesmo assim é importante prestarmos atenção a nossa estratégia de particionamento, já que ela pode também adicionar o problema de [[Inclinação de dados (Data Skew)]] e assim levar a problema sérios de performance.
 
-> [!warning] Evitar excesso de particionamento
+> [!warning]- O excesso de particionamento também é um problema
 > - Particionar pequenas tabelas pode levar a um aumento de armazenamento e o número total de arquivos para escaneamento
 > - Se a maioria das partições tem < 1GB de dados a tabela está superparticionada
 > 
-> Nesses casos executar um processo de Optimize não surte nenhum efeito, já que o particionamento já está altamente compactado e mal definido.
+> Nesses casos **executar um processo de Optimize não surte nenhum efeito**, já que o particionamento já está altamente compactado e mal definido.
 
 ## Mesclagem de dados
 
 O [[Delta lake]] suporta operações de inserção, atualização e exclusões em [Mesclagem de dados (Doc)](https://docs.databricks.com/pt/delta/merge.html). No [[Exemplo - Loja de livros#Livros]] vemos esse tipo de mesclagem de dados, onde o estado atual do livro é alterado cada vez que seu preço é modificado, isso nos permite manter um histórico de preços.
 
-Um caso que acontece comumente no processo de ingestão de dados é a necessidade de tratar dados duplicados na fonte. Esses dados devem ser mantidos apenas uma única vez.
+> [!warning]- Limitação da mesclagem
+> A operação de mesclagem de dados não pode ser performada se múltiplas linhas da fonte combinam e tentam modificar a mesma linha da tabela alvo. Isso geraria resultados ambíguos já que não fica claro qual a linha fonte deve ser utilizada para deletar ou para remover a linha alvo.
+> 
+> Para corrigir esse problema é necessário reprocessar a tabela fonte para eliminar qualquer possibilidade de múltiplas combinações.
+#### Deduplicação de dados
+
+Um caso que acontece comumente no processo de ingestão de dados é a necessidade de tratar dados duplicados na tabela destino. Esses dados devem ser mantidos apenas uma única vez.
 
 ```sql
 -- exemplo de inserção apenas de logs novos na tabela

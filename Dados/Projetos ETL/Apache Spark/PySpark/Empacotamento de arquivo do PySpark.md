@@ -1,6 +1,6 @@
 # Empacotamento de arquivo do PySpark
 
-### Utilização do múltiplos arquivos
+Nesse artigo demonstramos uma forma de organizar o código de um projeto em PySpark para submissão de jobs em um cluster. Com esse formato é possível **organizar o projeto em uma arquitetura limpa**.
 
 Digamos que temos o seguinte projeto:
 

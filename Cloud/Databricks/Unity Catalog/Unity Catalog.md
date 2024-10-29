@@ -15,7 +15,7 @@ Governança de dados:
 - Discovery
 	- Habilidade de pesquisar e descobrir ativos (assets) autorizados
 
-> [!info] Databricks e Gen AI
+> [!info]- Databricks e Gen AI
 > A plataforma Databricks já utiliza IAs generativas para várias tarefas internas, facilitando criar descrições de assets, comentários e outras funções.
 
 ![[Principais funcionalidades do Unity Catalog.png|Aspectos que o Unity Catalog|500]]

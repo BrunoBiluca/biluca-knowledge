@@ -205,7 +205,7 @@ Para garantir deduplicação de dados em streaming, podemos fazer
 - Realizar `dropDuplicates()` no lote com novos dados
 - Mesclagem apenas inserção na tabela de destino
 
-# Checkpoits
+## Checkpoits
 
 Características
 
