@@ -14,7 +14,7 @@ O exame cobre:
 - Monitoramento e Logs
 - Testes e publicação
 
-### Cursos
+# Material de estudo
 
 - [Data Engineering with Databricks](https://partner-academy.databricks.com/learn/course/1266/data-engineering-with-databricks;lp=10)
 	- Plataforma Databricks
@@ -34,13 +34,13 @@ E repositórios de questões
 
 - [Examtopics](https://www.examtopics.com/exams/databricks/certified-data-engineer-professional/view/)
 
-### Tópicos relacionados
+# Tópicos relacionados
 
 Principais conceitos
 
 - [[Databricks]]
 - [[Apache Spark]]
-	- [[Spark Structured Streaming]]
+	- [[Structured Streaming]]
 - [[Delta lake]]
 
 Exemplos de implementações

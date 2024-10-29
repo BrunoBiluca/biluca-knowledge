@@ -9,9 +9,13 @@ tags:
 > 
 > - [Documentação](https://delta.io/learn)
 >   
-> Exemplos
+> Exemplos de implementação de uma solução utilizando Delta lake:
 > - [[Exemplo - Vendas de loja]]
 > - [[Exemplo - Loja de livros]]
+> 
+> Considerações ao utilizar Delta Lake:
+> - [[Governança - Delta Lake]]
+> - [[Otimizações - Delta Lake]]
 
 Delta Lake usa arquivos Parquet versionados para armazenar seus dados em seu armazenamento em nuvem. Além das versões, Delta Lake também armazena um log de transações para acompanhar todos os commits feitos na tabela ou diretório de armazenamento de blob para fornecer transações ACID.
 
@@ -42,7 +46,7 @@ O transaction log (`_delta_log`) é o sistema de versionamento de uma Delta Tabl
 		- Dificuldade em operações em tempo real, permite micro-batch atômicas
 		- Custo de manter histórico de versões
 - Manipulação escalonável de metadados: aproveita o poder de processamento distribuído do Spark para lidar com todos os metadados de tabelas em escala de petabytes com bilhões de arquivos com facilidade.
-- [[Spark Structured Streaming]]
+- [[Structured Streaming]]
 - Aplicação de esquema: trata automaticamente variações de esquema para evitar a inserção de registros inválidos durante a ingestão.
 - [Versionamento ou Viagem no tempo](https://docs.delta.io/latest/delta-batch.html#-deltatimetravel) de dados permite reversões, trilhas de auditoria históricas completas e experimentos de aprendizado de máquina reproduzíveis.
 - [Atualizações](https://docs.delta.io/latest/delta-update.html#-delta-merge) e [exclusões](https://docs.delta.io/latest/delta-update.html #-delta-delete): oferece suporte a operações mais complexas de mesclagem de dados como **atualizações condicionais**.
@@ -80,17 +84,14 @@ São considerados para a contagem de colunas:
 
 Visualizações materialização são tabelas pré-processadas que mantem o estado de uma consulta, dessa forma consultas que são executadas várias vezes podem ser materializadas em uma visualização melhorando a performance.
 
-> [!tip] Databricks Delta Cache
+> [!tip]- Databricks Delta Cache
 > Databricks mantém o estado de uma consulta para o cluster ativo melhorando a performance caso essa consulta seja feita várias vezes.
 > 
 > Mesmo assim não é garantido por quanto tempo esse estado será mantido.
 
 ## Clonar tabelas
 
-> [!info] Documentação
-> - [Clonar uma tabela no Databricks](https://docs.databricks.com/pt/delta/clone.html)
-
-Existem 2 formas de clonar tabelas Delta:
+Existem 2 formas de [clonar uma tabela Delta](https://docs.databricks.com/pt/delta/clone.html):
 
 - **Deep clone (clonagem profunda):** copia tudo
 	- *Pode ocorrer de forma incremental* utilizando a expressão `CREATE OR REPLACE TABLE`.
@@ -99,7 +100,11 @@ Existem 2 formas de clonar tabelas Delta:
 Ambas as abordagens quando são modificadas persistem essas alterações independentes da fonte, ou seja, qualquer alteração na tabela clonada não altera a tabela original.
 ## Particionamento
 
-Podemos particionar os dados em relação a campos da base. Isso melhora consideravelmente a performance em queries que utilizam filtros nesses campos utilizados no particionamento, já que menos dados deverão ser carregados para o processamento.
+Uma forma de organizar os dados é dividi-los em partições definidas por campos específicos da nossa base de dados. Isso melhora consideravelmente a performance em queries que utilizam filtros nesses campos utilizados no particionamento, já que menos dados deverão ser carregados para o processamento.
+
+Um exemplo simples de particionamento seria, se o processamento varre uma faixa de dados por data de ingestão, podemos fazer partições por data de ingestão o que limita a quantidade de dados escaneados para o filtro consequentemente carregamos menos dados para memória.
+
+Mesmo assim é importante prestarmos atenção a nossa estratégia de particionamento, já que ela pode também adicionar o problema de [[Inclinação de dados (Data Skew)]] e assim levar a problema sérios de performance.
 
 > [!warning] Evitar excesso de particionamento
 > - Particionar pequenas tabelas pode levar a um aumento de armazenamento e o número total de arquivos para escaneamento
@@ -109,10 +114,7 @@ Podemos particionar os dados em relação a campos da base. Isso melhora conside
 
 ## Mesclagem de dados
 
-> [!info] Documentação
-> - [Mesclagem](https://docs.databricks.com/pt/delta/merge.html)
-
-O Delta lake suporta operações de inserção, atualização e exclusões na mesclagem de dados. No [[Exemplo - Loja de livros#Livros]] vemos esse tipo de mesclagem de dados, onde o estado atual do livro é alterado cada vez que seu preço é modificado, isso nos permite manter um histórico de preços.
+O [[Delta lake]] suporta operações de inserção, atualização e exclusões em [Mesclagem de dados (Doc)](https://docs.databricks.com/pt/delta/merge.html). No [[Exemplo - Loja de livros#Livros]] vemos esse tipo de mesclagem de dados, onde o estado atual do livro é alterado cada vez que seu preço é modificado, isso nos permite manter um histórico de preços.
 
 Um caso que acontece comumente no processo de ingestão de dados é a necessidade de tratar dados duplicados na fonte. Esses dados devem ser mantidos apenas uma única vez.
 
@@ -135,108 +137,4 @@ ON logs.uniqueId = newDedupedLogs.uniqueId AND logs.date > current_date() - INTE
 WHEN NOT MATCHED AND newDedupedLogs.date > current_date() - INTERVAL 7 DAYS
   THEN INSERT *
 ```
-
-## Otimizações
-
-> [!info] Documentação
-> - [Otimizações](https://docs.delta.io/latest/optimizations-oss.html)
->
-
-#### Comando OPTIMIZE
-
-[OPTIMIZE](https://docs.databricks.com/pt/sql/language-manual/delta-optimize.html) é um comando que pode ser utilizado para otimizar o layout do Delta Lake (arquivos contidos no `_delta_log`).  Com a execução desse comando podemos reduzir consideravelmente a quantidade de arquivos armazenado no `_delta_log` e melhor a performance em consultas que varrem uma grande quantidade de dados.
-
-```sql
--- otimiza geral
-> OPTIMIZE events;
-
--- otimiza a tabela de eventos também para dados previamente clusterizados
--- pode ser especificada apenas para tabelas que usam clusterização líquida
-> OPTIMZIE events FULL;
-
--- otimização com filtros
-> OPTIMIZE events WHERE date >= '2017-01-01';
-
--- otimização utilizada junto a algoritmos de salto (skipping) de dados
-> OPTIMIZE events
-    WHERE date >= current_timestamp() - INTERVAL 1 day
-    ZORDER BY (eventType);
-```
-
-#### Z-Order
-
-Delta Lake automaticamente armazena como parte dos metadados os valores mínimos e máximos das primeiras 32 colunas de uma tabela. Utilizando essas informações o Delta Lake é capaz de saltar informações foram desses intervalos a fim de melhorar a performance de consultas, esse processo é chamado de **Data Skipping**.
-
-A fim de manter a eficiência, os dados podem ser agrupados por colunas Z-Order de forma que os intervalos de valores mínimos e máximos de cada grupo sejam menores e não se sobrepõem.
-
-```sql
-OPTIMIZE ENGAGEMENT_DATA ZORDER BY (<coluna>)})
-```
-
-[No artigo de exemplo de melhoria de performance para um caso de uma tabela de registros de engajamento que é constantemente modificada](https://engineering.salesforce.com/boost-delta-lake-performance-with-data-skipping-and-z-order-75c7e6c59133/) os autores demonstram como a modificação do formato de particionamento para a utilização de uma coluna Z-Order altera consideravelmente a performance do processamento. Nesse artigo os autores tem um grave problema de [[Inclinação de dados (Data Skew)]] **provocado pela natureza dos dados** de engajamento das empresas que podem variar muito entre empresas pequenas e grandes. Como solução a estratégia de particionamento utilizada(`orgId,engagement_date` como chaves), que resultava em grande inclinação dos dados dependendo do  `orgId`, para o particionamento apenas do `orgId` e a coluna `engagement_date` como Z-Order, que resultou em um agrupamento dos dados mais sem perder a funcionalidade de salto de dados já que o Z-Order mantinha os intervalos de tempos necessários.
-
-#### Auto Optimize
-
-**Auto Optimize** é uma funcionalidade que permite ao Delta Lake automaticamente compactar arquivos pequenos. Ele é composto de dois processos:
-
-- **Optimized writes:** com essa funcionalidade ativa, Databricks tenta escrever arquivos de 128MB por repartição.
-- **Auto compaction:** verifica se o arquivo pode ser ainda mais compactado. Em caso positivo, executa um processo OPTIMIZE (não suporta Z-Ordering) com arquivos de tamanho 128MB (em vez de 1GB do tamanho padrão do processo OPTIMIZE).
-	- Auto compaction não suporta Z-Ordering já que Z-Ordering é mais caro computacionalmente que apenas compactação. Para utilizar o Z-Ordering ele deve ser executado independente do processo de compactação.
-
-# Governança
-
-### Visualizações dinâmicas
-
-Tipos mais tradicionais de controles de governança como, IAM da AWS e Role-Based Access Controls da Azure, são um bom ponto de início para o gerenciamento desse controle, porém não possuem formas muito refinadas de controle, como controlar uma coluna específica ou uma visualização específica.
-
-Para garantir acesso limitado a visualizações em LakeHouse o Delta Lake nos permite criar visualizações dinâmicas dependendo do papel do usuário. Isso é muito importante para garantir que determinados tipos de papéis dentro da organização não tenham acesso a mais informações do que eles precisam (princípio do mínimo privilégio), por exemplo PII(Person Identification Information).
-
-```sql
-CREATE OR REPLACE VIEW customers_vw AS
-	SELECT 
-		customer_id,
-		CASE
-			WHEN is_member('admins_demo') THEN email
-			else 'REDACTED'
-		END as email
-		...
-	FROM customers_silver
-```
-
-No exemplo acima restringimos a visualização do email dos clientes apenas para membros do grupo de usuários *admins_demo*.
-
-### Propagando deleções
-
-Para estar alinhado com a legislação de garantir de proteção de dados, o usuário pode requisitar a remoção de todos os seus dados do sistema.
-
-Utilizando Delta Lake podemos fazer a seguinte forma:
-
-- É criada uma tabela de pedidos de deleções, onde fica armazenado o pedido de cada usuário, a data da requisição e o estado.
-- Fazemos a remoção dos dados relacionados a essa tabela
-	- Cada tabela que existe o dado deve ser processada para o pedido de deleção
-- Atualizamos o estado de cada pedido de deleção para deletado
-- Como no Delta Lake temos a funcionalidade de Viagem no Tempo é necessário executar o VACUUM em cada tabela para remover os dados de versões anteriores
-
-Exemplo simples de propagação de deleções para apenas uma tabela. Nesse caso é propagado a deleção da tabela `user_lookup` para a tabela `users`.
-
-```sql
-CREATE OR REPLACE TEMPORARY VIEW user_lookup_deletes as (
-  select * from table_changes("user_lookup", 2) where _change_type = "delete"
-);
-
-MERGE INTO users u
-USING user_lookup_deletes ud
-ON u.alt_id = ud.alt_id
-  when matched then delete;
-```
-
-### Restrições aos dados
-
-```sql
--- exemplo de restrição para garantir uma quantidade válida de itens em um pedido de uma loja
-ALTER TABLE pedidos ADD CONSTRAINT valid_qty CHECK (quantidade > 0);
-```
-
-> [!tip] Adição de restrição
-> Quando adicionado uma nova restrição a base é necessário que a base de dados se comporte de acordo com essa restrição, caso contrário o processo falha e devemos resolver esses problemas antes de adicionar a restrição.
 

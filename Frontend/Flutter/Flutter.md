@@ -310,7 +310,7 @@ Cada uma dessa camadas são independentes das camadas inferiores. Essa arquitetu
 - **Repositórios:** contratos de funcionalidades do acesso de dados
 
 > [!tip] Casos de uso
-> A utilização de casos de uso aqui são chave para esse tipo de arquitetura, já que podemos focar o desenvolvimento diretamente nas interações do usuário com a aplicação e evitar assim implementação de funcionalidades que não agregam nenhum valor para o usuário.
+> A utilização de casos de uso aqui são chave para esse tipo de arquitetura, já que podemos focar o desenvolvimento diretamente nas interações do usuário com a aplicação e evitar assim implementação de funcionalidades que não agregam nenhum valor para o usuário. 
 
 ### Data (Infraestrutura)
 

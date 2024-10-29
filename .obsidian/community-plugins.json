@@ -12,5 +12,6 @@
   "obsidian-git",
   "obsidian-version-history-diff",
   "shiki-highlighter",
-  "image-captions"
+  "image-captions",
+  "obsidian-reveal-active-file"
 ]

@@ -2,6 +2,8 @@
 tags:
   - engenharia_de_dados
 ---
+# Databricks
+
 > [!info] O que é?
 > Databricks é uma plataforma que implementa um Data Lakehouse sobre outros tipos de [[Armazenamento de Objetos]].
 
@@ -58,7 +60,7 @@ Comandos mágicos que podem ser utilizados nos notebooks do Databricks para vár
 %pip                      # instala novas bibliotecas python
 ```
 
-Sobre o `%sh` é um comando mágico que deve ser utilizado com cautela já que ele executa o código shell sobre a máquina driver local **aumentando a sobrecarga de trabalho**.
+Sobre o `%sh` é um comando mágico que deve ser utilizado com cautela já que ele executa o código shell sobre a máquina driver local **aumentando a sobrecarga de trabalho**. 
 
 ### Adicionando parâmetros aos Notebooks
 
@@ -118,16 +120,11 @@ A plataforma Databricks permite múltiplas formas de gerenciar dados por meio de
 
 ## Fontes externas
 
-> [!info] Documentação
-> [Objetos de banco de dados em Databricks - Tabelas não gerenciadas](https://docs.databricks.com/pt/database-objects/index.html#what-is-an-unmanaged-table)
-
-Tabelas externas não são gerenciadas pelo Databricks, assim apenas os metadados dessas tabelas são armazenados pela Databricks.
+Tabelas externas [não são gerenciadas pelo Databricks](https://docs.databricks.com/pt/database-objects/index.html#what-is-an-unmanaged-table), assim apenas os metadados dessas tabelas são armazenados pela Databricks.
 
 Fontes externas podem ser extraídas por:
 - Sistema de arquivos
 - JDBC
-
-É possível definir vários tipos de opções na hora de ingerir dados de fontes externas, tanto relacionado a SQL quanto pelo próprio Spark.
 
 ## Auto Loader
 
@@ -301,12 +298,9 @@ Existem dois tipos de permissões de cluster:
 
 Tipos de clusters:
 - **All-purpose clusters**: cluster gerais que servem principalmente para o desenvolvimento.
-- **Job clusters**: encerram quando o job é finalizado, são principalmente utilizado em produção.
+- **Job clusters**: encerram quando o job é finalizado, são principalmente **utilizados em produção**.
 
 Jobs **não pode ser atribuídos a grupos de usuários**, eles devem ser atribuídos a um dono que deve ser um indivíduo.
-
-> [!tip] Jobs em produção
-> Para jobs que já estão em estágio de produção a Databricks recomenda utilizar cluster do tipo *Job Clusters*.
 
 # [[Change Data Capture]]
 
@@ -327,17 +321,3 @@ WHEN NOT MATCHED
 Cada linha da tabela deve definir um valor de sequência, esse valor é utilizado para definir qual a linha válida naquela janela de tempo. **Apenas uma entrada é capturada por janela (múltiplas entradas atualizadas geram uma exceção).**
 
 Para garantir que apenas uma entrada seja capturada podemos utilizar a função `rank().over(window)` por exemplo ou outras funções [[Funções nativas#Window Functions]].
-
-# Visualizações (Views)
-
-> [!info] Definição
-> Visualizações são tabelas que definem um tipo específico de informação assim facilitando a leitura pelo consumidor. Essa tabelas podem ter os mais diversos formatos e configurações como: visualizações materializadas, dinâmicas ou temporárias.
-> 
-> - [Conceitos gerais de visualizações](https://docs.databricks.com/en/views/index.html)
-
-- Visualizações materializadas
-	- Incrementalmente calcula e atualiza os resultados retornados por uma consulta
-- Visualizações temporárias
-	- tem um escopo e persistência limitada
-- Visualizações dinâmicas
-	- Podem ser usadas para prover linhas e colunas com controle de acesso e mascaramento de dados

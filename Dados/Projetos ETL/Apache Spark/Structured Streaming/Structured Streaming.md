@@ -1,6 +1,11 @@
-> [!info] Documentação
-> - [Guia de programação para Structured Streaming](https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html)
+# Structured Streaming
 
+> [!info] Definição
+> [Structured Streaming](https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html) é um motor de processamento de stream (fluxo contínuo) escalável e tolerante a falhas. Foi criado de forma a garantir que o processamento em streaming seja tratado da mesma forma que o formato em lotes.
+> 
+> Internamento o Structured Streaming trata o processamento como vários micro-lotes podendo ter latência baixas até 100 milisegundos, sendo considerado assim um motor de processamento contínuo em tempo real (ou quase).
+
+Exemplo de configuração de um processamento streaming:
 
 ```python
 # exemplo de um job de processamento streaming
@@ -60,13 +65,20 @@ coupon_sales_df
 
 ### Triggers
 
-> [!info] Documentação
-> - [Configuração de gatilhos para Structured Streaming](https://docs.databricks.com/pt/structured-streaming/triggers.html#configure-structured-streaming-trigger-intervals)
+É possível definir o [modo de ativação do processamento](https://docs.databricks.com/pt/structured-streaming/triggers.html#configure-structured-streaming-trigger-intervals):
+
+```python
+# Modo de intervalo fixo de 1 segundo
+df.writeStream
+	.trigger(processingTime="1 second")
+```
 
 - Intervalo fixo (default, intervalo de 500ms)
 - Ativado uma única vez para uma micro-batch
 - Ativado uma única vez para múltiplas micro-batches
 - Contínua
+
+Para essa configuração é importante **levar em consideração os requisitos de latência e a taxa de chegada dos dados na origem**, já que quando **menor o intervalo do trigger mais verificações** o sistema faz para verificar a chegada de novos dados.
 
 ### Output
 
@@ -74,29 +86,27 @@ coupon_sales_df
 - **append** - apenas novos registros serão adicionados a *tabela resultado* desde o último gatilho.
 - **update** - apenas linhas que foram alteradas na *tabela resultado* desde o último gatilho serão escritas no armazenamento externo.
 
-## Stream-Stream joins
+## Junções Stream-Stream
 
-Spark retem entradas antigas como streaming para ambas fontes, dessa forma é possível comparar para cada nova entradas com entradas antigas.
-
-> [!info] Documentação
-> - [Introdução à Stream-Stream Joins](https://www.databricks.com/blog/2018/03/13/introducing-stream-stream-joins-in-apache-spark-2-3.html)
-> 	- Essa documentação apresenta um exemplo de cálculo de limite de tempo entre os dados de cada fonte que pode ser utilizado como um template.
+O Structured Streaming disponibiliza a utilização de junções entre dataframes stream, nesses casos ele **retem entradas antigas para ambas fontes**, dessa forma é possível comparar para cada nova entradas com entradas antigas.
 
 Para **limitar o estado mantido** por junções stream-streaming é necessário saber algumas informações sobre seu caso de uso:
 
 - Qual a razão de de tempo entre a geração dos dois em suas respectivas fontes?
 - Qual a duração máxima um evento pode ser atrasado? (do momento que foi gerado até o motor de processamento)
 
+> [!quote]- Artigo - [Introdução à Stream-Stream Joins](https://www.databricks.com/blog/2018/03/13/introducing-stream-stream-joins-in-apache-spark-2-3.html)
+> Essa documentação demonstra o funcionamento em detalhes de operações de junção Stream-Stream. 
+> Também apresenta um **cálculo de retenção de eventos** para otimizar o gerenciamento de estado necessário para a execução do processamento.
 
-## Streaming vs Static
+## Junções Streaming-Static
 
-> [!info] Documentação
-> - [Realizando junções Stream-Static](https://docs.databricks.com/pt/structured-streaming/delta-lake.html#performing-stream-static-joins)
+Outra forma de realizar junções é entre um [dataframe stream e um dataframe estático](https://docs.databricks.com/pt/structured-streaming/delta-lake.html#performing-stream-static-joins).
 
 - Tabelas Streaming são sempre fontes de dados apenas de apêndice
 - Tabelas Estáticas podem ser alteradas ou sobrescritas
 
-Em junções do tipo streaming o responsável por ativar o processamento a adição de registros é a tabela Streaming. A tabela estática pode ser alterada e isso não resultará em nenhum tipo de processamento. **Stream-Static Joins dependem do estado no momento da operação.**
+O processamento é ativado sempre que **novos registros são adicionados** a tabela de Streaming. Qualquer alteração à tabela estática não resulta em nenhum tipo de processamento. Por isso junções Stream-Static dependem do estado no momento da operação.
 
 ## Agregações
 
@@ -118,8 +128,8 @@ Uma forma de fazer essas transformações é definir janelas de tempo que as ope
 
 Para a construção dessas janelas de tempo é necessário entender o conceito de *tempo do evento e tempo do processamento:*
 
-- Tempo do evento: horário da criação do evento
-- Tempo do processamento: horário que o evento foi processado
+- **Tempo do evento:** horário da criação do evento (geralmente esse é o tempo que nos importa na análise)
+- **Tempo do processamento:** horário que o evento foi processado
 
 ### Janelas fixas
 
@@ -155,12 +165,9 @@ query.awaitTermination()
 ![[Exemplo de janela fixa na contagem de palavras.png| Exemplo de janela fixa para um fluxo de registros na contagem de palavras|center|500]]
 
 > [!tip] Structured Streaming não materializa toda a tabela.
-> Ela lê os dados mais recentes da fonte de dados, processa incrementalmente e atualiza o resultado, então descarta os dados originais. Ele apenas mantem o mínimo do estado intermediário necessário para atualizar o resultado (ex: contadores intermediários).
+> Ela lê os dados mais recentes da fonte de dados, processa incrementalmente e atualiza o resultado, então descarta os dados originais. Ele apenas mantem o **mínimo do estado intermediário** necessário para atualizar o resultado (ex: contadores intermediários).
 
 ### Janelas deslizantes
-
-
-![[Exemplo de processamento em streaming com janelas deslizantes.png|Exemplo de processamento em streaming com janelas deslizantes|center|500]]
 
 A configuração para janelas deslizantes é muito parecida com a janela fixa com a alteração de um segundo argumento de tempo na função `window(coluna_de_tempo, janela, deslizamento)` .
 
@@ -173,6 +180,8 @@ windowedCounts = words.groupBy(
     words.word
 ).count()
 ```
+
+![[Exemplo de processamento em streaming com janelas deslizantes.png|Exemplo de processamento em streaming com janelas deslizantes|center|500]]
 
 ### Manipulação de dados atrasados (Watermark)
 
@@ -191,7 +200,10 @@ A janela correta de comparação deve ser relacionada a **coluna definida para o
 
 ## Deduplicação de dados
 
-Para garantir deduplicação de dados em streaming, podemos utilizar a função `dropDuplicates()` para eliminar a duplicação de registros em cada micro lote. Após isso é necessário garantir que os registros inseridos não estão condidos na tabela de destino e isso podemos fazer a partir de uma **mesclagem de apenas inserção.**
+Para garantir deduplicação de dados em streaming, podemos fazer
+
+- Realizar `dropDuplicates()` no lote com novos dados
+- Mesclagem apenas inserção na tabela de destino
 
 # Checkpoits
 

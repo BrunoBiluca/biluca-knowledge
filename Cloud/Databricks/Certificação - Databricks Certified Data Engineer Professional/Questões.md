@@ -212,7 +212,7 @@ A string *REDACTED* será exibida.
 
 Watermark.
 
-[[Spark Structured Streaming#Manipulação de dados atrasados (Watermark)]]
+[[Structured Streaming#Manipulação de dados atrasados (Watermark)]]
 
 ---
 
@@ -681,7 +681,7 @@ Caso a opção `slideDurantion` for provida as janelas passam a ser sobrepostas 
 
 Spark retem entradas antigas como streaming para ambas fontes, dessa forma é possível comparar para cada nova entradas com entradas antigas. A quantidade de entradas antigas retidas pelo Spark pode ser configurado a partir do `Wartermark()`.
 
-[[Spark Structured Streaming]]
+[[Structured Streaming]]
 
 ---
 
@@ -709,7 +709,7 @@ spark.readStream
 
 Para ingerir dados em quase tempo real utilizamos o Auto Loader. Ele provê uma fonte Structured Streaming chamada `cloudFiles` que por padrão fazer o processamento a cada 500 ms equivalente a opção `tigger(processingTime="500ms")`.
 
-[[Spark Structured Streaming#Triggers]]
+[[Structured Streaming#Triggers]]
 
 ---
 
@@ -733,7 +733,7 @@ Para ingerir dados em quase tempo real utilizamos o Auto Loader. Ele provê uma 
 ...
 ```
 
-[[Spark Structured Streaming#Triggers]]
+[[Structured Streaming#Triggers]]
 
 ---
 ## Clonagem de tabelas
