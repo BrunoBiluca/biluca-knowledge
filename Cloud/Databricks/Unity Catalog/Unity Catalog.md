@@ -95,3 +95,54 @@ Materiais relacionados:
 	- tem um escopo e persistência limitada
 - Visualizações dinâmicas
 	- Podem ser usadas para prover linhas e colunas com controle de acesso e mascaramento de dados
+
+# Databricks CLI
+
+A plataforma[[Databricks]] provê uma [API completa](https://docs.databricks.com/api/workspace/introduction) para gerenciamento de forma automatizada de seus componentes.
+
+### Criando um workflow
+
+Criando um workflow programaticamente utilizando a própria API do Databricks:
+
+```python
+import time
+
+from databricks_cli.sdk.api_client import ApiClient
+from databricks_cli.pipelines.api import PipelinesApi
+
+# Set up the entry point with authentication
+api_client = ApiClient(
+  host  = db_instance,
+  token = db_token
+)
+
+# Instantiate a PipelinesApi object
+pipelines_api = PipelinesApi(api_client)
+
+pipeline = pipelines_api.get(f"{DA.pipeline_id}")
+try:
+  state = pipeline.get("latest_updates")[0]["state"]
+  # Check if running
+  not_done = ["WAITING_FOR_RESOURCES", "INITIALIZING", "SETTING_UP_TABLES", "RUNNING"]
+  done = ["COMPLETED", "FAILED", "CANCELED"]
+
+  if state in not_done:
+      print(f"Pipeline is running (State: {state})")
+      print("Excellent work!!")
+  elif state in done:
+      print(f"Pipeline is done (State: {state})")
+      print("Excellent work!!")
+  else:
+      print("Something must be wrong. Double-check that you started the pipeline")
+except:
+  print("Something must be wrong. Double-check that you started the pipeline")
+```
+
+
+### Criando um job
+
+```
+POST api/2.1/jobs/create
+```
+
+Esse endpoint nos permite criar quantas execuções quisermos de um JOB. Cada execução nova criada retorna um novo `job_id` que pode ser utilizado para recuperar informações.

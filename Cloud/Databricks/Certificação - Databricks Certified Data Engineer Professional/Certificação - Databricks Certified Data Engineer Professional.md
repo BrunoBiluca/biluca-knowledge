@@ -48,6 +48,7 @@ Principais conceitos
 - [[Delta lake]]
 	- [[Change Data Feed (CDF)]]
 	- [[Otimizações no Delta Lake]]
+- [[MLFlow]]
 
 Exemplos de implementações
 
