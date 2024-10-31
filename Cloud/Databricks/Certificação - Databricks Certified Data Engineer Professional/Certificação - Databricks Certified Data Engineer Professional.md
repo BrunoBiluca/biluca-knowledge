@@ -47,7 +47,7 @@ Principais conceitos
 	- (Apenas uma questão sobre MLFlow e UDFs) [[Exemplo - Criando uma coluna baseada no retorno de uma função]] 
 - [[Delta lake]]
 	- [[Change Data Feed (CDF)]]
-	- [[Otimizações - Delta Lake]]
+	- [[Otimizações no Delta Lake]]
 
 Exemplos de implementações
 

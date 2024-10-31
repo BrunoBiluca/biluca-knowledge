@@ -14,7 +14,7 @@ A ideia chave do Lakehouse é ter um sistema de armazenamento de dados de baixo 
 Como podemos ver o DataLakehouse provê uma camada de metadados, cache, e indexação para permitir que as funcionalidades de um DW sejam possíveis como transações ACID, gerenciamento, versionamento, auditoria, indexação, cache e otimização de consultados sejam possíveis.
 
 Como os lakehouses também separam o processamento de armazenamento, diferentes aplicações podem rodar sob demanda em um cluster separado. Por exemplo, você pode subir um cluster Hadoop na nuvem sob demanda, rodar jobs Spark sobre os dados do data lake e depois derrubar o cluster, pagando apenas pelo que usou de processamento. Assim não é preciso manter o cluster rodando 24x7, já que eles estão armazenados em um barramento de dados compartilhado no data lake.
-# Comparação: [Delta Lake](https://delta.io/), [Apache Iceberg](https://iceberg.apache.org/) e [Apache Hudi](https://hudi.apache.org/)
+# Comparação: [[Delta Lake]], [Apache Iceberg](https://iceberg.apache.org/) e [Apache Hudi](https://hudi.apache.org/)
 
 ![[Comparação entre framewords de Data Lakehouse.webp|Comparação entre os frameworks Delta Lake, Apache Iceberg e Apache Hudi|center|500]]
 

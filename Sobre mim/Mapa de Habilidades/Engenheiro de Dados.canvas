@@ -15,7 +15,7 @@
 		{"id":"e5e67eabdbef399a","type":"text","text":"### Armazenamento de Big Data\n\n- ","x":-895,"y":1700,"width":329,"height":124},
 		{"id":"649bdbae1222ce60","type":"text","text":"### Data Lakehouse\n\n- [[Data Lakehouse]]","x":-269,"y":1615,"width":324,"height":121,"color":"3"},
 		{"id":"bac6cb20bba7a162","type":"text","text":"### Datalakes\n\n- [[Data Lake]]","x":-269,"y":1840,"width":324,"height":86,"color":"3"},
-		{"id":"ba51f9fde33153a3","type":"text","text":"### Data Warehouse\n\n- [[DataWarehouse]]","x":-269,"y":2000,"width":324,"height":86},
+		{"id":"ba51f9fde33153a3","type":"text","text":"### Data Warehouse\n\n- [[Data Warehouse]]","x":-269,"y":2000,"width":324,"height":86},
 		{"id":"a42b5894ab48dd7e","type":"text","text":"### Armazenamento de objetos\n\n- ","x":-895,"y":2132,"width":329,"height":124},
 		{"id":"da007b2673ce9bae","type":"text","text":"### AWS S3\n\n- ","x":-1434,"y":2132,"width":329,"height":86,"color":"1"},
 		{"id":"4814c6b88ee6864c","type":"text","text":"### Azure Blob Storage\n\n- ","x":-1434,"y":2272,"width":329,"height":86,"color":"1"},

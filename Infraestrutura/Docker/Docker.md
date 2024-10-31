@@ -32,10 +32,6 @@ tags:
 - Volumes
 	- Volumes são localizações no sistema de arquivos local que é automaticamente gerenciada pelo Docker
 
-### Exemplos de uso
-
-[[Exemplo - Envio de emails]]
-
 # Melhores práticas
 
 - Mantenha suas imagens pequenas

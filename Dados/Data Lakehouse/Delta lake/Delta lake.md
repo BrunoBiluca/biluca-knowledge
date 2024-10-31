@@ -10,12 +10,12 @@ tags:
 > - [Documentação](https://delta.io/learn)
 >   
 > Exemplos de implementação de uma solução utilizando Delta lake:
-> - [[Exemplo - Vendas de loja]]
+> - [[Exemplo - Vendas de uma loja]]
 > - [[Exemplo - Loja de livros]]
 > 
 > Considerações ao utilizar Delta Lake:
-> - [[Governança - Delta Lake]]
-> - [[Otimizações - Delta Lake]]
+> - [[Governança em Delta Lake]]
+> - [[Otimizações no Delta Lake]]
 
 Delta Lake usa arquivos Parquet versionados para armazenar seus dados em seu armazenamento em nuvem. Além das versões, Delta Lake também armazena um log de transações para acompanhar todos os commits feitos na tabela ou diretório de armazenamento de blob para fornecer transações ACID.
 

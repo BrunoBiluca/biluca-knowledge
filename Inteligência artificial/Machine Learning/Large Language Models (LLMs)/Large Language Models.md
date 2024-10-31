@@ -82,7 +82,7 @@ Abordagens comuns para criar os vetores de embedding de palavras:
 
 Exemplo da capacidade de autoatenção em modelos Transformer:
 
-> [!quote] Considere a frase
+> [!example] Considere a frase
 > "O gato estava dormindo no sofá enquanto o cachorro brincava lá fora."
 
 Quando o modelo processa essa frase usando o mecanismo de autoatenção, ele é capaz de capturar as relações entre palavras em toda a frase. Por exemplo:

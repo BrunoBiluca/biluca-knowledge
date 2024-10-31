@@ -1,7 +1,5 @@
 A separação por camadas nos permite definir objetivos bem claros para cada conjunto de dados armazenado.
 
-- [[Exemplo - Loja de livros]]
-
 # Bronze
 
 Objetivos da camada bronze são:

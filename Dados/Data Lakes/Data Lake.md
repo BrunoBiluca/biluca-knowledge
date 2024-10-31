@@ -81,6 +81,7 @@ Por muitas vezes as empresas tomam a atitude de combinar Datalakes e DataWarehou
 Para solucionar esse problema de vez temos as soluções de [[Data Lakehouse]], que trazem o melhor dos dois conceitos de uma forma realmente integrada.
 
 # Desidentificarão de dados
+
 O processo de desidentificarão de dados é utilizado para garantir as leis de proteção de dados e não deixar vazar dados de clientes, ao mesmo tempo que conseguimos utilizar os dados para criar visões de negócio com dados reais.
 
 ![[data_classification.png|Níveis de dados em relação a sua identificação|center]]

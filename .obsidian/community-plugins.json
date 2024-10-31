@@ -7,11 +7,11 @@
   "markdown-table-editor",
   "translate",
   "mermaid-tools",
-  "obsidian-icon-folder",
   "advanced-cursors",
   "obsidian-git",
   "obsidian-version-history-diff",
   "shiki-highlighter",
   "image-captions",
-  "obsidian-reveal-active-file"
+  "obsidian-reveal-active-file",
+  "obsidian-icon-folder"
 ]

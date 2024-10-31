@@ -1,7 +1,7 @@
 # Exemplo - Envio de emails
 
 > [!info] Definição
-> Esse exemplo tem como objetivo demonstrar a flexibilidade na criação de um sistema complexo enquanto mantemos a segurança da aplicação e melhores práticas de desenvolvimento.
+> Esse exemplo tem como objetivo demonstrar a flexibilidade do [[Docker compose]]  na criação de um sistema complexo enquanto mantemos a segurança da aplicação e melhores práticas de desenvolvimento.
 > 
 > Para isso utilizo de um sistema complexo com comunicação em múltiplas camadas e várias tecnologias, demonstrando assim a facilidade de trabalhar com diferentes componentes quando se utiliza uma solução de container.
 

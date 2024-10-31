@@ -9,9 +9,6 @@ tags:
 
 # Interfaces e Abstrações
 
-> [!info] Documentação
-> - 
-
 Em Dart todos os objetos são definidos na declaração de classes possibilitando a uma classe filha implementar qualquer método da classe pai ([Interfaces implícitas](https://dart.dev/language/classes#implicit-interfaces)).
 
 Para outros tipos de comportamento desejado podemos utilizar os diversos [Modificadores de classes](https://dart.dev/language/class-modifiers)  providos na linguagem. [Tabela referência de modificadores de classes](https://dart.dev/language/modifier-reference) .

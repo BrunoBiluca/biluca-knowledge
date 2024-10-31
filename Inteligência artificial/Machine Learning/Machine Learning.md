@@ -7,6 +7,7 @@ tags:
 Casos de uso da aplicação de Machine Learning
 
 - [[Classificação]]
+- [[Regressão]]
 
 Os algoritmos são principalmente recomendados para casos onde:
 

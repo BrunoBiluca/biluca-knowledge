@@ -214,5 +214,5 @@ Critério de aceito 3:
 	- Bom texto sobre Acceptance Criteria, com uma definição concisa sobre o básico de seus conceitos e utilização.
 - [User stories com exemplos e template](https://www.atlassian.com/br/agile/project-management/user-stories)
 - [Agile User Story Splitting by Non-Functional Requirements](https://corebts.com/blog/agile-user-story-splitting-non-functional-requirements/#:~:text=%E2%80%9CA%20type%20of%20requirement%20that,a%20solution%20as%20a%20whole.%E2%80%9D)
-- [[_Fifty Quick Ideas to improve your User Stories|Fifty Quick Ideas to improve your User Stories]]
+- [[Fifty Quick Ideas to improve your User Stories (Livro)|Fifty Quick Ideas to improve your User Stories]]
 

@@ -1,6 +1,6 @@
 
 > [!info] Objetivo
-> Mapa de Habilidade é uma forma de representar o conhecimento de forma mais visual com o objetivo de demonstrar o fluxo de conhecimento (um conhecimento que leva a outro), onde o início do fluxo representa as habilidades mais básicas para a atuação na área e ao final temos passado por todos os pontos necessários para considerar a pessoa com alto padrão de conhecimento na área de atuação.
+> Mapa de Habilidade é uma forma de representar o conhecimento de forma mais visual com o objetivo de demonstrar o fluxo de conhecimento (um conhecimento que leva a outro), onde o início do fluxo representa as habilidades mais básicas para a atuação na área e ao final temos passado por todos os pontos necessários para considerar a pessoa com conhecimento consolidado.
 
 # Ramos
 

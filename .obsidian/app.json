@@ -11,5 +11,6 @@
   "newFileLocation": "current",
   "readableLineLength": true,
   "showUnsupportedFiles": true,
-  "showRibbon": false
+  "showRibbon": false,
+  "promptDelete": false
 }

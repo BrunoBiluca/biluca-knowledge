@@ -100,7 +100,7 @@ class MyHome extends StatelessWidget {
 # Desenvolvimento
 
 - [[Injeção de dependência]]
-- [[SQLite para Flutter]]
+- [[Frontend/Flutter/SQLite]]
 - [[Testes]]
 
 ORM
