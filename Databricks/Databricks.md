@@ -11,7 +11,7 @@ Componentes da plataforma Databricks
 
 - [[Unity Catalog]]
 - [[Delta live tables]]
-- [[Databricks CLI]]
+- [[Databricks API]]
 - [[Notebooks]]
 	- [[CTAS (Create Tables as Select)]]
 - [[Workflows]]

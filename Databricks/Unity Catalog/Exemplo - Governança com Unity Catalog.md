@@ -1,4 +1,4 @@
-### Exemplo de um governança de dados com UC
+# Exemplo - Governança com Unity Catalog
 
 Para esse exemplo iremos utilizar uma base de dados de coletas de batimentos cardíacos. Essa base tem o seguinte formato:
 
