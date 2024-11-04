@@ -6,19 +6,21 @@
 
 Principais características que as DLT implementam:
 
-- Melhores práticas Delta Lake automaticamente aplicadas: **otimização, compactação automática**
+- Melhores práticas [[Delta Lake]] automaticamente aplicadas: **otimização, compactação automática**
 - Automaticamente **gerenciam os dados físicos**: automaticamente executa vacuum e otimizações diárias
 - **Evolução de esquema**: quando removidos colunas valores antigos são preservados.
+- Os mesmos princípios do uso de DTL são os mesmos do [[Structured Streaming]].
+
 
 Existem dois tipos de tabelas que podem ser criadas com DLT:
 - **Live tables**: são views materializadas para o Lakehouse, retornam os resultados atuais de qualquer query a cada intervalo de tempo de atualização
 - **Streaming live tables**: são projetadas para processamento de dados perto de tempo real e incremental
-	- Existe a opção de utilizar [Autoloader](https://docs.databricks.com/pt/ingestion/auto-loader/index.html) que otimiza carregamento de dados incrementais a partir do cloud object storage
+	- Existe a opção de utilizar [[Auto Loader]] que otimiza carregamento de dados incrementais a partir do cloud object storage
 
-> [!warning] DLT e notebooks
+> [!warning]- DLT e notebooks
 > DLT não foi criada para utilizar em notebooks de maneira iterativa, assim que o DLT é implementado deve fazer parte de um workflow. O que pode ser feito é criar a lógica utilizando uma sintaxe comum e depois converter para DLT quando estiver pronto para a criação do pipeline.
 
-## Como criar uma DLT
+# Como criar uma DLT
 
 Passos para a criação de uma DLT
 - Criar a live table
@@ -42,7 +44,7 @@ EXPECT (timestamp > '2021-01-01')
 ON VIOLATION DROP
 ```
 
-## Streaming
+# Streaming
 
 Também é possível ingerir dados por meio de uma tabela de Streaming
 
@@ -80,7 +82,7 @@ Caso um job de streaming falhe é recomendável configurar uma política de re-t
 - Agendamento (schedule): não configurar
 - Timeout: não configurar. Queries de streaming executando por longos tempos indeterminados.
 
-### Comentários e Propriedades de tabela
+# Comentários e Propriedades de tabela
 
 Podemos utilizar esses recursos para facilitar a organização dentro do Databricks. Comentário são bons em descrever cada tabela enquanto propriedades pode ser utilizadas para rotular tabelas
 ```python
@@ -92,7 +94,7 @@ def orders_silver():
 	# Implementação
 ```
 
-## Configurações
+# Configurações
 
 Configurações podem ser aplicadas diretamente ao código, essas configurações são cadastradas na plataforma Databricks e pode ser chamados no código tanto SQL quanto Python.
 
@@ -108,7 +110,7 @@ def data():
 	spark.readStream.format("cloud_files").load(input_path)
 ```
 
-## DLT com Change data capture
+# DLT com Change data capture
 
 É possível aplicar alterações em uma tabela a partir de eventos.
 
@@ -124,7 +126,7 @@ Necessário definir algum campo como uma sequência:
  - Timestamp
  - Tempo de ingestão
 
-## Python vs SQL
+# Python vs SQL
 
 Cada uma das linguagens tem suas vantagens e desvantagens.
 

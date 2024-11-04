@@ -12,22 +12,24 @@ A arquitetura Apache Spark é baseada em conjuntos de dados distribuídos resili
 
 Apache Spark utiliza o otimizador Catalyst para automaticamente revelar o plano de execução mais eficiente dado qualquer processamento.
 
-- Funcionalidades
-[[Plano de execução]]
-[[Funções nativas]]
-
-- Conceitos
-[[Stages]]
-[[Resilient Distributed Dataset (RDD)]]
-
-- Desenvolvimento e fluxo de trabalho
-[[Docker básico para submits locais]]
-[[Empacotamento de arquivo do PySpark]]
-
-- Cloud
-[[EMR Serverless]]
-
 O Apache Spark também pode ser utilizado com uma camada escrita para a linguagem Python chamada [[PySpark]]. Atualmente a performance do PySpark é tão boa quando a versão Java/Scala o que é uma ótima alternativa para equipes com habilidade na linguagem.
+
+Funcionalidades
+
+- [[Plano de execução]]
+- [[Funções nativas]]
+- [[Spark web UI]]
+
+Conceitos
+- [[Stages]]
+- [[Resilient Distributed Dataset (RDD)]]
+
+Desenvolvimento e fluxo de trabalho
+- [[Docker básico para submits locais]]
+- [[Empacotamento de arquivo do PySpark]]
+
+Cloud
+- [[EMR Serverless]]
 
 # Casos de uso
 
@@ -36,9 +38,6 @@ O Apache Spark também pode ser utilizado com uma camada escrita para a linguage
 - Processamento de dados em tempo real com Spark Streaming
 
 # Instalação
-
-> [!info] Referência
-> https://sparkbyexamples.com/pyspark/how-to-install-and-run-pyspark-on-windows/
 
 Programas necessários
 - Java 8+
@@ -67,7 +66,7 @@ Prior to 3.0, Spark does the optimization by creating an execution plan before t
 
 Adaptive Query Execution is disabled by default. In order to enable Set `spark.sql.adaptive.enabled` configuration property to `true`.
 
-[[Spark web UI]]
+
 
 
 # Diferença entre estruturas de dados

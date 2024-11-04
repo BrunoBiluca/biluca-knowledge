@@ -34,7 +34,7 @@ As permissões de acesso ao secrets são:
 - **READ**: permite ler de todo o escopo do secrete e lista os secrets disponíveis.
 - **Administradores do Workspace** e **criadores de secrets** também são papéis que podem utilizar as secrets.
 
-Para manter as credenciais secretas quando lidas utilizando o comando `dbutils.secrets.get()`. Qualquer leitura a partir da API de segredos garante a confidencialidade da informação, mesmo que um usuário exiba como saída de uma célula os valores serão alterados para uma string `[REDACTED]`.
+Podemos ler as credenciais secretas pela api `dbutils.secrets.get()`. Qualquer leitura a partir da API de segredos garante a confidencialidade da informação, mesmo que um usuário exiba como saída de uma célula os valores serão alterados para uma string `[REDACTED]`.
 
 > [!warning]- Jeitinho para exibir um secret em texto
 > É possível exibir uma senha armazenada no secrets pelo seguinte código:
@@ -45,6 +45,24 @@ Para manter as credenciais secretas quando lidas utilizando o comando `dbutils.s
 >        print(char)
 > ```
 > 
+
+Exemplo de utilização do Secrets
+
+```python
+password = dbutils.secrets.get(scope="db_creds", key="kdbc_password")
+
+print(passwork) # Irá exibir [REDACTED]
+
+df = (spark
+	 .read
+	 .format("jdbc")
+	 .option("url", connection)
+	 .option("dbtable", tablename)
+	 .option("user", username)
+	 .option("password", password)) # Conexão é feita com sucesso
+```
+
+
 
 # Jobs
 
@@ -67,14 +85,13 @@ Existem dois tipos de permissões de cluster:
 | Adicionar um notebook para processamento      | ✅             | ✅           | ✅          |
 | Ver o Spark UI                                | ✅             | ✅           | ✅          |
 | Ver a telemetria do cluster                   | ✅             | ✅           | ✅          |
-| Ver logs do driver                            |               |             | ✅          |
 | Encerrar o processamento (cluster)            |               | ✅           | ✅          |
 | Iniciar e reiniciar o processamento (cluster) |               | ✅           | ✅          |
+| Ver logs do driver                            |               |             | ✅          |
 | Editar o processamento                        |               |             | ✅          |
 | Adicionar uma biblioteca ao processamento     |               |             | ✅          |
 | Redimensionar o processamento                 |               |             | ✅          |
 | Modificar permissões                          |               |             | ✅          |
-
 Tipos de clusters:
 - **All-purpose clusters**: cluster gerais que servem principalmente para o desenvolvimento.
 - **Job clusters**: encerram quando o job é finalizado, são principalmente **utilizados em produção**.

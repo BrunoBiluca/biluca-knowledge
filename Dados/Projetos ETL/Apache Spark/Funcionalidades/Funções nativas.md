@@ -65,11 +65,12 @@ Depois do `explode()`:
 | ------ | ------------------------------------------------------------------------------------------------------------------------------------ |
 | 1      | {"coupon":null,"item_id":"M_PREM_F","item_name":"Premium Full Mattress","item_revenue_in_usd":1695,"price_in_usd":1695,"quantity":1} |
 | 1      | {"coupon":null,"item_id":"P_FOAM_S","item_name":"Standard Foam Pillow","item_revenue_in_usd":59,"price_in_usd":59,"quantity":1}      |
-### Manipulação de dados aninhados
+### Manipulação de dados aninhados em SQL
 
 - [Artigo de apresentação da funcionalidade de manipulação nativa de dados aninhados](https://www.databricks.com/blog/2017/05/24/working-with-nested-data-using-higher-order-functions-in-sql-on-databricks.html)
 
-Acessando elementos dentros de um campo aninhado:
+Acessando elementos dentro de um campo aninhado:
+
 ```sql
 SELECT * FROM events where value:event_name = "finalize"
 ```

@@ -35,6 +35,8 @@ Tipos de persona disponíveis:
 
 A plataforma Databricks permite múltiplas formas de gerenciar dados por meio de ingestão.
 
+- [[Auto Loader]]
+
 ## Fontes externas
 
 Tabelas externas [não são gerenciadas pelo Databricks](https://docs.databricks.com/pt/database-objects/index.html#what-is-an-unmanaged-table), assim apenas os metadados dessas tabelas são armazenados pela Databricks.
@@ -43,24 +45,11 @@ Fontes externas podem ser extraídas por:
 - Sistema de arquivos
 - JDBC
 
-## Auto Loader
+## Bases de dados e tabelas gerenciadas
 
-> [!info] O que é?
-> O Auto Loader processa de forma progressiva e eficiente novos arquivos de dados à medida que chegam ao armazenamento em nuvem sem qualquer configuração adicional.
-> 
-> [Documentação](https://docs.databricks.com/pt/ingestion/auto-loader/index.html)
-> [Configurando o processamento de lotes incrementais](https://docs.databricks.com/pt/structured-streaming/triggers.html#configuring-incremental-batch-processing)
+Além do processo de ingestão também podemos [criar bases de dados e tabelas próprias](https://docs.databricks.com/sql/language-manual/sql-ref-syntax-ddl-create-schema.html) na plataforma Databricks. 
 
-Databricks suporta gatilhos para o Delta Lake e fontes providas por Auto Loader. Essa opção consome todos os dados disponíveis de forma incremental.
-
-Opções:
-
-- `AvailableNow`: consome todos os registros disponíveis como lotes incrementais
-- [Descontinuada] `Once`
-
-## Criação de bases de dados e tabelas
-
-Podemos [criar bases de dados e tabelas](https://docs.databricks.com/sql/language-manual/sql-ref-syntax-ddl-create-schema.html) na plataforma Databricks. Quando criados eles passam a ser gerenciados pela plataforma.
+As bases de dados e tabelas quando criados eles passam a ser **gerenciados pela plataforma**.
 
 Exemplo
 
@@ -91,29 +80,4 @@ Além das formas de armazenamento do MLFlow é possível armazenar os modelos de
 - [Manage model lifecycle in Unity Catalog](https://docs.databricks.com/en/machine-learning/manage-model-lifecycle/index.html)
 - [Manage model lifecycle using the Workspace Model Registry (legacy)](https://docs.databricks.com/en/machine-learning/manage-model-lifecycle/workspace-model-registry.html)
 
-#### Exemplo - Separação do treinamento do uso de modelos de ML com MLFlow
-
-Podemos fazer o treinamento independente da utilização desse modelo. Nesse exemplo temos o primeiro script que treina e registra o modelo `LogisticRegression` em um volume do Databricks (utilizando o gerenciamento do [[Unity Catalog]]).
-
-```python
-# training_model.py
-from mlflow import spark
-from pyspark.ml.classification import LogisticRegression
-
-# Train a Spark MLlib model
-lr = LogisticRegression(maxIter=2)
-model = lr.fit(train_data)
-
-# Log the model as an MLflow artifact
-with mlflow.start_run() as run:
-    mlflow.spark.log_model(model, "caminho/do/modelo")
-```
-
-Quando o processamento de [[Structured Streaming]] ou o processamento em lotes do [[Apache Spark]] precisa do modelo, ele é carregado no mesmo volume definido e então utilizado.
-
-```python
-# job.py
-loaded_model = mlflow.pyfunc.load_model("caminho/do/modelo")
-```
-
-Podemos como o exemplo acima mostra separar o desenvolvimento do modelo 
+No Databricks podemos utilizar o [[Exemplo - Separação do treinamento do uso de modelos de ML com MLFlow]] para demonstrar a utilização da biblioteca MLFlow.

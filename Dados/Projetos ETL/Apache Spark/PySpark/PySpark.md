@@ -11,6 +11,9 @@ Exemplos
 Melhores práticas
 - [[Empacotamento de arquivo do PySpark]]
 
+> [!quote] Instalação no Windows tem suas tretas
+> [Tutorial definitivo de instalação do PySpark no Windows](https://sparkbyexamples.com/pyspark/how-to-install-and-run-pyspark-on-windows/)
+
 # PySpark e testes automatizados
 
 ### Melhoria de performance nos testes

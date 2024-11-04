@@ -4,7 +4,7 @@ Os Notebooks são elementos do [[Databricks]] que permite que times executem Job
 
 Para **definir um Notebook no Databricks** é necessário apenas criar um arquivo python e na primeira linha adicionar o seguinte comentário: `# Databricks notebook source`.
 
-### Comandos mágicos
+# Comandos mágicos
 
 Comandos mágicos que podem ser utilizados nos notebooks do Databricks para várias funcionalidades
 
@@ -21,7 +21,7 @@ Sobre o `%sh` é um comando mágico que deve ser utilizado com cautela já que e
 
 Para verificar o diretório atual podemos utilizar o comando `%sh pwd`.
 
-### Adicionando parâmetros aos Notebooks
+# Adicionando parâmetros aos Notebooks
 
 Para adicionarmos parâmetros os notebook utilizamos a funcionalidade de [Widgets](https://docs.databricks.com/pt/notebooks/widgets.html)
 
@@ -32,6 +32,28 @@ param1 = dbutils.widgets.get("param1")
 
 Esse parâmetros podem ser configurados pela interface gráfica do Databricks.
 
+# Código
+
+### Misturando as linguagens
+
+É possível [intercambiar dados entre células de Python e SQL](https://docs.databricks.com/en/notebooks/notebooks-code.html#explore-sql-cell-results-in-python-notebooks-using-python) . Esse é um caso de uso muito comum quando queremos buscar dados utilizando SQL e explorar os dados em Python. Para isso utilizamos tabelas temporárias que são definidas em sistemas de cache do ambiente.
+
+```python
+# celula_1.py
+
+path = "..."
+sparkDF = spark.read.csv(path, header="true", inferSchema="true")
+sparkDF.createOrReplaceTempView("tabela_temporária")
+```
+
+```sql
+-- celula_2.sql
+%sql
+SELECT * FROM tabela_temporária
+...
+```
+
+A segunda célula será executada normalmente buscando os dados da tabela temporária criada.
 ### SQL UDF
 
 É possível definir funções para serem reutilizadas no código SQL dentro dos notebooks Databricks.

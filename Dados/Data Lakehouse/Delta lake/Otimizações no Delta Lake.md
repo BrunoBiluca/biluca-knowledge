@@ -4,7 +4,7 @@ O [[Delta lake]] provê uma série de otimizações a partir de suas configuraç
 
 A [seção de otimizações da documentação do Delta lake](https://docs.delta.io/latest/optimizations-oss.html) provê uma lista de considerações na hora de otimizar o Delta Lake para o seu caso.
 
-#### Comando OPTIMIZE
+# Comando OPTIMIZE
 
 [OPTIMIZE](https://docs.databricks.com/pt/sql/language-manual/delta-optimize.html) é um comando que pode ser utilizado para otimizar o layout do Delta Lake (arquivos contidos no `_delta_log`).  Com a execução desse comando podemos reduzir consideravelmente a quantidade de arquivos armazenado no `_delta_log` e melhor a performance em consultas que varrem uma grande quantidade de dados.
 
@@ -25,7 +25,32 @@ A [seção de otimizações da documentação do Delta lake](https://docs.delta.
     ZORDER BY (eventType);
 ```
 
-#### Z-Order
+# Salto de dados para Delta Lake
+
+> [!info] Documentação
+> - [Data skipping](https://docs.databricks.com/en/delta/data-skipping.html)
+
+As informações de salto de dados são coletados no processo de escrita da [[Delta lake]].
+
+Leva em consideração [[Estatísticas de arquivos]]
+- Valores máximos e mínimos
+- Quantidade de nulos
+- Total de registros por arquivos
+
+
+### Exemplo de ordenação-Z
+
+```sql
+OPTIMIZE events
+WHERE date >= current_timestamp() - INTERVAL 1 day
+ZORDER BY (eventType)
+```
+
+Esse código faz uma otimização na tabela `events` para as últimas 24 horas em relação ao tipo de evento. 
+
+Após a execução do comando, a tabela `events` será otimizada para melhorar a performance de leitura de consultas que envolvam a coluna `eventType`, especialmente para os dados das últimas 24 horas. Isso significa que, por exemplo, uma consulta para buscar todos os eventos do tipo `login` nas últimas 24 horas será mais rápida devido à otimização.
+
+# Z-Order
 
 Delta Lake automaticamente armazena como parte dos metadados os valores mínimos e máximos das primeiras 32 colunas de uma tabela. Utilizando essas informações o Delta Lake é capaz de saltar informações foram desses intervalos a fim de melhorar a performance de consultas, esse processo é chamado de **Data Skipping**.
 
@@ -43,7 +68,7 @@ OPTIMIZE ENGAGEMENT_DATA ZORDER BY (<coluna>)})
 > 
 > Para solucionar esse problema é definida uma segunda estratégia de particionamento, utilizar apenas do `orgId` e a coluna `engagement_date` como Z-Order. Essa modificação no formato de particionamento e a utilização de uma coluna Z-Order altera consideravelmente a performance do processamento.
 
-#### Auto Optimize
+# Auto Optimize
 
 **Auto Optimize** é uma funcionalidade que permite ao Delta Lake automaticamente compactar arquivos pequenos. Ele é composto de dois processos:
 
@@ -52,7 +77,7 @@ OPTIMIZE ENGAGEMENT_DATA ZORDER BY (<coluna>)})
 	- Auto compaction não suporta Z-Ordering já que Z-Ordering é mais caro computacionalmente que apenas compactação. Para utilizar o Z-Ordering ele deve ser executado independente do processo de compactação.
 
 
-### Considerações sobre versionamento
+# Considerações sobre versionamento
 
 O Delta lake pode sofrer com **problemas de performance** a medida que seu estado é alterado. Isso ocorre porque são criados vários arquivos pequenos a cada transformação feita, o que faz a consulta desse histórico ser mais onerosa a cada consulta feita.
 
