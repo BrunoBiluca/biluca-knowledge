@@ -1,3 +1,6 @@
+---
+categoria: prática
+---
 # Governança
 
 O modelo de [[Governança de dados]] no Databricks é aplicado pelo [[Unity Catalog]].

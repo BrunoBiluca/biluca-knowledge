@@ -236,7 +236,7 @@ As principais considerações apresentadas para pessoas são:
 - Responsabilidade compartilhada
 - Sempre faça backup de seus dados
 
-Também fornece um [[Segurança#Exemplo de política de segurança]] para ser seguido.
+Também fornece um [[Segurança de dados#Exemplo de política de segurança]] para ser seguido.
 
 ### Chapter 11. The Future of Data Engineering
 

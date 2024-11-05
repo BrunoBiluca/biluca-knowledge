@@ -1,4 +1,8 @@
+---
+categoria: biblioteca
+---
 # pypdf
+
 antigo PyPDF2
 
 > [!info] O que é?

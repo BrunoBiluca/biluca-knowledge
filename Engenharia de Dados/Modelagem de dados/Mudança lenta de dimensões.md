@@ -9,6 +9,7 @@ Tipos
 	- Tabelas que não precisam de histórico, apenas o estado atual, como exemplo informações do endereço do usuário
 - Tipo 2: adiciona uma nova linha e marca a linha antiga como obsoleta
 	- Mudança de preços ao longo do tempo
+	- Esse tipo de modelagem também pode ser chamada de [[Change Data Capture]]
 
 Para tabelas de tipo 2 podemos utilizar algumas táticas para definir as linhas com as informações atuais e obsoletas:
 

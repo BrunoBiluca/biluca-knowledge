@@ -1,3 +1,6 @@
+---
+categoria: prática
+---
 ### Formatador padrão
 
 Necessário instalar o formatador autopep8.

@@ -1,3 +1,6 @@
+---
+categoria: biblioteca
+---
 # PyInstaller
 
 Podemos empacotar um servidor python para executar como uma programa independente.

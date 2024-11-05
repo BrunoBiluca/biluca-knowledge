@@ -1,6 +1,6 @@
 # SQLite
 
-[[Banco de dados/SQLite/SQLite]]
+[[SQLite/SQLite]]
 
 Windows
 - [Pacote - sqflite_common_ffi](https://pub.dev/packages/sqflite_common_ffi)

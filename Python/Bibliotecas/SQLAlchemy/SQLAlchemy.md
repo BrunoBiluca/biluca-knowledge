@@ -1,3 +1,6 @@
+---
+categoria: biblioteca
+---
 [SQLAlchemy](https://docs.sqlalchemy.org/en/latest/) é considerado um dos ORMs mais **maduros e completos** disponíveis, oferecendo uma grande variedade de recursos para lidar com bancos de dados. Ele é uma boa escolha para projetos de médio e grande escala.
 
 SQLAlchemy’s `asyncio` support depends upon the [greenlet](https://pypi.org/project/greenlet/) project.

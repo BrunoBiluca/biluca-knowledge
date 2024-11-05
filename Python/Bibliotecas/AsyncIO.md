@@ -2,6 +2,7 @@
 tags:
   - python
   - asynchronous_programming
+categoria: biblioteca
 ---
 Asyncio refere-se à programação assíncrona com corrotinas em Python.
 

@@ -1,3 +1,6 @@
+---
+categoria: biblioteca
+---
 
 [Tortoise-ORM](https://tortoise-orm.readthedocs.io/en/latest/) é construído sobre o `asyncio` e é projetado para aplicações que precisam de alta performance e escalabilidade, especialmente quando se trata de operações assíncronas.
 

@@ -27,7 +27,7 @@
 		{"id":"aff759a1eb54bc21","type":"text","text":"### Computação em cluster - Batch\n\n- [[Comparações de ferramentas de integração de ETL]]","x":-895,"y":3174,"width":329,"height":220},
 		{"id":"e66e93bed67ef9d5","type":"text","text":"### Fundamento de Big Data\n\n- ","x":-895,"y":2680,"width":329,"height":86},
 		{"id":"3e832ea45cd857bd","type":"text","text":"### Streaming de dados\n\n- [[Comparações de engines de streaming]]","x":-895,"y":4580,"width":329,"height":117,"color":"3"},
-		{"id":"1e0a679b0c489a66","type":"text","text":"### Governança de dados\n- [[Governança de dados]]\n- [[Segurança]]","x":-895,"y":4280,"width":329,"height":120,"color":"3"},
+		{"id":"1e0a679b0c489a66","type":"text","text":"### Governança de dados\n- [[Governança de dados]]\n- [[Segurança de dados]]","x":-895,"y":4280,"width":329,"height":120,"color":"3"},
 		{"id":"a7dd7cba2312af25","type":"text","text":"### Escalonamento vertical vs horizontal\n\n- ","x":-1365,"y":520,"width":329,"height":125,"color":"1"},
 		{"id":"cc81ace5c8ac1b9c","type":"text","text":"### Modelagem dimensional\n\n- [[Kimball]]\n- [[Inmon]]\n- [[Data vault]]","x":-1365,"y":680,"width":329,"height":180},
 		{"id":"cf26e94fcc9a6d6c","type":"text","text":"### Teorema CAP\n\n- ","x":-1365,"y":280,"width":329,"height":86,"color":"1"},

@@ -59,6 +59,54 @@
       "selectAppend": true,
       "selectPrepend": true,
       "selectBackground": true
+    },
+    {
+      "type": "path",
+      "name": "categoria",
+      "value": "Exemplo - ",
+      "matchCaseSensitive": false,
+      "match": "contains",
+      "uid": "07e1-ff8d",
+      "selectText": true,
+      "selectAppend": true,
+      "selectPrepend": true,
+      "selectBackground": true
+    },
+    {
+      "type": "path",
+      "name": "categoria",
+      "value": "Livro - ",
+      "matchCaseSensitive": false,
+      "match": "contains",
+      "uid": "6ad7-d866",
+      "selectText": true,
+      "selectAppend": true,
+      "selectPrepend": true,
+      "selectBackground": true
+    },
+    {
+      "type": "path",
+      "name": "categoria",
+      "value": "Tutorial - ",
+      "matchCaseSensitive": false,
+      "match": "contains",
+      "uid": "430c-40d2",
+      "selectText": true,
+      "selectAppend": true,
+      "selectPrepend": true,
+      "selectBackground": true
+    },
+    {
+      "type": "attribute",
+      "name": "categoria",
+      "value": "prática",
+      "matchCaseSensitive": false,
+      "match": "exact",
+      "uid": "fa8e-eb44",
+      "selectText": true,
+      "selectAppend": true,
+      "selectPrepend": true,
+      "selectBackground": true
     }
   ]
 }

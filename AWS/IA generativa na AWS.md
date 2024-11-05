@@ -85,7 +85,7 @@ Saúde
 
 # Defesa detalhada na AWS
 
-O desenvolvimento de aplicações de IA generativa também adicionam vários desafios no âmbito da [[Segurança]] e [[Governança de dados]], uma estratégia muito utilizada é a [[Segurança#Defesa detalhada|Defesa detalhada]].
+O desenvolvimento de aplicações de IA generativa também adicionam vários desafios no âmbito da [[Segurança de dados]] e [[Governança de dados]], uma estratégia muito utilizada é a [[Segurança de dados#Defesa detalhada|Defesa detalhada]].
 
 1. **Proteção de dados**
 	- Dados estacionários: criptografia a partir do AWS KMS

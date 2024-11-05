@@ -1,6 +1,7 @@
 ---
 tags:
   - Linguagens
+categoria: linguagem
 ---
 # Python
 

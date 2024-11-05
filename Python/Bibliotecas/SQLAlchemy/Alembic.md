@@ -3,6 +3,7 @@ tags:
   - banco_de_dados
   - python
   - backend
+categoria: biblioteca
 ---
 Alembic é a biblioteca que implementa as ferramentas de migração do SQLAlchemy.
 

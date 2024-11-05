@@ -1,3 +1,6 @@
+---
+categoria: prática
+---
 
 # Principais considerações de performance
 
