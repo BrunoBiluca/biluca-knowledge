@@ -6,7 +6,7 @@
 
 Principais características que as DLT implementam:
 
-- Melhores práticas [[Delta Lake]] automaticamente aplicadas: **otimização, compactação automática**
+- Melhores práticas [[Delta lake]] automaticamente aplicadas: **otimização, compactação automática**
 - Automaticamente **gerenciam os dados físicos**: automaticamente executa vacuum e otimizações diárias
 - **Evolução de esquema**: quando removidos colunas valores antigos são preservados.
 - Os mesmos princípios do uso de DTL são os mesmos do [[Structured Streaming]].

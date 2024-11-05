@@ -1,9 +1,0 @@
-{
-	"nodes":[
-		{"id":"da60daf61ebfcccb","type":"text","text":"### Gerenciamento de projetos\n\n- ","x":-660,"y":-600,"width":250,"height":140},
-		{"id":"91d106623acf444b","type":"text","text":"### Code Review\n\n- [[Code Review]]\n- [[Código limpo]]","x":-240,"y":-600,"width":250,"height":147,"color":"3"}
-	],
-	"edges":[
-		{"id":"8d5d744d9dfea9d6","fromNode":"da60daf61ebfcccb","fromSide":"right","toNode":"91d106623acf444b","toSide":"left"}
-	]
-}

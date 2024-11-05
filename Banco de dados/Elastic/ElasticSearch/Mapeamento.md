@@ -53,7 +53,7 @@ Alguns dos parâmetros mais utilizado para a criação de mapeamento
 
 Utilizando esse mapeamento de dados podemos ver uma melhoria muito grande no storage do Elasticsearch
 
-![Diferença do mapeamento em relação a storage](storage_diff_mapping.PNG)
+![Diferença do mapeamento em relação a storage](storage_diff_mapping.png)
 
 # Routing
 

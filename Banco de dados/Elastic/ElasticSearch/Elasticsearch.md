@@ -3,8 +3,6 @@ tags:
   - banco_de_dados
   - engenharia_de_dados
 ---
-#banco_de_dados 
-
 # Elasticsearch
 
 > [!info] O que é?
@@ -39,4 +37,4 @@ Funcionalidades
 
 - [Curso prático de Elasticsearch e várias ferramentas da stack da Elastic](https://www.udemy.com/course/elasticsearch-7-and-elastic-stack/?couponCode=KEEPLEARNING)
 - [Melhores práticas na utilização do Elasticsearch](https://lazypro.medium.com/best-practices-of-using-elasticsearch-2a2485a289c7)
-- [Guias com dicas do Elsaticsearch](https://opster.com/elasticsearch-guides/)
+- [Guias com dicas do Elasticsearch](https://opster.com/elasticsearch-guides/)

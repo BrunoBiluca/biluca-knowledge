@@ -2,8 +2,11 @@
   "accentColor": "",
   "baseFontSize": 16,
   "enabledCssSnippets": [
+    "supercharged-links",
+    "default",
     "center-images"
   ],
   "cssTheme": "Dracula Official",
-  "theme": "obsidian"
+  "theme": "obsidian",
+  "nativeMenus": false
 }

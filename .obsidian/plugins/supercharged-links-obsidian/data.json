@@ -1,0 +1,64 @@
+{
+  "targetAttributes": [
+    "categoria"
+  ],
+  "targetTags": true,
+  "getFromInlineField": true,
+  "enableTabHeader": true,
+  "activateSnippet": false,
+  "enableEditor": true,
+  "enableFileList": true,
+  "enableBacklinks": true,
+  "enableQuickSwitcher": true,
+  "enableSuggestor": true,
+  "selectors": [
+    {
+      "type": "attribute",
+      "name": "categoria",
+      "value": "biblioteca",
+      "matchCaseSensitive": false,
+      "match": "exact",
+      "uid": "d315-5744",
+      "selectText": true,
+      "selectAppend": true,
+      "selectPrepend": true,
+      "selectBackground": true
+    },
+    {
+      "type": "attribute",
+      "name": "categoria",
+      "value": "framework",
+      "matchCaseSensitive": false,
+      "match": "exact",
+      "uid": "da31-54f5",
+      "selectText": true,
+      "selectAppend": true,
+      "selectPrepend": true,
+      "selectBackground": true
+    },
+    {
+      "type": "attribute",
+      "name": "categoria",
+      "value": "linguagem",
+      "matchCaseSensitive": false,
+      "match": "exact",
+      "uid": "8867-ab25",
+      "selectText": true,
+      "selectAppend": true,
+      "selectPrepend": true,
+      "selectBackground": true
+    },
+    {
+      "type": "path",
+      "name": "categoria",
+      "value": ".png",
+      "matchCaseSensitive": false,
+      "match": "endswith",
+      "uid": "93ff-5f29",
+      "selectText": true,
+      "selectAppend": true,
+      "selectPrepend": true,
+      "selectBackground": true
+    }
+  ]
+}
