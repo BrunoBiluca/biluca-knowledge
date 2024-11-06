@@ -21,6 +21,19 @@ A API de Jobs permite criar, atualizar, remover e recuperar informações de tar
 
 Esse endpoint nos permite criar quantas execuções quisermos de um JOB. Cada execução nova criada retorna um novo `job_id` que pode ser utilizado para recuperar informações.
 
+Esse endpoint não inicia o processamento, apenas cria o job no cluster.
+
+```json
+// Exemplo de configuração
+{
+	"name": "Ingest new data",
+	"existing_cluster_id": "xxxx-xxxxxx-xxxxxxx",
+	"notebook_task": {
+		"notebook_path": "/Prod/ingest.py"
+	}
+}
+```
+
 #### [GET /get](https://docs.databricks.com/api/workspace/jobs/get)
 
 Esse endpoint nos permite recuperar informações sobre um job definido pelo `job_id`.

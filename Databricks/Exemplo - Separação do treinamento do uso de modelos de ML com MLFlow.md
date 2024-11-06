@@ -1,6 +1,8 @@
 # Exemplo - Separação do treinamento do uso de modelos de ML com MLFlow
 
-Podemos fazer o treinamento independente da utilização desse modelo. Nesse exemplo temos o primeiro script que treina e registra o modelo `LogisticRegression` em um volume do Databricks (utilizando o gerenciamento do [[Unity Catalog]]).
+Podemos fazer o treinamento independente da utilização desse modelo criado pelo formato definido pelo [[MLFlow]].
+
+Nesse exemplo temos o primeiro script que treina e registra o modelo `LogisticRegression` em um volume do Databricks (utilizando o gerenciamento do [[Unity Catalog]]).
 
 ```python
 # training_model.py
@@ -22,5 +24,3 @@ Quando o processamento de [[Structured Streaming]] ou o processamento em lotes d
 # job.py
 loaded_model = mlflow.pyfunc.load_model("caminho/do/modelo")
 ```
-
-Podemos como o exemplo acima mostra separar o desenvolvimento do modelo 

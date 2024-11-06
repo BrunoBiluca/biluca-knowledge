@@ -45,4 +45,4 @@ WHEN NOT MATCHED THEN INSERT *
 Como Delta Lake força esquema na escrita, **restrições em cada coluna são suportadas** durante a escrita das tabelas.
 
 > [!tip] Tabelas gerenciadas
-> Caso a tabela seja criada sem especificar o LOCATION, essa tabela passa a ser gerenciada pelo Databricks (metadados e dados).
+> Caso a tabela seja criada sem especificar o *LOCATION*, essa tabela passa a ser gerenciada pelo Databricks (metadados e dados).

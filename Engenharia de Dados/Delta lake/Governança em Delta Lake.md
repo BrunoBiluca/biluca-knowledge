@@ -1,3 +1,6 @@
+---
+categoria: prática
+---
 # Governança em Delta Lake
 
 O [[Delta lake]] provê vários opções de controle de [[Governança de dados]].

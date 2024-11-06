@@ -1,9 +1,9 @@
 #planejamento_de_projetos 
 
 > [!info] Definição de 🌟 Valores
-> Valores são ideais, vontades ou funções que serão desempenhadas ou alcançadas. Um Valor não é necessariamente alcançável, ele foca em definir um ideal que irá guiar o desenvolvimento do projeto.
+> Valores são ideais, vontades ou funções que guiam o desenvolvimento do projeto. Um Valor não é necessariamente alcançável, ele foca em definir um ideal que irá guiar o desenvolvimento do projeto.
 
-Como são os 🌟 Valores definem os ideias que guia o projeto, são eles que possuem as prioridades de um projeto. Essas prioridades são utilizadas no planejamento de execução para definir quanto tempo é destinado a cada prioridade e garantir que o que seja mais impactante está recebendo a atenção que merece.
+Como são os 🌟 Valores definem os ideais que guia o projeto, são eles que possuem as prioridades de um projeto. Essas prioridades são utilizadas no planejamento de execução para definir quanto tempo é destinado a cada prioridade e garantir que o que seja mais impactante está recebendo a atenção que merece.
 
 Durante o desenvolvimento do projeto a lista de 🌟 Valores deve crescer e se modificar, já que as necessidades do projeto muda com o tempo. Valores podem ser desmembrados em valores mais específicos e outros valores podem ser encerrados.
 

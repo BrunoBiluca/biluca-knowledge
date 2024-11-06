@@ -98,8 +98,10 @@ spark.conf.set("<opção>", <valor>)
 ```
 
 Opções:
+
 - `spark.sql.shuffle.partitions`: configura o embaralhamento dos dados no cluster
-	- Pode ser setado para o número de cores para melhorar a performance (`spark.sparkContext.defaultParallelism` )
+	- Pode ser adicionado para alterar o número de cores no processamento e melhorar a performance (`spark.sparkContext.defaultParallelism` )
+- `spark.sql.files.maxPartitionBytes`: configura o tamanho máximo de uma partição de dados
 
 # Referências
 

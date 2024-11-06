@@ -88,9 +88,15 @@ Mesmo assim é importante prestarmos atenção a nossa estratégia de particiona
 
 > [!warning]- O excesso de particionamento também é um problema
 > - Particionar pequenas tabelas pode levar a um aumento de armazenamento e o número total de arquivos para escaneamento
-> - Se a maioria das partições tem < 1GB de dados a tabela está superparticionada
+> - Se a maioria das partições tem tamanho < 1GB de dados a tabela está pode estar superparticionada
 > 
 > Nesses casos **executar um processo de Optimize não surte nenhum efeito**, já que o particionamento já está altamente compactado e mal definido.
+
+O tamanho máximo das partições pode ser alterado pela configuração:
+
+```python
+spark.conf.set("spark.sql.files.maxPartitionBytes", <valor em bytes>)
+```
 
 ## Mesclagem de dados condicional
 

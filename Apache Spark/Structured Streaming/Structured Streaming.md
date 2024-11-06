@@ -1,11 +1,20 @@
 # Structured Streaming
 
 > [!info] Definição
-> [Structured Streaming](https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html) é um motor de processamento de stream (fluxo contínuo) escalável e tolerante a falhas. Foi criado de forma a garantir que o processamento em streaming seja tratado da mesma forma que o formato em lotes.
+> [Structured Streaming](https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html) é um motor de processamento de stream (fluxo contínuo) escalável e tolerante a falhas criado a partir do [[Apache Spark]].
 > 
-> Internamento o Structured Streaming trata o processamento como vários micro-lotes podendo ter latência baixas até 100 milisegundos, sendo considerado assim um motor de processamento contínuo em tempo real (ou quase).
+> Internamente o Structured Streaming trata o processamento como vários micro-lotes podendo ter latência baixas até 100 milisegundos, sendo considerado assim um motor de processamento contínuo em tempo real (ou quase).
 
-Exemplo de configuração de um processamento streaming:
+São componentes de um processamento Structured Streaming:
+
+- **Unbound table (tabela ilimitada):** tabela de entrada, novas linhas são adicionadas a essa tabela para o processamento do micro lote
+- **Result table:** tabela contendo os resultados do processamento dividida pela janela
+- **Output:** modelo de output, pode ser completo, por inserção apenas ou de atualização.
+
+> [!warning]- Operações não suportadas pelos Dataframes de streaming
+> A maioria das operações são compatíveis entre os dois, existem algumas exceções como o caso da ordenação que não é possível em casos de dados streaming.
+
+### Exemplo de configuração
 
 ```python
 # exemplo de um job de processamento streaming
@@ -28,8 +37,6 @@ spark.readStream.format("kafka")
   .start()
 ```
 
-> [!tip] Operações sobre streaming Dataframes vs Dataframes estáticos
-> A maioria das operações são compatíveis entre os dois, existem algumas exceções como o caso da ordenação que não é possível em casos de dados streaming.
 
 # Leitura (readStream)
 
@@ -81,7 +88,7 @@ df.writeStream
 
 Para essa configuração é importante **levar em consideração os requisitos de latência e a taxa de chegada dos dados na origem**, já que quando **menor o intervalo do trigger mais verificações** o sistema faz para verificar a chegada de novos dados.
 
-### Output
+### Output mode
 
 - **complete** - toda a *tabela resultado* irá ser escrita no armazenamento externo
 - **append** - apenas novos registros serão adicionados a *tabela resultado* desde o último gatilho.
@@ -206,11 +213,11 @@ Para garantir deduplicação de dados em streaming, podemos fazer
 - Realizar `dropDuplicates()` no lote com novos dados
 - Mesclagem apenas inserção na tabela de destino
 
-## Checkpoits
+# Checkpoits
 
 Características
 
 - Armazenam o estado atual do processo de streaming para um armazenamento em cloud
 - Permitem que o motor de streaming rastreie o progresso do processamento
 - Não podem ser compartilhados entre streams
-- Verificando com o mecanismo de escrita a frente garante tolerância a falhas para o processo de streaming
+- O mecanismo de escrita a frente garante tolerância a falhas para o processo de streaming
