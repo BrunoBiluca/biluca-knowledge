@@ -107,6 +107,30 @@
       "selectAppend": true,
       "selectPrepend": true,
       "selectBackground": true
+    },
+    {
+      "type": "path",
+      "name": "categoria",
+      "value": "Certificação - ",
+      "matchCaseSensitive": false,
+      "match": "contains",
+      "uid": "6f5d-f272",
+      "selectText": true,
+      "selectAppend": true,
+      "selectPrepend": true,
+      "selectBackground": true
+    },
+    {
+      "type": "path",
+      "name": "categoria",
+      "value": "Curso - ",
+      "matchCaseSensitive": false,
+      "match": "contains",
+      "uid": "c41c-1669",
+      "selectText": true,
+      "selectAppend": true,
+      "selectPrepend": true,
+      "selectBackground": true
     }
   ]
 }

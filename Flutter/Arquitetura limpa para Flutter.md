@@ -1,3 +1,6 @@
+---
+categoria: arquitetura
+---
 # Arquitetura limpa para Flutter
 
 Como estamos trabalhando com um aplicativo voltado a interação do usuário, uma boa forma de organizarmos a arquitetura do código é seguindo o **fluxo de chamada**. O fluxo de chamada é o caminho que o sistema toma para atualizar o estado da aplicação que o usuário está utilizando.
