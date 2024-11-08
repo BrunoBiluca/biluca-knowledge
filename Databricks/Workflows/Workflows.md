@@ -33,7 +33,7 @@ A falha de uma tarefa é sempre parcial, o que significa que as operações no n
 
 ### Configurações de jobs de streaming
 
-Para reiniciar jobs de stremaing em casos de falha é recomendável a seguinte configuração:
+Para reiniciar jobs de streaming em casos de falha é recomendável a seguinte configuração:
 
 - **Retries:** Set to Unlimited.    
 - **Maximum concurrent runs:** Set to 1. There must be only one instance of each query concurrently active.
@@ -41,3 +41,9 @@ Para reiniciar jobs de stremaing em casos de falha é recomendável a seguinte c
 - **Notifications:** Set this if you want email notification on failures.
 - **Schedule:** Do not set a schedule.
 - **Timeout:** Do not set a timeout. Streaming queries run for an indefinitely long time.
+
+A Databricks oferece uma documentação auxiliar de [configurações do cluster](https://docs.databricks.com/en/compute/cluster-config-best-practices.html#complex-batch-etl) para melhor performance e garantia de resistência a falhas.
+
+### Processamentos complexos de ETL
+
+Para operações complexas que envolvam muita distribuição de dados no cluster, como é o caso de JOINS e UNIONS, Databricks recomenda utilizar menos instâncias de trabalhadores no cluster com mais recursos.
