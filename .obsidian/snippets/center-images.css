@@ -9,6 +9,7 @@
 
 .image-embed[alt$="|%cheio"]>.image-captions-figure {
 	max-width: 100% !important;
+	width: 100%;
 }
 
 /* PLUGIN: Obsidian Mermaid */
@@ -27,6 +28,7 @@
 
 .excalidraw-embedded-img.excalidraw-svg-\%cheio {
 	max-width: 100% !important;
+	width: 100%;
 }
 
 /* Geral */
