@@ -1,5 +1,8 @@
 # Épicos
 
+> [!info] Definição
+> Épicos são agrupamentos de [[Execuções]] que apresentam um avanço grande na realização do [[Valores|Valor]] relacionado.
+
 #### Propriedades
 
 - Nome

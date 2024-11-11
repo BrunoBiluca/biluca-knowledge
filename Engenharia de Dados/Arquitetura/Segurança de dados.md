@@ -2,6 +2,8 @@
 tags:
   - segurança
 ---
+# Segurança de dados
+
 > [!info] Definição
 > A segurança garante o sigilo, a integridade e a disponibilidade dos dados da organização e dos ativos e infraestrutura de informações. Essa função é geralmente chamada de segurança da informação ou segurança cibernética nas organizações.
 

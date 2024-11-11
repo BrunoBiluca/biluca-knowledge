@@ -9,5 +9,5 @@ Elementos da organização
 - [[Épicos]]
 - [[Execuções]]
 
-![[Entidades da organização|Relação entre as entidades da organização pessoal|%cheio]]
+![[Diagrama - Entidades da organização|Relação entre as entidades da organização pessoal|%cheio]]
 

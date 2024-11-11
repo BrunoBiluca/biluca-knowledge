@@ -4,7 +4,7 @@ A plataforma[[Databricks]] provê uma [API completa](https://docs.databricks.com
 
 É possível utilizar o Databricks API de várias formas:
 
-- [Databricks CLI](https://docs.databricks.com/en/dev-tools/cli/commands.html): aplicação na linha de comando com acessos a plataforma Databricks em qualquer sistema operacional
+- [[Databricks CLI]]: aplicação na linha de comando com acessos a plataforma Databricks em qualquer sistema operacional
 - Databricks SDK: kit de desenvolvimento para várias linguagens de programação como [[Python]], Java e GO.
 
 A API do Databricks pode ser utilizada para várias funcionalidades, principalmente quando queremos informações mais detalhadas do que as apresentadas na interface WEB. 
@@ -47,3 +47,5 @@ Metadados:
 - Agendamento
 - Cluster de execução
 - Estado atual da execução, aqui podemos saber se ela está executando, bloqueada ou finalizada com sucesso ou falha.
+
+

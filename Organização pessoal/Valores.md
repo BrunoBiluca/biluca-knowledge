@@ -1,5 +1,12 @@
 # Valores
 
+> [!info] Definição de 🌟 Valores
+> São as **coisas** que quero realizar, alcançar ou apenas fazer. Um Valor não é necessariamente alcançável, ele foca em definir um ideal que irá guiar as minhas atividades.
+
+A principal propriedade de um Valor é definir a sua **prioridade**. Sempre temos uma lista maior de atividades do que tempo disponível para fazer todas elas, é ai que entram os Valores, por meio deles é feita a priorização.
+
+Ao longo do tempo é possível que novos Valores sejam criados (quando temos uma nova realizada na vida), Valores podem ser arquivados (quando aquilo já não faz mais sentido ou quando foi alcançado). Valores também podem ser desmembrados em outros Valores. **A reavaliação de Valores deve ser um processo constante na organização pessoal.**
+
 #### Propriedades
 
 - **Nome** - Nome do Valor, deve representar bem o que deve ser alcançado, almejado ou desejado.

@@ -65,8 +65,6 @@ df = (spark
 	 .option("password", password)) # Conexão é feita com sucesso
 ```
 
-
-
 # Jobs
 
 > [!info] Documentação
@@ -100,3 +98,17 @@ Tipos de clusters:
 - **Job clusters**: encerram quando o job é finalizado, são principalmente **utilizados em produção**.
 
 Jobs **não pode ser atribuídos a grupos de usuários**, eles devem ser atribuídos a um dono que deve ser um indivíduo.
+
+# Qualidade dos dados
+
+A preocupação com a qualidade dos dados é um elemento dentro da [[Governança de dados]] que garante a saúde do lake.
+
+[Documentação do Databricks sobre restrições de dados](https://docs.databricks.com/en/tables/constraints.html)
+
+As principais formas de garantir a qualidade dos dados são:
+
+- Forçando restrições as informações dos dados
+	- Por exemplo: períodos válidos de tempo, faixas válidas de latitude e longitude
+- Verificar por valores NULL
+- Relacionar informações (PRIMARY KEY e FOREIGN)
+	- Nesse caso, não é possível forçar as relações como em um banco de dados relacional, no [[Unity Catalog]] essas chaves são informativas.

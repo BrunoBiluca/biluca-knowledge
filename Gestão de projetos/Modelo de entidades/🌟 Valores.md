@@ -46,8 +46,6 @@ Lista de Prioridades:
 - 🪖 - Outros
 - 🥶 - Congelado
 - 🛑 - Encerrado
-  
-> **💡 DICA:** Quanto menos valores mais consistente serão as prioridades dentro de vários Valores. 
 
 As primeiras posições da lista de prioridade devem sempre conter no máximo um 🌟 Valor associado, isso ajuda durante o processo de coleta de 🃏 Histórias para uma sprint e facilita o entendimento das prioridades no time.
 
@@ -55,7 +53,9 @@ O último item da lista de prioridades é utilizado para adicionar os valores co
 
 # Exemplo de criação de Valores
 
-Para demonstrar a criação de Valores vamos pegar o jogo Mario Bros. O valores iniciais poderiam ser algo no formato:
+Para demonstrar a criação de Valores vamos pegar o jogo Mario Bros. 
+
+O valores iniciais poderiam ser algo no formato:
 
 - Jogador principal
 	- Motivação: o jogador quer uma mecânica responsiva e de fácil aprendizado para concluir os desafios
