@@ -1,7 +1,7 @@
 ---
 categoria: prática
 ---
-# Principais considerações de performance
+# Otimizações - Databricks
 
 Para além das [[Otimizações no Delta Lake]] a própria plataforma do [[Databricks]] tem suas considerações de performance, por ser uma plataforma hospedada na cloud.
 

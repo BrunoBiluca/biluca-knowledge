@@ -1,4 +1,24 @@
+---
+categoria: arquitetura
+---
+# Arquitetura medalhão
+
+--- start-multi-column: ExampleRegion1  
+```column-settings  
+number of columns: 2
+Column Size: [59%, 40%]
+Border: disabled
+Shadow: off
+```
+
 A separação por camadas nos permite definir objetivos bem claros para cada conjunto de dados armazenado.
+
+--- end-column ---
+
+> [!info] Principais referências
+> - 
+
+--- end-multi-column
 
 # Bronze
 

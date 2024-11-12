@@ -1,14 +1,25 @@
 ---
 tags:
   - engenharia_de_dados
+categoria: repositório de dados
 ---
-# Delta Lake
+# Delta lake
 
-> [!info] Definição
-> [Delta Lake](https://delta.io/) é um [projeto de código aberto](https://github.com/delta-io/delta) que permite construir um [[Data Lakehouse]] em cima de um [[Data Lake]]. Delta Lake fornece [transações ACID](https://docs.delta.io/latest/concurrency-control.html), manipulação escalonável de metadados e unifica processamento de dados em [streaming](https://docs.delta.io/latest/delta-streaming.html) e [lote](https://docs.delta.io/latest/delta-batch.html)  em data lakes existentes, como S3, ADLS, GCS e HDFS.
-> 
+--- start-multi-column: ExampleRegion1  
+```column-settings  
+number of columns: 2
+Column Size: [59%, 40%]
+Border: disabled
+Shadow: off
+```
+
+[Delta Lake](https://delta.io/) é um [projeto de código aberto](https://github.com/delta-io/delta) que permite construir um [[Data Lakehouse]] em cima de um [[Data Lake]]. Delta Lake fornece [transações ACID](https://docs.delta.io/latest/concurrency-control.html), manipulação escalonável de metadados e unifica processamento de dados em [streaming](https://docs.delta.io/latest/delta-streaming.html) e [lote](https://docs.delta.io/latest/delta-batch.html)  em data lakes existentes, como S3, ADLS, GCS e HDFS.
+
+--- end-column ---
+
+> [!info] Principais referências
 > - [Documentação](https://delta.io/learn)
->   
+> 
 > Exemplos de implementação de uma solução utilizando Delta lake:
 > - [[Exemplo - Vendas de uma loja]]
 > - [[Exemplo - Loja de livros]]
@@ -16,25 +27,13 @@ tags:
 > Considerações ao utilizar Delta Lake:
 > - [[Governança em Delta Lake]]
 > - [[Otimizações no Delta Lake]]
+> 
+
+--- end-multi-column
 
 Delta Lake usa arquivos Parquet versionados para armazenar seus dados em seu armazenamento em nuvem. Além das versões, Delta Lake também armazena um log de transações para acompanhar todos os commits feitos na tabela ou diretório de armazenamento de blob para fornecer transações ACID.
 
 ![[Exemplificação do uso da tecnologia Delta Lake.png|Exemplificação do uso da tecnologia Delta Lake com suas integrações e ferramentas disponíveis|center|500]]
-
-Sempre que se escreve no modo **delta** estamos criando uma tabela `DeltaTable` que será gerenciada no formato. Uma tabela Delta Lake é persistida no seguinte formato:
-
-```python
-delta-table
-  ┣ _delta_log
-  ┃   ┣ v0.json
-  ┃   ┃ ... outros arquivos de controle de versão
-  ┃   ┣ v10.checkpoint.parquet (otimização que consolida versões anteriores)
-  ┃   ┗ vXX.json
-  ┣ data0.parquet
-  ┗ ... outras arquivos de dados
-```
-
-O transaction log (`_delta_log`) é o sistema de versionamento de uma Delta Table, ele utilizada arquivos no formato `.json` para persistir as alterações a cada versão e `.checkpoint.parquet` para aglutinar a cada 10 alterações de forma a remontar o esquema de forma mais performática.
 
 ### O que suporta?
 
@@ -54,78 +53,17 @@ O transaction log (`_delta_log`) é o sistema de versionamento de uma Delta Tabl
 ### O que não suporta?
 
 - Delta Lake não oferece suporte a transações multitabelas e chaves estrangeiras, ou seja, transações no nível da _tabela_.
+	- chaves estrangeiras são atualmente suportadas no ambiente [[Databricks]] pelo Unity Catalog, porém elas são apenas informativas, ou seja servem como referências não como uma funcionalidade com é o caso de outros bancos de dados, SQL Server e MySQL, por exemplo.
+
+
+# Principais conceitos
+
+- [[Formato de uma Tabela Delta]]
+- [[Particionamento]]
 
 # Funcionalidades
 
 - [[Change Data Feed (CDF)]]
-
-## Visualizações
-### Visualizações materializadas (Materialized View)
-
-Visualizações materialização são tabelas pré-processadas que mantem o estado de uma consulta, dessa forma consultas que são executadas várias vezes podem ser materializadas em uma visualização melhorando a performance.
-
-> [!tip]- Databricks Delta Cache
-> Databricks mantém o estado de uma consulta para o cluster ativo melhorando a performance caso essa consulta seja feita várias vezes.
-> 
-> Mesmo assim não é garantido por quanto tempo esse estado será mantido.
-
-## Clonar tabelas
-
-Existem 2 formas de [clonar uma tabela Delta](https://docs.databricks.com/pt/delta/clone.html):
-
-- **Deep clone (clonagem profunda):** copia tudo
-	- *Pode ocorrer de forma incremental* utilizando a expressão `CREATE OR REPLACE TABLE`.
-- **Shallow clone (clonagem rasa):** copia apenas os logs de transações do Delta Lake, assim qualquer alteração aos dados na tabela copiada serão armazenados separadamente, pode ser utilizado principalmente para testar consultas.
-
-Ambas as abordagens quando são modificadas persistem essas alterações independentes da fonte, ou seja, qualquer alteração na tabela clonada não altera a tabela original.
-## Particionamento
-
-Uma forma de organizar os dados é dividi-los em partições definidas por campos específicos da nossa base de dados. Isso melhora consideravelmente a performance em queries que utilizam filtros nesses campos, já que menos dados deverão ser carregados para o processamento.
-
-Um exemplo simples de particionamento seria, se o processamento varre uma faixa de dados por data de ingestão, podemos fazer partições por data de ingestão o que limita a quantidade de dados escaneados para o filtro consequentemente carregamos menos dados para memória.
-
-Mesmo assim é importante prestarmos atenção a nossa estratégia de particionamento, já que ela pode também criar um problema de [[Inclinação de dados (Data Skew)]] e assim levar a sérios problemas de performance.
-
-> [!warning]- O excesso de particionamento também é um problema
-> - Particionar pequenas tabelas pode levar a um aumento de armazenamento e o número total de arquivos para escaneamento
-> - Se a maioria das partições tem tamanho < 1GB de dados a tabela está pode estar superparticionada
-> 
-> Nesses casos **executar um processo de Optimize não surte nenhum efeito**, já que o particionamento já está altamente compactado e mal definido.
-
-O tamanho máximo das partições pode ser alterado pela configuração:
-
-```python
-spark.conf.set("spark.sql.files.maxPartitionBytes", <valor em bytes>)
-```
-
-## Mesclagem de dados condicional
-
-O [[Delta lake]] suporta operações de inserção, atualização e exclusões em [Mesclagem de dados (Doc)](https://docs.databricks.com/pt/delta/merge.html). No [[Exemplo - Loja de livros#Livros]] vemos esse tipo de mesclagem de dados, onde o estado atual do livro é alterado cada vez que seu preço é modificado, isso nos permite manter um histórico de preços.
-
-> [!warning]- Limitação da mesclagem
-> A operação de mesclagem de dados **não pode ser performada** se múltiplas linhas da fonte combinam e tentam modificar a mesma linha da tabela alvo. Isso geraria resultados ambíguos já que não fica claro qual a linha fonte deve ser utilizada para alterar ou para remover a linha alvo.
-> 
-> Para corrigir esse problema é necessário reprocessar a tabela fonte para **eliminar qualquer possibilidade de múltiplas combinações**.
-
-Um caso que acontece comumente no processo de ingestão de dados é a necessidade de tratar **dados duplicados na tabela destino**. Esses dados devem ser mantidos apenas uma única vez.
-
-```sql
--- exemplo de inserção apenas de logs novos na tabela
-MERGE INTO logs
-USING newDedupedLogs
-ON logs.uniqueId = newDedupedLogs.uniqueId
-WHEN NOT MATCHED
-  THEN INSERT *
-```
-
-Sabendo um pouco mais sobre a natureza da tabela podemos otimizar o código criado. Utilizando o exemplo de logs acima, se soubermos que na fontes os registros podem ser duplicados apenas por alguns dias, podemos fazer um filtro que especifica o intervalo de datas relevante ao nosso caso.
-
-```sql
--- abordagem mais eficiênte, pois busca logs cadastrados para os últimos 7 dias em vez da tabela inteira
-MERGE INTO logs
-USING newDedupedLogs
-ON logs.uniqueId = newDedupedLogs.uniqueId AND logs.date > current_date() - INTERVAL 7 DAYS
-WHEN NOT MATCHED AND newDedupedLogs.date > current_date() - INTERVAL 7 DAYS
-  THEN INSERT *
-```
-
+- [[Visualizações]]
+- [[Mesclagem de dados condicional]]
+- [[Clonar tabelas]]

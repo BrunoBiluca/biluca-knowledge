@@ -1,4 +1,4 @@
-# Criando uma coluna baseada no retorno de uma função
+# Exemplo - Criando uma coluna baseada no retorno de uma função
 
 Existem duas formas de fazer essa operação em pyspark
 

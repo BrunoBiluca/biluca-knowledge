@@ -1,3 +1,6 @@
+---
+categoria: prática
+---
 # Empacotamento de arquivo do PySpark
 
 Nesse artigo demonstramos uma forma de organizar o código de um projeto em PySpark para submissão de jobs em um cluster. Com esse formato é possível **organizar o projeto em uma arquitetura limpa**.

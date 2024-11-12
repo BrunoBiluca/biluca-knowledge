@@ -5,6 +5,14 @@ categoria: prática
 
 O modelo de [[Governança de dados]] no Databricks é aplicado pelo [[Unity Catalog]].
 
+> [!info]- Hive metastore (legado)
+> O Hive metastore é uma modelo de controle de privilégios para objetos armazenados no Hive, esse modelo já está definido como legado e será substituído pelo [[Unity Catalog]].
+> - [Privilégios do Hive metastore e objetos protegíveis](https://docs.databricks.com/pt/data-governance/table-acls/object-privileges.html#privilege-types)
+
+Componentes da [[Databricks]] que possibilitam melhorar a segurança da operação
+
+- [[Databricks secrets]]
+
 # Privilégios e objetos seguros
 
 Os objetos dentro do Databricks podem ser protegidos com uma série de [políticas de privilégios](https://docs.databricks.com/pt/data-governance/unity-catalog/manage-privileges/privileges.html).
@@ -16,54 +24,6 @@ Alguns dos privilégios mais comuns são:
 | Tabela | `ALL PRIVILEGES`<br>`APPLY TAG`<br>`MODIFY` (adição, remoção e alteração de dados)<br>`SELECT` |
 
 Cada componente do Metastore tem um tipo de privilégio específico, além disso é necessário disponibilizar privilégios para um componente em cada camada mais baixa é necessário habilitar os privilégios nas camadas superiores, caso contrário o privilégio não terá efeito algum.
-
-
-> [!info]- Hive metastore (legado)
-> O Hive metastore é uma modelo de controle de privilégios para objetos armazenados no Hive, esse modelo já está definido como legado e será substituído pelo [[Unity Catalog]].
-> - [Privilégios do Hive metastore e objetos protegíveis](https://docs.databricks.com/pt/data-governance/table-acls/object-privileges.html#privilege-types)
-
-# Databricks secrets
-
-> [!info] O que é?
-> Databricks secrets permitem que você armazene credenciais e as referencie em notebooks e jobs.
-> 
-> - [Redaction]([https://docs.databricks.com/security/secrets/redaction.html](https://docs.databricks.com/security/secrets/redaction.html))
-> - [Secrets]([https://docs.databricks.com/security/secrets/index.html](https://docs.databricks.com/security/secrets/index.html))
-
-As permissões de acesso ao secrets são:
-
-- **MANAGE**: permite alterar toda a lista de controle de acesso, e escrever e ler do escopo do secret.
-- **WRITE**: permite ler e escrever do escopo do secret
-- **READ**: permite ler de todo o escopo do secrete e lista os secrets disponíveis.
-- **Administradores do Workspace** e **criadores de secrets** também são papéis que podem utilizar as secrets.
-
-Podemos ler as credenciais secretas pela api `dbutils.secrets.get()`. Qualquer leitura a partir da API de segredos garante a confidencialidade da informação, mesmo que um usuário exiba como saída de uma célula os valores serão alterados para uma string `[REDACTED]`.
-
-> [!warning]- Jeitinho para exibir um secret em texto
-> É possível exibir uma senha armazenada no secrets pelo seguinte código:
-> 
-> ```python
-> db_password = dbutils.secrets.get("prod-scope", "db-password")
-> for char in db_password:
->        print(char)
-> ```
-> 
-
-Exemplo de utilização do Secrets
-
-```python
-password = dbutils.secrets.get(scope="db_creds", key="kdbc_password")
-
-print(passwork) # Irá exibir [REDACTED]
-
-df = (spark
-	 .read
-	 .format("jdbc")
-	 .option("url", connection)
-	 .option("dbtable", tablename)
-	 .option("user", username)
-	 .option("password", password)) # Conexão é feita com sucesso
-```
 
 # Jobs
 
@@ -94,6 +54,7 @@ Existem dois tipos de permissões de cluster:
 | Redimensionar o processamento                 |               |             | ✅          |
 | Modificar permissões                          |               |             | ✅          |
 Tipos de clusters:
+
 - **All-purpose clusters**: cluster gerais que servem principalmente para o desenvolvimento.
 - **Job clusters**: encerram quando o job é finalizado, são principalmente **utilizados em produção**.
 

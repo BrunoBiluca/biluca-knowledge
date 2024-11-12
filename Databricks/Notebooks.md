@@ -94,3 +94,26 @@ spark.udf.register("sql_udf", example_fn)
 %sql
 SELECT sql_udf(thing) as transformed_thing from table_a
 ```
+
+### Importando módulos Python
+
+Podemos utilizar módulos em [[Python]] de duas formas:
+
+- Módulos de outros diretórios
+- Pacotes wheel
+
+Para [importar módulos de outros diretórios](https://docs.databricks.com/pt/files/workspace-modules.html#import-python-and-r-modules) é necessário adicionar o caminho ao interpretador do Python. Isso é feito pela variável `sys.path` como no exemplo a seguir:
+
+```python
+import sys
+import os
+sys.path.append(os.path.abspath('..'))
+```
+
+O `sys.path` contém a lista de todos os diretórios que o interpretador do Python busca por módulos. 
+
+Também é possível importar pacotes [[Python wheel]] fazendo a instalação a partir do comando 
+
+```
+%python pip pacote.whl
+```

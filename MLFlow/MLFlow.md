@@ -1,9 +1,22 @@
 # MLFlow
 
-[Documentação](https://mlflow.org/docs/latest/introduction/index.htm)
+--- start-multi-column: ExampleRegion1  
+```column-settings  
+number of columns: 2
+Column Size: [59%, 40%]
+Border: disabled
+Shadow: off
+```
 
 [MLFlow](https://mlflow.org/) é uma plataforma que unifica todo o processo de desenvolvimento de [[Machine Learning]].
 
+--- end-column ---
+
+> [!info] Principais referências
+> - [Documentação](https://mlflow.org/docs/latest/introduction/index.html)
+>- 
+
+--- end-multi-column
 # MLFlow models
 
 O MLFlow disponibiliza um formato padrão de empacotamento de modelos de Machine Learning chamado [MLFlow Models](https://mlflow.org/docs/latest/models.html). Com isso podemos utilizar uma variedade de modelos desenvolvidos por outras ferramentas, por exemplo servindo serviços em tempo real ou processamento em lotes.
@@ -19,7 +32,7 @@ Por exemplo para registrar e carregar modelos do tipo Python é necessário faze
 
 ```python
 # registro do modelo
-mlflow.<model-type>.log_model(model, ...)
+mlflow.<model-type>.log_model(model, ...) # <model-type> pode ser substituído por pyfunc por exemplo
 
 # carregametno do modelo como uma UDF do Spark
 input_data = spark.table(input_table_name)

@@ -72,12 +72,7 @@ class Request(AcceptMixin, ETagRequestMixin, UserAgentMixin, AuthenticationMixin
 
 A diferença entre Mixins e herança múltipla é sutíl e semântica, porém sabendo dessa diferença podemos deduzir algumas práticas que devemos levar em consideração.
 
-# Python wheel
-
-> [!info] O que é:
-> Python wheel é um formato de distribuição binário de pacotes em Python.
-> 
-> - [Página do padrão](https://pythonwheels.com/)
+[[Python wheel]]
 
 
 # Modos de abertura de arquivos

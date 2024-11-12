@@ -4,8 +4,26 @@ tags:
 ---
 # Databricks
 
-> [!info] O que é?
-> Databricks é uma plataforma que implementa um Data Lakehouse sobre outros tipos de [[Armazenamento de Objetos]].
+--- start-multi-column: ExampleRegion1  
+```column-settings  
+number of columns: 2
+Column Size: [59%, 40%]
+Border: disabled
+Shadow: off
+```
+
+Databricks é uma plataforma que implementa um Data Lakehouse sobre outros tipos de [[Armazenamento de Objetos]].
+
+--- end-column ---
+
+> [!info] Principais referências
+> 
+> Melhores práticas
+> 
+> - [[Governança - Databricks]]
+> - [[Otimizações - Databricks]]
+
+--- end-multi-column
 
 Componentes da plataforma Databricks
 
@@ -15,11 +33,6 @@ Componentes da plataforma Databricks
 - [[Notebooks]]
 	- [[CTAS (Create Tables as Select)]]
 - [[Workflows]]
-
-Melhores práticas
-
-- [[Governança - Databricks]]
-- [[Otimizações - Databricks]]
 
 # Databricks Web
 
@@ -31,11 +44,13 @@ Tipos de persona disponíveis:
 - Machine Learning
 - SQL
 
-# Ingestão
+# Gestão dos dados
 
 A plataforma Databricks permite múltiplas formas de gerenciar dados por meio de ingestão.
 
 - [[Auto Loader]]
+- Fontes externas
+- Bases e tabelas gerenciadas
 
 ## Fontes externas
 
@@ -63,7 +78,6 @@ Como nenhuma localização foi explicitamente definida o Databricks cria essa es
 
 - `db_hr` é criado no caminho padrão `dbfs:/user/hive/warehouse/db_hr.db`
 - `employees`  é criado sobre o diretório `db_hr.db`
-
 
 # AI e Machine Learning
 ### Registros e carregamento de modelos

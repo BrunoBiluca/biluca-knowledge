@@ -1,6 +1,21 @@
 # Spark web UI
 
-O [[Apache Spark]] fornece um conjunto de UI/interfaces de usuário chamado de [Spark WEB UI](https://spark.apache.org/docs/latest/web-ui.html)que serve para monitorar o status do seu aplicativo Spark/PySpark, o consumo de recursos do cluster Spark e as configurações do Spark.
+--- start-multi-column: ExampleRegion1  
+```column-settings  
+number of columns: 2
+Column Size: [59%, 40%]
+Border: disabled
+Shadow: off
+```
+
+O [[Apache Spark]] fornece um conjunto de UI/interfaces de usuário chamado de [Spark WEB UI](https://spark.apache.org/docs/latest/web-ui.html) que serve para monitorar o status do seu aplicativo Spark/PySpark, o consumo de recursos do cluster Spark e as configurações do Spark.
+
+--- end-column ---
+
+> [!info] Principais referências
+> - [Documentação](https://spark.apache.org/docs/latest/web-ui.html)
+
+--- end-multi-column
 
 Telas que o Spark disponibiliza:
 - Resource Manager: http://localhost:9870
@@ -9,7 +24,9 @@ Telas que o Spark disponibiliza:
 
 > [!quote]- Artigo - [Health check using spark ui](https://medium.com/@badwaik.ojas/health-check-using-spark-ui-b0d3d26e08a0)
 > Demonstra em um exemplo como fazer o monitoramento de saúde de um cluster executando Apache Spark.
-### Spark Application UI (http://localhost:4040/)
+# Spark Application UI
+
+A Spark Application UI pode ser visualizada no caminho http://localhost:4040/.
 
 - Jobs: São exibidos nessa tela todos os jobs. Jobs são ativados por ações como por exemplo `count()` ou `saveAsTextFile()`.
 - [[Stages]]: São exibidos as informações de Stages como DAG criado, cada tarefa.

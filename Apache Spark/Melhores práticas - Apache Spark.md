@@ -1,6 +1,7 @@
 ---
 tags:
   - engenharia_de_dados
+categoria: prática
 ---
 # Otimizações de código
 

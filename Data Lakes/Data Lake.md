@@ -44,7 +44,7 @@ Garantir uma [segurança](https://www.integrate.io/glossary/what-is-big-data-se
 | **Reliability** | Low quality, data swamp | High quality, reliable data | High quality, reliable data |
 | **Ease of use** | Difficult: Exploring large amounts of raw data can be difficult without tools to organize and catalog the data | Simple: Provides simplicity and structure of a data warehouse with the broader use cases of a data lake | Simple: Structure of a data warehouse enables users to quickly and easily access data for reporting and analytics |
 | **Performance** | Poor | High | High |
-# Melhores práticos ao construir um Datalake
+# Melhores práticas ao construir um Datalake
 
 1. Defina seus objetivos
 São esses objetivos que irão guiar o desenvolvimento do projeto
@@ -59,9 +59,10 @@ São esses objetivos que irão guiar o desenvolvimento do projeto
 - **Metadata Management:** Using metadata to provide context makes data retrieval efficient and user-friendly.
 
 3. Medidas de segurança robusta
+
 Segurança é um item fundamental na construção de qualquer armazenamento de dados.
 
- - **Data Encryption:** Both at rest and in transit.
+- **Data Encryption:** Both at rest and in transit.
 - **Access Controls:** Define user roles and permissions, ensuring that users can only access data relevant to their roles.
 - **Audit Trails:** Maintain logs of all data access and modifications, providing transparency and accountability.
 
@@ -79,12 +80,6 @@ Por muitas vezes as empresas tomam a atitude de combinar Datalakes e DataWarehou
 - Manter os dados consistentes entre o DL e o DW é uma tarefa difícil e cara.
 
 Para solucionar esse problema de vez temos as soluções de [[Data Lakehouse]], que trazem o melhor dos dois conceitos de uma forma realmente integrada.
-
-# Desidentificarão de dados
-
-O processo de desidentificarão de dados é utilizado para garantir as leis de proteção de dados e não deixar vazar dados de clientes, ao mesmo tempo que conseguimos utilizar os dados para criar visões de negócio com dados reais.
-
-![[data_classification.png|Níveis de dados em relação a sua identificação|center]]
 
 
 # Referências

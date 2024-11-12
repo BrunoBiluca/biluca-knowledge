@@ -2,18 +2,34 @@
 tags:
   - engenharia_de_dados
 ---
-> [!info] Definição
->A governança de dados é a estrutura de política interna de uma organização que determina a forma como as pessoas tomam decisões de gerenciamento de dados. Todos os aspectos da gestão de dados devem ser realizados de acordo com as políticas de governança da organização.
+# Governança de dados
+
+--- start-multi-column: ExampleRegion1  
+```column-settings  
+number of columns: 2
+Column Size: [59%, 40%]
+Border: disabled
+Shadow: off
+```
+
+A governança de dados é a estrutura de política interna de uma organização que determina a forma como as pessoas tomam decisões de gerenciamento de dados. Todos os aspectos da gestão de dados devem ser realizados de acordo com as políticas de governança da organização.
+
+--- end-column ---
+
+> [!info] Principais referências
+> - [Artigo - O que governança de dados](https://www.integrate.io/glossary/what-is-data-governance/)
+
+--- end-multi-column
 
 A governança de dados se compromete a definir vários elementos entre eles:
 
-- Pessoas: pessoas relacionadas as decisões de gerenciamento de dados, como auditores, especialistas, representantes do negócio.
-- Política: cada organização deve definir o conjunto de políticas relacionadas ao gerenciamento dos dados, como arquitetura, segurança.
-- Regras: todas as organizações deve estar de acordo com a legislação vigente, como LGPD, GDPR, CCPA em relação a proteção dos dados.
+- **Pessoas:** pessoas relacionadas as decisões de gerenciamento de dados, como auditores, especialistas, representantes do negócio.
+- **Política:** cada organização deve definir o conjunto de políticas relacionadas ao gerenciamento dos dados, como arquitetura, segurança.
+- **Regras:** todas as organizações deve estar de acordo com a legislação vigente, como LGPD, GDPR, CCPA em relação a proteção dos dados.
 	- Exemplos são [[Delta lake#Propagando deleções]]
-- Tecnologia: a política de governança deve definir as tecnologias utilizadas.
-- Supervisão: toda organização deve ter processos que garantem o cumprimento das políticas de governança.
-- Interação e feedback: governança é algo vivo e deve ser formatado de acordo com as necessidades da organização.
+- **Tecnologia:** a política de governança deve definir as tecnologias utilizadas.
+- **Supervisão:** toda organização deve ter processos que garantem o cumprimento das políticas de governança.
+- **Interação e feedback:** governança é algo vivo e deve ser formatado de acordo com as necessidades da organização.
 
 Principais conceitos relacionados a governança de dados:
 
@@ -24,7 +40,7 @@ Principais conceitos relacionados a governança de dados:
 - Análise de dados
 - Retenção de dados
 
-Estratégias de governança
+# Estratégias de governança
 
 - Políticas
 	- Devem cobrir áreas como gerenciamento de dados, treinamento de modelos, validação de resultados, segurança e supervisão humana.
@@ -34,10 +50,13 @@ Estratégias de governança
 - Estratégias de análise
 - Padrões de transparência
 - Treinamento em equipe necessário
-# Pseudonimização
+
+# Controle de dados identificadores pessoais
 
 > [!info] PII (Person Identifiable Informações)
 > São informações que identificam indivíduos nos dados. Podem ser únicas como o CPF ou uma combinação de informações.
+
+## Pseudonimização
 
 - Protege os dados em nível de registro.
 - Permite a reidentificação dos registros
@@ -48,9 +67,17 @@ Estratégias de governança
 - Método de Tokenização
 É criada uma tabela de relação entre os campos identificadores e um token é criado para cada registro. Esse método ainda permite ter acesso aos dados originais.
 
-Também é possível criar tabelas dinâmicas de acordo com o papel do usuário para exibir apenas informações necessárias a cada papel, como é o caso de [[Delta lake#Visualizações dinâmicas]].
+Também é possível criar tabelas dinâmicas de acordo com o papel do usuário para exibir apenas informações necessárias a cada papel, como é o caso de [[Visualizações]] do [[Delta lake]].
 
-# Anonimização
+### Exemplo - Desidentificarão de dados
+
+O processo de desidentificarão de dados é utilizado para garantir as leis de proteção de dados e não deixar vazar dados de clientes, ao mesmo tempo que conseguimos utilizar os dados para criar visões de negócio com dados reais.
+
+![[data_classification.png|Níveis de dados em relação a sua identificação|center]]
+
+
+
+## Anonimização
 
 - Protege toda a base de dados
 - Alteração irreversível
@@ -68,8 +95,3 @@ Campos identificadores são removidos e apenas os dados relevantes a consultas s
 		- Por exemplo o salário das pessoas podem ser arredondados `1245.4` para `1200`
 
 Todos esses métodos visam generalização da identificação dos indivíduos, dificultando que mesmo sem os campos identificadores consigamos fazer relações entre as demais informações.
-
-# Referências
-
-- https://www.integrate.io/glossary/what-is-data-governance/
-	- Resumo do governança de dados

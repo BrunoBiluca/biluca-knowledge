@@ -82,17 +82,4 @@ Podemos criar mascaramento de dados estático, dinâmico, mas dando um exemplo p
 Materiais relacionados:
 - https://docs.databricks.com/en/data-governance/unity-catalog/row-and-column-filters.html 
 
-# Visualizações (Views)
-
-> [!info] Definição
-> Visualizações são tabelas que definem um tipo específico de informação assim facilitando a leitura pelo consumidor. Essa tabelas podem ter os mais diversos formatos e configurações como: visualizações materializadas, dinâmicas ou temporárias.
-> 
-> - [Conceitos gerais de visualizações](https://docs.databricks.com/en/views/index.html)
-
-- Visualizações materializadas
-	- Incrementalmente calcula e atualiza os resultados retornados por uma consulta
-- Visualizações temporárias
-	- tem um escopo e persistência limitada
-- Visualizações dinâmicas
-	- Podem ser usadas para prover linhas e colunas com controle de acesso e mascaramento de dados
 

@@ -1,7 +1,7 @@
 # Databricks CLI
 
 A plataforma[[Databricks]] provê a [[Databricks API]] para gerenciamento de forma automatizada de seus componentes. Um do modos de utilizar essa API é o [Databricks CLI](https://docs.databricks.com/en/dev-tools/cli/commands.html).
-### Criando um workflow
+### Criando um workflow em Python
 
 Criando um workflow programaticamente utilizando a própria API do Databricks:
 
@@ -38,12 +38,3 @@ try:
 except:
   print("Something must be wrong. Double-check that you started the pipeline")
 ```
-
-
-### Criando um job
-
-```
-POST api/2.1/jobs/create
-```
-
-Esse endpoint nos permite criar quantas execuções quisermos de um JOB. Cada execução nova criada retorna um novo `job_id` que pode ser utilizado para recuperar informações.

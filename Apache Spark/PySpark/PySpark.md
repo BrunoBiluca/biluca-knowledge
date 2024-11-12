@@ -1,18 +1,39 @@
 ---
 tags:
   - engenharia_de_dados
+categoria: framework
 ---
 # PySpark
 
+--- start-multi-column: ExampleRegion1  
+```column-settings  
+number of columns: 2
+Column Size: [59%, 40%]
+Border: disabled
+Shadow: off
+```
+
+PySpark é uma camada sobre o [[Apache Spark]] que possibilita a implementação de processamento de dados utilizando a linguagem [[Python]].
+
+--- end-column ---
+
+> [!info] Principais referências
+>- [Tutorial definitivo de instalação do PySpark no Windows](https://sparkbyexamples.com/pyspark/how-to-install-and-run-pyspark-on-windows/)
+
+--- end-multi-column
+
 Exemplos
+
 - [[Exemplo - Criando uma coluna baseada no retorno de uma função]]
 - [[Exemplo - Valores mínimos]]
 
 Melhores práticas
+
 - [[Empacotamento de arquivo do PySpark]]
 
-> [!quote] Instalação no Windows tem suas tretas
-> [Tutorial definitivo de instalação do PySpark no Windows](https://sparkbyexamples.com/pyspark/how-to-install-and-run-pyspark-on-windows/)
+Principais componentes
+
+- [[DataFrameWriter]]
 
 # PySpark e testes automatizados
 
@@ -40,20 +61,4 @@ Tanto o [[Apache Spark]] quanto o Pandas são frameworks para manipulação de d
 Quando pensamos em escalabilidade e desempenho para grandes volumes de dados o mais indicado é o [[Apache Spark]], já que o Pandas é normalmente executado em apenas uma máquina.
 
 Para análise exploratória e pela performance em bases dados menores o Pandas pode ser uma ótima opção. Apenas essa análise ser levantada podemos então implementar os jobs Spark para a execução da massa completa.
-
-# DataFrameWriter
-
-[DataFrameWriter](https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.DataFrameWriter.html) é a interface utilizada para escrever um dataframe a um sistema de armazenamento externo.
-
-Por meio dessa interface podemos definir vários comportamentos de escrita.
-
-#### .mode()
-
-Especifica o comportamento quando os dados ou a tabela já existem. 
-Ele pode ser configurado com os seguintes valores
-
-- `append`: apende conteúdo aos dados existente
-- `overwrite`: sobrescreve os dados
-- `error` ou `errorifexists`: lança exceção se o dado já existe
-- `ignore`: ignora operações quando dados já existem
 

@@ -2,12 +2,26 @@
 tags:
   - análise_de_dados
   - engenharia_de_dados
+categoria: framework
 ---
 # Apache Spark
 
-> [!info] O que é?
-> [Apache Spark](https://spark.apache.org/) é uma estrutura de computação em cluster distribuída de código aberto e de uso geral. O mecanismo de processamento de dados na memória do Spark conduz análises, ETL, aprendizado de máquina e processamento em grafo de dados em movimento ou em repouso. Oferece APIs de alto nível para as linguagens de programação: Python, Java, Scala, R e SQL.
+--- start-multi-column: ExampleRegion1  
+```column-settings  
+number of columns: 2
+Column Size: [59%, 40%]
+Border: disabled
+Shadow: off
+```
 
+**Apache Spark** é uma estrutura de computação em cluster distribuída de código aberto e de uso geral. O mecanismo de processamento de dados na memória do Spark conduz análises, ETL, aprendizado de máquina e processamento em grafo de dados em movimento ou em repouso. Oferece APIs de alto nível para as linguagens de programação: Python, Java, Scala, R e SQL.
+
+--- end-column ---
+
+> [!info] Principais referências
+> - [Site do Apache Spark](https://spark.apache.org/)
+
+--- end-multi-column
 A arquitetura Apache Spark é baseada em conjuntos de dados distribuídos resilientes (Resilient Distributed Datasets, RDDs). Estas são tabelas de dados imutáveis ​​​​distribuídas, que são divididas e alocadas aos nós trabalhadores. O RDD é imutável, portanto os nós trabalhadores não podem fazer alterações; eles processam informações e produzem resultados.
 
 Apache Spark utiliza o otimizador Catalyst para automaticamente revelar o plano de execução mais eficiente dado qualquer processamento.
@@ -26,7 +40,6 @@ Conceitos
 
 Desenvolvimento e fluxo de trabalho
 - [[Docker básico para submits locais]]
-- [[Empacotamento de arquivo do PySpark]]
 
 Cloud
 - [[EMR Serverless]]
@@ -66,9 +79,6 @@ Prior to 3.0, Spark does the optimization by creating an execution plan before t
 
 Adaptive Query Execution is disabled by default. In order to enable Set `spark.sql.adaptive.enabled` configuration property to `true`.
 
-
-
-
 # Diferença entre estruturas de dados
 
 Existe principalmente 3 estruturas de dados que podem ser utilizadas para o processamento distribuído em Apache Spark: RDD, DataFrame, DataSet.
@@ -87,7 +97,6 @@ Existe principalmente 3 estruturas de dados que podem ser utilizadas para o proc
 | Optimization                 | Sem otimizações imbutidas                                                                                                   | Catalyst optimizer.                                                                                      | Catalyst optimizer.                                                                                                                                                               |
 | Data types                   | Suitable for structured and semi-structured data processing with a higher level of abstraction.                             | DataFrames supports most of the available dataTypes                                                      | Datasets support all of the same data types as DataFrames, but they also support user-defined types. Datasets are more flexible when it comes to working with complex data types. |
 | Use Cases                    | Suitable for low-level data processing and batch jobs that require fine-grained control over data                           | Suitable for structured and semi-structured data processing with a higher-level of abstraction.          | Suitable for high-performance batch and stream processing with strong typing and functional programming.                                                                          |
-
 
 # Configurações
 

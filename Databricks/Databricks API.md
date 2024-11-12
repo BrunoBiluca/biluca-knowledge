@@ -47,5 +47,6 @@ Metadados:
 - Agendamento
 - Cluster de execução
 - Estado atual da execução, aqui podemos saber se ela está executando, bloqueada ou finalizada com sucesso ou falha.
+- Listas de Tarefas executadas. Cada lista tem seu próprio `run_id`
 
 
