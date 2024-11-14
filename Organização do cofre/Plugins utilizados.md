@@ -89,7 +89,7 @@ Git é um plugin que adiciona funcionalidades Git ao cofre do Obsidian. Nesse co
 
 --- end-multi-column
 
-# Iconize
+# [Descontinuado] Iconize
 
 --- start-multi-column: ExampleRegion1  
 ```column-settings  
@@ -100,6 +100,8 @@ Shadow: off
 ```
 
 Iconize permite adicionar ícones aos arquivos e pastas do cofre deixando um aspecto mais agradável de visualização.
+
+Foi descontinuado por criar conflitos com outro plugin o SuperCharged Links.
 
 --- end-column ---
 
@@ -172,4 +174,23 @@ Shiki Highlighter melhor a renderização dos blocos de código o que facilita a
 >- 
 
 --- end-multi-column
+# Supercharged Links
+
+--- start-multi-column: ExampleRegion1  
+```column-settings  
+number of columns: 2
+Column Size: [59%, 40%]
+Border: disabled
+Shadow: off
+```
+
+O Supercharged Links permite fazer várias configurações aos links como adicionar ícones, mudar de cor e várias outras baseados em regras definidas pelo nome dos arquivos, tags ou propriedades.
+
+--- end-column ---
+
+> [!info] Principais referências
+>- 
+
+--- end-multi-column
+
 

@@ -61,60 +61,6 @@ Conclusão --> [*]
 
 # Propriedades de uma 🃏 História
 
-> [!tip]- Título
-> O título de uma história é um lembre rápido sobre o que a História se trata.
-> Bom títulos são simples e descrevem o aspecto central da História sem explicitar a solução empregada.
-> 
-> Exemplos bons
-> - Contato inicial
->   - Brevemente descreve o primeiro contato do jogador com o jogo, não explicita se será por uma tela, um menu ou diretamente pelo jogo, essas soluções serão discutidas durante o desenvolvimento. Porém o valor está claro, é o contato inicial do jogador que deve ser muito bem tratado.
->- Dano em área
->    - Brevemente descreve uma História que apresenta uma mecânica de Dano em Área. Não é explicitado que tipo de recurso será utilizado com esse tipo de mecânica.
-> 
-> Exemplos ruins
-> 
-> - Criar a Tela inicial
->	- Nesse caso já especifica a criação de uma tela inicial, porém não descreve nenhum tipo de valor entregue por essa tela, ou seja, apenas criar uma tela inicial não demonstra nenhum valor que o usuário irá ganhar.
->	- Outra questão é no uso de uma ação para descrever a História. Criar a Tela inicial é ambíguo, isso envolve implementar a tela? criar o design? Uma História deve conter toda a discussão necessária para entrega de valor, então utilizar essa nomenclatura não deixa claro para o time que tipo de trabalho deve ser feito.
-> - Ataque de fogo em área para personagem XYZ
-> 	- Nesse caso a História apresenta vários conceitos, esses conceitos podem ser quebrados em Histórias próprias e então serem combinadas por meio de configurações. Assim Ataque de Fogo, Ataque em Área e Personagem XYZ são Histórias independentes.
-
-> [!tip]- Descrição (Modelo AS... IN ORDER TO ... I WANT)
-> Esse é o modelo mais comum de encontrar quando equipes descrevem Histórias. Ele pode ser um bom modelo, porém é importante lembrar que Histórias devem relatar uma alteração no comportamento do projeto de forma a entregar valor ao usuário. Assim o formato de escrita deve apresentar de forma bem resumida essas características.
-> Bons exemplos
-> - Como jogador casual a fim de acessar as imagens completadas eu quero uma visualização própria
-> - Como jogador profissional a fim de melhorar minhas habilidades eu quero um modo de treinamento
-> - Como jogador offline a fim de poder ir ao banheiro ou cozinha durante o gameplay quero poder pausar o jogo sem nenhum tipo de punição.
->
-> Maus exemplos
-> 
-> - Como jogador a fim de começar a jogar quero ter um menu com um botão de começar a jogar
->	- Essa História tem problemas nos 3 aspectos necessários para sua explicação.
->	- O usuário impactado não está bem definido, ou seja, é um grupo muito genérico
->	- A premissa também está confusa, começar a jogar não define um modo de jogo específico ou qualquer coisa, assim não define o real valor entregue ao grupo de usuário
->	- Por fim essa História está definindo qual o resultado esperado, a criação de um menu com um botão, isso impede qualquer tipo de discussão e impede outras formas de solução da História.
-
-> [!tip]- Critérios de aceite (CA)
-> Critérios de aceite, também conhecidos como acceptance criteria, são condições que devem ser satisfeitas a fim de que uma História seja aceita. Cada CA deve ser expresso como uma conjunto de declarações que visam descrever o que será entregue como valor pela História, sem focar no resultado de implementação final esperado.
-> 
-> Os critérios de aceite devem ser concisos, testáveis, claros e focado no resultado.
-> 
-> - Modelo baseado em cenário
->
->Um modelo recorrentemente utilizado na criação de casos de testes e critérios de aceite é imaginar um cenário e de acordo a uma ação ou acontecimento se espera um resultado. Pode se utilizar o formato **Given that; when; then**.
->
->🃏 História: Como jogador profissional a fim de melhorar minhas habilidades eu quero um modo de treinamento
->
->Bons exemplos
->- Espero que seja simples acessar o modo de treinamento
->- Espero escolher um personagem para treinar
->
->Maus exemplos
->- Quando entro no modo de treinamento espero poder configurar opções para o oponente atacar de forma automática enquanto pratico meus movimentos
->	- Justificativa: esse critério expande o escopo da História, já que a História visa um modo de treinamento em seu formato inicial. Assim, esse critério poderia ser promovido a uma História própria.
->- No modo de treinamento apertar o botão R1 para resetar a cena e voltar com todos os personagens na posição inicial
->	- Justificativa: esse CA define o como será implementado o resete dos personagens (por meio do botão R1), porém esse tipo de definição pode mudar durante o desenvolvimento então em algum momento esse CA se torna obsoleto.
-
 | Propriedade  | Descrição                                                                                                                                                                                  |
 | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | Tags         | Palavras chaves a fim de definir o contexto que a História se aplica. Utilizado para facilitar a classificação.                                                                            |
@@ -124,6 +70,64 @@ Conclusão --> [*]
 | Iniciado em  | Data de início da História.                                                                                                                                                                |
 | Concluído em | Data de conclusão da História.                                                                                                                                                             |
 | Status       | Estado atual da História.                                                                                                                                                                  |
+
+### Título
+O título de uma história é um lembre rápido sobre o que a História se trata.
+Bom títulos são simples e descrevem o aspecto central da História sem explicitar a solução empregada.
+
+Exemplos bons
+- Contato inicial
+  - Brevemente descreve o primeiro contato do jogador com o jogo, não explicita se será por uma tela, um menu ou diretamente pelo jogo, essas soluções serão discutidas durante o desenvolvimento. Porém o valor está claro, é o contato inicial do jogador que deve ser muito bem tratado.
+- Dano em área
+    - Brevemente descreve uma História que apresenta uma mecânica de Dano em Área. Não é explicitado que tipo de recurso será utilizado com esse tipo de mecânica.
+
+Exemplos ruins
+
+- Criar a Tela inicial
+- Nesse caso já especifica a criação de uma tela inicial, porém não descreve nenhum tipo de valor entregue por essa tela, ou seja, apenas criar uma tela inicial não demonstra nenhum valor que o usuário irá ganhar.
+- Outra questão é no uso de uma ação para descrever a História. Criar a Tela inicial é ambíguo, isso envolve implementar a tela? criar o design? Uma História deve conter toda a discussão necessária para entrega de valor, então utilizar essa nomenclatura não deixa claro para o time que tipo de trabalho deve ser feito.
+- Ataque de fogo em área para personagem XYZ
+	- Nesse caso a História apresenta vários conceitos, esses conceitos podem ser quebrados em Histórias próprias e então serem combinadas por meio de configurações. Assim Ataque de Fogo, Ataque em Área e Personagem XYZ são Histórias independentes.
+
+### Descrição (Modelo AS... IN ORDER TO ... I WANT)
+Esse é o modelo mais comum de encontrar quando equipes descrevem Histórias. Ele pode ser um bom modelo, porém é importante lembrar que Histórias devem relatar uma alteração no comportamento do projeto de forma a entregar valor ao usuário. Assim o formato de escrita deve apresentar de forma bem resumida essas características.
+Bons exemplos
+- Como jogador casual a fim de acessar as imagens completadas eu quero uma visualização própria
+- Como jogador profissional a fim de melhorar minhas habilidades eu quero um modo de treinamento
+- Como jogador offline a fim de poder ir ao banheiro ou cozinha durante o gameplay quero poder pausar o jogo sem nenhum tipo de punição.
+
+Maus exemplos
+
+- Como jogador a fim de começar a jogar quero ter um menu com um botão de começar a jogar
+- Essa História tem problemas nos 3 aspectos necessários para sua explicação.
+- O usuário impactado não está bem definido, ou seja, é um grupo muito genérico
+- A premissa também está confusa, começar a jogar não define um modo de jogo específico ou qualquer coisa, assim não define o real valor entregue ao grupo de usuário
+- Por fim essa História está definindo qual o resultado esperado, a criação de um menu com um botão, isso impede qualquer tipo de discussão e impede outras formas de solução da História.
+
+### Critérios de aceite (CA)
+
+Critérios de aceite, também conhecidos como acceptance criteria, são condições que devem ser satisfeitas a fim de que uma História seja aceita. Cada CA deve ser expresso como uma conjunto de declarações que visam descrever o que será entregue como valor pela História, sem focar no resultado de implementação final esperado.
+
+Os critérios de aceite devem ser concisos, testáveis, claros e focado no resultado.
+
+> [!tip]- Modelo baseado em cenário
+> Um modelo recorrentemente utilizado na criação de casos de testes e critérios de aceite é imaginar um cenário e de acordo a uma ação ou acontecimento se espera um resultado. Pode se utilizar o formato **Given that; when; then**.
+
+🃏 História: Como jogador profissional a fim de melhorar minhas habilidades eu quero um modo de treinamento
+
+Bons exemplos
+
+- Espero que seja simples acessar o modo de treinamento
+
+- Espero escolher um personagem para treinar
+
+Maus exemplos
+
+- Quando entro no modo de treinamento espero poder configurar opções para o oponente atacar de forma automática enquanto pratico meus movimentos
+	- Justificativa: esse critério expande o escopo da História, já que a História visa um modo de treinamento em seu formato inicial. Assim, esse critério poderia ser promovido a uma História própria.
+
+- No modo de treinamento apertar o botão R1 para resetar a cena e voltar com todos os personagens na posição inicial
+	- Justificativa: esse CA define o como será implementado o resete dos personagens (por meio do botão R1), porém esse tipo de definição pode mudar durante o desenvolvimento então em algum momento esse CA se torna obsoleto.
 
 ## Prioridade
 
@@ -135,7 +139,7 @@ Quando a História não faz parte de um Épico a sua prioridade é dada pela pri
 
 
 > [!info] Priorização de um 🏆 Épico
-> [[🏆 Épicos#Priorização de 🏆 Épicos]]
+> [[Gestão de projetos/Modelo de entidades/🏆 Épicos#Priorização de 🏆 Épicos]]
 
 ## Estimativa
 

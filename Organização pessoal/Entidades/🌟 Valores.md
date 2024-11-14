@@ -1,4 +1,4 @@
-# Valores
+# 🌟 Valores
 
 > [!info] Definição de 🌟 Valores
 > São as **coisas** que quero realizar, alcançar ou apenas fazer. Um Valor não é necessariamente alcançável, ele foca em definir um ideal que irá guiar as minhas atividades.
@@ -38,9 +38,37 @@ Ao longo do tempo é possível que novos Valores sejam criados (quando temos uma
 
 #### Gestão
 
-- Épicos - abertos
-- Épicos - concluídos
-- Épicos - linha do tempo
-- Execuções - em aberto
-- Execuções - em refinamento
-- Execução - concluídos
+- **Épicos - abertos** - Épicos não concluídos
+	- Propriedades
+		- Nome
+		- Progresso
+		- Progresso tempo
+
+- **Épicos - concluídos** - Épicos concluídos
+	- Propriedades
+		- Nome
+
+- **Épicos - linha do tempo** - Todos os Épicos com períodos definidos
+	- Propriedades
+		- Nome
+		- Progresso
+		- Progresso tempo
+
+- **Execuções - em aberto** - Execuções com estado Aberto, Pausado, Elencado ou Em Progresso
+	- Propriedades
+		- Nome
+		- Estado
+		- Vencimento
+		- Impacto
+		- Épico
+
+- **Execuções - em refinamento** - Execuções com estado Novo, Refinamento ou Bloqueado
+	- Propriedades
+		- Nome
+		- Estado
+		- Épico
+
+- **Execução - concluídos**
+	- Propriedades
+		- Nome
+		- Épico
