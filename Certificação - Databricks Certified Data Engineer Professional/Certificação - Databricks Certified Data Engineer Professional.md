@@ -29,6 +29,10 @@ O exame cobre:
 - [Practice Exams: Databricks Data Engineer Professional](https://www.udemy.com/course/practice-exams-databricks-data-engineer-professional-k/)
 	- Plataforma Udemy
 	- Conjunto de questões cobradas na prova de certificação
+- [Databricks Certified Data Engineer Professional Nov 2024](https://www.udemy.com/course/databricks-certified-data-engineer-professional-z)
+	- Plataforma Udemy
+	- Conjunto de questões, são 5 provas de 60 questões
+
 
 E repositórios de questões
 
