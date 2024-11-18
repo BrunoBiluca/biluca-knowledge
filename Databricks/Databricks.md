@@ -22,6 +22,7 @@ Databricks é uma plataforma que implementa um Data Lakehouse sobre outros tipos
 > 
 > - [[Governança - Databricks]]
 > - [[Otimizações - Databricks]]
+> - [Considerações em produção para Strucutred Streaming](https://docs.databricks.com/en/structured-streaming/production.html)
 
 --- end-multi-column
 

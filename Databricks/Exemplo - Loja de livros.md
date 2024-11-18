@@ -1,5 +1,6 @@
-> [!info] Descrição
-> Exemplo extraído do [curso preparatório para a certificação Databricks Engineer Professional](https://www.udemy.com/course/databricks-certified-data-engineer-professional/) 
+# Exemplo - Loja de livros
+
+Exemplo extraído do [curso preparatório para a certificação Databricks Engineer Professional](https://www.udemy.com/course/databricks-certified-data-engineer-professional/) 
 
 # Descrição
 
@@ -104,12 +105,13 @@ Para a ingestão iremos utilizar uma única tabela que recebe todos os eventos d
 		 .option("checkpointLocation", "...")
 		 .option("mergeSchema", True)
 		 .partitionBy("topic", "year_month")
-		 .trigger(availableNow=True) # define o tempo de processamento dos dados
+		 .trigger(availableNow=True) # define o tempo de processamento dos dados, nesse caso a ingestão será única do que está disponível
 		 .table("bronze"))
 ```
 
-A ingestão dos dados foi feita para uma tabela chamada `bronze` que está *particionada em relação ao mês e ano* (`year_month`), obtido a partir do campo `timestamp` quando um evento é persistido no Kafka, e ao tópico (`topic`).
+A ingestão dos dados foi feita para uma tabela chamada `bronze` que está **particionada em relação ao mês e ano** (`year_month`), obtido a partir do campo `timestamp` quando um evento é persistido no Kafka, e ao tópico (`topic`).
 
+Uma configuração importante de definir é a [[Evolução de esquema]] pela opção `.option("mergeSchema", True)`. Dessa forma qualquer nova coluna provida pela origem não será perdida e podemos utilizar futuramente quando o negócio demandar.
 ## Prata
 
 Com a camada Bronze já configurada podemos avançar para criar o processamento da camada Prata ([[Arquitetura medalhão#Prata|Características da camada Prata]]). 
@@ -160,9 +162,9 @@ ALTER TABLE pedidos ADD CONSTRAINT valid_qty CHECK (quantidade > 0);
 ```
 
 > [!tip] Erro ao alterar a tabela para uma nova restrição
-> Quando executamos essa alteração na tabela `pedidos` podemos receber um erro já que alguns registros já pertencentes a base não se adequam a nova regra definida.
+> Quando executamos essa alteração na tabela `pedidos` podemos receber um erro. Os registros já pertencentes a base não se adequam a nova regra definida.
 > 
-> Nesse caso podemos apenas remover esses registros ou caso a tabela seja de streaming e apenas de apêndice precisamos fazer um procedimento de [[Arquitetura medalhão#Quarentena de entradas inválidas]]
+> Nesse caso podemos apenas remover esses registros em uma tabela estática ou caso a tabela seja de streaming e apenas de apêndice precisamos fazer um procedimento de [[Arquitetura medalhão#Quarentena de entradas inválidas]]
 
 ### Livros
 
@@ -286,8 +288,7 @@ def batch_upsert(microBatchDF, batchId):
 		.drop("rank")
 		.createOrReplaceTempView("ranked_updates"))
 		
-	query =
-		"""
+	query = """
 		MERGE INTO clientes c
 		USING ranked_updates r ON c.customer_id = r.customer_id
 		WHEN MATCHED AND c. row_time < r. row_time
@@ -449,12 +450,14 @@ Iremos criar uma [[Delta lake#Visualizações materializadas (Materialized View)
 
 ```sql
 CREATE VIEW IF NOT EXISTS estatistica_paises_vw AS (
-	SELECT country
-	, date_trunc("DD", order_timestamp) order_date
-	, count(order_id) orders_count
-	, sum(quantity) books_count 
+	SELECT 
+		country, 
+		date_trunc("DD", order_timestamp) order_date, 
+		count(order_id) orders_count,
+		sum(quantity) books_count 
 	FROM customers_orders
 	GROUP BY country, order_date
+)
 ```
 
 Podemos definir essa visualização de duas formas:
@@ -482,3 +485,4 @@ query = (spark
 			.table("estatistica_autores")
 )
 ```
+

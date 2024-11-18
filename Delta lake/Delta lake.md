@@ -47,7 +47,7 @@ Delta Lake usa arquivos Parquet versionados para armazenar seus dados em seu arm
 - Manipulação escalonável de metadados: aproveita o poder de processamento distribuído do Spark para lidar com todos os metadados de tabelas em escala de petabytes com bilhões de arquivos com facilidade.
 - [[Structured Streaming]]
 - Aplicação de esquema: trata automaticamente variações de esquema para evitar a inserção de registros inválidos durante a ingestão.
-- [Versionamento ou Viagem no tempo](https://docs.delta.io/latest/delta-batch.html#-deltatimetravel) de dados permite reversões, trilhas de auditoria históricas completas e experimentos de aprendizado de máquina reproduzíveis.
+- [[Fundamentos de Ciências da Computação/Versionamento/Versionamento|Versionamento]] de dados permite reversões, trilhas de auditoria históricas completas e experimentos de aprendizado de máquina reproduzíveis.
 - [Atualizações](https://docs.delta.io/latest/delta-update.html#-delta-merge) e [exclusões](https://docs.delta.io/latest/delta-update.html #-delta-delete): oferece suporte a operações mais complexas de mesclagem de dados como **atualizações condicionais**.
 
 ### O que não suporta?
@@ -67,3 +67,4 @@ Delta Lake usa arquivos Parquet versionados para armazenar seus dados em seu arm
 - [[Visualizações]]
 - [[Mesclagem de dados condicional]]
 - [[Clonar tabelas]]
+- [[Evolução de esquema]]

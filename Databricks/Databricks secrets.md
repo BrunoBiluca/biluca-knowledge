@@ -1,7 +1,7 @@
 # Databricks secrets
 
 > [!info] O que é?
-> Databricks secrets permitem que você armazene credenciais e as referencie em notebooks e jobs.
+> [[Databricks]] secrets permitem que você armazene credenciais e as referencie em notebooks e jobs.
 > 
 > - [Redaction]([https://docs.databricks.com/security/secrets/redaction.html](https://docs.databricks.com/security/secrets/redaction.html))
 > - [Secrets]([https://docs.databricks.com/security/secrets/index.html](https://docs.databricks.com/security/secrets/index.html))
@@ -25,7 +25,9 @@ Podemos ler as credenciais secretas pela api `dbutils.secrets.get()`. Qualquer l
 > ```
 > 
 
-Exemplo de utilização do Secrets
+A tabela de acessos de controle dos Secrets da Databricks  pode ser vista em [Lista de controle de acessos de Screts](https://docs.databricks.com/en/security/auth/access-control/index.html#secret-acls).
+
+#### Exemplo de utilização do Secrets
 
 ```python
 password = dbutils.secrets.get(scope="db_creds", key="kdbc_password")
@@ -40,3 +42,4 @@ df = (spark
 	 .option("user", username)
 	 .option("password", password)) # Conexão é feita com sucesso
 ```
+

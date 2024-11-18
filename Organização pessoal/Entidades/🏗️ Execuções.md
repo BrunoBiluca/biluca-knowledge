@@ -46,7 +46,11 @@ O estado das execuções são alterados pelos rituais de [[📆 Planejamento]] e
 
 Critérios de aceite são **condições que devem ser satisfeitas** a fim de que uma Execução seja aceita e dada como concluída. Cada CA deve ser expresso como uma conjunto de declarações que visam descrever o que será entregue como avanço no Valor, sem especificar como isso será alcançado.
 
-Os critérios de aceite **devem ser** concisos, testáveis, claros e focado no resultado. É necessário que os CAs sejam bem definidos antes de dar a Execução como refinada. 
+É necessário que os CAs sejam bem definidos antes de dar a Execução como refinada para isso ele **devem ser**
+- **concisos** - escrita curta
+- **testáveis** - deve ser possível verificar a conclusão ou não do critério
+- **claros** - direto ao ponto
+- **focados no resultado** - estritamente relacionado com o objetivo
 
 Os critérios de aceite variam de acordo com o tipo da execução, já que o que define uma execução concluída para um estudo é diferente de uma execução de desenvolvimento.
 

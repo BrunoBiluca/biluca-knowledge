@@ -27,10 +27,31 @@ Cada componente do Metastore tem um tipo de privilégio específico, além disso
 
 # Jobs
 
+
+--- start-multi-column: ExampleRegion1  
+```column-settings  
+number of columns: 2
+Column Size: [59%, 40%]
+Border: disabled
+Shadow: off
+```
+
+Tipos de permissões de Jobs
+
+- **NO PERMISSIONS** 
+- **CAN VIEW**: utilizado para usuários que precisam de visualização sobre o Job
+- **CAN MANAGE RUN**: usuários que controlam a execução do JOB
+- **IS OWNER**: usuários que gerenciam o Job, podem alterar, deletar ou modificar permissões do Job
+- **CAN MANAGE**: mesma coisa do IS OWNER.
+
+--- end-column ---
+
 > [!info] Documentação
 > - [Criar e executar jobs do Databricks](https://docs.databricks.com/pt/workflows/jobs/create-run-jobs.html#choose-the-correct-cluster-type-for-your-job)
 > - [Lista de acesso de controle](https://docs.databricks.com/pt/security/auth/access-control/index.html)
 > - [Permissões para Jobs](https://docs.databricks.com/security/auth-authz/access-control/jobs-acl.html#job-permissions)
+
+--- end-multi-column
 
 # Cluster 
 
@@ -58,7 +79,7 @@ Tipos de clusters:
 - **All-purpose clusters**: cluster gerais que servem principalmente para o desenvolvimento.
 - **Job clusters**: encerram quando o job é finalizado, são principalmente **utilizados em produção**.
 
-Jobs **não pode ser atribuídos a grupos de usuários**, eles devem ser atribuídos a um dono que deve ser um indivíduo.
+> [!important] Jobs **não pode ser atribuídos a grupos de usuários**, eles devem ser atribuídos a um dono que deve ser um indivíduo.
 
 # Qualidade dos dados
 
