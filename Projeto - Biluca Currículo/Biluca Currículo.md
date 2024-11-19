@@ -1,3 +1,8 @@
+---
+categoria: projeto
+ano: 2023
+última atualização: 2024-11-19
+---
 
 # Biluca Currículo
 
