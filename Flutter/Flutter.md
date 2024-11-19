@@ -3,6 +3,8 @@ tags:
   - programação/frameworks
 categoria: framework
 ---
+# Flutter
+
 > [!info] O que é?
 > Flutter é um framework multiplataforma para a criação de aplicações.
 > Utiliza a linguagem [[Dart]] para desenvolvimento.

@@ -165,14 +165,15 @@ O refinamento desse tipo de execução deve focar em buscar um conjunto de conte
 
 **Descoberta** é um tipo de execução que tem como objetivo verificar alguma questão que não se tem o conhecimento completo.
 
-Execuções de descoberta não definem um critério de aceite com a entrega de algo concreto, os critérios de aceite nesses casos são mais relacionados a um relatório ou análise em relação ao tema. Também devem existir critérios de aceite como condições de parada na descoberta, já que um tópico levantado para descobrir pode desdobrar em muitos outros.
+Execuções de descoberta não definem critérios de aceite como a entrega de algo concreto, os critérios de aceite nesses casos são mais relacionados a um relatório ou análise em relação ao tema. Também devem existir critérios de aceite como condições de parada na descoberta, já que um tópico levantado para descobrir pode desdobrar em muitos outros.
 
 O refinamento de execuções de Descoberta foca em definir bem o objetivo proposto e os tipos de informações que precisamos levantar ao final. Um escopo fechado para esse tipo é muito importante para não executarmos indefinidamente a descoberta.
 
 Execuções de descoberta podem ser utilizadas principalmente para mitigar o risco de executar outras atividades, como por exemplo:
+
 - garantir o fechamento do escopo de outras execuções ou épicos
 - garantir que o impacto seja realmente o que estamos pensando
-- evitar perder tempo com execuções aparentemente fácies e com uma busca no google é possível verificar a dificuldade de executá-las
+- evitar perder tempo com execuções aparentemente fácies onde uma busca no google é possível verificar uma dificuldade de executá-las
 
 Exemplos
 

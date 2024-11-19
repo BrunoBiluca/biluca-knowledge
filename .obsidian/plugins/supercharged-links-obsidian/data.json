@@ -131,6 +131,18 @@
       "selectAppend": true,
       "selectPrepend": true,
       "selectBackground": true
+    },
+    {
+      "type": "path",
+      "name": "categoria",
+      "value": "Projeto - ",
+      "matchCaseSensitive": false,
+      "match": "contains",
+      "uid": "ae3c-4e22",
+      "selectText": true,
+      "selectAppend": true,
+      "selectPrepend": true,
+      "selectBackground": true
     }
   ]
 }
