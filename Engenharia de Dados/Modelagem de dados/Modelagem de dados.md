@@ -10,10 +10,7 @@ Dependendo do problema podemos abordar a modelagem de dados de várias maneiras,
 - [[Kimball]]
 - [[Inmon]]
 - [[Data vault]]
-
-## Esquema Estrela (Star Schema)
-
-Esquema estrela representa o modelo do negócio, onde uma tabela fato é cercada apenas das dimensões necessárias. Esse esquema captura lógica do negócio e deve ser flexível o bastante para responder questões críticas.
+- [[Esquema Estrela (Star Schema)]]
 
 # Técnicas
 

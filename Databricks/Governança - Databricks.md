@@ -27,7 +27,6 @@ Cada componente do Metastore tem um tipo de privilégio específico, além disso
 
 # Jobs
 
-
 --- start-multi-column: ExampleRegion1  
 ```column-settings  
 number of columns: 2

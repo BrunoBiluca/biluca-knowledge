@@ -10,6 +10,8 @@ Shadow: off
 
 O Auto Loader processa de forma progressiva e eficiente novos arquivos de dados à medida que chegam ao armazenamento em nuvem sem qualquer configuração adicional.
 
+Por causa do seu sistema de notificação de arquivos Autoloader é uma da melhores opções para reduzir a latência e aumentar o vazão do processamento de dados.
+
 --- end-column ---
 
 > [!info] Principais referências

@@ -35,6 +35,17 @@ São componentes de um processamento Structured Streaming:
 > A maioria das operações são compatíveis entre os dois, existem algumas exceções como o caso da ordenação que não é possível em casos de dados streaming.
 
 
+### Garantindo processamento semântico único
+
+Um problema comum em processamentos de streaming é **garantir a escrita apenas uma vez** de um registro. 
+
+No Structured Streaming isso é possível seguindo o formato:
+
+- Usar `foreachBatch` para processar cada micro-lote
+- E aplicar escritas idempotentes na base alvo (verificando se já existe na base)
+
+Controlando o processo de escrita a cada micro-lote nos possibilita garantir que um registro está sendo escrito apenas uma única vez. 
+
 # Principais componentes do processamento de Structured Streaming:
 
 - [[ReadStream]]

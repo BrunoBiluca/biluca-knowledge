@@ -12,5 +12,6 @@
   "readableLineLength": true,
   "showUnsupportedFiles": true,
   "showRibbon": false,
-  "promptDelete": false
+  "promptDelete": false,
+  "showInlineTitle": false
 }

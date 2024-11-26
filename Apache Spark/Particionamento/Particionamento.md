@@ -1,5 +1,36 @@
 # Particionamento
 
+--- start-multi-column: ExampleRegion1  
+```column-settings  
+number of columns: 2
+Column Size: [59%, 40%]
+Border: disabled
+Shadow: off
+```
+
+Em [[Apache Spark]] partições são conjuntos de dados que serão processados. Essa separação é feita para **garantir o paralelismo** entre as tarefas criadas em um Job.
+
+Quando o Spark decide os [[Stages|estágios]] de um Job ele leva em consideração transformações aplicadas as partições para montar o fluxo de execução.
+
+Essas transformações são:
+
+- Transformações estreitas (Narrows) que dependem apenas da partição.
+- Transformações abrangentes (Wide) que dependem de várias partições e envolve o processo de Shuffle.
+
+--- end-column ---
+
+> [!info] Principais referências
+> -
+
+---
+
+> [!quote]- Referências externas
+> - [Artigo - How to Optimize Your Apache Spark Application with Partitions](https://engineering.salesforce.com/how-to-optimize-your-apache-spark-application-with-partitions-257f2c1bb414/)
+> 	- Bom resumo do funcionamento de partições
+> 	- Apresenta um exemplo de otimização do processamento com um ganho de 40% em relação a configuração padrão
+
+--- end-multi-column
+
 Uma forma de organizar os dados é dividi-los em partições definidas por campos específicos da nossa base de dados. Isso melhora consideravelmente a performance em queries que utilizam filtros nesses campos, já que menos dados deverão ser carregados para o processamento.
 
 Um exemplo simples de particionamento seria, se o processamento varre uma faixa de dados por data de ingestão, podemos fazer partições por data de ingestão o que limita a quantidade de dados escaneados para o filtro consequentemente carregamos menos dados para memória.
@@ -23,3 +54,11 @@ spark.conf.set("spark.sql.files.maxPartitionBytes", <valor em bytes>)
 Caso o particionamento seja bem implementado por utilizar ele como fator para arquivar ou remover dados. Nesse caso ele nos ajuda facilitando a remoção de dados pela partição o que não altera os metadados de estatísticos do Delta table ([[Estatísticas de arquivos]]).
 
 Por exemplo, uma tabela que armazena registros de pedidos por ano, as consultas a essa tabela buscam apenas pelos 10 anos mais recentes. Podemos então arquivar os a cada ano o décimo primeiro ano mais recente, isso faz remover uma partição inteira sem que seja necessário alterar nenhuma das partições mais recentes.
+
+
+## Spark DataFrame repartition() vs coalesce()
+
+> [!quote]- (Tipo) - [Spark by Examples - repartition vs coalesce](https://sparkbyexamples.com/spark/spark-repartition-vs-coalesce/)
+> Apresenta a distinção entre as duas funções com exemplo em [[Resilient Distributed Dataset (RDD)]] ou Dataframes.
+
+

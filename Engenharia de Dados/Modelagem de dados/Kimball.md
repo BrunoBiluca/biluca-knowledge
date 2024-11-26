@@ -1,8 +1,29 @@
 # Kimball
 
+--- start-multi-column: ExampleRegion1  
+```column-settings  
+number of columns: 2
+Column Size: [59%, 40%]
+Border: disabled
+Shadow: off
+```
+
 Criado por Ralph Kimball a modelagem Kimball vem como uma abordagem totalmente oposta ao que [[#Inmon]] propõe, onde nessa abordagem o foco é bem menos na normalização dos dados, permitindo até ter denormalização.
 
 O modelo de Kimball tenta uma abordagem mais baixa-cima, onde cada departamento ou negócio deve ser modelado e servido do próprio Data Warehouse, removendo assim a centralidado do modelo Inmon conseguindo então mais agilidade no processo em detrimento de uma menor taxa de integração e dados duplicados ou redundantes.
+
+--- end-column ---
+
+> [!info] Principais referências
+> - 
+
+---
+
+> [!quote]- Outras referências
+> - [[Fundamentals of Data Engineering]]
+> 	- Conceitos e aplicação
+
+--- end-multi-column
 
 A abordagem do Kimball tem como elementos principais dois tipos de tabelas: Fatos e Dimensões.
 
@@ -19,7 +40,7 @@ A abordagem do Kimball tem como elementos principais dois tipos de tabelas: Fato
 Alguns tipos de estratégias de atualização das tabelas dimensão são:
 
 - Sobrescrever tudo
-- Manter histórico completo de mudanças
+- Manter histórico completo de mudanças ([[Mudança lenta de dimensões]])
 	- Quando uma mudança é feita a linha atual é marcada como alterada e uma cópia dela com as novas informações é adicionada em uma nova linha, esta passa a ser a linha atual
 - Manter histórico de mudanças por adição de novos campos
 	- Quando uma mudança é feita um novo campo é criado para armazenar o estado atual

@@ -1,6 +1,21 @@
+# Inclinação de dados (Data Skew)
 
-> [!info] O que é?
-> Distribuição desigual de ados entre diferentes partições ou nós.
+--- start-multi-column: ExampleRegion1  
+```column-settings  
+number of columns: 2
+Column Size: [59%, 40%]
+Border: disabled
+Shadow: off
+```
+
+Distribuição desigual de ados entre diferentes partições ou nós.
+
+--- end-column ---
+
+> [!info] Principais referências
+> -
+
+--- end-multi-column
 
 Esse é um problema de otimização de processamento de dados. Essa diferença no balanceamento das partições pode levar a problemas de performance já que o tempo total do processo será relacionado ao tempo da tarefa mais lenta.
 
@@ -32,8 +47,8 @@ df.groupBy(F.spark_partition_id()).count().show()
 
 Soluções
 
-- Repartição baseado em colunas que aumenta a eficiência do embaralhamento de dados
-- Repartição por um "salt" aleatório
+- **Repartição baseado em colunas** que aumenta a eficiência do embaralhamento de dados
+- **Repartição por um "salt" aleatório**
 	- Cria uma coluna com um valor aleatório e faz a repartição por esse valor
-	- Caso utilizado quando não sabemos quais colunas são as melhores para fazer a distribuição
+	- Pode ser utilizado quando **não sabemos** quais colunas são as melhores para fazer a distribuição
 
