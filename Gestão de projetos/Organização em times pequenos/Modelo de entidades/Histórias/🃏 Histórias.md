@@ -139,7 +139,7 @@ Quando a História não faz parte de um Épico a sua prioridade é dada pela pri
 
 
 > [!info] Priorização de um 🏆 Épico
-> [[Gestão de projetos/Modelo de entidades/🏆 Épicos#Priorização de 🏆 Épicos]]
+> [[Gestão de projetos/Organização em times pequenos/Modelo de entidades/🏆 Épicos#Priorização de 🏆 Épicos]]
 
 ## Estimativa
 

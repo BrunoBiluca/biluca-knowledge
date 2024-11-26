@@ -167,6 +167,9 @@ O refinamento desse tipo de execução deve focar em buscar um conjunto de conte
 
 Execuções de descoberta não definem critérios de aceite como a entrega de algo concreto, os critérios de aceite nesses casos são mais relacionados a um relatório ou análise em relação ao tema. Também devem existir critérios de aceite como condições de parada na descoberta, já que um tópico levantado para descobrir pode desdobrar em muitos outros.
 
+Bons critérios de aceite de Execuções de Descoberta são perguntas. Alguns exemplos são:
+- Como seria o formato do escopo durante a criação de um Épico? (Documentação)
+
 O refinamento de execuções de Descoberta foca em definir bem o objetivo proposto e os tipos de informações que precisamos levantar ao final. Um escopo fechado para esse tipo é muito importante para não executarmos indefinidamente a descoberta.
 
 Execuções de descoberta podem ser utilizadas principalmente para mitigar o risco de executar outras atividades, como por exemplo:

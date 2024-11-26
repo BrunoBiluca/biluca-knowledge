@@ -10,9 +10,9 @@ Esse sistema de organização se baseia nas seguintes entidades que serão elabo
 
  ---
 > 
-> [🌟 Valor](Gestão%20de%20projetos/Modelo%20de%20entidades/🌟%20Valores.md)
+> [🌟 Valor](Gestão%20de%20projetos/Organização%20em%20times%20pequenos/Modelo%20de%20entidades/🌟%20Valores.md)
 > [🎯 Metas](🎯%20Metas.md)
-> [🏆 Épicos](Gestão%20de%20projetos/Modelo%20de%20entidades/🏆%20Épicos.md)
+> [🏆 Épicos](Gestão%20de%20projetos/Organização%20em%20times%20pequenos/Modelo%20de%20entidades/🏆%20Épicos.md)
 > [🎽 Sprints](🎽%20Sprints.md)
 > [🃏 Histórias](🃏%20Histórias.md)
 > [[🪵 Backlog]]
