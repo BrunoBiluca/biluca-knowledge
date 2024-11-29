@@ -19,7 +19,7 @@ Principais gargalhos de performance para big data e sistemas MPP:
 - [[Inclinação de dados (Data Skew)]]
 
 - **Processar mais que o necessário**
-	- Data Skipping
+	- [[Salto de dados (Data skipping)]]
 	- Delta Lake e Z-Order utilizam uma técnica de indexação para evitar esses problemas
 
 - **Contenção de recursos:** processar diferentes fluxos ao mesmo tempo utilizando os mesmos recursos
@@ -28,7 +28,7 @@ Principais gargalhos de performance para big data e sistemas MPP:
 
 [Documentação de controle de tamanho de arquivos no Databricks](https://docs.databricks.com/en/delta/tune-file-size.htm)
 
-Databricks automaticamente otimiza o tamanho dos arquivos em tables Delta Lake utilizando o auto-optimize do Delta Lake. Tabelas com valores especificados não são ajustados.
+Databricks automaticamente otimiza o tamanho dos arquivos em tables Delta Lake utilizando o [[Auto Optimize]]do [[Delta lake]]. Tabelas com valores especificados não são ajustados.
 
 O Databricks ajusta automaticamente o tamanho dos arquivos baseados em dois casos:
 

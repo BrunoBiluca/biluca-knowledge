@@ -10,7 +10,7 @@ Databricks tem duas formas de orquestração
 - Delta Live Tables: processamentos para Delta Lake
 	- Utilizado principalmente para ingestão de dados e transformação de qualquer tipo de ETL, podendo adicionar restrições de qualidade, monitoramento e logs
 
-![[Exemplo de utilização de workflow para ML dentro do Databricks.png|Exemplo de utilização de workflow para ML dentro do Databricks|500]]
+![[Exemplo de utilização de workflow para ML dentro do Databricks.png|Exemplo de utilização de workflow para ML dentro do Databricks]]
 
 > [!tip] Componentes de um fluxo de processamento
 > Quando pensamos em um fluxo de processamento é crucial pensar basicamente em 3 coisas:
@@ -25,11 +25,13 @@ Databricks tem duas formas de orquestração
 
 A execução dos JOBs sequem uma DAG criada
 
-![[Exemplo de DAG criada no Databricks Workflow.png|Exemplo de DAG criada no Databricks Workflow|center|500]]
+![[Exemplo de DAG criada no Databricks Workflow.png|Exemplo de DAG criada no Databricks Workflow|center]]
 
 Caso uma tarefa nesse fluxo falhe, todas as tarefas dependentes são puladas.
 
-A falha de uma tarefa é sempre parcial, o que significa que as operações no notebook antes da tarefa falhar são persistidas, enquanto após a falha todas as operações são puladas. [Guia de reparo de jobs](https://docs.databricks.com/pt/jobs/repair-job-failures.html).
+A falha de uma tarefa é **sempre parcial**, o que significa que as operações no notebook antes da tarefa falhar são persistidas, após a falha todas as operações são puladas.
+
+[Guia de reparo de jobs](https://docs.databricks.com/pt/jobs/repair-job-failures.html).
 
 ### Configurações de jobs de streaming
 
@@ -46,4 +48,4 @@ A Databricks oferece uma documentação auxiliar de [configurações do cluster]
 
 ### Processamentos complexos de ETL
 
-Para operações complexas que envolvam muita distribuição de dados no cluster, como é o caso de JOINS e UNIONS, Databricks recomenda utilizar menos instâncias de trabalhadores no cluster com mais recursos.
+Para operações complexas que envolvam muita distribuição de dados no cluster, como é o caso de JOINS e UNIONS, Databricks recomenda utilizar menos instâncias de trabalhadores no cluster, porém com mais recursos.

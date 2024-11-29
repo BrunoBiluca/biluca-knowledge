@@ -45,6 +45,6 @@ Caso seja necessário persistir dados inválidos podemos utilizar dois tipos de 
 - Criar regras de expectativas invertidas
 	- Processa a base duas vezes, mas utiliza todos os recursos nativos da plataforma Databricks
 - Adicionar um campo com o estado da validação
-	- Processa a base inteira apenas uma vez, porém não é possível verificar as métricas de qualidade pela interface (no caso do Databricks)
+	- Processa a base inteira apenas uma vez, porém não é possível verificar as métricas de [[Qualidade dos dados]] pela interface (no caso do Databricks)
 - Adicionar um filtro com a restrição desejada ao processamento de dados, dessa forma não é necessário remover os dados inválidos da tabela e apenas recebemos dados válidos a partir daquele momento.
 # Ouro

@@ -31,7 +31,7 @@ O Apache Spark também pode ser utilizado com uma camada escrita para a linguage
 Funcionalidades
 
 - [[Plano de execução]]
-- [[Funções nativas]]
+- [[Transformações nativas]]
 - [[Spark web UI]]
 
 Conceitos

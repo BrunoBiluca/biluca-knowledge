@@ -1,6 +1,8 @@
 # Formato de uma Tabela Delta
 
-Sempre que se escreve no modo **delta** estamos criando uma tabela `DeltaTable` que será gerenciada no formato. Uma tabela Delta Lake é persistida no seguinte formato:
+Sempre que se escreve no modo **delta** estamos criando uma tabela `DeltaTable`. 
+
+Uma tabela Delta Lake é persistida no seguinte formato:
 
 ```python
 delta-table
@@ -13,4 +15,4 @@ delta-table
   ┗ ... outras arquivos de dados
 ```
 
-O transaction log (`_delta_log`) é o sistema de versionamento de uma Delta Table, ele utilizada arquivos no formato `.json` para persistir as alterações a cada versão e `.checkpoint.parquet` para aglutinar a cada 10 alterações de forma a remontar o esquema de forma mais performática.
+O transaction log (`_delta_log`) é o sistema de versionamento de uma Delta Table, ele utilizada arquivos em uma combinação do formato `.json` e `.parquet` para persistir as alterações a cada versão. A cada 10 alterações os arquivos `.json` são aglutinados no formato `.checkpoint.parquet` melhorando o desempenho de consultas.

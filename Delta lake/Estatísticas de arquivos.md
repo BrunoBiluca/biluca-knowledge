@@ -9,7 +9,7 @@ Delta Lake analisa as primeiras 32 colunas de uma tabela para determinar:
 - Máximo valor de cada coluna
 - Contagem de valores nulls em cada coluna
 
-Essas estatísticas são utilizadas para pular arquivos que não são relevantes as consultas. Assim quando pedimos a contagem de registros em uma partição, o Delta Lake busca nas estatísticas dos arquivos não nos dados em si.
+Essas estatísticas são utilizadas para efetuar o [[Salto de dados (Data skipping)]] não relevantes as consultas. Assim quando pedimos a contagem de registros em uma partição, o Delta Lake busca nas estatísticas dos arquivos não nos dados em si.
 
 São considerados para a contagem de colunas:
 

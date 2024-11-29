@@ -1,5 +1,5 @@
 
-![[Ganglia UI - resumo.png|Exemplo de interface gráfica do Ganglia|500]]
+![[Ganglia UI - resumo.png|Exemplo de interface gráfica do Ganglia]]
 
 O Ganglia UI é uma ferramenta visual para verificar a saúde do cluster.
 
@@ -12,4 +12,4 @@ Temos as seguintes informações para avaliar:
 
 Também é possível verificar a utilização de recursos em cada um dos nós do cluster.
 
-![[Ganglia UI - nós individuais.png|Exemplo de visualização individual da utilização de cpu em cada nó do cluster|500]]
+![[Ganglia UI - nós individuais.png|Exemplo de visualização individual da utilização de cpu em cada nó do cluster]]

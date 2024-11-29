@@ -80,9 +80,14 @@ Tipos de clusters:
 
 > [!important] Jobs **não pode ser atribuídos a grupos de usuários**, eles devem ser atribuídos a um dono que deve ser um indivíduo.
 
+
+# Segurança de dados
+
+Para garantir a segurança de dados armazenados enquanto mantemos o acesso podemos utilizar **Databricks SQL Auth** que implementa em nível de linha quais informações são exibidas dependendo do grupo de usuários que estão acessando.
+
 # Qualidade dos dados
 
-A preocupação com a qualidade dos dados é um elemento dentro da [[Governança de dados]] que garante a saúde do lake.
+A preocupação com a [[Qualidade dos dados]] é um elemento dentro da [[Governança de dados]] que garante a saúde do lake.
 
 [Documentação do Databricks sobre restrições de dados](https://docs.databricks.com/en/tables/constraints.html)
 

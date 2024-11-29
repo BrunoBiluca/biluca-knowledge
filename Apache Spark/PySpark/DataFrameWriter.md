@@ -14,3 +14,4 @@ Ele pode ser configurado com os seguintes valores
 - `error` ou `errorifexists`: lança exceção se o dado já existe
 - `ignore`: ignora operações quando dados já existem
 
+O modo padrão do DataFrameWritter é `error` ou `errorifexists`. Se a tabela já existe será lançada um exceção de **Error: pyspark.sql.utils.AnalysisException: table already exists**.

@@ -13,7 +13,7 @@ O Structured Streaming disponibiliza a utilização de junções entre Dataframe
 
 Para **limitar o estado mantido** por junções stream-streaming é necessário saber algumas informações sobre seu caso de uso:
 
-- Qual a razão de de tempo entre a geração dos dois em suas respectivas fontes?
+- Qual a razão de tempo entre a geração de dados em suas respectivas fontes?
 - Qual a duração máxima um evento pode ser atrasado? (do momento que foi gerado até o motor de processamento)
 
 > [!quote]- Artigo - [Introdução à Stream-Stream Joins](https://www.databricks.com/blog/2018/03/13/introducing-stream-stream-joins-in-apache-spark-2-3.html)

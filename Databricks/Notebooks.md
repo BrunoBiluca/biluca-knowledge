@@ -18,6 +18,7 @@ Comandos mágicos que podem ser utilizados nos notebooks do Databricks para vár
 ```
 
 Sobre o `%sh` é um comando mágico que deve ser utilizado com cautela:
+
 - Ele executa o código shell sobre a máquina driver local **aumentando a sobrecarga de trabalho**
 - Reseta o interpretador do Python
 - Não tem acesso a armazenamento permanente para salvar saídas

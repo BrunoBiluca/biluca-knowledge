@@ -51,11 +51,11 @@ Assim a diferença entre as duas configurações (`AvailableNow` e `Processingti
 - **append** - apenas novos registros serão adicionados a *tabela resultado* desde o último gatilho.
 - **update** - apenas linhas que foram alteradas na *tabela resultado* desde o último gatilho serão escritas no armazenamento externo.
 
-## Deduplicação de dados
+Por padrão o output mode é "append".
+
+# Deduplicação de dados
 
 Para garantir deduplicação de dados em streaming, podemos fazer
 
 - Realizar `dropDuplicates()` no lote com novos dados
 - Mesclagem apenas inserção na tabela de destino
-
-[[Agregações]]

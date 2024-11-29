@@ -26,7 +26,7 @@ Para habilitar a evolução de esquema é necessário configurar a escrita com a
 
 - `.option("mergeSchema", "true")`
 - `MERGE WITH SCHEMA EVOLUTION`
-- `spark.databricks.delta.schema.autoMerge.enabled` para `true` na configuração da sessão do Spark.
+- `spark.databricks.delta.schema.autoMerge.enabled` para `true` na configuração da sessão do Spark 
 
 A junção do esquema é suportada **apenas em parquet** outros formatos não permitem essa funcionalidade.
 
@@ -40,4 +40,6 @@ Para substituir o esquema da tabela é preciso definir o `mode("overwrite")` jun
 
 Para remover colunas sem reescrever os arquivos é necessário habilitar mapeamento de coluna para a tabela ([Renomear e remover colunas](https://docs.databricks.com/en/delta/column-mapping.html)).
 
-Remover uma coluna não deleta os dados nos arquivos. Para expurgar esse tipo os dados dessa coluna é necessário executar o comando [REORG TABLE](https://docs.databricks.com/en/sql/language-manual/delta-reorg-table.html) e posteriormente um comando VACUUM.
+**Remover uma coluna não deleta os dados nos arquivos.** 
+
+Para expurgar os dados dessa coluna é necessário executar o comando [REORG TABLE](https://docs.databricks.com/en/sql/language-manual/delta-reorg-table.html) e posteriormente um comando VACUUM.

@@ -24,6 +24,7 @@ Telas que o Spark disponibiliza:
 
 > [!quote]- Artigo - [Health check using spark ui](https://medium.com/@badwaik.ojas/health-check-using-spark-ui-b0d3d26e08a0)
 > Demonstra em um exemplo como fazer o monitoramento de saúde de um cluster executando Apache Spark.
+
 # Spark Application UI
 
 A Spark Application UI pode ser visualizada no caminho http://localhost:4040/.
@@ -40,4 +41,4 @@ Essa página exibe informações gerais sobre a execução da Query.
 - Lista de Jobs associados
 - DAG de execução
 
-Ele também mostra métricas do SQL no bloco de operações físicas. Essas métricas podem ser úteis quando nós queremos aprofundar no detalhes de execução de cada operador. Por exemplo, "número de linhas de saída" pode responder como as linhas saem após uma operação de filtro, definido pelo tamanho do derramamento (Spill size) que pode indicar um possível problema de [[Derramamento de dados (Spill)]].
+Ele também mostra métricas do SQL no bloco de operações físicas. Essas métricas podem ser úteis quando nós queremos aprofundar no detalhes de execução de cada operação. Por exemplo, "número de linhas de saída" pode responder como as linhas saem após uma operação de filtro, ou também o tamanho do derramamento (Spill size) que pode indicar um possível problema de [[Derramamento de dados (Spill)]].

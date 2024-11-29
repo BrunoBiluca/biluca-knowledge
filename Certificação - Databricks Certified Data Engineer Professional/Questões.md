@@ -671,7 +671,7 @@ Essa consulta calcula em nível de negócio para cada janela de 5 minutos não-s
 
 Caso a opção `slideDurantion` for provida as janelas passam a ser sobrepostas pelo tempo configurado.
 
-[[Funções nativas#Window Functions]]
+[[Transformações nativas#Window Functions]]
 
 ---
 

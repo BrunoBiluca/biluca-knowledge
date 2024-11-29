@@ -3,7 +3,7 @@ tags:
   - engenharia_de_dados
 categoria: repositório de dados
 ---
-# Delta lake
+a# Delta lake
 
 --- start-multi-column: ExampleRegion1  
 ```column-settings  
@@ -68,3 +68,4 @@ Delta Lake usa arquivos Parquet versionados para armazenar seus dados em seu arm
 - [[Mesclagem de dados condicional]]
 - [[Clonar tabelas]]
 - [[Evolução de esquema]]
+- [[Estatísticas de arquivos]]

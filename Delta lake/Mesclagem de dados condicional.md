@@ -20,7 +20,9 @@ WHEN NOT MATCHED
   THEN INSERT *
 ```
 
-Sabendo um pouco mais sobre a natureza da tabela podemos otimizar o código criado. Utilizando o exemplo de logs acima, se soubermos que na fontes os registros podem ser duplicados apenas por alguns dias, podemos fazer um filtro que especifica o intervalo de datas relevante ao nosso caso.
+Sabendo um pouco mais sobre a natureza da tabela podemos otimizar o código criado. 
+
+Utilizando o exemplo de logs acima, se soubermos que na fontes os registros podem ser duplicados apenas por alguns dias, podemos fazer um filtro que especifica o intervalo de datas relevante ao nosso caso.
 
 ```sql
 -- abordagem mais eficiênte, pois busca logs cadastrados para os últimos 7 dias em vez da tabela inteira

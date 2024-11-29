@@ -70,7 +70,7 @@ Após habilitado o CDF na Delta Table são criados 3 novas colunas que irão faz
 
 ### Armazenamento das alterações de dados
 
-As alterações de dados são armazenadas em uma pasta (`_change_data`) junto aos próprios dados da tabela.
+As alterações de dados são armazenadas em uma pasta (`_change_data`) junto ao [[Formato de uma Tabela Delta]].
 
 Por exemplo, se em uma Delta Table chamada `customers` for habilitado o CDF a disposição das pastas ficará como a seguinte:
   
@@ -93,3 +93,14 @@ Também é possível fazer a mesma consulta com a API do PySpark
 	.table("customers"))
 ```
 
+### Leitura estática das versões
+
+É possível buscar todas as versões de dados de uma vez, para isso utilizamos uma leitura em estática definindo a versão inicial desejada:
+
+```python
+ cdf_df = (spark.read
+	.format("delta")
+	.option("readChangeData", True) # Habilita a leitura das alterações capturas pelo CDF
+	.option("startingVersion", 2) # Configura a versão inicial da leitura dos dados
+	.table("customers"))
+```
