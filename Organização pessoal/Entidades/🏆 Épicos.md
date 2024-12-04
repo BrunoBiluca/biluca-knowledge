@@ -5,21 +5,21 @@
 
 Os Épicos são parte fundamental do processo de organização por causa das suas características:
 
-- Objetivo que é mais do que a soma individual das Execuções relacionadas
-- Escopo inicialmente delimitado a fim de mitigar riscos
-- Período de execução até sua conclusão
+- **Objetivo** que é mais do que a soma individual das Execuções relacionadas
+- **Escopo inicialmente delimitado** a fim de mitigar riscos
+- **Período de execução** até sua conclusão
 
 Os Épicos são principalmente definidos durante o ritual de [[🔬 Refinamento]], onde o objetivo, escopo, período de execução entre outras características são refinadas a fim de mitigar riscos e garantir fluidez sua execução. Durante o processo de refinamento também é importante ter um pensamento crítico em relação aos objetivos do Épico, seja para adicionar novas Execuções, remover Execuções que não agregam ou também concluir o próprio Épico.
 
-Importante **diferenciar um Épico de uma Execução** e vice-versa. Ter o claro entendimento entre as duas entidades é necessário para garantir que estamos criando a **melhor representação um avanço no Valor**.
+Importante **diferenciar um Épico de uma Execução** e vice-versa, ter o claro entendimento entre as duas entidades é necessário para garantir que estamos criando a **melhor representação um avanço no Valor**.
 
 De forma que:
 - Se um Épico foi removido de todas as execuções relacionadas isso remove algum tipo de informação relevante à organização?
-	- Em casos positivos dessa pergunta o Épico não é necessário e é apenas uma burocracia a mais.
+	- Em casos positivos dessa pergunta o Épico não é necessário e é apenas uma burocracia.
 
 > [!tip] Enquanto uma 🏗️ Execução tem o escopo fechado uma 🏆 Épico tem um escopo possivelmente aberto.
 
-O escopo é possivelmente aberto porque para se alcançar o objetivo de um Épico é necessário que a conclusão das suas Execuções agregadas gerem o Valor desejado. Isso pode ocorrer com um escopo fechado caso o processo de refinamento inicial foi altamente exitoso ou durante as demais iterações e incrementos feitos durante o desenvolvimento do Épico.
+O **escopo é possivelmente aberto** porque para se alcançar o objetivo de um Épico é necessário que a conclusão das suas Execuções agregadas gerem o Valor desejado. Isso pode ocorrer com um escopo fechado caso o processo de refinamento inicial foi altamente exitoso ou durante as demais iterações e incrementos feitos durante o desenvolvimento do Épico.
 
 ### Exemplos de Épicos ruins
 
