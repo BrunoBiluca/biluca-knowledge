@@ -18,9 +18,15 @@ Os rituais da organização são:
 
 - [[📆 Planejamento]]
 - [[🔬 Refinamento]]
+- [[🌀 Retrospectiva]]
 
 Tanto as entidades quanto os rituais devem ser organizadas de forma clara para agilizar fluxo de trabalho no dia a dia. 
 
 Visualizações
+
 - [[Quadro de tarefas]]
 - [[Backlog]]
+
+Existem também alguns elementos que são auxiliares ao processo de organização:
+
+- [[Tabela de referências de estimativas]]

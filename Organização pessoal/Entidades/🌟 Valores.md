@@ -24,19 +24,19 @@ Ao longo do tempo é possível que novos Valores sejam criados (quando temos uma
 - **Tem execução essa semana** - exibe se existe alguma execução relacionada essa semana. Isso ajuda no processo de planejamento da semana.
 - **Última execução concluída** - exibe a quantidade de dias desde a última execução concluída. Isso ajuda a entender se esse valor está sendo trabalhado, ou já podemos arquivar.
 
-#### Visualizações
+## Visualizações
 
 - **Todos** - todos os valores
 - **Abertos** - valores não arquivados
 - **Ativos** - valores com prioridades 1, 2, 3 ou 4
 - **Arquivados** - valores arquivados
 
-#### Conteúdo
+## Conteúdo
 
 - **Qual ideal, vontade ou função esse Valor quer alcançar?** - Descrição sobre os objetivos do valor
 - **O que fazer para alcançar esse valor?** - Descrições por alto de atividades, etapas e ideias para conseguir alcançar o valor.
 
-#### Gestão
+## Gestão
 
 - **Épicos - abertos** - Épicos não concluídos
 	- Propriedades

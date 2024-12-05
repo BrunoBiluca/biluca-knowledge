@@ -9,10 +9,21 @@ O estado das execuções são alterados pelos rituais de [[📆 Planejamento]] e
 
 - **Data da realização** - Data da realização da execução. Não é a data limite é a data que deve ser executada.
 - **Tipo** - Define o tipo da execução que será realizada ([[#Tipos de execuções]])
+- **Estimativa** - Define um valor aproximado de tempo possível para a realização da Execução.
+	- A estimativa deve ser definida quando a Execução é definida com o estado aberto.
+	- É dividida em 3 tamanhos:
+		- Pequeno: até 2 UT
+		- Médio: algumas UT
+		- Grande: muitas UT
+			- Nesse casos podemos pensar em quebrar a execução em execuções menores.
+			- Algumas execuções são grandes mesmo.
 - **Estado** - Estado da execução no fluxo de trabalho.
 - **Impacto** - Nível do impacto que a execução quando realizada causa no Valor ou no Épico relacionado.
 - **Iniciado em** - Data do momento que a execução foi definida na primeira vez como "Em progresso".
 - **Concluído em** - Data do momento que a execução foi definida como "Concluída"
+- **Unidades de trabalho (UT)** - Quantidade de unidades de trabalho utilizadas para a realização da Execução.
+	- 1 UT ~ até 3 horas.
+	- A unidade de trabalho nos ajuda a entender o real tempo trabalhado na Execução.
 - **Criado em** - Data de criação da execução.
 
 #### Relações
@@ -108,7 +119,7 @@ Uma execução é dividida em 3 estágios:
 - **Novo** - Execução foi criada, são necessários principalmente o contexto e objetivo.
 - **Refinando** - Execução precisa de definir demais informações
 - **Bloqueado** - Execução depende de outra para ser realizada
-- **Aberto** - Execução pronta para ser executada, estão definidos todos os elementos necessários para uma execução fluida.
+- **Aberto** - Execução pronta para ser executada, estão definidos todos os elementos necessários sua realização de forma fluída.
 - **Pausada** - Execução começou a ser executada e foi interrompida
 
 **Em andamento** consiste nos seguintes estados:
@@ -142,7 +153,7 @@ Tipos
 
 Uma tarefa precisa de pouco refinamento e deve ser destinada a execuções curtas e diretas.
 
-Exemplos
+#### Exemplos
 
 - Controle de contas
 	- A própria execução dessa tarefa já é o resultado esperado, que nesse caso é levantar os gastos e receitas do mês
@@ -178,7 +189,7 @@ Execuções de descoberta podem ser utilizadas principalmente para mitigar o ris
 - garantir que o impacto seja realmente o que estamos pensando
 - evitar perder tempo com execuções aparentemente fácies onde uma busca no google é possível verificar uma dificuldade de executá-las
 
-Exemplos
+#### Exemplos
 
 - Levantamento de possibilidades para a v2 do Biluca Finanças
 	- Essa execução de descoberta foca em entender que tipo de elementos são interessantes para uma segunda versão do Biluca Finanças. 
