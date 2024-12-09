@@ -143,6 +143,18 @@
       "selectAppend": true,
       "selectPrepend": true,
       "selectBackground": true
+    },
+    {
+      "type": "path",
+      "name": "categoria",
+      "value": "Desafios - ",
+      "matchCaseSensitive": false,
+      "match": "contains",
+      "uid": "6cde-fb16",
+      "selectText": true,
+      "selectAppend": true,
+      "selectPrepend": true,
+      "selectBackground": true
     }
   ]
 }

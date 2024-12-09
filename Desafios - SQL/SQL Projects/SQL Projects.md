@@ -27,6 +27,13 @@ Criar duas [[Common Table Expressions (CTE)]]:
 
 Como os projetos são sempre consecutivos, ou seja, um projeto só começa depois do outro, a solução é junta a primeira tarefa de início do projeto com a primeira tarefas de término do projeto, a segunda com a segunda e assim sucessivamente.
 
+Por fim ordenamos pela diferença entre a data de início e a data de término.
+
+#### Conceitos trabalhados
+
+- Junções
+- [[Common Table Expressions (CTE)]]
+- Ordenação por valores calculados
 #### Implementações
 
 - [[SQL Projects - mysql.sql]]
