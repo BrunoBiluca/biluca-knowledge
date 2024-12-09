@@ -1,7 +1,7 @@
 ---
 categoria: projeto
 ano: 2024
-última atualização: 2024-11-19
+última atualização: 2024-12-09
 ---
 # Biluca Finanças
 
@@ -83,6 +83,8 @@ shadow: off
 	- [[PyInstaller]]
 
 - [[SQLite/SQLite|SQLite]]
+
+- [[Inno Setup]] utilizada na compilação do pacote e criação de instalador para windows
 
 #### Motivação
 
