@@ -86,6 +86,8 @@ shadow: off
 
 - [[Inno Setup]] utilizada na compilação do pacote e criação de instalador para windows
 
+- [[Github]] para controle de versão e publicação.
+
 #### Motivação
 
 - **Uso da própria aplicação**, ter esse aplicativo me ajuda no dia a dia a controlar contas e investimentos, sem precisar gastar muito tempo com isso, além de confiar na matemática implementada (Nubank por exemplo usa para demonstrar ganho na carteira valores brutos e não líquidos).
