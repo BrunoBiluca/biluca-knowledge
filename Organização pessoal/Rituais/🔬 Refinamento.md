@@ -1,3 +1,5 @@
+# 🔬 Refinamento
+
 Refinamento é um momento dedicado a entender melhor os [[Organização pessoal/Entidades/🌟 Valores]] ativos.
 
 O refinamento pode ser feito de duas formas:

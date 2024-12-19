@@ -1,3 +1,5 @@
+# Quadro de tarefas (HUB)
+
 O quadro de tarefas é a principal visualização da [[Organização pessoal]]. Ele define todas informações necessárias para a execução do trabalho cotidiano.
 
 O quadro de tarefas também deve disponibilizar acessos rápidos a todos os elementos da organização.

@@ -3,7 +3,16 @@
 > [!info] Objetivo
 > A organização pessoal tem o objetivo de organizar **atividades** de **coisas** (valores, vontades, funções, desejos) que preciso, posso ou apenas quero executar.
 
-Os **Elementos da organização** são estruturas que existem para organizar as ideais, atividades e coisas. Cada um tem um objetivo específico de existir e são relacionados entre si.
+As **Entidades** são estruturas que existem para organizar as ideais, atividades e coisas. Cada um tem um objetivo específico de existir e são relacionados entre si.
+
+Entidades são compostas de alguns elementos:
+
+- **Campos:** são elementos intrínsecos da entidade e são preenchidos de acordo com a mudança de estados.
+- **Propriedades:** são elementos calculados a partir dos campos e relações. Podem ser alterados de acordo com mudanças internas ou externas a entidade.
+- **Conteúdo:** são elementos descritivos a entidade, estão mais interessados em fornecer informações mais detalhadas sobre a entidade, como objetivos, justificativas, contextos e discussões.
+- **Relações:** são a forma que uma entidade relaciona com as demais.
+
+Elas são:
 
 - [[Organização pessoal/Entidades/🌟 Valores|🌟 Valores]]
 - [[Organização pessoal/Entidades/🏆 Épicos|🏆Épicos]]

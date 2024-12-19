@@ -27,6 +27,7 @@ Para fazer a exibição de informações de forma mais legível precisamos utili
 
 - Funções de manipulação de strings: CONCAT, SUBSTRING, LOWER.
 	- [W3Schools](https://www.w3schools.com/sql/sql_ref_mysql.asp)
+
 #### Implementações
 
 - [[The pads - mysql.sql]]

@@ -5,7 +5,7 @@
 
 O estado das execuções são alterados pelos rituais de [[📆 Planejamento]] e [[🔬 Refinamento]].
 
-#### Campos
+## Campos
 
 - **Data da realização** - Data da realização da execução. Não é a data limite é a data que deve ser executada.
 - **Tipo** - Define o tipo da execução que será realizada ([[#Tipos de execuções]])
@@ -26,12 +26,7 @@ O estado das execuções são alterados pelos rituais de [[📆 Planejamento]] e
 	- A unidade de trabalho nos ajuda a entender o real tempo trabalhado na Execução.
 - **Criado em** - Data de criação da execução.
 
-#### Relações
-
-- **Valor** - Toda execução está associada a apenas um valor.
-- **Épico** - Uma execução pode estar associada a apenas um épico.
-
-#### Propriedades
+## Propriedades
 
 - **Prioridade** - A prioridade da execução é definida pela prioridade do Épico primeiro (caso associada) e depois do Valor. 
 - **Está atrasado** - A data de realização é menor que a data atual
@@ -43,6 +38,11 @@ O estado das execuções são alterados pelos rituais de [[📆 Planejamento]] e
 - **Está encerrado** - Quando a execução está em algum estado final ("Concluído", "Caducou", "Promovido")
 - **Está congelado** - Quando sua prioridade está congelada
 - **Está arquivado** - O Valor relacionado está arquivado
+
+## Relações
+
+- **Valor** - Toda execução está associada a apenas um valor.
+- **Épico** - Uma execução pode estar associada a apenas um épico.
 
 ## Conteúdo
 
@@ -117,7 +117,7 @@ Uma execução é dividida em 3 estágios:
 **A fazer** consiste nos seguintes estados:
 
 - **Novo** - Execução foi criada, são necessários principalmente o contexto e objetivo.
-- **Refinando** - Execução precisa de definir demais informações
+- **Refinando** - Execução ainda precisa de definir demais informações
 - **Bloqueado** - Execução depende de outra para ser realizada
 - **Aberto** - Execução pronta para ser executada, estão definidos todos os elementos necessários sua realização de forma fluída.
 - **Pausada** - Execução começou a ser executada e foi interrompida
