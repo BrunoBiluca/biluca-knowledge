@@ -9,21 +9,12 @@ O estado das execuções são alterados pelos rituais de [[📆 Planejamento]] e
 
 - **Data da realização** - Data da realização da execução. Não é a data limite é a data que deve ser executada.
 - **Tipo** - Define o tipo da execução que será realizada ([[#Tipos de execuções]])
-- **Estimativa** - Define um valor aproximado de tempo possível para a realização da Execução.
-	- A estimativa deve ser definida quando a Execução é definida com o estado aberto.
-	- É dividida em 3 tamanhos:
-		- Pequeno: até 2 UT
-		- Médio: algumas UT
-		- Grande: muitas UT
-			- Nesse casos podemos pensar em quebrar a execução em execuções menores.
-			- Algumas execuções são grandes mesmo.
+- **Estimativa** - Define um valor aproximado de tempo possível para a realização da Execução ([[#Estimativa e UT]])
 - **Estado** - Estado da execução no fluxo de trabalho.
-- **Impacto** - Nível do impacto que a execução quando realizada causa no Valor ou no Épico relacionado.
+- **Impacto** - Nível do impacto que a execução quando realizada causa no Valor relacionado. Essa é uma propriedade totalmente subjetiva e dependente do contexto e do momento que está sendo avaliado. O impacto é alterado sempre durando o ritual de [[📆 Planejamento]].
 - **Iniciado em** - Data do momento que a execução foi definida na primeira vez como "Em progresso".
 - **Concluído em** - Data do momento que a execução foi definida como "Concluída"
-- **Unidades de trabalho (UT)** - Quantidade de unidades de trabalho utilizadas para a realização da Execução.
-	- 1 UT ~ até 3 horas.
-	- A unidade de trabalho nos ajuda a entender o real tempo trabalhado na Execução.
+- **Unidades de trabalho (UT)** - Quantidade de unidades de trabalho utilizadas para a realização da Execução ([[#Estimativa e UT]]).
 - **Criado em** - Data de criação da execução.
 
 ## Propriedades
@@ -46,7 +37,8 @@ O estado das execuções são alterados pelos rituais de [[📆 Planejamento]] e
 
 ## Conteúdo
 
-- **Objetivo** - Por que será executado? Qual o ganho em realizar essa execução?
+- **Objetivo** - Uma frase clara do que será executado.
+- **Impacto** - Por que será executado? Qual o ganho em realizar essa execução?
 - **Critérios de aceite** - O que espero com a realização dessa execução? São os principais requisitos para definir essa execução como concluída.
 - **Refinamento** - O que preciso antes da realização dessa execução?
 - **Tarefas** - Subdivisão de tarefas, auxilia na realização da execução.
@@ -133,6 +125,75 @@ Uma execução é dividida em 3 estágios:
 - **Promovido** - Execução foi definida como mais do que apenas uma execução. Durante o processo de refinamento uma execução pode ser promovida a múltiplas execuções, um Épico ou um Valor.
 - **Caducou** - Execução não faz mais sentido, não apresenta nenhum impacto e deve ser finalizada
 
+### Execução considerada "Nova"
+
+Qualquer nova ideia começa como uma Execução nova. Nesse momento ainda estamos juntando informações suficientes para definir seu objetivo, impacto e contexto. 
+
+#### Informações necessárias
+
+As informações para uma execução nova são as mais diversas, como aqui estamos falando de ideias sem muita restrições ela pode adotar vários formatos. Assim é importante tentar trazer o máximo de informação para então pensarmos com o que essa ideia se parece mais.
+
+Caso a ideia tenha um objetivo muito amplo talvez estamos falando de um [[Organização pessoal/Entidades/🌟 Valores|🌟 Valores]].
+
+Caso a ideia já seja tenha um Valor associado e tenha um prazo de execução ou tenha um escopo grande que não seja tão bem delimitado, talvez estamos falando de um [[Organização pessoal/Entidades/🏆 Épicos|🏆 Épicos]].
+
+Caso a ideia já tenha uma Valor associado e um escopo fechado, que já defina qual tipo de atividade será realizada, então talvez estamos falando uma Execução que precisa ser refinada.
+
+#### Caminhos
+
+A partir de uma execução nova podemos:
+
+- Avançar para o refinamento de execuções baseadas nos seus tipos (verificar [[#Execução considerada "Refinando"]])
+- Promover a execução para um Épico ou um Valor completamente novo
+
+Esse processo de construção das informações de uma execução é feito durante os rituais de [[🔬 Refinamento]].
+
+### Execução considerada "Refinando"
+
+Uma execução **Refinando** ainda precisa ter algumas informações preenchidas para elevar ao estado de Aberto. Este é um estado intermediário que ainda não temos muita certeza sobre os aspectos mais específicos da execução. Nesse estado temos mais informações sobre as necessidades da execução do que como ela será desenvolvida, ou seja, temos acesso as informações superficiais do que está sendo proposto.
+
+#### Informações necessárias
+
+Campos:
+
+- Nome bem descritivo
+- Tipo definido. 
+	- Uma execução é refinada a partir do seu tipo, isso que irá definir os critérios de aceite necessários, como será dada as discussões, o tipo de contexto necessário para o seu desenvolvimento e assim por diante.
+	- Por exemplo, uma execução de descoberta tem CAs muito diferentes de uma execução de desenvolvimento.
+
+Conteúdo:
+
+- Objetivo claro com a realização da Execução
+- Impacto evidente da realização. Se não existisse um impacto para quê essa execução está sendo refinada?
+
+#### Caminhos
+
+Uma execução é trabalhada durante os rituais de [[🔬 Refinamento]] e pode seguir os seguintes caminhos:
+
+- A partir da coleta das informações necessárias para que uma [[#Execução considerada "Aberta"]]
+- Em caso da necessidade de outras atividades necessárias para avançar com a execução atual, bloqueamos a atual execução e priorizamos os processos das demais atividades.
+
+### Execução considerada "Aberta"
+
+Uma execução em **Aberto** significa que todas as informações necessárias já foram preenchidas e que ela já está pronta para ser executada.
+
+#### Informações necessárias
+
+Campos com descrições finais
+
+- Nome
+- Tipo
+- Estimativa
+- (Opcional) Data da realização
+
+Conteúdo final, a partir daqui não devemos fazer alterações a essas informações:
+
+- Objetivo
+- Impacto
+- Contexto
+- Critérios de aceite
+- Refinamento não deve ter nenhuma questão em aberto
+
 
 # Tipos de execuções
 
@@ -203,3 +264,26 @@ Execuções de descoberta podem ser utilizadas principalmente para mitigar o ris
 - Assistências por IA no VSCode
 	- Essa execução visava levantar uma possível ferramenta de IA generativa para auxiliar no desenvolvimento de código pelo VSCode
 	- Após a avaliação de alguns tipos foi decidido a utilização de uma ferramenta específica
+
+# Estimativa e UT
+
+A estimativa deve ser definida quando a Execução é definida com o estado Aberto. 
+
+> [!warning]- Estimativa não é prever o futuro
+> Esse campo não é para ser utilizado como algo rígido e garantido, a ideia de utilizar uma estimativa é conseguir ter um mínimo de previsibilidade a curto prazo para aas atividades que serão executadas.
+> 
+> Isso facilita a tomada de decisão de quais atividades podem ser elencadas no curto prazo.
+
+A estimativa utiliza o conceito de Unidade de Trabalho (UT). Como não devemos utilizar estimativa como algo garantido a UT é uma boa aproximação do tempo de trabalho de uma execução, além de ser fácil de ser preenchida. Isso nos ajuda a fazer comparações com outras execuções parecidas pela [[Tabela de referências de estimativas]].
+
+Uma boa aproximação de valor de UT é aproximadamente 3 horas, ou seja, geralmente um turno de trabalho, como uma manhã ou uma tarde.
+
+A estimativa assim pode adotar 3 valores distintos:
+
+- **Pequeno:** até 2 UT
+- **Médio:** algumas UT (+2~5 UT), aproximadamente uma semana de trabalho para uma prioridade principal
+- **Grande:** muitas UT (+5 UT)
+	- Nesse casos podemos pensar em quebrar a execução em execuções menores.
+	- Também é importante pensarmos que algumas execuções são grandes mesmo e que talvez não tenha necessidade de serem repartidas.
+
+Como a estimativa é algo pouco preciso, reduzir os valores de estimativas para esse modelo de pequeno, médio e grande ajuda a definir essas estimativas, tirando o foco da busca por uma estimativa perfeita para aproximações sem muito preocupação.
