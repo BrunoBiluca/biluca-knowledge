@@ -29,6 +29,8 @@ O estado das execuções são alterados pelos rituais de [[📆 Planejamento]] e
 - **Está encerrado** - Quando a execução está em algum estado final ("Concluído", "Caducou", "Promovido")
 - **Está congelado** - Quando sua prioridade está congelada
 - **Está arquivado** - O Valor relacionado está arquivado
+- **Idade** - Tempo decorrido desde a criação da Execução até um estado final
+	- A idade de uma execução pode nos ajudar a entender coisas que estamos negligenciando, e até a repensar o impacto da execução, já que ele é contextual.
 
 ## Relações
 
@@ -145,6 +147,7 @@ A partir de uma execução nova podemos:
 
 - Avançar para o refinamento de execuções baseadas nos seus tipos (verificar [[#Execução considerada "Refinando"]])
 - Promover a execução para um Épico ou um Valor completamente novo
+	- Anexar a página da ideia ao novo Valor ou Épico para motivos históricos.
 
 Esse processo de construção das informações de uma execução é feito durante os rituais de [[🔬 Refinamento]].
 
@@ -157,14 +160,16 @@ Uma execução **Refinando** ainda precisa ter algumas informações preenchidas
 Campos:
 
 - Nome bem descritivo
-- Tipo definido. 
+- Tipo definido
 	- Uma execução é refinada a partir do seu tipo, isso que irá definir os critérios de aceite necessários, como será dada as discussões, o tipo de contexto necessário para o seu desenvolvimento e assim por diante.
 	- Por exemplo, uma execução de descoberta tem CAs muito diferentes de uma execução de desenvolvimento.
+- Valor associado
 
 Conteúdo:
 
 - Objetivo claro com a realização da Execução
 - Impacto evidente da realização. Se não existisse um impacto para quê essa execução está sendo refinada?
+- Contexto inicial
 
 #### Caminhos
 
