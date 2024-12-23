@@ -2,7 +2,7 @@
 tags:
   - planejamento_de_projetos/histórias
 ---
-# Descrição
+# Histórias de usuário
 
 Uma 🃏 História é a unidade de ação que será executada.
 

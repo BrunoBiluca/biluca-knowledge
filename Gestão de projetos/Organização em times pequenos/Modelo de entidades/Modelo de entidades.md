@@ -14,7 +14,7 @@ Esse sistema de organização se baseia nas seguintes entidades que serão elabo
 > [🎯 Metas](🎯%20Metas.md)
 > [🏆 Épicos](Gestão%20de%20projetos/Organização%20em%20times%20pequenos/Modelo%20de%20entidades/🏆%20Épicos.md)
 > [🎽 Sprints](🎽%20Sprints.md)
-> [🃏 Histórias](🃏%20Histórias.md)
+> [Histórias de usuário](Histórias%20de%20usuário.md)
 > [[🪵 Backlog]]
 > [[⚙️ Trabalho incidental]]
 > ---

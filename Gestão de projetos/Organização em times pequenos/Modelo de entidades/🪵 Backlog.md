@@ -16,7 +16,7 @@ Uma equipe deve ter um Backlog organizado, porém esse Backlog não deve estar d
 | Escala      | Estado da 🃏 História em relação ao seu refinamento                                                               |
 | 🌟 Valor    | 🌟 Valor associado a 🃏 História. Toda 🃏 História deve estar associado a um Valor para determinar sua prioridade |
 
-Todas as outras propriedades são iguais as de [[🃏 Histórias]] já que uma História de Backlog é apenas uma História que ainda não foi refinada.
+Todas as outras propriedades são iguais as de [[Histórias de usuário]] já que uma História de Backlog é apenas uma História que ainda não foi refinada.
 
 > [!tip]- Estimativa
 > A estimativa é a quantidade de trabalho necessário para a conclusão da História. Essa quantidade é estimada pelo time, porém não deve ser levado como uma previsão precisa de tempo gasto.
