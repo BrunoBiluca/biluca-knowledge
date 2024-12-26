@@ -22,8 +22,18 @@ Essa documentação tem uma abordagem mais descritiva do sistema e tem como **pr
 
 Alguns tipos comuns de elementos que compõem essa documentação:
 
-- [[Documento de requisito de produto]]
-- [[Documento Design UX]]
 - [[Documento de arquitetura]]
-- [[Documento de Qualidade]]
 - [[Documento de API]]
+- Documento de Hierarquia de pastas
+    - Importante para novos integrantes poderem contribuir sem dúvida
+- Documentos de Bibliotecas, Software, Ferramentas, Frameworks utilizados e homologados
+    - Cada biblioteca utilizada no projeto, justificar cada biblioteca é uma forma de melhorar a legibilidade do código e de sustentar a longo prazo as decisões.
+    - Cada elemento técnico deverá ter um documento técnico
+- Processo de publicação
+    - Descrição do processo de publicação e disponibilização a fim de demonstrar como ter acesso ao projeto desenvolvido
+- Guia inicial de execução
+    - Para novos integrantes conseguirem executar o projeto sem problemas
+- Versionamento
+    - Principalmente para novos integrantes, saber como são feitas as contribuições e seus formatos
+
+Também é possível inverter a relação do requisito do produto em relação a documentação do sistema. Nesse caso definimos os requisitos técnicos como elementos do requisito do produto, assim cada novo requisito de produto define como será sua alteração técnica do sistema. Este é um formato mais descentralizado de documentação de sistema.

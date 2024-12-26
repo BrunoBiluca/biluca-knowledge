@@ -79,3 +79,4 @@ Os tipos de documentações mais comuns são
 
 Utilizando esses tipos já conseguimos ter um domínio enorme do projeto, permitindo uma maior previsibilidade e fluidez no desenvolvimento.
 
+![[Relação das documentações|Diagrama de relação entre os diversos tipos de documentações e documentos|%cheio]]

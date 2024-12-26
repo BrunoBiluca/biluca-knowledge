@@ -24,14 +24,14 @@ Critérios de aceite são **condições que devem ser satisfeitas** a fim de que
 
 --- end-multi-column
 
-É necessário que os CAs sejam bem definidos antes de dar a Execução como refinada para isso ele **devem ser:**
+Critérios de Aceite devem ser:
 
 - **concisos** - escrita curta
 - **testáveis** - deve ser possível verificar a conclusão ou não do critério
 - **claros** - direto ao ponto
 - **focados no resultado** - estritamente relacionado com o objetivo
 
-Os critérios de aceite são diferentes da [[Definição de Pronto (DdP)]]. Enquanto a DdP pode ser reaproveitada para todas as histórias o critérios de aceite são definidos exclusivamente para um história.
+Os critérios de aceite são diferentes da [[Definição de Pronto (DdP)]]. Enquanto a DdP pode ser reaproveitada para todas as histórias o **critérios de aceite são definidos exclusivamente para um história.**
 
 Os principais motivos de utilizar CAs são:
 

@@ -91,7 +91,9 @@ Exemplos ruins
 
 ### Descrição (Modelo AS... IN ORDER TO ... I WANT)
 Esse é o modelo mais comum de encontrar quando equipes descrevem Histórias. Ele pode ser um bom modelo, porém é importante lembrar que Histórias devem relatar uma alteração no comportamento do projeto de forma a entregar valor ao usuário. Assim o formato de escrita deve apresentar de forma bem resumida essas características.
+
 Bons exemplos
+
 - Como jogador casual a fim de acessar as imagens completadas eu quero uma visualização própria
 - Como jogador profissional a fim de melhorar minhas habilidades eu quero um modo de treinamento
 - Como jogador offline a fim de poder ir ao banheiro ou cozinha durante o gameplay quero poder pausar o jogo sem nenhum tipo de punição.
@@ -106,14 +108,7 @@ Maus exemplos
 
 ### Critérios de aceite (CA)
 
-Critérios de aceite, também conhecidos como acceptance criteria, são condições que devem ser satisfeitas a fim de que uma História seja aceita. Cada CA deve ser expresso como uma conjunto de declarações que visam descrever o que será entregue como valor pela História, sem focar no resultado de implementação final esperado.
-
-Os critérios de aceite devem ser concisos, testáveis, claros e focado no resultado.
-
-> [!tip]- Modelo baseado em cenário
-> Um modelo recorrentemente utilizado na criação de casos de testes e critérios de aceite é imaginar um cenário e de acordo a uma ação ou acontecimento se espera um resultado. Pode se utilizar o formato **Given that; when; then**.
-
-🃏 História: Como jogador profissional a fim de melhorar minhas habilidades eu quero um modo de treinamento
+[[Documentação/Componentes/Critérios de aceite|Critérios de aceite]]
 
 Bons exemplos
 
