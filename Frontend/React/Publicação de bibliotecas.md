@@ -4,4 +4,4 @@ Uma biblioteca para React nada mais é do que uma aplicação React só que o cl
 > 
 > Esse artigo apresenta uma boa forma de organizar o projeto React focado para bibliotecas. Ele está obsoleto em relação as bibliotecas que utiliza, mas a explicação continua bem atual e funcional.
 
-O projeto https://github.com/BrunoBiluca/biluca-resume é uma biblioteca criada e publicada e foi instalada no projeto https://github.com/BrunoBiluca/web com a finalidade de desacoplar as funcionalidades de geração de currículos da criação do próprio website.
+O projeto [[Biluca Currículo]] é uma biblioteca criada e publicada e foi instalada no projeto https://github.com/BrunoBiluca/web com a finalidade de desacoplar as funcionalidades de geração de currículos da criação do próprio website.
