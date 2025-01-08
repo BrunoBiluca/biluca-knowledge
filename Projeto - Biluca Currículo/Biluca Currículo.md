@@ -62,7 +62,7 @@ shadow: off
 
 #### Tecnologias
 
-- [[REACT]]
+- [[React]]
 	- html-react-parser
 	- react-icons
 
