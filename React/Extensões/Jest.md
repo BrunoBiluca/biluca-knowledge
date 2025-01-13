@@ -18,6 +18,7 @@ Jest é um framework geral de testes para Javascript, essa biblioteca provê um 
 > [!info] Principais referências
 > - [Jest](https://jestjs.io/)
 >- [Documentação](https://jestjs.io/docs)
+>- [Documentação - Mocks](https://jestjs.io/pt-BR/docs/es6-class-mocks)
 >- [Github](https://github.com/jestjs/jest)
 
 --- end-multi-column
@@ -31,6 +32,7 @@ Necessário adicionar o comando no `package.json`:
 }
 ```
 
+Pode ser relacionado ao [[Jest-DOM]] para fazer testes utilizando a renderização dos componentes como base.
 
 ### Configurações
 
@@ -110,7 +112,41 @@ Onde `styleMock.js` e `fileMock.js` são na verdade um arquivo com o seguinte co
 export default {}
 ```
 
+# Mocks
 
-# Jest-DOM
+#### Mock de uma instância de uma classe
 
-[jest-dom](https://github.com/testing-library/jest-dom/) é uma biblioteca que permite escrever testes com o Jest para verificar vários aspectos do estado do DOM, como por exemplo se um elemento está no Documento ou não.
+No exemplo abaixo temos a utilização do Mock para uma classe qualquer `xxx` onde seus dois métodos são alterados para a implementação. Dessa forma podemos fazer testes sobre os métodos.
+
+```js
+// *.test.js
+import xxx from "./xxx"
+
+const mockxxx = jest.fn();
+jest.mock("./xxx", () => {
+  return jest.fn().mockImplementation(() => ({
+    method_1: mockxxx,
+    method_2: jest.fn().mockReturnValue([
+      { ... },
+    ])
+  }))
+})
+
+test("qualquer teste", () => {
+	expect(mockxxx).toHaveBeenCalledTimes(2)
+})
+```
+
+> [!warning]- Nomenclatura da variável de mock
+> O Jest exige que a variável de mock tenha uma nomenclatura específica já que é uma variável utilizada fora do escopo do mock.
+> 
+> Nomenclatura: `mockXXX`, onde XXX é qualquer nome dado.
+
+Para que o mock funcione de forma independente entre todos os testes é necessário resetar seu valor a cada teste.
+
+```js
+beforeEach(() => {
+  // Reseta todas as instâncias e métodos do mock
+  mockxxx.mockClear();
+});
+```
