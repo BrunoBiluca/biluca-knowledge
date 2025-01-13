@@ -150,3 +150,23 @@ beforeEach(() => {
   mockxxx.mockClear();
 });
 ```
+
+#### Substituir um mock de classe
+
+É muito comum precisarmos substituir o mock de uma classe para testes específicos. Para isso fazemos no testes desejado a alteração da implementação do mock por meio do método "factory".
+
+```js
+// *.test.js
+
+test("qualquer teste", () => {
+	XXX.mockImplementation(() => ({
+    method_1: mockxxx,
+    method_2: jest.fn().mockReturnValue([
+      { ... },
+    ])
+
+	...
+})
+```
+
+onde `XXX` é o nome da classe importada nos testes.
