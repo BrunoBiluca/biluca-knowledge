@@ -20,6 +20,7 @@ Problema: implementar portas lógicas de forma que dado duas entradas de sinais 
 
 #### Implementação
 
+- [[Logic gates.py]]
 
 ### Solução
 
