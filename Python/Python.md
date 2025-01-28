@@ -5,6 +5,11 @@ categoria: linguagem
 ---
 # Python
 
+
+Funcionalidades da linguagem:
+
+- [[Strings]]
+
 Para fazer agruparmos os arquivos de um sistema python e gerar um executável podemos utilizar o [[PyInstaller]].
 
 # Herança múltipla
@@ -86,23 +91,6 @@ A diferença entre Mixins e herança múltipla é sutíl e semântica, porém sa
 ‘rb’     # leitura em arquivo binário
 ‘wb’     # escrita em arquivo binário
 ```
-
-# Formatação espacial de strings
-
-A formatação espacial de strings pode ser utilizado em vários aspectos como prints e como writelines de arquivos em texto.
-
-```python
-self.nova_linha(f"{'Informação':<25}{'Minerado':>10}{'Sucesso':>10}")
-for i in info_mineradas:
-	self.nova_linha(f"{f'{i[0]}:':<25}{f'{i[1]}%':>10}{f'{i[2]}%':>10}")
-```
-
-Tipos de alinhamento
-- `<`   :    alinhamento à esquerda
-- `^`   :    alinhamento ao centro
-- `>`   :    alinhamento à direita
-
-O número após o tipo de alinhamento determina a quantidade de espaços serão utilizados para esse campo.
 
 # Comparadores
 
