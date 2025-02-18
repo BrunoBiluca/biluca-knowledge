@@ -8,5 +8,6 @@
   ],
   "cssTheme": "Dracula Official",
   "theme": "obsidian",
-  "nativeMenus": false
+  "nativeMenus": false,
+  "showRibbon": false
 }
