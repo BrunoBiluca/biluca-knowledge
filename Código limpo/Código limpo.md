@@ -26,7 +26,7 @@
 
 > Minha definição: Quando vc olha para o código e não te vem um que porra é essa na cabeça, a pessoa consegue entender o que foi implementado e quais as decisões que foram tomadas.
 
-![](wtf.png)
+![](Código%20limpo/Apresentação%20-%20Código%20limpo/wtf.png)
 
 Existem arquiteturas que favorecem a semântica de um projeto. Eric Evans autor do livro Domain Driven Design descreve em seu livro ferramentas e procedimentos que auxiliam na criação de uma aplicação ou conjunto de serviços que possuem um linguagem de comum entendimento entre todas as entidades responsáveis pelo projeto.
 
@@ -74,16 +74,16 @@ Aumento da complexidade do código:
 - estruturas aninhadas
 - múltiplos condicionais
 
-![](ciclomatic_complexity_graph.png)
+![](Código%20limpo/Apresentação%20-%20Código%20limpo/ciclomatic_complexity_graph.png)
 
 ## Side effects (evitar utilizando múltiplos retornos)
 
 Side effects são alterações no código que podem levar a um comportamento não esperado. O famoso mexi numa coisa e quebrou outra.
 
-Side effects são sintomas que um determinado treixo de código está sobrecarregado de responsabilidades e deve ser refatorado.
+Side effects são sintomas que um determinado trecho de código está sobrecarregado de responsabilidades e deve ser refatorado.
 
 Alguns fatores que podem ocasionar side effects
-- Alta complexidade aciclomática no código
+- Alta complexidade ciclomática no código
 - Variáveis que são alteradas durante a execução de várias linhas de código
 
 ```js
@@ -197,7 +197,7 @@ user = {isActive: true, role: "admin"}
 add(user)
 ```
 
-Um método não deve receber apenas um parâmetros booleano. Nesse caso o idela é criar dois métodos.
+Um método não deve receber apenas um parâmetros booleano. Nesse caso o ideal é criar dois métodos.
 
 ```js
 // bad

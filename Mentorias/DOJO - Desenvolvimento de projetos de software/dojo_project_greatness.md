@@ -1,6 +1,7 @@
 # DOJO - Biluca project greatness
 
-> 🏆 Objetivo: apresentar práticas no desenvolvimento de projetos de software para alcançar o sucesso de entregar o resultado com a qualidade esperada ✨ e de forma sustentável ♻️.
+> [!info] Objetivo
+> Apresentar práticas no desenvolvimento de projetos de software para alcançar o sucesso de entregar o resultado com a qualidade esperada ✨ e de forma sustentável ♻️.
 
 Uma das maiores dificuldades no desenvolvimento de software é garantir a qualidade e a previsibilidade da entrega. É comum utilizarmos várias técnicas e métodos tentar estimar e garantir o desenvolvimento de software, porém elas causam aproximações básicas do que realmente o cliente espera como entrega de valor. 
 
@@ -113,15 +114,11 @@ Cada sistema deve ser auto-contido e implementado de forma a resolver seus próp
 
 #### Modularização
 
-Enquanto modularização os sistemas desenvolvidos durante a criaçaõ do projeto devem ser implementados de forma a serem combinados e reutilizados pelos demais módulos do projeto.
+Enquanto modularização os sistemas desenvolvidos durante a criação do projeto devem ser implementados de forma a serem combinados e reutilizados pelos demais módulos do projeto.
 
 Cada módulo deve ser auto-contido e garantir sua funcionalidade além de ser configurável. Com a possibilidade de configuração de cada módulo aumenta a flexibilidade de testes com outras trolagens para determinar quais trolagens são mais divertidas e interessantes para serem publicadas na versão final.
 
-> ⚠️ Sem um processo de modularização eficiente o projeto fica preso ao que está implementado e a forma que foi implementado, dificultando a adição de novas ideias e tecnologias ao projeto.
-
-- Desenvolvimento incremental
-- Separação de responsabilidades
-- Modularização
+> [!tip] Sem um processo de modularização eficiente o projeto fica preso ao que está implementado e a forma que foi implementado, dificultando a adição de novas ideias e tecnologias ao projeto.
 
 ## Design do projeto
 
