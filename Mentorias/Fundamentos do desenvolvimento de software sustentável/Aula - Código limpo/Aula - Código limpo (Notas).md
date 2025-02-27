@@ -184,6 +184,61 @@ save(validUser)
 - Explicar o problema de uma grande complexidade ciclomática no código
 
 
+```js
+function printBalance(account){
+
+    console.log(`Debits: ${account.debits.toFixed(2)}\n`)
+    console.log(`Credits: ${account.debits.toFixed(2)}\n`)
+
+    console.log("        -----------\n")
+
+    if(account.fees < 0){
+        console.log(`Fees: ${-account.fees.toFixed(2)}`)
+    }
+    else {
+        console.log(`Fees: ${account.fees.toFixed(2)}`)
+    }
+
+    if(account.balance < 0){
+        console.log(`Balance: ${-account.balance.toFixed(2)}`)
+    }
+    else {
+        console.log(`Balance: ${account.balance.toFixed(2)}`)
+    }
+}
+```
+
+Solução
+
+```javascript
+function printBalance(account){
+    console.log(reportLine("Debits", account.debits))
+    console.log(reportLine("Credits", account.credits))
+    console.log(printLine("", "-----------"))
+    console.log(reportLine("Fees", account.fees))
+    console.log(reportLine("Balance", account.balance))
+    console.log(reportLine("Debits", account.debits))
+}
+
+function reportLine(label, amount){
+    return printLine(label + ":", formatAmount(amount))
+}
+
+function formatAmount(amount) {
+    result = Math.abs(amount).toFixed(2)
+
+    if(amount < 0){
+        return "-" + result
+    }
+    
+    return " " + result
+}
+
+function printLine(label, value){
+    return `${label} ${value}\n`
+}
+```
+
 ## Efeitos colaterais
 
 Alguns fatores que podem ocasionar side effects
