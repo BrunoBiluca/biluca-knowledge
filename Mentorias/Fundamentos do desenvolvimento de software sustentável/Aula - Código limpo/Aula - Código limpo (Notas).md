@@ -2,6 +2,17 @@
 
 Notas referente a apresentação [[Aula - Código limpo (Apresentaç)]].
 
+
+# Origem da ideia de código limpo
+
+O termo código limpo é um termo utilizado para descrever código de programação que seja conciso, fácil de entender que claramente expresse a intenção do programador.
+
+Esse termo ganhou bastante popularidade desde 2008 quando Robert Cecil Martin (famoso Uncle Bob) publicou o livro "Clean Code: A Handbook of Agile Software Craftsmanship".
+
+Uncle Bob é um agitador em relação a metodologias ágeis (foi um dos que participou do Agile Manifesto) e práticas de extreme programming.
+
+Atualmente acredito podemos discutir que as algumas práticas apresentadas em seu livro são um pouco datadas e existem outras convenções que podem as substituir, mas a ideia de criar um guia de código ajuda muito na comunicação do time por propor um entendimento claro sobre como o código deve ser norteado é necessário a qualquer projeto que espera ter sucesso com tranquilidade. 
+
 # Semântica de código
 
 Utilizando como base a seção de semântica do [[Código limpo]].
@@ -52,7 +63,13 @@ def fibonacci(n):
 - Fluxo de refatoração
 	- Testes
 	- Reduzir a desordem
+		  - Remover código desnecessário
+		  - Remover comentários que não são pertinentes
+		  - Extrair métodos simples
+		  - Reduzir expressões lógicas
 	- Reduzir a complexidade ciclomática
+		  - Extrair métodos para código dentro de loops
+		  - Extrair métodos para código dentro de ifs
 	- Melhorar a semântica
 
 # Impactos na semântica do código
@@ -90,6 +107,7 @@ for i in range(len(items)):
     - componente que uma imagem será inserida ou encontrada
 
 #### Métodos e funções
+
 Métodos devem ser nomeados de acordo com a ação que será executada. 
 
 ```js
@@ -142,11 +160,31 @@ function addAdmin(user){ user.type = "admin" }
 function addTeacher(user){ user.type = "teacher" }
 ```
 
-## Condicionais e complexidade ciclomática
+Acúmulo de responsabilidades
+
+```js
+// bad
+function validateAndSave(user){
+	if (isValid(user)) {
+		save(user)
+	}
+} 
+validateAndSave(user)
+
+// good
+function validate(create_user_request){ // lança exceção caso contrário }
+function save(validUser){ // lança exceção caso contrário }
+validUser = validate(create_user_request)
+save(validUser)
+```
+
+## Complexidade ciclomática
 
 - Descrever o que é
 - Explicar o problema de uma grande complexidade ciclomática no código
 
+
+## Efeitos colaterais
 
 Alguns fatores que podem ocasionar side effects
 - Alta complexidade ciclomática no código
@@ -163,22 +201,48 @@ console.log(obj)
 // Não sabemos o que será retornado, já que o obj pode ter sido alterado durante doSomething
 ```
 
+Solução
+
+```js
+let obj = {a: 0};
+
+otherObj = doSomething(obj)
+
+obj.a += 1
+console.log(obj) // {a: 1}
+console.log(otherObj) // o que o doSomething retornar
+```
+
 Esse tipo de side effect pode ser ainda pior quando utilizamos funções assíncronas sem aguardar os devidos resultados.
 
 ```js
-
 let books = []
-let isBooksEmpty = true
+let bookOwnedCount = 0
 
-doSomethingAsync()
+getBooks()
   .then((res) => books.append(res.data))
 
-doAnotherthingAsync()
-  .then((res) => isBooksEmpty = !books.length)
+getBooksOwned()
+  .then((res) => bookOwnedCount = books.filter(b in res.data).length())
 
-console.log(isBooksEmpty)
+console.log(bookOwnedCount)
 // O que será printado no console?
 ```
+
+Solução
+
+```js
+let books = []
+
+res1 = await getBooks()
+books.append(res1.data)
+
+res2 = await getBooksOwned()
+let bookOwnedCount = books.filter(b in res2.data).length())
+
+console.log(isBooksEmpty)
+```
+
 
 ## Comentários
 
