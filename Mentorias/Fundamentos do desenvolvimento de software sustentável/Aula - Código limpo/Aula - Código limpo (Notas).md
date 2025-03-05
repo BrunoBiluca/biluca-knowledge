@@ -298,6 +298,9 @@ let bookOwnedCount = books.filter(b in res2.data).length())
 console.log(isBooksEmpty)
 ```
 
+> [!Warning] Melhorias
+> - Explicar side effect a partir da programação funcional, pode ser uma forma melhor de explicar
+> - 
 
 ## Comentários
 
