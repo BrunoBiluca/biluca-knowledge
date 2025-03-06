@@ -20,6 +20,12 @@ O MCP ajuda a criar agentes de linguagem natural (ChatGPT e similares) para outr
 >- [Tutorial de desenvolvimento de MCP com LLMs](https://modelcontextprotocol.io/tutorials/building-mcp-with-llms)
 >- [Conceitos arquiteturais](https://modelcontextprotocol.io/docs/concepts/architecture)
 
+---
+
+> [!quote]- Referências externas
+>- [Anthropic's MCP: First impressions as a developer](https://www.chriswere.com/p/anthropics-mcp-first-impressions)
+>	- Primeiras impressões desenvolvendo utilizando MCP (27/11/2024)
+
 --- end-multi-column
 
 ![[Arquitetura MCP.png|Exemplo de uma arquitetura implementada utilizando MCP para fontes adicionais de informações]]
@@ -57,6 +63,6 @@ Outros componentes importantes para o desenvolvimento de serviços MCP:
 
 Serviços MCP podem providenciar principalmente 3 tipos capacidades:
 
-- [Resources](https://modelcontextprotocol.io/docs/concepts/resources) são tipos de arquivos lidos pelo cliente (como requisições API ou arquivos)
+- [Resources](https://modelcontextprotocol.io/docs/concepts/resources) são tipos de arquivos lidos pelo cliente (como requisições API ou arquivos), ajuda a IA ter noção de quais recursos estão disponíveis para a execução da consulta
 - [Tools](https://modelcontextprotocol.io/docs/concepts/tools): são funções chamadas pelo LLM
 - [Prompts](https://modelcontextprotocol.io/docs/concepts/prompts): são templates pré-escritos que ajudam o usuário a cumprir algumas tarefas específicas. Mais sobre em [[Design de comandos (Engenharia de prompts)]].
