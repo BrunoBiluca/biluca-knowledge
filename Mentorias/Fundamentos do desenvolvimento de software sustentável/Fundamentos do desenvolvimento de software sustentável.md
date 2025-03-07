@@ -18,6 +18,9 @@ Ao mesmo tempo que o esforço colocado pelos desenvolvedores seja eficiente para
 --- end-column ---
 
 > [!info] Principais referências
+> - Código limpo do Robert C. Martin
+> Básico de pensar o código de forma semântica
+> 
 > - [O programador Pragmático: De Aprendiz a Mestre](https://www.amazon.com.br/Programador-Pragm%C3%A1tico-Aprendiz-Mestre-ebook/dp/B019HM0H90)
 >Boas dicas pontuais e muito práticas para adoção no dia a dia do programador
 >
@@ -30,9 +33,9 @@ Ao mesmo tempo que o esforço colocado pelos desenvolvedores seja eficiente para
 --- end-multi-column
 #### Principais conceitos abordados
 
-- Você tem seus **princípios** porque um projeto não teria também
 - **Código limpo** e fácil de ser alterado
 - **Documentação** para realmente entregar o que se espera
+- Você tem seus **princípios** porque um projeto não teria também
 - **Arquitetura** para evitar que todos os problemas parecem pregos
 - **Automação de testes** para acelerar o desenvolvimento
 - **Comunicação** para criar um ambiente colaborativo
