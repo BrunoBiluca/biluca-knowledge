@@ -5,7 +5,6 @@ ano: 2024
 ---
 # Biluca Finanças
 
-
 --- start-multi-column: ID_e76b
 
 ```column-settings
