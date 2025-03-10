@@ -5,11 +5,11 @@
 
 #### Motivação
 
-Permitir ao usuário que está buscando por conteúdo específicos em canais do Youtube cadastrados. Infelizmente esses conteúdos ficam escondidos para os usuários por conta da organização caótica do próprio Youtube, então permitir um acesso mais simples e direto a esses conteúdos ajuda aos usuários interessados.
+Permitir ao usuário que está buscando por conteúdo específicos em canais do Youtube cadastrados ter uma **maior assertividade na sua busca**, em vez de ser influenciado pelo algoritmo do Youtube, que não presa pelo conteúdo e sim pela taxa de exibição de propaganda. Além disso, infelizmente esses conteúdos ficam escondidos para os usuários por conta da organização caótica do próprio Youtube, então permitir um acesso mais simples e direto a esses conteúdos ajuda aos usuários interessados.
 
-Desenvolver um caso de estudo para tecnologias de integração entre modelos de linguagem e fontes de dados externas.
+Desenvolver **um caso de estudo** para tecnologias de integração entre modelos de linguagem e fontes de dados externas.
 
-Fazer a comparação entre o desenvolvimento utilizando [[Model context protocol (MCP)]] e [[Semantic Kernel]] em relação a suas limitações, melhores práticas, ferramentas a fim de criar um material para definir a utilização dessas tecnologias em quais tipos de contextos.
+Fazer a **comparação** entre o desenvolvimento utilizando [[Model context protocol (MCP)]] e [[Semantic Kernel]] em relação a suas limitações, melhores práticas, ferramentas a fim de criar um material para definir a utilização dessas tecnologias em quais tipos de contextos.
 
 #### Referências
 
@@ -54,7 +54,6 @@ Eu como curioso específico quero um resumo de um vídeo para avaliar se está r
 __Impacto__
 O usuário irá poder verificar se o assunto e a abordagem do vídeo o interessa antes de ver, otimizando o tempo gasto na pesquisa de um assunto específico
 
-
 __Critérios de aceite__
 
 - Informado ao assistentes as informações de um vídeo ele deve trazer o resumo do texto baseado nas legendas.
@@ -65,7 +64,6 @@ __Qualidade__
 - Síntese na elaboração do resumo
 	- Capacidade do assistente de abordar de forma breve os principais pontos do vídeo
 
-
 ### RF 03 Perguntas sobre um vídeo específico
 
 __Descrição__
@@ -73,7 +71,6 @@ Eu como curioso específico quero perguntar ao assistente questões específicas
 
 __Impacto__
 O usuário poderá antes de ver o vídeo, ter algumas de suas dúvidas sanadas, o que pode aumentar ou diminuir o interesse do usuário de assistir ao vídeo.
-
 
 __Critérios de aceite__
 
@@ -107,7 +104,77 @@ Será utilizado como base de comparação um canal específico a definir, em rel
 
 - Será possível implementar todos os requisitos com ambos métodos.
 
+- Ter um aprendizado das principais dificuldade de implementar design de comandos em relação aos modelos de linguagem.
+
 # Arquitetura inicial
 
+O contexto será o mesmo entre os dois cenários.
 
 #### Tecnologias base
+
+- C#
+- [[Model context protocol (MCP)]]
+- [[Semantic Kernel]]
+- [YouTube Data API](https://developers.google.com/youtube/v3/docs?hl=pt-br)
+	- Necessário configuração no [Google Cloud Console](https://console.cloud.google.com/)
+	- (Necessário verificar) Existe limites de cotas para as requisições feitas
+- (Necessário verificar) [youtube-transcript-api-sharp](https://github.com/BobLd/youtube-transcript-api-sharp)
+
+### Para RF 01
+
+```
+mensagem 
+-> LLM chama função(plugin)
+-> REQ todos vídeos do canal 
+-> LLM avalia o título dos vídeos 
+-> LLM formula resposta
+-> apresentação da resposta
+```
+
+Exemplo de requisição por vídeos de um canal
+
+```python
+# criado pelo deepseek
+import requests
+
+API_KEY = 'SUA_CHAVE_DA_API'
+CHANNEL_ID = 'ID_DO_CANAL'
+url = f'https://www.googleapis.com/youtube/v3/search?key={API_KEY}&channelId={CHANNEL_ID}&part=snippet,id&order=date&maxResults=50'
+
+next_page_token = None
+
+while True:
+    if next_page_token:
+        response = requests.get(url + f'&pageToken={next_page_token}')
+    else:
+        response = requests.get(url)
+
+    data = response.json()
+
+    for item in data['items']:
+        if item['id']['kind'] == 'youtube#video':
+            print(f"Título: {item['snippet']['title']}")
+            print(f"ID do Vídeo: {item['id']['videoId']}")
+            print(f"Publicado em: {item['snippet']['publishedAt']}")
+            print("-" * 40)
+
+    next_page_token = data.get('nextPageToken')
+
+    if not next_page_token:
+        break
+```
+
+
+### Para RF 02
+
+```
+mensagem 
+-> LLM define o título desejado pelo usuário
+-> LLM chama função(plugin) passando o título
+-> REQ legendas do vídeo
+-> LLM avalia as legendas
+-> LLM formula remuso
+-> apresentação da resposta
+```
+
+Para buscar as legendas é possível utilizar o [youtube-transcript-api-sharp](https://github.com/BobLd/youtube-transcript-api-sharp).
