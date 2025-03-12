@@ -16,9 +16,7 @@ Shadow: off
 --- end-column ---
 
 > [!info] Principais referências
-> - [Documentação]()
->- [Github]()
->- 
+> - 
 
 --- end-multi-column
 

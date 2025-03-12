@@ -119,6 +119,29 @@ O contexto será o mesmo entre os dois cenários.
 	- Necessário configuração no [Google Cloud Console](https://console.cloud.google.com/)
 	- (Necessário verificar) Existe limites de cotas para as requisições feitas
 - (Necessário verificar) [youtube-transcript-api-sharp](https://github.com/BobLd/youtube-transcript-api-sharp)
+- [OpenRouter](https://openrouter.ai/)
+	- OpenRouter fornece um modelo gratuito do DeepSeek e vários outros modelos que podem ser utilizados para invocação de funções
+- Postman para testes em relação a conexão de API
+
+#### Semantic Kernel e OpenRouter
+
+Nesse caso estamos desenvolvimento uma aplicação que acessa um endpoint customizado.
+
+- [OpenAI ChatCompletion custom endpoint](https://learn.microsoft.com/en-us/semantic-kernel/support/migration/v2-openai-migration-guide#5-openai-chatcompletion-custom-endpoint)
+	- Esse link tem a documentação para como o endpoint customizado deve ser definido durante a criação do Kernel
+
+> [!warning] Por enquanto não consegui uma forma de fazer funcionar com um endpoint customizado.
+> Estou tentando isso para usar o deep seek gratuito pelo OpenRouter. Consegui acessar o link pelo Postman, mas não consegui pelo código.
+
+#### Claudie Desktop e MCP
+
+A configuração inicial foi bem simples, mas isso porque não é necessário criar um cliente de IA.
+
+Depuração
+
+```ps1
+npx @modelcontextprotocol/inspector uv run assistente_mcp.py
+```
 
 ### Para RF 01
 

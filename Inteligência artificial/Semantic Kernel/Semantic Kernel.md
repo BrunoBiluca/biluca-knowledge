@@ -24,10 +24,6 @@ Semantic Kernel é um kit de desenvolvimento open-source, desenvolvido pela Micr
 
 --- end-multi-column
 
-Alternativas
-
-- [[Model context protocol (MCP)]]
-
 O Semantic Kernel pode ser facilmente configurado para acessar qualquer LLM disponível.
 
 ![[dotnetmap.png|Passo a passo do processo de desenvolvimento de um Kernel que interage com serviços de IA]]
@@ -40,6 +36,10 @@ Principais conceitos
 	- Plugins devem ser bem descritos para que o modelo de linguagem saiba como utilizá-los.
 	- Podem ser importados de duas formas: código nativo (simples) ou especificação da OpenAI (serviços externos, como [REST API](https://learn.microsoft.com/en-us/semantic-kernel/concepts/plugins/adding-openapi-plugins?pivots=programming-language-csharp))
 - **Planning** e a habilidade da aplicação definir quais são as funções chamadas pelo modelo. O plano nada mais é do que a invocação de uma função com os parâmetros corretos.
+
+#### Alternativas/Similares
+
+- [[Model context protocol (MCP)]]
 
 ### Serviços AI
 
