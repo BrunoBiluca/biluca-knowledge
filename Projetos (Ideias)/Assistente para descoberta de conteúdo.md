@@ -11,6 +11,9 @@ Desenvolver **um caso de estudo** para tecnologias de integração entre modelos
 
 Fazer a **comparação** entre o desenvolvimento utilizando [[Model context protocol (MCP)]] e [[Semantic Kernel]] em relação a suas limitações, melhores práticas, ferramentas a fim de criar um material para definir a utilização dessas tecnologias em quais tipos de contextos.
 
+
+![[Exemplo de pesquisa no youtube.png|Exemplo de pesquisa no youtube que mostra como é difícil de encontrar vídeos de um tema específico]]
+
 #### Referências
 
 Minha principal referência é o vídeo [C# Semantic Kernel Plugins: Get YouTube Video Info!](https://www.youtube.com/watch?v=DJvzBUI9SQ0). Nesse conteúdo o autor cria uma aplicação utilizando [[Semantic Kernel]] que busca informações no Youtube para permitir ao seu usuário pesquisar por vídeos utilizando as legendas como base para a explicação do conteúdo.
@@ -38,6 +41,9 @@ __Critérios de aceite__
 		- Informações necessárias
 			- Título
 			- URL
+			- Quando foi publicado
+	- Perguntas de exemplo:
+		- Quais são 5 vídeos do JonesManoel que falam sobre o MST?
 
 - Quando não existir conteúdo relacionado ao canal a assistente deve explicar isso ao usuário
 
@@ -58,6 +64,9 @@ __Critérios de aceite__
 
 - Informado ao assistentes as informações de um vídeo ele deve trazer o resumo do texto baseado nas legendas.
 	- Esse resumo deve ser breve e dar um contexto de todo o vídeo (caso possível já que LLM tem limitação de tokens)
+	- Exemplo de mensagens para verificar esse critério:
+		- Resuma o vídeo "vídeo"
+		- O autor do vídeo cita algum exemplo sobre o assunto do vídeo?
 
 __Qualidade__
 
@@ -143,6 +152,10 @@ Depuração
 npx @modelcontextprotocol/inspector uv run assistente_mcp.py
 ```
 
+Limitações
+
+Não é possível enviar um texto muito grande para o Claude entender, pelo menos na versão grátis. Nesse caso apenas 50 vídeos foram possíveis.
+
 ### Para RF 01
 
 ```
@@ -179,6 +192,7 @@ while True:
             print(f"Título: {item['snippet']['title']}")
             print(f"ID do Vídeo: {item['id']['videoId']}")
             print(f"Publicado em: {item['snippet']['publishedAt']}")
+            print(f"url: {f'https://www.youtube.com/watch?v={item["id"]["videoId"]}'}")
             print("-" * 40)
 
     next_page_token = data.get('nextPageToken')
@@ -200,4 +214,11 @@ mensagem
 -> apresentação da resposta
 ```
 
-Para buscar as legendas é possível utilizar o [youtube-transcript-api-sharp](https://github.com/BobLd/youtube-transcript-api-sharp).
+Para buscar as legendas é possível utilizar o [youtube-transcript-api-sharp](https://github.com/BobLd/youtube-transcript-api-sharp) ou [youtube-transcript-api](https://github.com/jdepoix/youtube-transcript-api) (python). Existem limitações em relação a essa biblioteca já que o próprio Youtube bloqueia IPs que estão utilizando essa biblioteca. Em um produto pode ser necessário pensar em como solucionar isso, talvez armazenando essas legendas.
+
+> [!warning]- Não é possível utilizar API Keys para baixar legendas de vídeos.
+> Não é possível utilizar diretamente o Youtube Data API para pegar as legendas de vídeos com API Keys.
+> 
+> Mensagem de erro quando requisitando o serviço `GET https://www.googleapis.com/youtube/v3/captions/id` com Chave de API:
+> 
+> >"API keys are not supported by this API. Expected OAuth2 access token or other authentication credentials that assert a principal. See https://cloud.google.com/docs/authentication"
