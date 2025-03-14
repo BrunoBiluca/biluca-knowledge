@@ -20,6 +20,13 @@ Shadow: off
 
 --- end-multi-column
 
+# CLI Options
+
+O [[React]] possui algumas formas de fazer o controle a partir de linha de comando:
+
+- [[Vite]]
+- Create React App
+
 # Testes em React
 
 Para criar testes em React é possível utilizando duas extensões:
