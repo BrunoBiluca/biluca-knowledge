@@ -20,7 +20,7 @@ Semantic Kernel é um kit de desenvolvimento open-source, desenvolvido pela Micr
 ---
 
 > [!quote]- Referências externas
-> Considerações sobre a referência
+
 
 --- end-multi-column
 

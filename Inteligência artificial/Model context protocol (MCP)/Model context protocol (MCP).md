@@ -18,8 +18,7 @@ O MCP ajuda a criar agentes de linguagem natural (ChatGPT e similares) para outr
 > - [Documentação](https://modelcontextprotocol.io/introduction)
 >- [Github](https://github.com/modelcontextprotocol)
 >- [Tutorial de desenvolvimento de MCP com LLMs](https://modelcontextprotocol.io/tutorials/building-mcp-with-llms)
->- [Conceitos arquiteturais](https://modelcontextprotocol.io/docs/concepts/architecture)
->
+>- [Conceitos arquiteturais](https://modelcontextprotocol.io/docs/concepts/architecture)>
 >- [MCP Python SDK](https://pypi.org/project/mcp/) tem apresenta uma parte da documentação que está melhor que no site principal
 
 ---

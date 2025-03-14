@@ -139,8 +139,14 @@ Nesse caso estamos desenvolvimento uma aplicação que acessa um endpoint custom
 - [OpenAI ChatCompletion custom endpoint](https://learn.microsoft.com/en-us/semantic-kernel/support/migration/v2-openai-migration-guide#5-openai-chatcompletion-custom-endpoint)
 	- Esse link tem a documentação para como o endpoint customizado deve ser definido durante a criação do Kernel
 
-> [!warning] Por enquanto não consegui uma forma de fazer funcionar com um endpoint customizado.
-> Estou tentando isso para usar o deep seek gratuito pelo OpenRouter. Consegui acessar o link pelo Postman, mas não consegui pelo código.
+- Durante o desenvolvimento eu tentei utilizar o OpenRouter com um modelo gratuito do Deepseek, sem sucesso. Isso porque o modelo importa para o Semantic Kernel, ele precisa de ter a capacidade de chamar funções, o que o modelo do Deepseek previamente tentado não tinha. Quando o modelo foi alterado para `google/gemma-3-1b-it:free` funcionou. Mesmo assim o SDK deveria ter mensagens de erro melhores, já que 404 não informa bem o problema.
+
+> [!warning] Function calling não funcionou
+> Por algum motivo quando configurado o chat com um plugin ele não retorna nenhuma resposta.
+> 
+> Seria necessário um estudo mais aprofundado de invocação de funções
+> - [Function calling with chat completion](https://learn.microsoft.com/en-us/semantic-kernel/concepts/ai-services/chat-completion/function-calling/?pivots=programming-language-csharp)
+
 
 #### Claudie Desktop e MCP
 
