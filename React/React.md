@@ -35,13 +35,42 @@ Componentes no React podem ter vários tipos de lógica definidos:
 - **Manipulação de eventos**: são funções dentro do componente que fazem algo de acordo com um evento emitido.
 - **Efeitos:** permite declarar efeitos colaterais causados pela renderização do componente, em vez de um evento específico.
 
+
+# Gerenciamento de estado
+
+Gerenciamento de estado no [[React]] é quando precisamos manter estado da aplicação e não apenas de cada componente.
+
+Esses tipos de dados incluem:
+
+- Dados do tema (como modo escuro ou claro)
+- Dados do usuário
+- Dados específicos do local (idioma, localização)
+
+Existem várias formas de manter esse estado entre os componentes, entre elas as mais usuais são:
+
+- **Context** - nativo do próprio React
+- [[Recoil]]
+- [[Zustand]]
+
+### Context
+
+O **Context** foi criado para facilitar o consumo de dados entre componentes de uma aplicação. Ele **não é para ser utilizado** em casos que esses dados precisam de ser atualizados com frequência, já que ele causa re-renderizações desnecessárias na árvore de componentes quando esses dados são atualizados.
+
+> [!quote]- (Documentação) - [Passando dados com Context](https://react.dev/learn/passing-data-deeply-with-context#use-cases-for-context)
+> Documentação trata dos principais casos de uso da utilização do Context e trás também a discussão sobre suas limitações.
+
+> [!quote]- (Artigo) - [Você está utilizando React Context errado](https://blog.codeminer42.com/you-are-using-react-context-wrong/)
+> Série de dicas para evitar as principais armadilhas de utilizar Context para gerenciamento de estado.
+> Principais dicas:
+> - Cuidado com a utilização do Context e valores default, isso causa altas confusões
+> - 
+
 # CLI Options
 
 O [[React]] possui algumas formas de fazer o controle a partir de linha de comando:
 
 - [[Vite]]
 - Create React App
-
 
 ### Criando um aplicação com [[Vite]]
 
