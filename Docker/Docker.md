@@ -2,6 +2,8 @@
 tags:
   - infraestrutura
 ---
+# Docker
+
 > [!info] Definição
 > Docker é uma plataforma open-source para desenvolvimento, publicação e execução de aplicações. Com o docker é possível separar a aplicação da sua infraestrutura.
 > 
