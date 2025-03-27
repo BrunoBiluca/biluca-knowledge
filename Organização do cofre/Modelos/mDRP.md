@@ -7,10 +7,6 @@ Objetivos:
 
 - __- Objetivo 1 com a realização do projeto -__
 
-Métricas para mensurar sucesso:
-
-- __- Métrica relacionada ao objetivo 1 -__
-
 Métricas para monitorar:
 
 - __- demais métricas que podem influenciar em outros aspectos do produto, como performance, satisfação do usuários -__

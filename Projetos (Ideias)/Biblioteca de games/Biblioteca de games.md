@@ -9,9 +9,9 @@
 
 Tentei utilizar vários sistemas de organização de jogos, porém todos eles caiam num problema principal, que era não poder configurar a experiência com o jogo do meu jeito. Isso porque geralmente esses sistemas utilizam como base o estado do jogo, uma ideia muito retirada da execução de tarefas, assim um jogo está novo ou em progresso ou concluído ou platinado. Agora o que acontece quando um jogo já foi concluído e eu só quero jogar novamente? Eu zerei esse jogo, ai ele passa a não ter sido zerado?
 
-Esse tipo de problema que o sistema com base no estado do jogo que eu consegui resolver. Onde o estado é separado do jogo. Assim, posso rastrear que eu zerei o mesmo jogo várias vezes, isso também possibilita criar meus próprios desafios, como chegar em um ranking específico, zerar com uma pontuação, zerar no nível desejado. Isso abre um leque de possibilidades muito grande sem impactar no catálogo dos jogos.
+Esse tipo de problema que o sistema com base no estado do jogo resolve. O estado é separado do jogo. Assim, posso rastrear que eu zerei o mesmo jogo várias vezes, isso também possibilita criar meus próprios desafios, como chegar em um ranking específico, zerar com uma pontuação, zerar no nível desejado. 
 
-Uma das possibilidades que esse sistema trás é a possibilidade de fazer retrospectivas do catálogo, essa informação é bem divertida de ser gerada.
+Isso abre um leque de possibilidades muito grande sem impactar no catálogo dos jogos, permitindo assim fazer retrospectivas do catálogo, essa informação é bem divertida de ser gerada.
 
 #### Referências
 
@@ -23,14 +23,19 @@ Uma das possibilidades que esse sistema trás é a possibilidade de fazer retros
 
 # Requisitos
 
-- [[DRP 01 - Catálogo de jogos]]
+- [[DRP 01 - Jogadores]]
+- [[DRP 02 - Catálogo de jogos]]
+- [[DRP 03 - Registro de desafios]]
 
-### Potenciais usuários
+### Principais personas
 
-- Jogadores
+- **Visitantes** - qualquer pessoa com acesso ao site
+- **Jogadores** - são pessoas registradas
+- **Moderadores** - são avaliadores de conteúdo
 
 
 # Solução inicial
+
 
 #### Tecnologias
 
