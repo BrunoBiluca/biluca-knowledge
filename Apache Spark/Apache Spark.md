@@ -39,7 +39,7 @@ Conceitos
 - [[Resilient Distributed Dataset (RDD)]]
 
 Desenvolvimento e fluxo de trabalho
-- [[Docker básico para submits locais]]
+- [[Docker para Apache Spark]]
 
 Cloud
 - [[EMR Serverless]]
@@ -63,6 +63,7 @@ Variáveis de ambiente
 - JAVA_HOME
 - HADOOP_HOME
 - SPARK_HOME
+
 # Principais diferenças entre Spark 2 e Spark 3
 
 Apache Spark 3 foi lançado em 2020 e trouxe várias melhorias em relação ao seu antecessor Apache Spark 2 (2016)
