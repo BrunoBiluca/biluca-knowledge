@@ -37,6 +37,9 @@ Principais componentes
 
 # PySpark e testes automatizados
 
+> [!quote]- (Tutorial) - [Unit testing PySpark code using Pytest | Engineering for Data Science](https://engineeringfordatascience.com/posts/pyspark_unit_testing_with_pytest/)
+> Bom exemplo de utilização do Pytest para executar os testes
+
 ### Melhoria de performance nos testes
 
 Quando estamos implementando testes automatizados para o desenvolvimento de projetos com PySpark um dos principais problemas encontrados é na **performance da execução**. Criar uma nova sessão do spark a cada teste pode impactar profundamente na performance do sistema.
@@ -44,6 +47,8 @@ Quando estamos implementando testes automatizados para o desenvolvimento de proj
 Uma solução para esse problema é criar e **compartilhar a mesma sessão do spark sobre toda a bateria de testes**.
 
 # PySpark com Venv
+
+> [!quote]- (Tutorial) - [Using VirtualEnv with PySpark - Cloudera Community - 245932](https://community.cloudera.com/t5/Community-Articles/Using-VirtualEnv-with-PySpark/ta-p/245932)
 
 ### Configurações
 

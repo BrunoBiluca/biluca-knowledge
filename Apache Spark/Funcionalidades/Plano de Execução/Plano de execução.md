@@ -8,6 +8,10 @@ Apache Spark ou PySpark usa um otimizador Catalyst, que descobre automaticamente
 - O plano lógico é passado pelo Catalyst Optimizer para aplicar regras otimizadas.
 - O Plano Lógico Otimizado é então convertido em um Plano Físico
 - O Plano Físico é executado pelos executores do Spark.
-- (Opcional) Adaptive Query Execution pode ser utilizado e permite que o plano de execução físico seja alterado em tempo de execução no cluester. Se utilizando de estatísticas geradas em tempo real o AQE pode alterar o plano para otimizar ainda mais a consulta. Para ver o plano de execução gerado nessa etapa é necessário visualizar a partir do Spark UI.
+- (Opcional) Adaptive Query Execution pode ser utilizado e permite que o plano de execução físico seja alterado em tempo de execução no cluster. Se utilizando de estatísticas geradas em tempo real o AQE pode alterar o plano para otimizar ainda mais a consulta. Para ver o plano de execução gerado nessa etapa é necessário visualizar a partir do Spark UI.
 
 ![[Composição do plano de execução do Apache Spark.webp]]
+
+
+> [!quote]- (Documentação) - [Plano de execuçao do Spark](https://sparkbyexamples.com/spark/spark-execution-plan/)
+> Exemplo de utilização do plano de execução do spark para otimização de operações

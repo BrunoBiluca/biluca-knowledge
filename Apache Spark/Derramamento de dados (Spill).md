@@ -1,6 +1,6 @@
 # Derramamento de dados (Spill)
 
-Esse problema ocorre quanto a base de dados é grande demais para caber na memória RAM. Caso esse problema não seja resolvido pode ocorrer erro OOM (Out of Memory).
+Esse problema ocorre quanto a base de dados é grande demais para caber na memória RAM de um cluster [[Apache Spark]]. Caso esse problema não seja resolvido pode ocorrer **erro OOM (Out of Memory**).
 
 Exemplos comuns de ocorrer derramamento
 

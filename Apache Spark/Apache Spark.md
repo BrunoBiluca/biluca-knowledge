@@ -22,9 +22,10 @@ Shadow: off
 > - [Site do Apache Spark](https://spark.apache.org/)
 
 --- end-multi-column
+
 A arquitetura Apache Spark é baseada em conjuntos de dados distribuídos resilientes (Resilient Distributed Datasets, RDDs). Estas são tabelas de dados imutáveis ​​​​distribuídas, que são divididas e alocadas aos nós trabalhadores. O RDD é imutável, portanto os nós trabalhadores não podem fazer alterações; eles processam informações e produzem resultados.
 
-Apache Spark utiliza o otimizador Catalyst para automaticamente revelar o plano de execução mais eficiente dado qualquer processamento.
+Uma das suas otimizações é o uso do **Catalyst** que automaticamente revela o plano de execução mais eficiente dado qualquer processamento.
 
 O Apache Spark também pode ser utilizado com uma camada escrita para a linguagem Python chamada [[PySpark]]. Atualmente a performance do PySpark é tão boa quando a versão Java/Scala o que é uma ótima alternativa para equipes com habilidade na linguagem.
 
@@ -39,6 +40,7 @@ Conceitos
 - [[Resilient Distributed Dataset (RDD)]]
 
 Desenvolvimento e fluxo de trabalho
+- [[Configurações do Apache Spark]]
 - [[Docker para Apache Spark]]
 
 Cloud
@@ -49,6 +51,13 @@ Cloud
 - Treinamento de modelos de aprendizado de máquina em escala
 - Consultar conjuntos de big data usando SQL
 - Processamento de dados em tempo real com Spark Streaming
+
+# Melhores práticas
+
+[[Otimizações de código]]
+[[Esquema definido vs Não definido]]
+[[Broadcast tabelas de referência]]
+[[Memória]]
 
 # Instalação
 
@@ -63,6 +72,10 @@ Variáveis de ambiente
 - JAVA_HOME
 - HADOOP_HOME
 - SPARK_HOME
+
+
+> [!quote]- (Tutorial) - [How to Install Apache Spark on Windows 10 (phoenixnap.com)](https://phoenixnap.com/kb/install-spark-on-windows-10)
+>No passo de instalação do windowutils, não é para criar uma pasta apenas com o .exe sugerido no arquivo, é para baixar a pasta completa 
 
 # Principais diferenças entre Spark 2 e Spark 3
 
@@ -98,29 +111,3 @@ Existe principalmente 3 estruturas de dados que podem ser utilizadas para o proc
 | Optimization                 | Sem otimizações imbutidas                                                                                                   | Catalyst optimizer.                                                                                      | Catalyst optimizer.                                                                                                                                                               |
 | Data types                   | Suitable for structured and semi-structured data processing with a higher level of abstraction.                             | DataFrames supports most of the available dataTypes                                                      | Datasets support all of the same data types as DataFrames, but they also support user-defined types. Datasets are more flexible when it comes to working with complex data types. |
 | Use Cases                    | Suitable for low-level data processing and batch jobs that require fine-grained control over data                           | Suitable for structured and semi-structured data processing with a higher-level of abstraction.          | Suitable for high-performance batch and stream processing with strong typing and functional programming.                                                                          |
-
-# Configurações
-
-Podemos fazer configurações sobre os aspectos que a sessão do spark é executada.
-
-```python
-spark.conf.set("<opção>", <valor>)
-```
-
-Opções:
-
-- `spark.sql.shuffle.partitions`: configura o embaralhamento dos dados no cluster
-	- Pode ser adicionado para alterar o número de cores no processamento e melhorar a performance (`spark.sparkContext.defaultParallelism` )
-- `spark.sql.files.maxPartitionBytes`: configura o tamanho máximo de uma partição de dados
-
-# Referências
-
-- [Using VirtualEnv with PySpark - Cloudera Community - 245932](https://community.cloudera.com/t5/Community-Articles/Using-VirtualEnv-with-PySpark/ta-p/245932)
-- [Unit testing PySpark code using Pytest | Engineering for Data Science](https://engineeringfordatascience.com/posts/pyspark_unit_testing_with_pytest/)
-	- Bom exemplo de utilização do Pytest para executar os testes
-- [How to Install Apache Spark on Windows 10 (phoenixnap.com)](https://phoenixnap.com/kb/install-spark-on-windows-10)
-	- No passo de instalação do windowutils, não é para criar uma pasta apenas com o .exe sugerido no arquivo, é para baixar a pasta completa
-- [Plano de execuçao do Spark](https://sparkbyexamples.com/spark/spark-execution-plan/)
-	- Exemplo de utilização do plano de execução do spark para otimização de operações
-- [Exemplo de execução do Spark com sua representação no Spark UI](://sparkbyexamples)
-
