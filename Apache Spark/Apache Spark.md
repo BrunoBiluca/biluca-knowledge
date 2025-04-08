@@ -29,21 +29,25 @@ Uma das suas otimizações é o uso do **Catalyst** que automaticamente revela o
 
 O Apache Spark também pode ser utilizado com uma camada escrita para a linguagem Python chamada [[PySpark]]. Atualmente a performance do PySpark é tão boa quando a versão Java/Scala o que é uma ótima alternativa para equipes com habilidade na linguagem.
 
-Funcionalidades
+**Funcionalidades**
 
-- [[Plano de execução]]
 - [[Transformações nativas]]
 - [[Spark web UI]]
 
-Conceitos
+**Conceitos**
+
 - [[Stages]]
 - [[Resilient Distributed Dataset (RDD)]]
+- [[Diferença entre estruturas de dados]]
+- [[Plano de execução]]
 
-Desenvolvimento e fluxo de trabalho
+**Desenvolvimento e fluxo de trabalho**
+
 - [[Configurações do Apache Spark]]
 - [[Docker para Apache Spark]]
 
-Cloud
+**Cloud**
+
 - [[EMR Serverless]]
 
 # Casos de uso
@@ -51,6 +55,7 @@ Cloud
 - Treinamento de modelos de aprendizado de máquina em escala
 - Consultar conjuntos de big data usando SQL
 - Processamento de dados em tempo real com Spark Streaming
+- [[Exemplo - Loja de livros]]
 
 # Melhores práticas
 
@@ -92,22 +97,3 @@ Apache Spark 3 foi lançado em 2020 e trouxe várias melhorias em relação ao s
 Prior to 3.0, Spark does the optimization by creating an execution plan before the query starts executing, once execution starts Spark doesn’t do any further optimization which is based on metrics it collects during runtime. AQE bridges this gap by applying the second level of optimization based on the metrics it sees with each stage.
 
 Adaptive Query Execution is disabled by default. In order to enable Set `spark.sql.adaptive.enabled` configuration property to `true`.
-
-# Diferença entre estruturas de dados
-
-Existe principalmente 3 estruturas de dados que podem ser utilizadas para o processamento distribuído em Apache Spark: RDD, DataFrame, DataSet.
-
-| CONTEXT                      | RDD                                                                                                                         | DATAFRAME                                                                                                | DATASET                                                                                                                                                                           |
-| ---------------------------- | --------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-|                              |                                                                                                                             |                                                                                                          |                                                                                                                                                                                   |
-| Interoperability             | Can be easily converted to DataFrames and vice versa using the `toDF()` and `rdd()` methods.                                | Can be easily converted to RDDs and Datasets using the `rdd()` and `as[]` methods respectively.          | Can be easily converted to DataFrames using the `toDF()` method, and to RDDs using the `rdd()` method.                                                                            |
-| Type safety                  | Not type-safe                                                                                                               | DataFrames are not type-safe, todos os erros relacionados a tipagem são levantados em tempo de execução. | Datasets are type-safe, A estrutura dos dados é feita em tempo de compilação.                                                                                                     |
-| Performance                  | Maior controle sobre os dados, porém menos otimizações.                                                                     | Optimized for performance, with high-level API, Catalyst optimizer, and code generation.                 | Datasets são mais rápidos pode permitirem otimizações em nível da JVM.                                                                                                            |
-| Memory Management            | Controle completo e possibilidade de cache em memória ou disco                                                              | Mais otimizado por contar com Apache SQL.                                                                | support most of the available dataTypes                                                                                                                                           |
-| Serialization                | A sobrecarga de serialização de objetos Java e Scala individuais é cara e requer o envio de dados e estrutura entre nós.    | DataFrames use a generic encoder that can handle any object type.                                        | Datasets are serialized using specialized encoders that are optimized for performance.                                                                                            |
-| APIs                         | Baixo nível                                                                                                                 | Alto nível                                                                                               | API mais expressiva que pode ser escrita tanto no paradigma orientado a objetos quanto funcional.                                                                                 |
-| Schema enforcement           | Do not have an explicit schema, and are often used for unstructured data.                                                   | DataFrames enforce schema at runtime. Have an explicit schema that describes the data and its types.     | Datasets enforce schema at compile time.                                                                                                                                          |
-| Programming Language Support | RDD APIs are available in Java, Scala, Python, and R languages. Hence, this feature provides flexibility to the developers. | Available In 4 languages like Java, Python, Scala, and R.                                                | Only available in Scala and Java.                                                                                                                                                 |
-| Optimization                 | Sem otimizações imbutidas                                                                                                   | Catalyst optimizer.                                                                                      | Catalyst optimizer.                                                                                                                                                               |
-| Data types                   | Suitable for structured and semi-structured data processing with a higher level of abstraction.                             | DataFrames supports most of the available dataTypes                                                      | Datasets support all of the same data types as DataFrames, but they also support user-defined types. Datasets are more flexible when it comes to working with complex data types. |
-| Use Cases                    | Suitable for low-level data processing and batch jobs that require fine-grained control over data                           | Suitable for structured and semi-structured data processing with a higher-level of abstraction.          | Suitable for high-performance batch and stream processing with strong typing and functional programming.                                                                          |

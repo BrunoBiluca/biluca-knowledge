@@ -5,6 +5,8 @@ tags:
 ---
 # Docker para Apache Spark
 
+Configuração inicial utilizando a imagem fornecida pelo bitnami.
+
 ```yml
 version: '3.7'
 
@@ -45,3 +47,4 @@ services:
       SPARK_MASTER_URL: spark://spark-master:7077
 ```
 
+O projeto [[Projeto - Breweries Case]] também utiliza uma imagem do [[Apache Spark]], só que nesse caso também utiliza o [[Apache Airflow]] como orquestrador e o Dremio como plataforma de Lake House.
