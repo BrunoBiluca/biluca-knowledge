@@ -21,4 +21,11 @@ Autor: [Wadson Guimatsa](https://www.udemy.com/user/wadson-guimatsa/) é engenhe
 --- end-multi-column
 
 - Seção 1: explicação da [[Estrutura de um cluster]] do [[Apache Spark]] e demonstração de construção do cluster nos ambientes [[Azure]] e [[Databricks]].
-- Seção 2:
+
+- Seção 2: explicação sobre Dataframe e como os dados são distribuídos pelo cluster
+
+- Seção 3: Transformações em DataFrame
+
+- Seção 4:
+
+- Seção 5:
