@@ -1,4 +1,4 @@
-## Window Functions
+# Window Functions
 
 > [!info] Documentação
 > - [Funções em Janelas](https://sparkbyexamples.com/spark/spark-sql-functions/#window)

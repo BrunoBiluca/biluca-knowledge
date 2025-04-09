@@ -17,3 +17,16 @@ São considerados para a contagem de colunas:
 - Estatísticas gerados por campos com alta cardinalidade são pouco úteis
 	- Exemplo: campos de texto livre
 	- Remover esses campos dos primeiros 32 da tabela
+
+Uma forma de visualizar essas informações é utilizar o comando:
+
+```py
+# informações gerais, como contagem, média, desvio padrão, mínimo, máximo
+df.describe("coluna") 
+
+# retorna as estatísticas para todas as colunas do dataframe
+df.summary()
+
+# retorna as estatísticas selecionadas para todas as colunas do dataframe
+df.summary("tipo") # tipo: stddev, count, avg, mean
+```

@@ -12,8 +12,14 @@ Em [[Apache Spark]] existe principalmente dois tipos de transformações:
 		- MapPartitions
 
 - **Transformações abrangentes (Wide)** que dependem de várias partições e envolve o processo de Shuffle.
+	- Também podemos falar que transformações abrangentes são quando uma partição de entrada pode contribuir com dados para múltiplas partições de saída
 	- São exemplos de transformações abrangentes
 		- Joins
+		- GroupBy
+		- Distinct
+		- Repartition
+		- Coalesce
+		- OrderBy
 
 Dentre esses tipos de transformações podemos utilizar várias funções disponíveis:
 
@@ -29,39 +35,8 @@ Dentre esses tipos de transformações podemos utilizar várias funções dispon
 - [[Mesclagens (join)]]
 - [[Pivoteamento]]
 - [[Processamento de pares chave-valor]]
+- [[Tratando valores Nulos]]
+- [[Agrupamento]]
 
 > [!tip] Dica de performance
 > Sempre que possível tente utilizar a biblioteca padrão Spark SQL, ela é um pouco mais rápida na compilação, trata valores nulos e performa um pouco melhor que UDFs
-
-## Tratando valores Nulos
-
-Podemos tratar linhas com valores nulos com uma API dedicada do DataFrame, `df.na`.
-
-**Para remoção de valores nulos:**
-
-```py
-# todas as colunas são nulas
-df.na.drop("all")
-
-# todas as colunas definidas são nulas
-df.na.drop("all", ["col_1", "col_2"])
-
-# qualquer coluna é nula
-df.na.drop("any")
-
-# qualquer coluna definida é nula
-df.na.drop("any", ["col_1", "col_2"])
-```
-
-**Para preenchimento de valores nulos:**
-
-```py
-# todas as colunas que são nulas são preenchidas com o <valor>
-df.na.fill(<valor>)
-
-# mapeamento de colunas, cada coluna nula é preenchida com um valor definido
-df.na.fill({
-	"col_1": <value_1>,
-	"col_2": <value_2>
-})
-```

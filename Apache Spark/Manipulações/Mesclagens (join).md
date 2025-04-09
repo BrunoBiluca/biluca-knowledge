@@ -1,6 +1,6 @@
 # Mesclagens (join)
 
-- Emp Dataset (empDF)
+- Emp Dataset (`empDF`)
 
 | emp_id | name     | superior_emp_id | year_joined | emp_dept_id | gender | salary |
 | ------ | -------- | --------------- | ----------- | ----------- | ------ | ------ |
@@ -11,7 +11,7 @@
 | 5      | Brown    | 2               | 2010        | 40          |        | -1     |
 | 6      | Brown    | 2               | 2010        | 50          |        | -1     |
 
-- Dept Dataset (deptDF)
+- Dept Dataset (`deptDF`)
 
 | dept_name | dept_id |
 |-----------|---------|
@@ -28,13 +28,13 @@ A junção padrão que é usado para juntar dois databases por uma coluna defini
 empDF.join(deptDF, empDF["emp_dept_id"] ==  deptDF["dept_id"], "inner")
 ```
 
-| emp_id | name     | superior_emp_id | year_joined | emp_dept_id | gender | salary | dept_name | dept_id |
-| ------ | -------- | --------------- | ----------- | ----------- | ------ | ------ | --------- | ------- |
-| 1      | Smith    | -1              | 2018        | 10          | M      | 3000   | Finance   | 10      |
-| 2      | Rose     | 1               | 2010        | 20          | M      | 4000   | Marketing | 20      |
-| 3      | Williams | 1               | 2010        | 10          | M      | 1000   | Finance   | 10      |
-| 4      | Jones    | 2               | 2005        | 10          | F      | 2000   | Finance   | 10      |
-| 5      | Brown    | 2               | 2010        | 40          |        | -1     | IT        | 40      |
+| emp_id | name     | superior_emp_id | year_joined | emp_dept_id | gender | salary | dept_id | dept_name |
+| ------ | -------- | --------------- | ----------- | ----------- | ------ | ------ | ------- | --------- |
+| 1      | Smith    | -1              | 2018        | 10          | M      | 3000   | 10      | Finance   |
+| 2      | Rose     | 1               | 2010        | 20          | M      | 4000   | 20      | Marketing |
+| 3      | Williams | 1               | 2010        | 10          | M      | 1000   | 10      | Finance   |
+| 4      | Jones    | 2               | 2005        | 10          | F      | 2000   | 10      | Finance   |
+| 5      | Brown    | 2               | 2010        | 40          |        | -1     | 40      | IT        |
 
 ### Outer join
 
@@ -63,7 +63,7 @@ Funcionam como o [[#Outer join]], porém retornam apenas as linhas relacionadas 
 
 ### Left Semi Join
 
-É similar ao [[#Inner join]] porém retorna apenas as colunas do Dataframe á esquerda para as linhas que correspondem a expressão.
+É similar ao [[#Inner join]], porém retorna apenas as colunas do Dataframe á esquerda para as linhas que correspondem a expressão.
 
 ```python
 empDF.join(deptDF, empDF["emp_dept_id"] ==  deptDF["dept_id"], "leftsemi")
@@ -89,7 +89,7 @@ empDF.join(deptDF, empDF["emp_dept_id"] ==  deptDF["dept_id"], "leftanti")
 | 6      | Brown | 2               | 2010        | 50          |        | -1     |
 ### Self join
 
-Não existe um tipo específico de auto mesclagem disponível no Spark, porém podemos utilizar qualquer um dois outros tipos para fazer essa operação.
+Não existe um tipo específico de auto mesclagem disponível no Spark, porém podemos utilizar qualquer um dos outros tipos para fazer essa operação.
 
 ```scala
 empDF.as("emp1").join(

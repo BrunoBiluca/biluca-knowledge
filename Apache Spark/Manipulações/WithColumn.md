@@ -1,4 +1,4 @@
-## WithColumn
+# WithColumn
 
 `WithColumn` é usada para criar uma nova coluna a partir de uma transformação de uma ou mais colunas no mesmo conjunto.
 

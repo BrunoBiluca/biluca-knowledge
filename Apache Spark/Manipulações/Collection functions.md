@@ -1,4 +1,4 @@
-## Collection functions
+# Collection functions
 
 > [!quote]- (Documentação) - [Collection Functions](https://sparkbyexamples.com/spark/spark-sql-functions/#collection)
 > Definição e exemplos de funções nativas relacionadas a coleções.
