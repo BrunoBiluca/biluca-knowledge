@@ -1,6 +1,8 @@
-# Exemplo - Criando uma coluna baseada no retorno de uma função
+# UDFs
 
-Existem duas formas de fazer essa operação em pyspark
+UDF são funções definidas pelo usuário.
+
+Existem duas formas de fazer essa operação em pyspark.
 
 - `Dataframe.withColumn` method:
  

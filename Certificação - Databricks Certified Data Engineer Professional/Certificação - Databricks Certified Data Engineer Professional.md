@@ -48,7 +48,7 @@ Principais conceitos
 	- [[Structured Streaming]]
 	- [[Spark web UI]]
 - [[PySpark]]
-	- (Apenas uma questão sobre MLFlow e UDFs) [[Exemplo - Criando uma coluna baseada no retorno de uma função]] 
+	- (Apenas uma questão sobre MLFlow e UDFs) [[UDFs]] 
 - [[Delta lake]]
 	- [[Change Data Feed (CDF)]]
 	- [[Otimizações no Delta Lake]]

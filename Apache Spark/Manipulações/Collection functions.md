@@ -58,7 +58,9 @@ Depois do `explode()`:
 | 1      | {"coupon":null,"item_id":"P_FOAM_S","item_name":"Standard Foam Pillow","item_revenue_in_usd":59,"price_in_usd":59,"quantity":1}      |
 ### Manipulação de dados aninhados em SQL
 
-- [Artigo de apresentação da funcionalidade de manipulação nativa de dados aninhados](https://www.databricks.com/blog/2017/05/24/working-with-nested-data-using-higher-order-functions-in-sql-on-databricks.html)
+
+> [!quote]- (Artigo) - [Working with nested data using higher order functions in sql on databricks](https://www.databricks.com/blog/2017/05/24/working-with-nested-data-using-higher-order-functions-in-sql-on-databricks.html)
+> Demonstra a funcionalidade de manipulação de dados aninhados em SQL
 
 Acessando elementos dentro de um campo aninhado:
 

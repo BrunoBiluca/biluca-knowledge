@@ -16,9 +16,29 @@ O plano de execução é a forma detalhada que o processamento será executado n
 > [!quote]- (Documentação) - [Plano de execuçao do Spark](https://sparkbyexamples.com/spark/spark-execution-plan/)
 > Exemplo de utilização do plano de execução do spark para otimização de operações
 
+> [!quote]- (Artigo) - [Apache Spark Logical and Physical Plans](https://www.clairvoyant.ai/blog/apache-spark-logical-and-physical-plans)
+> Explicação dos planos lógicos e físicos com exemplos.
+
+## Plano lógico
+
+O plano lógico se refere a uma abstração de todas os passos de transformações necessárias a serem executadas, ele não provê nenhum detalhe sobre o Driver ou Executores e é utilizado para conseguir a versão mais otimizada a expressão do usuário.
+
+O plano lógico é dividido em 3 partes:
+
+- **Unresolved Logical Plan ou Parsed Logical Plan**
+	- É um plano criado depois da análise sintática da expressão do usuárioe não verifica nenhuma questão em relação aos nomes das colunas, tabelas ou qualquer outra coisa
+- **Resolved Logical Plan ou Analyzed Logical Plan**
+	- Nessa etapa o plano lógico é avaliado pelo *Analyzer* utilizando o *Catalog* para definir questões semânticas, nomes de colunas, tabelas e outras expressões
+- **Optimized Logical Plan**
+	- Pega o plano resolvido e por um conjunto de regras o otimiza
+	- Algumas considerações que o Catalyst Optimizer leva em consideração
+		- Checa todas as tarefas para verificar se elas são exequíveis
+		- Decide a ordem de execução das consultas
+		- Otimiza a consulta para avaliar os filtros antes de qualquer outra operação
+
 ## Plano físico
 
-O plano físico define as tarefas que realmente serão executada pelos processos executores (ver [[Estrutura de um cluster]]).
+O plano físico define as tarefas que realmente serão executada pelos processos executores (ver [[Estrutura de um cluster]]). Durante esse processo o código é gerado para executar em [[Resilient Distributed Dataset (RDD)]] que é uma tarefa do Spark's Tungsten Execution Engine.
 
 Por exemplo, seja um Dataframe de clientes e queremos aplicar algumas transformações, o plano de execução irá otimizar todas essas transformações até realmente ser necessário sua execução.
 

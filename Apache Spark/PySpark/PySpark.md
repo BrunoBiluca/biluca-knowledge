@@ -24,7 +24,7 @@ PySpark é uma camada sobre o [[Apache Spark]] que possibilita a implementação
 
 Exemplos
 
-- [[Exemplo - Criando uma coluna baseada no retorno de uma função]]
+- [[UDFs]]
 - [[Exemplo - Valores mínimos]]
 
 Melhores práticas

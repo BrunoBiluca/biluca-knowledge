@@ -9,4 +9,4 @@ df.withColumn(<nome>, <função>)
 df.withColumn("items", explode(col("items")))
 ```
 
-O [[Exemplo - Criando uma coluna baseada no retorno de uma função]] demonstra outra capacidade do `WithColumn`, que no caso é utilizar em conjunto com UDFs.
+O [[UDFs]] demonstra outra capacidade do `WithColumn`, que no caso é utilizar em conjunto com UDFs.

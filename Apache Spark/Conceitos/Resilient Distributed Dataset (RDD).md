@@ -31,9 +31,9 @@ A operação de ação RDD retorna os [valores brutos de um RDD](https://sparkby
 
 ### Cache em RDDs
 
-Usando os métodos [`cache()` e `persist()`](https://sparkbyexamples.com/spark/spark-dataframe-cache-and-persist-explained/), o Spark fornece um mecanismo de otimização para armazenar a computação intermediária de um RDD para que possam ser reutilizados em ações subsequentes.
+Usando os métodos [`cache()` e `persist()`](https://sparkbyexamples.com/spark/spark-dataframe-cache-and-persist-explained/), o Spark fornece um mecanismo de otimização para armazenar a **computação intermediária de um RDD** para que possam ser reutilizados em ações subsequentes.
 
-Quando você persiste ou armazena em cache um RDD, cada nó de trabalho armazena seus dados particionados na memória ou no disco e os reutiliza em outras ações nesse RDD. E os dados persistentes do Spark nos nós são tolerantes a falhas, o que significa que se alguma partição for perdida, ela será automaticamente recalculada usando as transformações originais que a criaram.
+Quando você persiste ou armazena em cache um RDD, cada nó de trabalho armazena seus dados particionados na memória ou no disco e os reutiliza em outras ações nesse RDD. E os dados persistentes do Spark nos nós são **tolerantes a falhas**, o que significa que se alguma partição for perdida, ela será automaticamente recalculada usando as transformações originais que a criaram.
 
 ### Variáveis compartilhadas
 
@@ -46,7 +46,6 @@ São variáveis disponíveis em todos os nós do cluster, armazenada na forma de
 - Accumulator variables (updatable shared variables)
 
 Os acumuladores Spark são outro tipo de variável compartilhada que só é “adicionada” por meio de uma [operação associativa e comutativa](https://sparkbyexamples.com/spark/spark-accumulators/) e são usados ​​para realizar contadores ou operações de soma.
-
 
 # Referências
 
