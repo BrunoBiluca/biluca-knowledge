@@ -6,11 +6,12 @@ Podemos fazer configurações sobre os aspectos que a sessão do spark é execut
 spark.conf.set("<opção>", <valor>)
 ```
 
-Opções:
+# Shuffle
 
 - `spark.sql.shuffle.partitions`: configura o embaralhamento dos dados no cluster
 	- Pode ser adicionado para alterar o número de cores no processamento e melhorar a performance (`spark.sparkContext.defaultParallelism` )
 - `spark.sql.files.maxPartitionBytes`: configura o tamanho máximo de uma partição de dados
+- `spark.sql.autoBreadcastJoinThreshould`: configura o número máximo de bytes que uma tabela pode ser enviada para todos os executores para efetuar uma junção.
 
 # Memória
 
@@ -21,4 +22,4 @@ As configurações principais sobre memória são:
 - `--driver-memory XG`
 - `--executor-memory XG`
 
- [[Melhores práticas - Apache Spark]] na sessão de memória
+ Na sessão [[Memória]] temos boas práticas para levar em consideração em relação a essa configuração.

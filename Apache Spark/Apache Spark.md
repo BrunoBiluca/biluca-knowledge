@@ -92,9 +92,3 @@ Apache Spark 3 foi lançado em 2020 e trouxe várias melhorias em relação ao s
 - SQL Engine
 - Machine Learning
 - Nova interface para Streaming de dados
-
-### Adaptive Query Execution
-
-Prior to 3.0, Spark does the optimization by creating an execution plan before the query starts executing, once execution starts Spark doesn’t do any further optimization which is based on metrics it collects during runtime. AQE bridges this gap by applying the second level of optimization based on the metrics it sees with each stage.
-
-Adaptive Query Execution is disabled by default. In order to enable Set `spark.sql.adaptive.enabled` configuration property to `true`.

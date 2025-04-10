@@ -28,13 +28,7 @@ Mesmo assim é importante prestarmos atenção a nossa **estratégia de particio
 > [!tip]- Junções de partições muito grandes
 > Nesses casos podemos otimizar o processo de junção fazendo a **repartição** dos dados baseado nas **chaves da junção.**
 
-### Opções
-
-O tamanho máximo das partições pode ser alterado pela configuração:
-
-```python
-spark.conf.set("spark.sql.files.maxPartitionBytes", <valor em bytes>)
-```
+Para configurações de particionamento ver [[Configurações do Apache Spark]].
 
 ### Exemplo - Particionamento como limites para arquivamento ou remoção de dados
 
