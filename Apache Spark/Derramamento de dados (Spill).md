@@ -20,4 +20,4 @@ No Spark UI ([artigo com exemplos da Spark UI](https://medium.com/road-to-data-e
 Esses valores aparecem em várias partes da Spark UI como: Summary metrics, Aggregated metrics by executor, Tasks table e na tela de [[Plano de execução]].
 
 > [!tip] Dados em disco vs memória
-> Sempre os dados em disco serão menores que os dados me memória devido ao ganho de compressão durante o processo de serialização.
+> Sempre os dados em disco serão menores em tamanho que os dados me memória devido ao ganho de compressão durante o processo de serialização.

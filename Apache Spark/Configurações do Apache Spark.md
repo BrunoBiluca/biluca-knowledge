@@ -23,3 +23,6 @@ As configurações principais sobre memória são:
 - `--executor-memory XG`
 
  Na sessão [[Memória]] temos boas práticas para levar em consideração em relação a essa configuração.
+
+> [!warning] Out of memory
+> Erros de falta de memória ocorrem quando **um driver ou um executor** não tem memória suficiente para coletar ou processar os dados alocados.

@@ -24,8 +24,8 @@ Autor: [Wadson Guimatsa](https://www.udemy.com/user/wadson-guimatsa/) é engenhe
 
 - Seção 2: explicação sobre Dataframe e como os dados são distribuídos pelo cluster
 
-- Seção 3: Transformações em DataFrame
+- Seção 3: Transformações em DataFrame. Nessa seção são abordadas as transformações e manipulações mais recorrentes na utilização do Apache Spark
 
-- Seção 4:
+- Seção 4: Arquitetura do Apache Spark
 
-- Seção 5:
+- Seção 5: Dicas e simulação do exame de certificação.
