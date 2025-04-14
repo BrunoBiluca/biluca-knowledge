@@ -8,7 +8,8 @@ Em um cluster temos dois tipos de papéis desempenhados pelas máquinas:
 
 - **Cluster manager**
 	- Aloca recursos em todas as aplicações em execução no cluster
-	- Verificar a saúde dos nós individuais
+	- Verificar a saúde dos nós individuais, ou seja, mantém os processos executores no cluster para quando requisitados pela aplicação do Spark ter recursos
+	- Não existem no modo local
 
 - **Node Manager**
 	- Monitora a disponibilidade de recursos em cada nó

@@ -42,3 +42,5 @@ Exame cobre:
 # Material de estudo
 
 - [[Curso - Apache Spark 3 - Databricks Certified Associate Developer]]
+- [Databricks Certified Associate Developer for Apache Spark (Python)](https://www.udemy.com/course/databricks-certified-developer-for-apache-spark-30-practice-exams/learn/quiz/5245554#overview)
+	- Conjunto de simulados para o exame
