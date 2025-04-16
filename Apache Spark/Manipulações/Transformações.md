@@ -37,6 +37,4 @@ Dentre esses tipos de transformações podemos utilizar várias funções dispon
 - [[Processamento de pares chave-valor]]
 - [[Tratando valores Nulos]]
 - [[Agrupamento]]
-
-> [!tip] Dica de performance
-> Sempre que possível tente utilizar a biblioteca padrão Spark SQL, ela é um pouco mais rápida na compilação, trata valores nulos e performa um pouco melhor que UDFs
+- [[Broadcast]]

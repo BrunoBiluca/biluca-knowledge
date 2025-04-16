@@ -11,7 +11,9 @@ spark.conf.set("<opção>", <valor>)
 - `spark.sql.shuffle.partitions`: configura o embaralhamento dos dados no cluster
 	- Pode ser adicionado para alterar o número de cores no processamento e melhorar a performance (`spark.sparkContext.defaultParallelism` )
 - `spark.sql.files.maxPartitionBytes`: configura o tamanho máximo de uma partição de dados
-- `spark.sql.autoBreadcastJoinThreshould`: configura o número máximo de bytes que uma tabela pode ser enviada para todos os executores para efetuar uma junção.
+- `spark.sql.autoBroadcastJoinThreshold`: configura o número máximo de bytes que uma tabela pode ser enviada para todos os executores para efetuar uma junção.
+	- Padrão (10MB)
+	- Dependendo do cenário pode representar uma grande **otimização** no custo de processamento
 
 # Memória
 
