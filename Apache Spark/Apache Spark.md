@@ -20,6 +20,7 @@ Shadow: off
 
 > [!info] Principais referências
 > - [Site do Apache Spark](https://spark.apache.org/)
+> - [[Instalação]]
 
 --- end-multi-column
 
@@ -65,24 +66,6 @@ O Apache Spark também pode ser utilizado com uma camada escrita para a linguage
 [[Broadcast tabelas de referência]]
 [[Memória]]
 
-# Instalação
-
-Programas necessários
-- Java 8+
-- Apache Hadoop
-- Apache Spark
-- winutils.exe (todos os arquivos da pasta bin do repositório devem ser copiados)
-- PySpark (pip)
-
-Variáveis de ambiente
-- JAVA_HOME
-- HADOOP_HOME
-- SPARK_HOME
-
-
-> [!quote]- (Tutorial) - [How to Install Apache Spark on Windows 10 (phoenixnap.com)](https://phoenixnap.com/kb/install-spark-on-windows-10)
->No passo de instalação do windowutils, não é para criar uma pasta apenas com o .exe sugerido no arquivo, é para baixar a pasta completa 
-
 # Principais diferenças entre Spark 2 e Spark 3
 
 Apache Spark 3 foi lançado em 2020 e trouxe várias melhorias em relação ao seu antecessor Apache Spark 2 (2016)
@@ -92,3 +75,4 @@ Apache Spark 3 foi lançado em 2020 e trouxe várias melhorias em relação ao s
 - SQL Engine
 - Machine Learning
 - Nova interface para Streaming de dados
+- [[Dynamic Partition Pruning]]

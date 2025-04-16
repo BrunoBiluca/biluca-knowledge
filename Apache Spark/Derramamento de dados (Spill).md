@@ -12,7 +12,7 @@ Exemplos comuns de ocorrer derramamento
 - `countDistinct()` e `size(collect_set())`
 - `spark.sql.shuffle_partitions` baixo demais ou uso errado do `repartition()`
 
-No Spark UI ([artigo com exemplos da Spark UI](https://medium.com/road-to-data-engineering/spark-performance-optimization-series-2-spill-685126e9d21f)), o derramamento é exibido como dois valores:
+No [[Spark web UI]] ([artigo com exemplos da Spark UI](https://medium.com/road-to-data-engineering/spark-performance-optimization-series-2-spill-685126e9d21f)), o derramamento é exibido como dois valores:
 
 - Spill (Memory)
 - Spill (Disk)
