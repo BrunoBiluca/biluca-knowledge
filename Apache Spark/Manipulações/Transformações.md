@@ -28,7 +28,7 @@ Dentre esses tipos de transformações podemos utilizar várias funções dispon
 - [Math Functions](https://sparkbyexamples.com/spark/spark-sql-functions/#math)
 - [Aggregate Functions](https://sparkbyexamples.com/spark/spark-sql-functions/#aggregate)
 - Sorting functions
-- `cast` usado para alterar o tipo de uma coluna
+- [[Conversões]]
 - [[Collection functions]]
 - [[WithColumn]]
 - [[Window Functions]]
