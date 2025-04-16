@@ -65,8 +65,9 @@ Nesse caso, o plano físico de transformações será executado na **seguinte or
 
 Após a análise dos planos lógicos e físicos o Spark tem um Job para ser executado.
 
-Ele organiza o Job em [[Stages]] tentando colocar o máximo de transformações possíveis em cada um. Cada Stage é iniciado após um Shuffle de dados, por isso os estágios são sempre dependentes um dos outros.
+Ele organiza o Job em [[Stages]] tentando colocar o máximo de transformações possíveis em cada um. Cada Stage é iniciado após um **Shuffle** de dados, por isso os estágios são sempre dependentes um dos outros.
 
+Após o início do Stage o processo do Driver envia para os Executores Tasks que são executadas de forma paralela em todos os recursos disponíveis.
 
 ## Adaptive Query Execution
 

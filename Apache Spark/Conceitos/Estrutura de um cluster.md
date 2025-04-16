@@ -37,5 +37,6 @@ Cada **Aplicação do spark** é composta por dois tipos distintos de processos:
 	- Responde ao usuário ou programa inputado
 
 - **Executor Process**
-	- Executa as TASKs enviadas pelo processo do Driver
+	- Executa as TASKs enviadas pelo processo do Driver em um Slot disponível
 	- Reporta o estado das TASKs de volta ao processo do Driver
+	- Cada executor pode ter atribuído um número de Slots associado com o número de núcleos de CPU, eles são implementados como Threads para funcionar sobre as threads do processadores físicos e não precisam corresponder ao número de CPU físicas
