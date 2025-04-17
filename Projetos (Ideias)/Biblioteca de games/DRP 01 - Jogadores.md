@@ -1,7 +1,9 @@
 # DRP - 01
 
 > [!important] Resumo
-> Jogadores são o principal usuário da biblioteca de games, eles são responsáveis pela maioria das informações da plataforma e utilizam dessas informações.
+> Jogadores são o principal usuário da biblioteca de games. 
+> 
+> Os jogadores querem principalmente rastrear o progresso em seus jogos favoritos e a plataforma deve ajudar os jogadores a conseguir fazer isso. Eles são responsáveis pela maioria das informações da plataforma como cadastro de novos jogos, registro de atividades nos jogos, e etc.
 
 Objetivos:
 
@@ -10,6 +12,9 @@ Objetivos:
 Métricas para monitorar:
 
 - Acessos periódicos a plataforma
+- Número de registros de atividade em jogos
+- Número de cadastro de novos jogos na plataforma
+- Número de alteração em informações de jogos na plataforma
 
 # Contexto
 
@@ -17,7 +22,9 @@ Para alterar qualquer informação dentro do ambiente da biblioteca de games é 
 
 ### Hipóteses
 
-- Permitir que jogadores sejam registrados eles irão submeter informações diversas a plataforma.
+- Jogadores irão submeter informações sobre novos jogos
+- Jogadores irão ajustar informações sobre os jogos já contidos na plataforma em caso de erro
+- Jogadores irão rastrear o progresso de seus jogos
 
 ### Restrições
 
