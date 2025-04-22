@@ -5,7 +5,9 @@ Em [[Apache Spark]] existe principalmente dois tipos de transformações:
 - **Transformações estreitas (Narrows)** que dependem apenas da partição. Nesse caso cada partição de um [[DataFrame]] está relacionado diretamente com a partição resultante da transformação. 
 	- São exemplos de transformações estreitas
 		- Filter
-		- Select
+		- Consultas
+			- `select`
+			- `selectExpr` usada para aplicar expressões mais complexas do SQL
 		- Union
 		- Map
 		- FlapMap
@@ -38,3 +40,4 @@ Dentre esses tipos de transformações podemos utilizar várias funções dispon
 - [[Tratando valores Nulos]]
 - [[Agrupamento]]
 - [[Broadcast]]
+- [[Filtros]]

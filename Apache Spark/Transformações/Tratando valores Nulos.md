@@ -4,6 +4,14 @@ Podemos tratar linhas com valores nulos com uma API dedicada do DataFrame, `df.n
 
 **Para remoção de valores nulos:**
 
+```python
+drop(how='any', thresh=None, subset=None)
+```
+
+- **how** – This takes values ‘any’ or ‘all’. By using ‘any’, drop a row if it contains NULLs on any columns. By using ‘all’, drop a row only if all columns have NULL values. Default is ‘any’.
+- **thresh** – This takes int value, Drop rows that have less than thresh hold non-null values. Default is ‘None’.
+- **subset** – Use this to select the columns for NULL values. Default is ‘None.
+
 ```py
 # todas as colunas são nulas
 df.na.drop("all")

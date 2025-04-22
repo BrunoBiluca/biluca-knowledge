@@ -671,7 +671,7 @@ Essa consulta calcula em nível de negócio para cada janela de 5 minutos não-s
 
 Caso a opção `slideDurantion` for provida as janelas passam a ser sobrepostas pelo tempo configurado.
 
-[[Apache Spark/Manipulações/Transformações#Window Functions]]
+[[Apache Spark/Transformações/Transformações#Window Functions]]
 
 ---
 

@@ -241,7 +241,7 @@ WHEN NOT MATCHED THEN
 > - O segundo registro irá criar a nova versão atual do livro na tabela
 
 > [!warning] Múltiplas atualização em um microbatch
-> Caso mais de um evento de atualização venha em um microbatch para o mesmo livro irá ocorrer um erro. Nesse casos é necessário garantir que tenha apenas uma única `merge_key`, que pode ser feita utilizando algum tipo de operação temporal ([[Apache Spark/Manipulações/Transformações#Window Functions]]).
+> Caso mais de um evento de atualização venha em um microbatch para o mesmo livro irá ocorrer um erro. Nesse casos é necessário garantir que tenha apenas uma única `merge_key`, que pode ser feita utilizando algum tipo de operação temporal ([[Apache Spark/Transformações/Transformações#Window Functions]]).
 #### Livros atuais
 
 Como podemos ter livros descontinuados em nossa loja, queremos garantir que os novos pedidos sejam comparados apenas com os livros atualmente disponíveis.
@@ -315,10 +315,10 @@ query = (spark.readStream
 		.start())
 ```
 
-Nesse caso estamos utilizando a função [[Apache Spark/Manipulações/Transformações#Window Functions|rank()]], nativa do próprio pyspark, para fazer o ranking do evento considerando a ordenação do campo `row_time`. Assim iremos pegar apenas o evento mais recente dentro da janela de tempo.
+Nesse caso estamos utilizando a função [[Apache Spark/Transformações/Transformações#Window Functions|rank()]], nativa do próprio pyspark, para fazer o ranking do evento considerando a ordenação do campo `row_time`. Assim iremos pegar apenas o evento mais recente dentro da janela de tempo.
 
 > [!warning] Funções de janela não são suportadas por Dataframes de streaming
-> Não é possível utilizar funções de janela ([[Apache Spark/Manipulações/Transformações#Window Functions]]) em Dataframes de streaming, já que não temos um conceito fixo de tempo. Nesses casos quebramos o processamento em microbatch transformando o processamento em lote permitindo assim a utlização dessa funções.
+> Não é possível utilizar funções de janela ([[Apache Spark/Transformações/Transformações#Window Functions]]) em Dataframes de streaming, já que não temos um conceito fixo de tempo. Nesses casos quebramos o processamento em microbatch transformando o processamento em lote permitindo assim a utlização dessa funções.
 
 > [!tip] Tabelas de referência
 > Tabelas de referência podem ser utilizadas para enriquecer os dados. Caso a tabela seja pequena é possível fazer o espalhamento de seus dados por meio da função `broadcast`, melhorando assim a performance do sistema como um todo.
