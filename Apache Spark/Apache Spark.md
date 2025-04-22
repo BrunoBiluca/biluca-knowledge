@@ -61,10 +61,11 @@ O Apache Spark também pode ser utilizado com uma camada escrita para a linguage
 
 # Melhores práticas
 
-[[Otimizações de código]]
-[[Esquema definido vs Não definido]]
-[[Broadcast tabelas de referência]]
-[[Memória]]
+- [[Otimizações de código]]
+- [[Esquema definido vs Não definido]]
+- [[Broadcast]]
+- [[Memória]]
+- [[Cache]]
 
 # Principais diferenças entre Spark 2 e Spark 3
 
