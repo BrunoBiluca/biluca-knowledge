@@ -8,7 +8,7 @@ Border: disabled
 Shadow: off
 ```
 
-Delta lake permite a atualização do esquema da tabela. São disponíveis 3 tipos de alterações:
+Delta lake permite a atualização do [[Esquema em Apache Spark]]. São disponíveis 3 tipos de alterações:
 
 - Adicionar colunas
 - Reordenar colunas existentes

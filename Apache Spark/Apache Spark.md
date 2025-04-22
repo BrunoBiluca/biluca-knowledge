@@ -62,7 +62,7 @@ O Apache Spark também pode ser utilizado com uma camada escrita para a linguage
 # Melhores práticas
 
 - [[Otimizações de código]]
-- [[Esquema definido vs Não definido]]
+- [[Esquema em Apache Spark]]
 - [[Broadcast]]
 - [[Memória]]
 - [[Cache]]
