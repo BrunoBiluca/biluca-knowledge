@@ -27,7 +27,7 @@ Dentre esses tipos de transformações podemos utilizar várias funções dispon
 - [Date & Time Functions](https://sparkbyexamples.com/spark/spark-sql-functions/#date-time)
 - [Math Functions](https://sparkbyexamples.com/spark/spark-sql-functions/#math)
 - [Aggregate Functions](https://sparkbyexamples.com/spark/spark-sql-functions/#aggregate)
-- Sorting functions
+- [[Ordenação]]
 - [[Conversões]]
 - [[Collection functions]]
 - [[WithColumn]]
