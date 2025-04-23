@@ -41,3 +41,4 @@ Dentre esses tipos de transformações podemos utilizar várias funções dispon
 - [[Agrupamento]]
 - [[Broadcast]]
 - [[Filtros]]
+- [[Unicidade de valores]]
