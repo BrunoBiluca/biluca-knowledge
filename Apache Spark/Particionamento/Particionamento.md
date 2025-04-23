@@ -4,7 +4,7 @@ Em [[Apache Spark]] partições são conjuntos de dados que serão processados. 
 
 Quando o Spark decide os [[Stages|estágios]] de um Job ele leva em consideração transformações aplicadas as partições para montar o fluxo de execução.
 
-Essas transformações são:
+Essas [[Apache Spark/Transformações/Transformações|Transformações]] são:
 
 - Transformações estreitas (Narrows) que dependem apenas da partição.
 - Transformações abrangentes (Wide) que dependem de várias partições e envolve o processo de Shuffle.
@@ -32,9 +32,9 @@ Para configurações de particionamento ver [[Configurações do Apache Spark]].
 
 ### Exemplo - Particionamento como limites para arquivamento ou remoção de dados
 
-Caso o particionamento seja bem implementado por utilizar ele como fator para arquivar ou remover dados. Nesse caso ele nos ajuda facilitando a remoção de dados pela partição o que não altera os metadados de estatísticos do Delta table ([[Estatísticas de arquivos]]).
+Caso o particionamento seja bem implementado pode-se utilizar esta estrutura como fator facilitador para arquivar ou remover dados, já que isso não altera os metadados de estatísticos do Delta table ([[Estatísticas de arquivos]]).
 
-Por exemplo, uma tabela que armazena registros de pedidos por ano, as consultas a essa tabela buscam apenas pelos 10 anos mais recentes. Podemos então arquivar os a cada ano o décimo primeiro ano mais recente, isso faz remover uma partição inteira sem que seja necessário alterar nenhuma das partições mais recentes.
+Por exemplo, uma tabela que armazena registros de pedidos por ano, as consultas a essa tabela buscam apenas pelos 10 anos mais recentes. Podemos então arquivar o décimo primeiro ano mais recente, isso faz remover uma partição inteira sem que seja necessário alterar nenhuma das partições mais recentes.
 
 ## repartition() vs coalesce()
 
@@ -43,6 +43,7 @@ Por exemplo, uma tabela que armazena registros de pedidos por ano, as consultas 
 
 - `repartition()` é usado para aumentar ou diminuir partições redistribuindo os dados dentro do cluster
 	- Balanceamento de dados completo
+
 - `coalesce()` é usado para diminuir partições verificando partições que podemos ser aglutinadas em outras.
 	- Não garante balanceamento
 

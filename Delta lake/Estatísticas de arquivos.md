@@ -1,6 +1,6 @@
 # Estatísticas de arquivos
 
-[Delta Lake File Statistics](https://docs.databricks.com/pt/delta/data-skipping.html#specify-delta-statistics-columns) é um processo que o [[Delta lake]] executa a fim de analisar os arquivos para extrair informações que podem ser utilizadas para impulsionar a performance de processamentos futuros.
+[Delta Lake File Statistics](https://docs.databricks.com/pt/delta/data-skipping.html#specify-delta-statistics-columns) é um processo que o [[Delta lake]] ([[Apache Spark]]) executa a fim de analisar os arquivos para extrair informações que podem ser utilizadas para impulsionar a performance de processamentos futuros.
 
 Delta Lake analisa as primeiras 32 colunas de uma tabela para determinar:
 
@@ -30,3 +30,5 @@ df.summary()
 # retorna as estatísticas selecionadas para todas as colunas do dataframe
 df.summary("tipo") # tipo: stddev, count, avg, mean
 ```
+
+Todos os métodos de estatística retorna um novo [[DataFrame]], assim para ser exibido é necessário aplicar uma ação como `show()` ou `display()`.
