@@ -2,7 +2,8 @@
 
 O [[Apache Spark]] roda sobre a Java Virtual Machine (JVM), assim quando grandes massas de dados são carregados tem uma dependência muito grande do gerenciamento de memória e do coletor de lixo do Java.
 
-> [!tip] Aplicações com **uso pesado de computação em memória** (HEAP muito utilizada) ajustes no GC são muito importantes, pois podem degradar a performance em até 2 vezes.
+> [!tip] Aplicações com **uso pesado de computação em memória** (HEAP muito utilizada) ajustes no GC são muito importantes. 
+> Uma configuração ruim pode degradar a performance em até 2 vezes.
  
 Alguns sintomas comuns de uso excessivo do GC:
 
@@ -10,9 +11,9 @@ Alguns sintomas comuns de uso excessivo do GC:
 - Timeout do heartbeat do executor
 - GC erro de passar do limite
 
-Quanto menos espaço de memória um [[Resilient Distributed Dataset (RDD)]] ocupa mais espaço na Heap da JVM é deixado o que aumenta a eficiência do GC; ao contrário, quanto mais memória é consumida pelo TDD mais perda de performance temos devido a quantidade de objetivos acumulados.
+Quanto menos espaço de memória um [[Resilient Distributed Dataset (RDD)]] ocupa mais espaço na Heap da JVM é deixado livre o que aumenta a eficiência do GC; ao contrário, quanto mais memória é consumida pelo RDD mais perda de performance temos devido a quantidade de objetivos acumulados.
 
-A [[Spark web UI]] demonstra problemas quando os Executores utilizam muito GC. Isso pode demonstrar um problema já que os recursos de processamento (CPU) estão sendo gastos com GC e não com o processamento real.
+A [[Spark web UI]] exibe informações sobre consumo de CPU para a tarefa de Garbage Collection, essa é uma boa maneira de verificar quando o processamento está sendo utilizado para GC em vez de para o processamento real da aplicação Spark.
 
 > [!info] Project Tungsten
 > Uma iniciativa para **melhorar o gerenciamento de memória em aplicações do Spark** é o Project Tungsten, que permite um gerenciamento mais direto o que pode resolver muitos problemas relacionados ao GC.

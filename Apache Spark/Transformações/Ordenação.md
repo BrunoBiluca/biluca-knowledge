@@ -2,23 +2,23 @@
 
 Utilizando os métodos `sort()` ou `orderBy()` é possível ordenar [[DataFrame]] em ordem ascendente ou descendente baseado em uma ou múltiplas colunas.
 
-### `sort()`
+### sort()
 
 ```python
 # Sorting different columns in different orders
 df.sort("column1", "column2", ascending=[True, False]) 
-df.sort(col("department").asc(),col("state").asc()).show(truncate=False)
+df.sort(col("department").asc(), col("state").asc()).show(truncate=False)
 ```
 
 Por padrão ordena de forma ascendente.
 
-### `orderBy()`
+### orderBy()
 
 ```python
 # Sorting DataFrame using orderBy()
-df.orderBy("department","state").show(truncate=False)
-df.orderBy(col("department"),col("state")).show(truncate=False)
-df.orderBy(col("department").asc(),col("state").asc()).show(truncate=False)
+df.orderBy("department", "state").show(truncate=False)
+df.orderBy(col("department"), col("state")).show(truncate=False)
+df.orderBy(col("department").asc(), col("state").asc()).show(truncate=False)
 ```
 
 Por padrão ordena de forma ascendente.

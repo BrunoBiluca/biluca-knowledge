@@ -1,5 +1,7 @@
 # Agrupamento
 
+> [!quote]- (Documentação e exemplo) - 		- [Aggregate Functions](https://sparkbyexamples.com/spark/spark-sql-functions/#aggregate)
+
 Podemos agrupar dados relacionados a colunas utilizando o `groupBy`.
 
 Quando aplicamos o `groupBy` por baixo dos panos, os dados são **distribuídos pelo cluster** (Shuffle) de forma que cada particionamento é dado pelo **identificador do agrupamento**.

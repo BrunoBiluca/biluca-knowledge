@@ -32,21 +32,24 @@ O Apache Spark também pode ser utilizado com uma camada escrita para a linguage
 
 **Funcionalidades**
 
-- [[Manipulações]]
 - [[Apache Spark/Transformações/Transformações|Transformações]]
 - [[Spark web UI]]
 
-**Conceitos**
+**Arquitetura e componentes**
 
-- [[Stages]]
+- [[Estrutura de um cluster]]
+- [[Plano de execução]]
+
+**Estruturas de dados**
+
 - [[Resilient Distributed Dataset (RDD)]]
 - [[Diferença entre estruturas de dados]]
-- [[Plano de execução]]
 
 **Desenvolvimento e fluxo de trabalho**
 
 - [[Configurações do Apache Spark]]
 - [[Docker para Apache Spark]]
+- [[Spark SQL API]]
 
 **Cloud**
 
@@ -71,7 +74,7 @@ O Apache Spark também pode ser utilizado com uma camada escrita para a linguage
 
 Apache Spark 3 foi lançado em 2020 e trouxe várias melhorias em relação ao seu antecessor Apache Spark 2 (2016)
 
-- Performance: o Adaptive Query Execution é uma funcionalidade que automaticamente otimiza consultadas baseadas em várias características dos dados além das melhorias com o Apache Arrow para integração.
+- Performance: o [[Adaptive Query Execution]] é uma funcionalidade que automaticamente otimiza consultadas baseadas em várias características dos dados além das melhorias com o Apache Arrow para integração.
 - Python API: melhoria na integração do python principalmente na utilização do Pandas.
 - SQL Engine
 - Machine Learning

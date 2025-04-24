@@ -16,7 +16,7 @@ A certificação se propõe aprofundar no conhecimento da arquitetura do Apache 
 - Particionamento com esquemas
 - UDFs e SQL functions
 
-Sobre a arquitetura do Apache Spark:
+**Sobre a arquitetura do Apache Spark:**
 
 - Hierarquia de execução
 - Tolerância a falhas
@@ -32,10 +32,35 @@ Sobre a arquitetura do Apache Spark:
 Exame cobre:
 
 1. Apache Spark Architecture and Components - 20%
+	- [[Estrutura de um cluster]]
+	- [[Plano de execução]]
+	- [[Adaptive Query Execution]]
+	- [[Spark web UI]]
 2. Using Spark SQL - 20%
+	- [[Spark SQL API]]
 3. Developing Apache Spark™ DataFrame/DataSet API Applications - 30%
+	- [[DataFrame]]
+	- [[Diferença entre estruturas de dados]]
+	- [[Esquema em Apache Spark]]
+	- [[Cache]]
+	- [[Broadcast]]
+	- [[WithColumn]]
+	- [[Agrupamento]]
+	- [[Collection functions]]
+	- [[Conversões]]
+	- [[Filtros]]
+	- [[Mesclagens (join)]]
+	- [[Ordenação]]
+	- [[Apache Spark/Transformações/Transformações]]
+	- [[Tratando valores Nulos]]
+	- [[Unicidade de valores]]
+	- [[UDFs]]
+	- [[Acumuladores]]
 4. Troubleshooting and Tuning Apache Spark DataFrame API Applications - 10%
+	- [[Derramamento de dados (Spill)]]
+	- [[Garbage Collection]]
 5. Structured Streaming - 10%
+	- [[Structured Streaming]]
 6. Using Spark Connect to deploy applications - 5%
 7. Using Pandas API on Apache Spark - 5%
 

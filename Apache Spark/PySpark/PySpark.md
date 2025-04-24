@@ -33,6 +33,7 @@ Melhores práticas
 
 Principais componentes
 
+- [[DataFrameReader]]
 - [[DataFrameWriter]]
 
 # PySpark e testes automatizados

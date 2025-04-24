@@ -26,6 +26,7 @@ display(df.select(flatten("column")))
 ```
 
 ### collect_set() 
+
 Retorna todos os valores de uma coluna de entrada com os valores duplicados removidos.
 
 ```python
@@ -69,6 +70,7 @@ SELECT * FROM events where value:event_name = "finalize"
 ```
 
 Transformando campos aninhados:
+
 ```sql
 SELECT key,
 values,
@@ -77,6 +79,7 @@ FROM nested_data
 ```
 
 outras funções disponíveis:
+
 - `exists`
 - `filter`
 - `reduce`

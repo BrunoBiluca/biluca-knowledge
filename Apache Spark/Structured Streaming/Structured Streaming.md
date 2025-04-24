@@ -19,14 +19,13 @@ Internamente o Structured Streaming trata o processamento como vários micro-lot
 
 --- end-multi-column
 
-São componentes de um processamento Structured Streaming:
+#### Componentes
 
 - **Unbound table (tabela ilimitada):** tabela de entrada, novas linhas são adicionadas a essa tabela para o processamento do micro lote
 - **Result table:** tabela contendo os resultados do processamento dividida pela janela
 - **Output:** modelo de output, pode ser completo, por inserção apenas ou de atualização.
 
-
-# Principais funcionalidades
+#### Principais funcionalidades
 
 - [[Agregações]]
 - [[Junções (Joins)]]
@@ -34,19 +33,7 @@ São componentes de um processamento Structured Streaming:
 > [!warning]- Operações não suportadas pelos Dataframes de streaming
 > A maioria das operações são compatíveis entre os dois, existem algumas exceções como o caso da ordenação que não é possível em casos de dados streaming.
 
-
-### Garantindo processamento semântico único
-
-Um problema comum em processamentos de streaming é **garantir a escrita apenas uma vez** de um registro. 
-
-No Structured Streaming isso é possível seguindo o formato:
-
-- Usar `foreachBatch` para processar cada micro-lote
-- E aplicar escritas idempotentes na base alvo (verificando se já existe na base)
-
-Controlando o processo de escrita a cada micro-lote nos possibilita garantir que um registro está sendo escrito apenas uma única vez. 
-
-# Principais componentes do processamento de Structured Streaming:
+#### Principais APIs
 
 - [[ReadStream]]
 - [[WriteStream]]
@@ -76,3 +63,13 @@ spark.readStream.format("kafka")
 ```
 
 
+# Garantindo processamento semântico único
+
+Um problema comum em processamentos de streaming é **garantir a escrita apenas uma vez** de um registro. 
+
+No Structured Streaming isso é possível seguindo o formato:
+
+- Usar `foreachBatch` para processar cada micro-lote
+- E aplicar escritas idempotentes na base alvo (verificando se já existe na base)
+
+Controlando o processo de escrita a cada micro-lote nos possibilita garantir que um registro está sendo escrito apenas uma única vez. 

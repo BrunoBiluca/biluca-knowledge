@@ -4,6 +4,23 @@
 
 # `.cast()`
 
+```py
+from pyspark.sql.functions import col
+
+# DataFrame de exemplo
+data = [(1, "João"), (2, "Maria"), (3, "Pedro")]
+df = spark.createDataFrame(data, ["id", "nome"])
+
+# Método 1: Usando cast()
+df = df.withColumn("id_str", col("id").cast("string"))
+
+# Método 2: Usando a função format_string (com formatação)
+from pyspark.sql.functions import format_string
+df = df.withColumn("id_formatado", format_string("%03d", col("id")))
+
+# Convertendo para inteiro
+df = df.withColumn("id_int", col("id_str").cast("integer"))
+```
 
 # Datas (dates)
 

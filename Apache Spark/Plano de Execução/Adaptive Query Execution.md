@@ -10,4 +10,4 @@ Algumas otimizações que podem ser feitas pelo AQE:
 
 - Re-otimiza o plano baseado em estatísticas em tempo de execução
 - Dinamicamente altera o número de partições de Shuffle como combinar partições adjacentes pequenas em partições maiores em tempo de execução
-- Altera o tipo de junção feito dependendo do tamanho dos DataFrames e tabelas, por exemplo quando os DataFrames são pequenos ele altera o tipo de junção para Broadcast
+- Altera o tipo de junção feito dependendo do tamanho dos [[DataFrame|DataFrames]] e tabelas, por exemplo quando os DataFrames são pequenos ele altera o tipo de junção para Broadcast
