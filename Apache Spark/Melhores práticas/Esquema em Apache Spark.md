@@ -39,7 +39,7 @@ df.printSchema()
 
 ### Esquema definido
 
-O esquema definido apresenta várias vantagens em relação a garantir da consistência de dados. Depois de uma análise exploratória, com o entendimento dos dados trabalhados, é necessário começar a buscar por formas de consistências, assim é recomendado trabalhar com dados de esquema bem definidos.
+O esquema definido apresenta várias vantagens em relação a garantir da consistência de dados.
 
 - **Vantagens:**
 	- **Tipagem Forte:** O esquema fornece informações sobre os tipos de dados em cada coluna, o que impõe uma tipagem forte no DataFrame. Isso ajuda a evitar erros de tipo durante a execução.
@@ -86,3 +86,5 @@ with open("schema.json", "r") as f:
 dados = [("Ana", 25), ("João", 30)]
 df = spark.createDataFrame(dados, schema_carregado)
 ```
+
+Podemos visualizar o esquema definido em um JSON no formato DDL utilizando o método `schema_of_json(json_str)`. Nesse caso o esquema de uma string  `'{a: 1}'` terá seu esquema demonstrado como `STRUCT<a: BIGINT>`.

@@ -36,33 +36,44 @@ Exame cobre:
 	- [[Plano de execução]]
 	- [[Adaptive Query Execution]]
 	- [[Spark web UI]]
+
 2. Using Spark SQL - 20%
 	- [[Spark SQL API]]
+
 3. Developing Apache Spark™ DataFrame/DataSet API Applications - 30%
-	- [[DataFrame]]
-	- [[Diferença entre estruturas de dados]]
-	- [[Esquema em Apache Spark]]
-	- [[Cache]]
-	- [[Broadcast]]
-	- [[WithColumn]]
-	- [[Agrupamento]]
-	- [[Collection functions]]
-	- [[Conversões]]
-	- [[Filtros]]
-	- [[Mesclagens (join)]]
-	- [[Ordenação]]
-	- [[Apache Spark/Transformações/Transformações]]
-	- [[Tratando valores Nulos]]
-	- [[Unicidade de valores]]
-	- [[UDFs]]
-	- [[Acumuladores]]
+	- Estrutura de dados
+		- [[DataFrame]]
+		- [[Diferença entre estruturas de dados]]
+		- [[Esquema em Apache Spark]]
+	- [[Apache Spark/Transformações/Transformações|Transformações]]
+		- [[Agrupamento]]
+		- [[Seleção]]
+		- [[Filtros]]
+		- [[WithColumn]]
+		- [[Collection functions]]
+		- [[Conversões]]
+		- [[Mesclagens (join)]]
+		- [[Ordenação]]
+		- [[UDFs]]
+		- [[Tratando valores Nulos]]
+		- [[Unicidade de valores]]
+	- Outras funcionalidades
+		- [[Acumuladores]]
+
 4. Troubleshooting and Tuning Apache Spark DataFrame API Applications - 10%
 	- [[Derramamento de dados (Spill)]]
 	- [[Garbage Collection]]
+	- [[Broadcast]]
+	- [[Cache]]
+
 5. Structured Streaming - 10%
 	- [[Structured Streaming]]
+
 6. Using Spark Connect to deploy applications - 5%
+	- [[Spark Connect]]
+
 7. Using Pandas API on Apache Spark - 5%
+	- [[Pandas API em Spark]]
 
 # Material de estudo
 

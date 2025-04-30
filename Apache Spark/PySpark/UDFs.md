@@ -1,6 +1,6 @@
 # UDFs
 
-UDF são funções definidas pelo usuário, são principalmente utilizadas para extender as [[Apache Spark/Transformações/Transformações|Transformações]] nativas e reutilizar essas funções em múltiplos [[DataFrame]]
+UDF são funções definidas pelo usuário, são principalmente utilizadas para extender as [[Apache Spark/Transformações/Transformações|Transformações]] nativas e reutilizar essas funções em múltiplos [[DataFrame]].
 
 > [!quote]- (Artigo) - [PySpark UDF (User Defined Function)](https://sparkbyexamples.com/pyspark/pyspark-udf-user-defined-function/)
 > Demonstra a utilização de UDF em PySpark e ao final trás algumas considerações importantes sobre sua utilização.

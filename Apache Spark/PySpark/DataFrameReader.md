@@ -2,11 +2,14 @@
 
 ### pathGlobFilter
 
-A opção `pathGlobFilter` é utilizado para filtrar arquivos quando estão sendo lidos dados de um diretório utilizando um padrão de glob especificado.
+A opção `pathGlobFilter` é utilizado para **filtrar arquivos em um diretório** utilizando um padrão de glob especificado.
 
 ```py
-# irá buscar todos os arquivos csv dentro do caminho especificado
+# versão utilizando .option(key, value)
 data_frame = spark.read.option("pathGlobFilter", "*.csv").csv("path_to_your_folder")
+
+# versão utilizando .options(**options)
+data_frame = spark.read.options(pathGlobFilter="*.csv").csv("path_to_your_folder")
 ```
 
-Filename globbing não utiliza um formato de expressões regulares, ele utiliza a combinação de nomes de arquivos e diretórios utilizando wildcards `*`
+**Filename globbing** não utiliza um formato de expressões regulares, ele utiliza a combinação de nomes de arquivos e diretórios utilizando wildcards `*`

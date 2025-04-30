@@ -2,26 +2,24 @@
 
 Utilizando os métodos `sort()` ou `orderBy()` é possível ordenar [[DataFrame]] em ordem ascendente ou descendente baseado em uma ou múltiplas colunas.
 
-### sort()
+`sort()`
 
 ```python
 # Sorting different columns in different orders
 df.sort("column1", "column2", ascending=[True, False]) 
-df.sort(col("department").asc(), col("state").asc()).show(truncate=False)
+df.sort(col("department").asc(), col("state").asc())
 ```
 
-Por padrão ordena de forma ascendente.
-
-### orderBy()
+`orderBy()`
 
 ```python
 # Sorting DataFrame using orderBy()
-df.orderBy("department", "state").show(truncate=False)
-df.orderBy(col("department"), col("state")).show(truncate=False)
-df.orderBy(col("department").asc(), col("state").asc()).show(truncate=False)
+df.orderBy("department", "state")
+df.orderBy(col("department"), col("state"))
+df.orderBy(col("department").asc(), col("state").asc())
 ```
 
-Por padrão ordena de forma ascendente.
+**Por padrão ordena** de forma ascendente e com os nulos em primeiro. Caso seja indicado `ascending=False` a forma será descendente com os nulos ao final.
 
 ### Ordenação de NULLs
 
@@ -30,9 +28,11 @@ Por padrão Spark trata valores nulos como os menores valores possíveis, assim 
 Por esse motivo existe algumas funções para mudar esse comportamento:
 
 - `asc_nulls_first` nulos no início
+	- Padrão quando a ordenação ascendente é definida
 - `asc_nulls_last` nulos ao final
 - `desc_nulls_first` nulos no início
 - `desc_nulls_last` nulos ao final
+	- Padrão quando a ordenação descendente é definida
 
 ```py
 from pyspark.sql.functions import desc_nulls_last, desc, asc
@@ -60,18 +60,4 @@ df1.sort(
 |  2|Alice|
 |  0| null|
 +---+-----+
-```
-
-### Ordenação colunas de arrays
-
-Também é possível ordenar arrays.
-
-```py
-df = spark.createDataFrame([([2, 1, None, 3],),([1],),([],)], ['data'])
-
->>> df.select(sort_array(df.data).alias('r')).collect()
-[Row(r=[None, 1, 2, 3]), Row(r=[1]), Row(r=[])]
-
->>> df.select(sort_array(df.data, asc=False).alias('r')).collect()
-[Row(r=[3, 2, 1, None]), Row(r=[1]), Row(r=[])]
 ```

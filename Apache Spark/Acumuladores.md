@@ -21,6 +21,23 @@ print(accum.value) #Accessed by driver
 
 Os valores de uma acumulador só podem ser **lidos a partir do processo do Driver**.
 
+### Comportamento de atualizações
+
+Por ser uma variável compartilhada no cluster um acumulador apresenta um comportamento diferente dependendo de onde está sendo aplicado, seja em ações ou transformações.
+
+- Quando **aplicados em ações** (ex. `foreach()`) o Spark garante que a atualização do acumulador seja **aplicada apenas uma única vez**
+- Quando **aplicado em transformações** (ex. `map()`) cada tarefa pode aplicar uma **atualização mais de uma vez**, quando a tarefa ou job form reexecutado
+
+Dessa forma quando declaramos um acumulador dentro de uma transformação precisamos levar em consideração alguns casos que garantem a atualização apenas uma vez:
+
+- ✅ Quando uma falha de uma tarefa acontece por um erro no código, o Spark irá retornar ao último estado do acumulador antes da falha
+
+- ❌ Quando um [[Stages]] falha por causa de um nó faltante pode ocasionar uma reexecução de um dos nós
+
+- ❌ Quando uma tarefa é lenta demais, o Spark pode lançar uma cópia dessa tarefa para outro nó executor
+
+- ❌ Quando um RDD é persistido ([[Cache]]) parcialmente em memória, a parte que não for persistida precisa ser recomputada toda vez que necessário
+
 ### Principais casos de uso
 
 Acumuladores pode ser utilizados principalmente para obter estatísticas a partir da processamento dos dados como:
@@ -30,7 +47,7 @@ Acumuladores pode ser utilizados principalmente para obter estatísticas a parti
 
 ### Considerações de performance
 
-O custo de utilização de Acumuladores é relativamente pequeno e pode ser até negligenciado para grandes volumes de dados, mesmo assim algumas considerações são importante para um uso mais eficiente:
+O custo de utilização de Acumuladores é relativamente pequeno e pode ser até negligenciado para grandes volumes de dados, mesmo assim algumas considerações são importantes para um uso mais eficiente:
 
 1. **Use accumulators moderadamente**
     - Evite criar centenas de accumulators no mesmo job
@@ -67,7 +84,7 @@ val data = sc.textFile("input.txt")                // Número de palavras: 15
                                                    
 data.map(line => {                                 // Lazy Evaluation:
 		val words = line.split(" ")                // map() não é executado
-		wordCount.add(words.length)                // assim: essa linha nunca é executada
+		wordCount.add(words.length)                // essa linha nunca é executada
 		line                                       // Não transforma o rdd já que retorna o mesmo número de linhas
 	})
 	.count()                                       // count() é resolvido no rdd original data sem executar o map()

@@ -9,4 +9,6 @@ df.withColumn(<nome>, <função>)
 df.withColumn("items", explode(col("items")))
 ```
 
-O [[UDFs]] demonstra outra capacidade do `WithColumn`, que no caso é utilizar em conjunto com UDFs.
+Para transformações mais complexas pode ser necessário definir um [[UDFs]] para aplicar a transformação.
+
+> [!tip] Sempre dê prioridade a funções nativas do Spark por serem mais eficientes.

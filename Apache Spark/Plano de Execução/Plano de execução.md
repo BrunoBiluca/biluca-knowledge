@@ -6,9 +6,9 @@ O plano de execução é a forma detalhada que o processamento será executado n
 
 - O código escrito é primeiro anotado como um plano **lógico não resolvido**; se for válido, o Spark o converte em um plano lógico
 - O plano lógico é passado pelo **Catalyst Optimizer** para aplicar regras otimizadas.
-- O **Plano Lógico Otimizado** é então convertido em um Plano Físico
-- O **Plano Físico** é executado pelos executores do Spark.
-- (Opcional) [[Adaptive Query Execution]] pode ser utilizado e permite que o plano de execução físico seja alterado em tempo de execução no cluster. Se utilizando de estatísticas geradas em tempo real o AQE pode alterar o plano para otimizar ainda mais a consulta. Para ver o plano de execução gerado nessa etapa é necessário visualizar a partir do Spark UI.
+- O **Plano Lógico Otimizado** é então convertido em vários Planos Físicos e o menos custoso é selecionado
+- O **Plano Físico** é executado pelos executores do Spark a partir da geração de código
+- (Opcional) [[Adaptive Query Execution]] pode ser utilizado e permite que o plano de execução físico seja alterado em tempo de execução no cluster. Se utilizando de estatísticas geradas em tempo real o AQE pode alterar o plano para otimizar ainda mais a consulta. Para ver o plano de execução gerado nessa etapa é necessário visualizar a partir do [[Spark web UI]].
 
 ![[Composição do plano de execução do Apache Spark.webp|Composição do plano de execução de um job do Apache Spark|%cheio]]
 

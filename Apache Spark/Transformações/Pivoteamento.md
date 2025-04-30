@@ -2,6 +2,10 @@
 
 A função `pivot()` é utilizada para rotacionar ou transpor dados de uma coluna para várias colunas, ou o contrário utilizando `stack()`.
 
+```py
+GroupedData.pivot(pivot_col: str, values: Optional[List[LiteralType]] = None) → GroupedData
+```
+
 Síntaxe
 
 ```python
@@ -11,7 +15,7 @@ pivot_df = original_df
 	.agg({"agg_column": "agg_function"})
 ```
 
-Operações de pivoteamento exigem combinações únicas de agrupamento e as colunas pivôs. No exemplo abaixo fazermos o agrupamento dos produtos e o pivoteamento pelo País, ou seja, entre essas colunas não existem valores duplicados já que cada produto irá ser mostrado para cada país, caso existissem produtos ou países duplicados seria necessário utilizar algum outro tipo de agrupamento para resover esses conflitos.
+Operações de pivoteamento exigem combinações únicas de agrupamento e as colunas pivôs. No exemplo abaixo fazemos o agrupamento dos produtos e o pivoteamento pelo País, ou seja, entre essas colunas não existem valores duplicados já que cada produto irá ser mostrado para cada país, caso existissem produtos ou países duplicados seria necessário utilizar algum outro tipo de agrupamento para resolver esses conflitos.
 
 Exemplo
 
@@ -81,3 +85,4 @@ stack(
 |Banana|China|400|
 |Carrots|Canada|2000|
 |Carrots|China|1200|
+Repare que os valores nulos foram filtrados na consulta pela cláusula de `.where("Total is not null")`.

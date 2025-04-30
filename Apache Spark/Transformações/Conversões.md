@@ -2,7 +2,7 @@
 
 É muito comum no processamento de dados precisarmos alterar formatos, esquemas e estruturas.
 
-# `.cast()`
+# .cast()
 
 ```py
 from pyspark.sql.functions import col
@@ -22,7 +22,7 @@ df = df.withColumn("id_formatado", format_string("%03d", col("id")))
 df = df.withColumn("id_int", col("id_str").cast("integer"))
 ```
 
-# Datas (dates)
+# Datas e Timestamps
 
 Para a conversão de datas o [[Apache Spark]] utiliza a formatação baseada no [SimpleDateFormat](https://docs.oracle.com/en/java/javase/13/docs/api/java.base/java/text/SimpleDateFormat.html).
 

@@ -1,6 +1,6 @@
 # Agrupamento
 
-> [!quote]- (Documentação e exemplo) - 		- [Aggregate Functions](https://sparkbyexamples.com/spark/spark-sql-functions/#aggregate)
+> [!quote]- (Documentação e exemplo) - [Aggregate Functions](https://sparkbyexamples.com/spark/spark-sql-functions/#aggregate)
 
 Podemos agrupar dados relacionados a colunas utilizando o `groupBy`.
 
@@ -13,7 +13,7 @@ Quando se utiliza um `groupBy` é retornado um objeto de `GroupedData` que conte
 - `max()`
 - `mim()`
 - `sum()`
-- `agg()` permite criar uma função de agregação
+- `agg()` permite criar uma função de agregação para transformações mais complexas, como transformações em múltiplas colunas
 - `pivot()` tratado com mais detalhe em [[Pivoteamento]]
 
 #### Exemplo de redistribuição de dados no cluster

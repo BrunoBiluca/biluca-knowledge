@@ -2,7 +2,7 @@
 
 Podemos tratar linhas com valores nulos com uma API dedicada do DataFrame, `df.na`.
 
-**Para remoção de valores nulos:**
+### Remoção
 
 ```python
 drop(how='any', thresh=None, subset=None)
@@ -26,7 +26,28 @@ df.na.drop("any")
 df.na.drop("any", ["col_1", "col_2"])
 ```
 
-**Para preenchimento de valores nulos:**
+#### Exemplo de utilização
+
+| key | A   | B    | C    |
+| --- | --- | ---- | ---- |
+| 1   | a   | Null | Null |
+| 2   | a   | b    | Null |
+| 3   | a   | b    | c    |
+
+```py
+df.na.drop(how="all", thresh=2)
+```
+
+Resultado
+
+| key | A   | B   | C    |
+| --- | --- | --- | ---- |
+| 2   | a   | b   | Null |
+| 3   | a   | b   | c    |
+
+Apenas a primeira linha não consegue alcançar o limite estabelecido, 2 colunas não nulas.
+
+### Preenchimento
 
 ```py
 # todas as colunas que são nulas são preenchidas com o <valor>

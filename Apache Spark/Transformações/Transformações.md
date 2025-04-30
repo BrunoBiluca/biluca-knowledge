@@ -5,9 +5,7 @@ Em [[Apache Spark]] existe principalmente dois tipos de transformações:
 - **Transformações estreitas (Narrows)** que dependem apenas da partição. Nesse caso cada partição de um [[DataFrame]] está relacionado diretamente com a partição resultante da transformação. 
 	- São exemplos de transformações estreitas
 		- [[Filtros]]
-		- Consultas
-			- `select`
-			- `selectExpr` usada para aplicar expressões mais complexas do SQL
+		- [[Seleção]]
 		- [String Functions](https://sparkbyexamples.com/spark/spark-sql-functions/#string)
 		- [Date & Time Functions](https://sparkbyexamples.com/spark/spark-sql-functions/#date-time)
 		- [Math Functions](https://sparkbyexamples.com/spark/spark-sql-functions/#math)
@@ -15,7 +13,7 @@ Em [[Apache Spark]] existe principalmente dois tipos de transformações:
 		- Map
 		- FlapMap
 		- MapPartitions
-		- [[Conversões]]
+	- [[Conversões]]
 
 - **Transformações abrangentes (Wide)** que dependem de várias partições e envolve o processo de Shuffle.
 	- Também podemos falar que transformações abrangentes são quando uma partição de entrada pode contribuir com dados para múltiplas partições de saída
