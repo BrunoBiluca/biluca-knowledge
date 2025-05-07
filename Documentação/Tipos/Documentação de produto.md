@@ -12,8 +12,8 @@ Dentro da documentação de produto podemos ter documentos para definir diferent
 - Documento de requisito de sistema
 
 > [!warning] Documentação de produto vs Processo de gestão
-> A documentação serve como uma referência para o desenvolvimento, utilizar o **processo de gestão como fonte de documentação não me parece uma boa ideia**. Como o processo de desenvolvimento é muito dinâmico ele é modificado constantemente, assim manter esse processo atualizado e coeso com o produto é muito difícil.
+> A documentação serve como uma referência para o desenvolvimento, utilizar o **processo de gestão como fonte de documentação não me parece uma boa ideia**, ou seja, histórias de usuário, anotações em tarefas, épicos e outros elementos que podemos utilizar no processo de gestão, não são uma fonte sólida e confiável de documentação do produto.
 > 
-> Por isso, acredito que manter uma documentação separada do processo de gestão é mais fácil de manter, além de termos uma documentação mais robusta e menos suscetível a mudanças, já que a documentação vira um ponto de referência em vez de ser criada dinamicamente.
+> Por isso, acredito que manter uma documentação de produto separada do processo de gestão, centralizada e atualizada permite mais confiança da equipe do estado atual e anterior do projeto.
 
 

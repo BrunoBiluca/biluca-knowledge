@@ -1,27 +1,15 @@
 # Documento de requisito de produto
 
---- start-multi-column: ExampleRegion1  
-```column-settings  
-number of columns: 2
-Column Size: [59%, 40%]
-Border: disabled
-Shadow: off
-```
-
 Um **documento de requisito de produto (DRP)** provê informações sobre funcionalidades e comportamentos do sistema da perspectiva do usuário final. É responsabilidade de uma **analista de negócio ou product owner** criar essa documentação, mantendo cooperação com os demais envolvidos no projeto para sanar dúvidas, como por exemplo, o cliente em relação a interface de usuário ou o arquiteto de solução como detalhes técnicos de baixo nível.
 
-A [[Documentação do sistema]] deve ser composta de vários DRPs, já que um documento deve se restringir a um requisito do produto.
+O documento de requisitos é o ponto de partida onde os desenvolvedores recebem suas tarefas, os QAs entendem como fazer seus casos de testes e os escritores técnicos começam a criar os manuais de usuário. Ele ajuda a garantir que o time tenham uma referência dos objetivos do projeto e que lembrem das funcionalidades enquanto as desenvolvam.
 
---- end-column ---
+A [[Documentação do sistema]] deve ser composta de vários DRPs, já que um documento deve se restringir a um requisito do produto.
 
 > [!info] Atores
 >- Analista de negócio ou product owner são os principais responsáveis em produzir essa documentação
 >
 >- Desenvolvedores consomem a documentação a fim de garantir consistência do projeto
-
---- end-multi-column
-
-O documento de requisitos é o ponto de partida onde os desenvolvedores recebem suas tarefas, os QAs entendem como fazer seus casos de testes e os escritores técnicos começam a criar os manuais de usuário. Ele ajuda a garantir que o time tenham uma referência dos objetivos do projeto e que lembrem das funcionalidades enquanto as desenvolvam.
 
 > [!quote]- (Artigo) - [Product requirements Document: PRD Templates and Examples](https://www.altexsoft.com/blog/product-requirements-document/)
 > Visão geral sobre a documentação de requisitos, com templates e exemplos de uso.

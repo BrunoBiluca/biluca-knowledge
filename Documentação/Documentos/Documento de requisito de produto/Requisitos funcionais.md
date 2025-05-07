@@ -4,7 +4,9 @@
 - Entrega como resultado final as funcionalidades do sistema
 - Tem o foco nas necessidades do usuário
 
-Exemplo de um requisito funcional é a **funcionalidade de PIX**. No [[Documento de requisito de produto]] será descrito cada aspecto que a funcionalidade faz, e c**ada requisito funcional é um único comportamento dentro dessa funcionalidade**.
+Exemplo de um requisito funcional é a **funcionalidade de PIX**. 
+
+No [[Documento de requisito de produto]] será descrito cada aspecto que a funcionalidade faz, e c**ada requisito funcional é um único comportamento dentro dessa funcionalidade**.
 
 Requisitos funcionais bem escritos podem prover **vários benefícios** como:
 
@@ -21,7 +23,7 @@ Existem várias formas de buscar requisitos funcionais, entre elas podemos:
 
 Quando estiver levantando seus requisitos funcionais tente focar nos seguintes aspectos:
 
-- Levante o máximo de detalhes possíveis, como cenários de uso, critérios de aceitação. Isso irá ajudar a definir melhor o escopo do requisito.
+- Levante o máximo de detalhes possíveis, como cenários de uso, [[Documentação/Componentes/Critérios de aceite|Critérios de aceite]]. Isso irá ajudar a definir melhor o escopo do requisito.
 - Revisar os documentos quando novas ideias aparecerem ou serem modificadas.
 
 Também é possível descrever os requisitos funcionais como [[Histórias de usuário]], essa é uma forma mais guiada ao usuário dos recursos do produto.
