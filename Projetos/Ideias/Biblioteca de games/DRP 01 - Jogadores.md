@@ -5,11 +5,11 @@
 > 
 > Os jogadores querem principalmente rastrear o progresso em seus jogos favoritos e a plataforma deve ajudar os jogadores a conseguir fazer isso. Eles são responsáveis pela maioria das informações da plataforma como cadastro de novos jogos, registro de atividades nos jogos, e etc.
 
-Objetivos:
+**Objetivos**
 
 - Liberar funcionalidades para os jogadores
 
-Métricas para monitorar:
+**Métricas para monitorar**
 
 - Acessos periódicos a plataforma
 - Número de registros de atividade em jogos
@@ -76,9 +76,12 @@ __Critérios de aceite__
 		- Deve ser criado
 		- Deve ser redirecionado para a página personalizada
 	- Se ele já existe na base
-		- Deve ser autenticado
+		- Deve informar ao usuário que ele já foi cadastrado
+		- Deve redirecionar o usuário a página de autenticação
 
 ### RF 01.02 - Esqueceu a senha?
+
+TODO: A definir
 
 __Descrição__
 
@@ -107,19 +110,6 @@ __Critérios de aceite__
 	- Se ele não estiver registrado
 		- Deve redirecionar o visitante para conseguir fazer o registro
 
-### RF 01.04 Página inicial do Jogador
-
-__Descrição__
-
-Como jogador quero ter uma visão personalizada para acessar meus jogos
-
-__Impacto__
-
-A partir do momento que o jogador está logado, ele deve partir da sua página personalizada.
-
-__Critérios de aceite__
-
-- Quando o jogador acessa a sua página principal deve ser exibido o nome dele
 
 # Especificação de arquitetura
 

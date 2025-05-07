@@ -11,6 +11,7 @@ Objetivos:
 Métricas para monitorar:
 
 - Adição de jogos periódicos
+- Atualização de informações dos jogos
 
 # Contexto
 
@@ -87,11 +88,15 @@ __Critérios de aceite__
 
 __Descrição__
 
+Como jogador devo poder registrar DLCs lançadas a jogos já cadastrados.
+
 __Impacto__
+
+Muitos jogos tem vários tipos de conteúdos adicionais lançados, o registro desses conteúdos é importante também para o controle do jogador.
 
 __Critérios de aceite__
 
-- __CA 1__
+- 
 
 
 ### RF 02.03 - Visualização dos jogos
@@ -106,17 +111,21 @@ Permitir aos visitantes verem o catálogo de jogos castrados pelos jogadores.
 
 __Critérios de aceite__
 
-- __CA 1__
+- Na tela inicial deve mostrar uma lista com todos os jogos cadastrados
 
 ### RF 02.04 - Edição de jogos
 
 __Descrição__
 
+Como jogador quero poder editar informações em jogos já cadastrados na base.
+
 __Impacto__
+
+Isso irá permitir correções a informações dos jogos cadastrados e também atualizações de informações como gênero
 
 __Critérios de aceite__
 
-- __CA 1__
+- 
 
 
 # Especificação de arquitetura
