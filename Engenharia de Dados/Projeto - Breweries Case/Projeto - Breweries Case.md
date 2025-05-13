@@ -1,9 +1,8 @@
 ---
 categoria: projeto
-ano: 
+ano: 2025
 última atualização: ""
 ---
-
 # Projeto - Breweries Case
 
 --- start-multi-column: ID_e76b

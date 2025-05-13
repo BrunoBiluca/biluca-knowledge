@@ -14,7 +14,7 @@ Serialização deve ser um tópico importante na hora de desenvolver os fluxos d
 - JSON e JSONL
 	- JSONL (JSON Lines) é uma forma especialização de armazenar JSON.
 - Avro
-	- É um formato criado para serialização de dadados para RPCs (Remote procedure call)
+	- É um formato criado para serialização de dados para RPCs (Remote procedure call)
 
 ### Serializações baseados em colunas
 

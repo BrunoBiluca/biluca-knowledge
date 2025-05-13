@@ -1,4 +1,4 @@
-# Regrassão
+# Regressão
 
 > [!info] Definição
 > A regressão é uma técnica de aprendizado supervisionado usada para prever valores contínuos ou numéricos com base em uma ou mais variáveis de entrada. É usada para modelar a relação entre uma variável dependente (o valor a ser previsto) e uma ou mais variáveis independentes (os atributos ou entradas usados para a predição).
