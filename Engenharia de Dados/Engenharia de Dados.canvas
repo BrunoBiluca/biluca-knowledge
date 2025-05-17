@@ -51,7 +51,7 @@
 		{"id":"4d352a27bdd5f72c","type":"text","text":"### Delta live tables\n- [[Delta live tables]]","x":-1480,"y":4813,"width":329,"height":127},
 		{"id":"22ccc26b61601e30","type":"text","text":"### Delta Lake\n- [[Delta lake]]","x":289,"y":1797,"width":320,"height":129,"color":"3"},
 		{"id":"f8112e5ea2b3573c","type":"text","text":"### Python\n\n- [[Python]]","x":-1365,"y":-1000,"width":329,"height":124},
-		{"id":"f88e5271900efcaa","x":-140,"y":4320,"width":400,"height":400,"type":"file","file":"Engenharia de Dados/Qualidade dos dados.md"}
+		{"id":"f88e5271900efcaa","x":-140,"y":4320,"width":400,"height":400,"type":"file","file":"Engenharia de Dados/Qualidade de dados/Qualidade dos dados.md"}
 	],
 	"edges":[
 		{"id":"e6c711b92b26afac","fromNode":"e5e67eabdbef399a","fromSide":"right","toNode":"649bdbae1222ce60","toSide":"left"},

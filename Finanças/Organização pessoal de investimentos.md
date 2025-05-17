@@ -2,14 +2,13 @@
 
 A organização de investimentos é importante para conseguirmos acompanhar os rendimentos dos investimentos a fim de tomar melhores decisões sobre os investimentos.
 
-O acompanhamento dos investimentos pode ser feito **mensalmente** por meio dos **valores líquidos** de cada investimento feito.
+> [!tip] Acompanhamento dos investimentos
+> A forma mais interessante de acompanhamento dos investimentos foi **mensalmente** por meio dos **valores líquidos** de cada investimento feito.
+> Dessa forma não preciso gastar muito tempo com isso e tenho uma visão a médio prazo do que fazer com os investimentos.
 
-Elementos
+# Controle de investimentos
 
-- Controle mensal
-- Investimento
-
-# Controle mensal
+Visualizações que ajudam a entender o comportamento dos investimentos
 
 ### Relatório do mês
 
@@ -35,9 +34,20 @@ Relação com o mês passado
 - **Valor limpo:** total considerado desse mês em relação ao valor total do ano passado
 - **Valor anterior:** valor total do mês anterior, esse valor é utilizado em qualquer fórmula do mês corrente
 
+
+# Elementos da organização de investimentos
+### Investimento
+
+> [!info]
+> **💰 Investimento** é um tipo de aplicação financeira utilizada para conseguir renda, valorização ou outra forma de aumentar seu valor.
+
+- **Nome:** nome do investimento
+- **Tipo:** tipo do investimento, como renda fixa, ações, fiis
+
 ### Entrada
 
-A entrada é uma foto de um investimento em um momento específico.
+> [!info] 
+> A **🪙 Entrada** é uma foto de um investimento em um momento específico.
 
 - **Valor:** valor do investimento no mês
 - **Valor considerado:** segue a fórmula: valor - adicionado + removido
@@ -50,8 +60,3 @@ Relação com o mês passado para a mesma entrada
 
 - **Anterior:** valor do mês anterior do mesmo investimento
 - **Relação ao anterior:** relação do valor consideração em relação ao valor anterior da mesma entrada
-
-# Investimento
-
-- **Nome:** nome do investimento
-- **Tipo:** tipo do investimento, como renda fixa, ações, fiis
