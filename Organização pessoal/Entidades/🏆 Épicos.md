@@ -2,6 +2,8 @@
 
 > [!info] Definição
 > Épicos são agrupamentos de [[🏗️ Execuções]] que apresentam um avanço grande na realização do [[Organização pessoal/Entidades/🌟 Valores|Valor]] relacionado.
+> 
+> São a principal entidade para ter uma **visão macro** de evolução de um Valor.
 
 Os Épicos são parte fundamental do processo de organização por causa das suas características:
 
