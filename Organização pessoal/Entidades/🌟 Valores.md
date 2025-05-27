@@ -11,8 +11,7 @@ Ao longo do tempo é possível que novos Valores sejam criados (quando temos uma
 
 - **Nome** - Nome do Valor, deve representar bem o que deve ser alcançado, almejado ou desejado.
 - **Prioridade** - Define a quantidade de tempo e esforço dispendido para realizar o valor. Quanto maior a prioridade mais tempo e esforço são dispendidos. Uma boa prática é definir poucos valores nas prioridades que devem ser elencadas, acho que o ponto de equilíbrio é definir 3 valores nas prioridades.
-- **Está arquivado** - Define o valor como arquivado ou não. Valores arquivados não são escalados para executar.
-- **Resumo** - Breve descrição do valor, ajuda a lembrar exatamente o que aquele valor representa.
+- **Não ativo** - Define o valor como arquivado ou não. Valores arquivados não são escalados para executar.
 
 ## Propriedades
 

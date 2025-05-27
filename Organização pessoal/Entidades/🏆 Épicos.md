@@ -13,6 +13,10 @@ Os Épicos são parte fundamental do processo de organização por causa das sua
 
 Os Épicos são principalmente definidos durante o ritual de [[🔬 Refinamento]], onde o objetivo, escopo, período de execução entre outras características são refinadas a fim de mitigar riscos e garantir fluidez sua execução. Durante o processo de refinamento também é importante ter um pensamento crítico em relação aos objetivos do Épico, seja para adicionar novas Execuções, remover Execuções que não agregam ou também concluir o próprio Épico.
 
+O **escopo é possivelmente aberto** porque para se alcançar o objetivo de um Épico é necessário que a conclusão das suas Execuções agregadas gerem o Valor desejado. Isso pode ocorrer com um escopo fechado caso o processo de refinamento inicial foi altamente exitoso ou durante as demais iterações e incrementos feitos durante o desenvolvimento do Épico.
+
+### Épico vs Execução
+
 Importante **diferenciar um Épico de uma Execução** e vice-versa, ter o claro entendimento entre as duas entidades é necessário para garantir que estamos criando a **melhor representação um avanço no Valor**.
 
 De forma que:
@@ -21,7 +25,23 @@ De forma que:
 
 > [!tip] Enquanto uma 🏗️ Execução tem o escopo fechado uma 🏆 Épico tem um escopo possivelmente aberto.
 
-O **escopo é possivelmente aberto** porque para se alcançar o objetivo de um Épico é necessário que a conclusão das suas Execuções agregadas gerem o Valor desejado. Isso pode ocorrer com um escopo fechado caso o processo de refinamento inicial foi altamente exitoso ou durante as demais iterações e incrementos feitos durante o desenvolvimento do Épico.
+#### Aprofundamento de React
+
+Pensemos em um exemplo de aprofundamento do conhecimento em React.
+
+- Épico 
+	- Aprofundamento em React
+- Execuções
+	- Testes em React
+	- Estilização em React
+	- Gerenciamento de estado em React
+	- Principais Hooks
+
+Caso removemos d conjunto de execuções relacionadas a conceitos, ferramentas, bibliotecas e frameworks do React o Épico `Aprofundamento em React` nós perdemos uma informação importante.
+
+Ao completar todas essas execuções temos um novo grau de conhecimento do React em si, ou seja, a execução conjunta de todas essas tarefas é mais do que a sua execução individuação somadas. Se removermos esse Épico não podemos falar o mesmo, já que a falta da conclusão de algumas execuções não garante o objetivo do Épico.
+
+Quando concluído o `Aprofundamento em React`, temos a garantia que o conhecimento está em outro nível de profundidade, dessa forma o Épico pode ser uma ótima estrutura para definir esse **avanço qualitativo no Valor**.
 
 ### Exemplos de Épicos ruins
 
@@ -47,25 +67,30 @@ Durante o desenvolvimento desse Épico alguns novos estudos sofram propostos par
 - **Nome** - Nome que representa o conjunto de tarefas
 - **Período** - (Opcional) Define um período de início e término, pode ser utilizado para ajudar na hora da priorização dos valores e até para datas limites
 - **Criado em** - Data da criação do Épico
-- **Arquivado** - Define se o épico foi finalizado ou não.
+- **Estado** - Estado atual do Épico
+	- Em refinamento
+	- Aberto
+	- Em progresso
+	- Pausado
+	- Concluído
+	- Caducou
+- **Data de início** -  define a data de início da execução do Épico, quando o estado passa de aberto para em progresso
 - **Completado em** - Data de finalização do Épico.
 
 ## Propriedades
 
 - **Progresso tempo** - Quando definido o Período, a proporção de tempo do início até o término
 	- Essa fórmula nos ajuda a ter uma maior noção de tempo.
+- **Data da última execução concluída** - nos informa sobre se aquele épico está realmente em progresso ou não, caso muito tempo passe desde que uma execução foi concluída talvez devemos repensar se esse Épico é realmente necessário.
+- **Duração** - tempo decorrido da Data de início e hoje
 - **Progresso** - Proporção das execuções concluídas pelo total. 
 	- Muito útil para verificar o andamento do épico. 
 	- Também se relaciona com o progresso de tempo que permite indicar se o Épico está atrasado ou não.
 - **Prioridade** - Prioridade do Valor relacionado
 - **Concluído** - Número de Execuções concluídas
 - **Total** - Total de Execuções associadas
-- **Está ativo** - Épicos ativos são aquelas que estão sendo trabalhados
-	- Um Épico está ativo quando:
-		- Não está congelado
-		- Não está arquivado
-		- Está com alguma Execução com estado "Em progresso" ou "Elencada"
-- **Está congelado** - Quando a prioridade do Valor é considerada congelada
+- **Em Execução** - Épicos ativos são aquelas que estão sendo trabalhados, ou seja, alguma Execução com estado "Em progresso" ou "Elencada"
+- **Está priorizado** - Quando a prioridade do Valor é considerada congelada
 
 ## Relações
 
