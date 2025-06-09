@@ -67,7 +67,7 @@ Um aspecto do desenvolvimento de software voltado a técnicas de engenharia é a
 
 Uma questão que Dave trás no texto é sobre o avanço do desenvolvimento. Ele não é baseado em linhas de códigos ou máquinas que estão executando o software. Isso seria uma ilusão de progresso.
 
-Assim, pensar no que estamos projetando e se realmente isso terá o impacto desejado é o **real progresso do projeto**. E para isso é necessário fazermos as perguntas certas, confrontando nossas verdades de forma cética em relação as ideias do projeto, podendo assim julgar de um lugar ideias que são boas e ideias que não.
+Assim, pensar no que estamos projetando e se realmente isso terá o impacto desejado é o **real progresso do projeto**. E para isso é necessário fazermos as perguntas certas, confrontando nossas verdades de forma cética em relação as ideias do projeto, podendo assim julgar de um lugar ideias que o são boas e ideias que não.
 
 Isso tudo está amplamente relacionada a ideia de aprendizado e gerenciamento de complexidade.
 
@@ -75,19 +75,19 @@ Nesse sentido é bem comum ver times com agendas muito apertadas tendo problemas
 
 #### A importância da medição
 
-Existem métricas que podem irrelevantes como é o caso de velocidade ou até ser prejudiciais como linhas de código ou cobertura de testes. Essas duas métricas não medem nenhum tipo de produtividade.
+Existem métricas que podem ser irrelevantes como é o caso de velocidade ou até ser prejudiciais como linhas de código ou cobertura de testes. Essas duas métricas não medem nenhum tipo de produtividade.
 
 Existem duas métricas que tem uma grande correlação de times de alta performance que são: **estabilidade (stability) e vazão (throghput).**
 
 Estabilidade diz respeita a duas coisas:
 
-- Taxa de falha de uma mudança: a taxa cuja uma mudança no sistema pode criar um defeito em um ponto particular do processo.
-- Tempo de recuperação de falha: Quanto tempo é necessário para recuperar de uma falha em um ponto particular do processo.
+- **Taxa de falha de uma mudança:** a taxa cuja uma mudança no sistema pode criar um defeito em um ponto particular do processo.
+- **Tempo de recuperação de falha:** Quanto tempo é necessário para recuperar de uma falha em um ponto particular do processo.
 
 Vazão:
 
-- Tempo de condução (Lead time): tempo de uma ideia virar software em produção
-- Frequência: com qual frequência mudanças são publicadas em produção.
+- **Tempo de condução (Lead time):** tempo de uma ideia virar software em produção
+- **Frequência:** com qual frequência mudanças são publicadas em produção.
 
 Essas métricas são **oportunidades do time aprender**. Quanto maior a vazão mais chance a equipe tem de aprender sobre seu domínio, já que mais mudanças estão sendo utilizadas pelos seus usuários.
 
@@ -95,3 +95,44 @@ Essas métricas são **oportunidades do time aprender**. Quanto maior a vazão m
 
 
 ## Parte 2: Otimizando para o aprendizado 
+
+Na segunda parte do livro Dave desenvolve melhor os elementos que ele entender como principais na capacidade de aprendizado durante o processo de desenvolvimento de software.
+
+### Trabalhando iterativamente
+
+Iteração é definida coo "um procedimento cuja repetição de uma sequência de operações produz resultados sucessivamente próximos ao resultado desejado".
+
+Uma das principais vantagens de trabalhar iterativamente é **estreitar o foco das mudanças** o que leva a pensar em menores pacotes de trabalhos que devem ser melhor modulados e com uma separação de responsabilidades maior.
+
+Uma ideia comum ao ágil é: "Progresso é difícil de medir, mas podemos medir funcionalidades já finalizadas, então que trabalhemos em pequenas funções para que possamos ver quando elas estiverem finalizadas". Esse pensamento nos permite entender melhor o que estamos tentando construir com o software já construído, em vez de apenas ficarmos idealizando o que queremos construir.
+
+Nem sempre o melhor valor entregue está de acordo com o levantamento inicial e isso deve ser **sempre questionado antes** do cliente descobrir que algo é prioritário que não foi mapeado.
+
+Aumentar o ritmo de mudanças nos permite aprender mais, como:
+
+- Esse design está funcionando?
+- Nossos usuários estão gostando da funcionalidade?
+- O sistema é rápido o suficiente?
+- Nós eliminamos todos os bugs?
+- Este é um bom código para se trabalhar?
+
+Todas essas perguntas só podem ser respondidas depois que o produto foi entregue, qualquer coisa antes é apenas especulação.
+
+![[Ciclo de iteração em Continuous Delivery.png]]
+
+> [!tip] Adaptação como resultado da otimização para o aprendizado
+> Requer um pulo intelectual difícil reconhecer que o paradigma que você está operando é fundamentalmente o errado. Isso ainda é mais verdade quando o mundo todo diz que o paradigma que você opera está correto.
+> 
+> O mundo não funciona da forma que idealizamos do processo e sim de como o processo se materializa. Nós não somos bons em montar planos precisos, entender as necessidades dos usuários, ou executar o plano sem desvios.
+> 
+> Por isso, trabalhar em pequenos passos com um custo de cada passo pequenos, nos permite entender quais ideias são boas e quais são ruins, de forma que não é um gasto de energia grande demais mudar qualquer coisa na nossa forma organizativa.
+
+Uma abordagem iterativa para planejamento e execução nos permite ter sempre o quadro mais atualizado da situação que estamos, em vez de algumas versões preditivas, teóricas e sempre imprecisas da situação.
+
+Uma forma de trabalhar iterativamente é utilizadar das práticas de Continuous Integration (CI) e Test-driven development (TDD).
+
+> [!warning] Dúvida?
+> Quando definir que uma mudança já pode ser commitada?
+> Mesmo que a funcionalidade que ela faça parte não está completa, ainda assim tem que ser commitada, como isso funciona? Só vamos deixando trabalho incabado pelo caminho?
+
+
