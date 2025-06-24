@@ -26,7 +26,7 @@ O livro é dividido em 4 partes
 - Parte 3: Otimizando para gerenciar complexidade
 - Parte 4: Ferramentas para auxiliar na engenharia em software
 
-# Premissa
+# Resumo
 
 ## Parte 1: O que é Engenharia de Software
 
@@ -98,7 +98,7 @@ Essas métricas são **oportunidades do time aprender**. Quanto maior a vazão m
 
 Na segunda parte do livro Dave desenvolve melhor os elementos que ele entender como principais na capacidade de aprendizado durante o processo de desenvolvimento de software.
 
-### Trabalhando iterativamente
+### Capítulo 4: Trabalhando iterativamente
 
 Iteração é definida coo "um procedimento cuja repetição de uma sequência de operações produz resultados sucessivamente próximos ao resultado desejado".
 
@@ -135,4 +135,66 @@ Uma forma de trabalhar iterativamente é utilizadar das práticas de Continuous 
 > Quando definir que uma mudança já pode ser commitada?
 > Mesmo que a funcionalidade que ela faça parte não está completa, ainda assim tem que ser commitada, como isso funciona? Só vamos deixando trabalho incabado pelo caminho?
 
+### Capítulo 5: Feedback
 
+
+### Capítulo 6: Incrementalismo
+
+
+### Capítulo 7: Empiricismo
+
+
+### Capítulo 8: Sendo experimental
+
+Podemos utilizar os nossos suposições onde são apropriadas, mas é importante projetar experimentos para testar essas suposições e melhorar.
+
+> [!quote] Richard Feynman
+> Ciência é acreditar na ignorância dos experts.
+> 
+> Não tenha respeito por qualquer tipo de autoridade; esqueça quem está falando e em vez disso olhe para a premissa iniciada, qual a conclusão proposta, e se pergunte, 'Isto é razoável?'
+
+Ser experimenta pode ser definido por principalmente quatro características:
+
+- **Feedback** - entender como os resultados serão providos de forma a claramente demonstrar o ponto que estamos pensando.
+- **Hipótese** - precisamos ter uma ideia em mente a priori do que estamos tentando avaliar.
+- **Medição** - temos que ter uma clara ideia de como iremos avaliar as suposições que estamos testando
+- **Controle de variáveis** - precisamos eliminar o máximo de variáveis para entender os sinais que nosso experimento estão sendo coletados.
+
+> [!quote] Richard Feynman
+> Se a sua suposição discorda do experimento, então ela está errada!
+
+Aceitar que suas suposições podem estar erradas é o centro do pensamento experimental e uma forma de garantir que estamos fazendo engenharia e não apenas adivinhação. Precisamos aceitar os dados que coletamos e ser críticos a seu respeito.
+
+> [!warning] Cobertura de código
+> Cobertura de código é algo amplamente utilizado, porém essa métrica esconde uma armadilha. 
+> 
+> É possível implementar testes que não tem verificações se o código funciona e isso leva ao aumento da cobertura de código.
+> 
+> Ou seja, essa é uma métrica que pode ser mais prejudicial do que benéfica, já que apresenta uma falsa confiança na base de código.
+
+Ser experimental também faz parte da disciplina do aprendizado, mudar as métricas, variáveis e hipóteses é algo que deve ser incentivado durante o processo. Esse processo nos ajuda a entender se "estamos construindo as coisas certas" (aqui pensando em valor) já que temos controle que "estamos construindo as coisas de forma correta".
+
+> [!tip] Continuous Delivery
+> Trabalhar com software que esteja sempre em um estado pronto para publicação, nos permite maximizar o feedback e nos encoraja a trabalhar em pequenos passos de forma experimental.
+
+Trabalhar de forma experimental, por meio de um uso efetivo de técnicas de automação de testes, de entrega contínua, infraestrutura como código, faz os nossos experimentos mais confiáveis e reprodutíveis. Mais do que isso, faz o nosso software ser mais determinístico, o que aumenta a sua qualidade.
+
+#### Testes como ferramenta para experimentação
+
+Utilizar a abordagem de TDD (Test Driven Development) nos permite utilizar os testes como uma ferramenta para experimentação.
+
+Os testes são como uma hipótese que será avaliada, assim a implementação proposta pode ser considerada um experimento para provar se o design proposta é positivo ou negativo.
+
+Isso vale para todos os níveis de abstração do software como testes de aceitação centrados no usuário (BDD - Behavior-driven development).
+
+Software desenvolvidos utilizando essas técnicas tem uma redução significativa de bugs em relação a software desenvolvidos de maneira convencional. (Fontes: https://bit.ly/2LFixzS, https://bit.ly/2LDh3q3, https://bit.ly/3MurTgF)
+
+#### Escopo de um experimento
+
+Experimentos pode ser de várias formas, um tipo comum de experimento pode ser definido nos seguintes passos:
+
+1. Pense sobre e caracterize o problema - "Eu decidi o comportamento que quero que meu sistema tenha".
+	- Aqui podemos criar um caso de teste para esse comportamento
+2. Forme uma hipótese - "Eu espero que meu teste falhe"
+3. Faça uma previsão - "Eu espero que quando o meu teste falhe ele retorne essa mensagem"
+4. Execute o experimento - "Eu executei o teste"
