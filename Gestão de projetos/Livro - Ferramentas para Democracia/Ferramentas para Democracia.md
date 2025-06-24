@@ -20,6 +20,8 @@ Se queremos mudar estruturalmente a sociedade precisamos construir ferramentas q
 
 Precisamos de algo que seja mais eficiente, no sentido de mais eficiente para os objetivos e valores do grupo.
 
+> Tem uma frase do Lenin no livro do centralismo democrático que pode combinar aqui, da unidade de ação e unidade ideológica
+
 > Tem uma frase do Humberto que concordo muito, que é sobre ter razão ou fazer algo que vai realmente ter impacto. Eu não quero ter razão, quero fazer alguma coisa que realmente faça sentido.
 > "Se você quer ter razão, eu não tô nem ai, eu quero é mudar a sociedade."
 
@@ -38,11 +40,13 @@ O consenso é um processo grupal de tomada de decisões colaborativo, honesto, n
 
 Dado que nossa sociedade oferece muito pouca formação nessa área, precisamos desaprender muitas formas de conduta a fim de praticar um bom processo de consenso.
 
-As opiniões e as ideias de todas as participantes são relevadas e sintetizadas para chegar a um decisão final que resulta aceitável a todos.
+As opiniões e as ideias de todas as participantes são relevadas e sintetizadas para chegar a uma decisão final aceitável a todas.
 
 O consenso dá poder as pessoas de tomar decisões e também as demanda que tomem responsabilidades de essas decisões. Em lugar de abdicar o poder a um indivíduo ou representante.
 
 O consenso não é só um processo para ajudar a tomar decisões, mas também é uma meta valiosa a ser alcançada pelo grupo.
+
+É pensar que as pessoas em um grupo que promove o consenso podem oferecer seu tempo, riqueza ou fazer um sacrifício pelo bem do grupo, enquanto podem ser persuadidas, inspiradas, amadas ou aconselhadas nos seus prejuízos, preconceitos e outras questões. 
 
 Um grupo que promove o consenso tem várias vantagens:
 
@@ -73,24 +77,36 @@ Nenhuma ideia se perde, a opinião de cada participante é valorizada como parte
 
 Ao tomar uma decisão, os sentimentos são tão importante como os fatos.
 
-O conhecimento de cada pessoa ou as credenciais pode influenciar o grupo inteiro, ao mesmo tempo que a possibilidade de participação deve continuar.
+O conhecimento de cada pessoa ou as credenciais podem influenciar o grupo inteiro, ao mesmo tempo que a possibilidade de participação deve continuar.
 
 O consenso é um processo para pessoas que querem trabalhar em conjunto, honestamente e com boa fé.
 
-
 > Está claro que consenso é um processo que toma tempo
+
 ## Consenso é um dos melhores processos
 
 Se não é o consenso então o que?
 
-O voto é só um procedimento, 
+O voto é só um procedimento. O voto só pode produzir decisões satisfatórias quando cada um é extremamente tolerante ou existe unanimidade de opinião.
+
+Se o problema não tem uma solução clara e fácil, algumas pessoas sentem uma devoção particular a uma solução específica, ou se gera uma ânsia por poder no grupo; o processo vai travar, vai polarizar e/ou descambar para a coerção.
+
+Um bom processo de consenso evita esses problemas, permitindo que todas as pessoas do grupo possam explorar em profundidades todo o leque de opções e preocupações em uma atmosfera cooperativa e não contraditória.
+
+O grupo pode desafiar presunções tolas, obsoletas ou imorais e podem explorar soluções incomuns, que são normalmente passadas por cima quando a discussão se polariza ou é restrita por posições muito formais.
+
+De fato, um bom processo de voto pode ser indistinguível de um bom processo de consenso, porém os processos não consensuais normalmente se baseiam em propostas formais, debates e outros procedimentos que interferem com a cooperação. Sabendo que terá um voto no final é comum se polarizar a discussão. Além disso, se em um grupo se estabelece uma mentalidade de linchamento ou de pensamento grupal, não existe cominho para uma pessoa ou minoria pare ou frustre as decisões imorais.
+
 ## Consenso é
 
 - É um processo cooperativo, as pessoas precisam querer trabalhar em conjunto, honestamente e com boa fé.
-- A decisão final de um consenso nem sempre é a primeira, mas deve ser a que todas consentiram que é o melhor para o grupo 
+- Um bom processo de consenso se apoia fortemente na solução de problemas, questionamentos, empatia, auto-sacrifício e ação direta e não-violenta
+- A decisão final de um consenso nem sempre é a primeira, mas deve ser a que todas consentiram que é o melhor para o grupo
+- Não ignora ou encobre o conflito e sim o incentiva
+- Os problemas e soluções são minuciosamente descartas (ou seja, com bastante critério) quando uma boa solução é encontrada
+- Como em qualquer ação não-violenta, as ideias são severamente desafiadas, mas as pessoas envolvidas são escutadas, acolhidas e apoiadas
+- Quando não existe soluções fáceis as pessoas devem estar dispostas a se sacrificar pelo bem do grupo, ou o grupo deve se dividir ou dissolver
 
-### Um processo para decidir o que é melhor para o grupo
-### Cooperativo
 ## Consenso não é:
 
 - Unanimidade
@@ -108,9 +124,12 @@ Muita gente pensa que o consenso é um método de votação estendida, onde toda
 
 ### Só um processo, é uma meta valiosa
 
+O consenso não é só um processo para ajudar a tomar decisões, mas também é uma meta valiosa a ser alcançada pelo grupo.
 
-### Não é conflito, nem livro ou indolor
+Um grupo que promove o consenso tem várias vantagens:
 
+- Crescimento da comunidade
+- Aumenta da confiança
 
 ## Dificuldades para alcançar o consenso
 
@@ -133,6 +152,8 @@ Nesses casos, existe várias formas de expressar objeções:
 		- As questões filosóficas e morais importantes que representam cada grupo de afinidade devem ser trabalhadas internamente o mais rápido possível durante sua formação
 
 > As discussões sobre os valores e objetivos são tão importantes como as discussões sobre as ações a tomar e muitas vezes são deixadas de lado por grupos que sentem as pressões da falta de tempo.
+
+Quando uma pessoa ou grupo (seja maioria ou minoria) rejeita ou é incapaz de trabalhar cooperativamente, todas devem ser corajosas e ao mesmo tempo fraternalmente resistir e desafia-las, ou se for necessário remove-las do grupo (idealmente, oferecendo suporte e guia para seu próximo projeto).
 
 # Como chegar a um consenso?
 
@@ -279,6 +300,29 @@ Objeções fortes devem limitar-se a questões de princípios e nesse caso devem
 
 
 # Grupos de afinidades
+
+> Se organize em nós! 
+> Monte um grupo com suas amigas!
+> Sejam barulhentas!
+> Brilhem apaixonadas!
+> Divirtam-se!
+
 ## O que é?
+
+Um grupo de afinidade é um grupo de pessoas com afinidades entre elas, que conhecem debilidades e forças entre as outras, que se apoiam e realizam trabalho político juntas.
+
+É importante dentro de um grupo de afinidade conhecer a posição de cada uma em relação ao tema. Todas devem ter uma ideia compartilhada de o que se quer de forma individual e coletiva em relação as ações e campanha.
 ## Com quem formar?
+
+A resposta mais simples é, com as pessoas que você conhece e que se sentem da mesma forma sobre um(uns) tema(s) em questão. Também tenham algo em comum fora a atividade que estão fazendo juntas, confie nelas e que elas confiem em você.
 ## Organização
+
+Existe um leque muito diverso de papéis que as membras podem assumir. 
+
+Da mesma forma que as membras assumem papéis, os grupos de afinidade podem assumir papéis durante sua interação com outros grupos. Por exemplo, durante uma manifestação um grupo pode tomar conta das crianças enquanto um outro está fazendo a movimentação na rua, outro está observando em relação a infiltrações e outro providenciando a comida, água.
+
+Dessa forma, muitos grupos de afinidade forma uma rede interdependente que conquistam muito mais do que um grupo grande de ativistas individuais.
+
+Os papéis dos grupos podem ser trocados de forma a gerar uma compreensão da importância de todos os papéis na efetividade do grupo.
+
+O objetivo no fim do dia é cuidar de si mesma e das suas pares, se divertir e trabalhar para maximizar construtivamente a mudança da sociedade.

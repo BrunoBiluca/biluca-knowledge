@@ -458,7 +458,6 @@
 }
 
 .sc-supporters {
-  max-height: 37ch;
   border: 1px solid var(--h1-color);
   border-radius: 10px;
   padding: 10px;
@@ -524,9 +523,6 @@
 }
 
 /* SINCE COMPONENT PATTERN SETTINGS */
-.setting-component[data-setting="is_obsidian_vault"] {
-  display: none;
-}
 
 .setting-component[data-setting="smart_change.active"] {
   display: none;
@@ -585,28 +581,29 @@
   max-width: 95%;
   margin: 10px;
   flex-shrink: 0;
+
+  .sc-context-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.88rem 1rem;
+    background-color: var(--background-primary);
+    color: var(--text-muted);
+    font-weight: var(--font-medium);
+    cursor: pointer;
+    user-select: none;
+  
+    &:hover {
+      background-color: var(--background-primary-hover);
+    }
+  
+    &:focus {
+      outline: 2px solid var(--text-muted);
+      outline-offset: 2px;
+    }
+  }
 }
 
-.sc-context-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.88rem 1rem;
-  background-color: var(--background-primary);
-  color: var(--text-muted);
-  font-weight: var(--font-medium);
-  cursor: pointer;
-  user-select: none;
-
-  &:hover {
-    background-color: var(--background-primary-hover);
-  }
-
-  &:focus {
-    outline: 2px solid var(--text-muted);
-    outline-offset: 2px;
-  }
-}
 
 .sc-context-item {
   padding: 0.5rem;
@@ -990,4 +987,14 @@ div.workspace-leaf-content[data-type^="smart-"] {
   & .sc-inline-confirm-cancel {
     font-weight: normal;
   }
+}
+
+.sc-story-modal {
+  width: 80% !important;
+  height: 80% !important;
+}
+.sc-story-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
