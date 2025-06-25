@@ -137,6 +137,41 @@ Uma forma de trabalhar iterativamente é utilizadar das práticas de Continuous 
 
 ### Capítulo 5: Feedback
 
+Feedback not permite estabelecer uma fonte de evidência para nossas decisões
+
+> [!info] Feedback pode ser definido como:
+> A transmissão de informações corretivas ou avaliativas sobre uma ação, evento ou processo à fonte, controlador original
+
+Uma abordagem TDD nos permite criar vários níveis possibilidades de obtenção de feedbacks sobre o comportamento do software.
+
+Feedback pode ser aplicado em todos os aspectos de software, obter feedback sobre arquitetura, design de código, design do produto e outros elementos, permite tomar decisões que continuamente melhorem o projeto.
+
+Exemplo de obtenção de feedback por elementos do software:
+
+- Arquitetura
+	- A publicação do software pode definir a forma que o software deve ser disponibilizado, como microsserviço ou monolito por exemplo
+- Design de código
+	- Obter informações sobre o estado do código permite identificar problemas em relação a modularidade, separação de responsabilidades, coesão, abstrações, acoplamentos
+- Design de produto
+	- Adicionar telemetria na utilização do produto de software nos permite entender quais funcionalidades usuários utilizam mais ou menos, possibilitando direcionar esforços de acordo com os objetivos do projeto.
+
+> [!warning] Decisão guiada a dados pode ser uma péssima ideia também
+> Dados podem apenas reforçar uma suposição, é importante entender se as métricas que estão sendo utilizadas são válidas para o contexto utilizado.
+> Utilizar as métricas sem pensamento crítico podem apenas piorar a situação.
+
+Dave recomenda a utilização das métricas DORA, principalmente Estabilidade e Vazão (Throughput) para avaliação do desenvolvimento de software.
+
+#### Feedback no contexto de controle de versão
+
+Existem duas maneiras mais difundidas de controle de versão no desenvolvimento de software:
+
+- Continuous integration
+	- Avaliação de cada mudança do sistema junto com todas as outras o mais frequente possível
+- Feature branching
+	- Branches permite que alterações sejam isoladas até estarem prontas para serem mescladas com a branch principal
+
+Dave aqui trás um exemplo puxando sardinha para o lado do Continuous integration, que eu também acho mais eficiente. Mas o principal ponto é que uma abordagem de CI permite ter muito mais feedback sobre o comportamento do sistema que o modelo FB.
+
 
 ### Capítulo 6: Incrementalismo
 
