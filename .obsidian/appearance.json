@@ -1,6 +1,6 @@
 {
   "accentColor": "",
-  "baseFontSize": 18,
+  "baseFontSize": 16,
   "enabledCssSnippets": [
     "supercharged-links",
     "default",
@@ -9,5 +9,6 @@
   "cssTheme": "Dracula Official",
   "theme": "obsidian",
   "nativeMenus": false,
-  "showRibbon": false
+  "showRibbon": false,
+  "baseFontSizeAction": false
 }
