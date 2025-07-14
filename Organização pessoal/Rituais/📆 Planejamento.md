@@ -1,4 +1,4 @@
-# 📆 Planejamento
+# 📆 Planejamento semanal
 
 O planejamento é uma atividade feita de forma periódica e serve principalmente para definir as execuções que serão realizadas em um ciclo de trabalho.
 

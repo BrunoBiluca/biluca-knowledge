@@ -17,6 +17,7 @@ Elas são:
 - [[Organização pessoal/Entidades/🌟 Valores|🌟 Valores]]
 - [[Organização pessoal/Entidades/🏆 Épicos|🏆Épicos]]
 - [[🏗️ Execuções]]
+- [[🗓️ Planos]]
 
 ![[Diagrama - Entidades da organização|Relação entre as entidades da organização pessoal]]
 

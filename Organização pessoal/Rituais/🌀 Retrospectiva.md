@@ -9,6 +9,8 @@ Durante esse momento podemos verificar algumas questões:
 - Os objetivos das [[🏗️ Execuções]] e dos [[Organização pessoal/Entidades/🏆 Épicos|🏆 Épicos]] estavam devidamente alinhados com o que queríamos?
 - Os critérios de aceite estavam alinhados com os objetivos das [[🏗️ Execuções]]?
 
+Também é importante reavaliar os [[🗓️ Planos]] de acordo com o andamento do trabalho.
+
 Ao final do ritual essas questões são consolidadas em um **relatório**, que irá servir como fonte de inspiração para a melhoria do processo de organização.
 
 O ritual de retrospectiva também pode ser utilizado repensar para acrescentar informações na [[Tabela de referências de estimativas]].
