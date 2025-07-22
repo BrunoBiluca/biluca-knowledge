@@ -29,7 +29,7 @@ Em [[Delta lake]] temos principalmente 3 formas de criar visualizações:
 
 ### Visualizações materializadas (Materialized View)
 
-Visualizações materialização são tabelas pré-processadas que mantem o estado de uma consulta, dessa forma consultas que são executadas várias vezes podem ser materializadas em uma visualização melhorando a performance.
+Visualizações materialização são tabelas **pré-processadas** que mantem o estado de uma consulta, dessa forma consultas que são executadas várias vezes podem ser materializadas em uma visualização melhorando a performance.
 
 > [!tip]- Databricks Delta Cache
 > Databricks mantém o estado de uma consulta para o cluster ativo melhorando a performance caso essa consulta seja feita várias vezes.
@@ -53,10 +53,9 @@ Para criar uma visualização materializada o usuário precisa ter os seguintes 
 - `USE CATALOG` e `USE SCHEMA` no catálogo e no esquema destino da visualização criada
 - `CREATE TABLE` e `CREATE MATERIALIZED VIEW` no esquema destino da visualização criada.
 
-
 ### Visualizações dinâmicas
 
-Tipos mais tradicionais de controles de governança como, IAM da AWS e Role-Based Access Controls da Azure, são um bom ponto de início para o gerenciamento desse controle, porém não possuem formas muito refinadas de controle, como controlar uma coluna específica ou uma visualização específica.
+Tipos mais tradicionais de controles de governança como, IAM da AWS e Role-Based Access Controls da Azure, são um bom ponto de início para o gerenciamento desse controle, porém não possuem formas muito refinadas de controle, como **controlar uma coluna específica ou uma visualização específica**.
 
 Para garantir acesso limitado a visualizações em [[Data Lakehouse]] o [[Delta lake]] nos permite criar visualizações dinâmicas que definem comportamento dependendo do papel do usuário. Assim é possível garantir que determinados tipos de papéis dentro da organização não tenham acesso a mais informações do que eles precisam (princípio do mínimo privilégio), por exemplo PII(Person Identification Information).
 

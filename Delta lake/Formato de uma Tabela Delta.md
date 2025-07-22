@@ -15,4 +15,4 @@ delta-table
   ┗ ... outras arquivos de dados
 ```
 
-O transaction log (`_delta_log`) é o sistema de versionamento de uma Delta Table, ele utilizada arquivos em uma combinação do formato `.json` e `.parquet` para persistir as alterações a cada versão. A cada 10 alterações os arquivos `.json` são aglutinados no formato `.checkpoint.parquet` melhorando o desempenho de consultas.
+O transaction log (`_delta_log`) é o sistema de versionamento de uma Delta Table, ele utilizada arquivos em uma combinação do formato `.json` e `.parquet` para persistir as alterações a cada versão ([[Versionamento (Data Travel)]]). A cada 10 alterações os arquivos `.json` são aglutinados no formato `.checkpoint.parquet` melhorando o desempenho de consultas.

@@ -1,29 +1,17 @@
-# Versionamento
-
---- start-multi-column: ExampleRegion1  
-```column-settings  
-number of columns: 2
-Column Size: [59%, 40%]
-Border: disabled
-Shadow: off
-```
+# Versionamento (Data Travel)
 
 [[Delta lake]] utiliza o log das transações para armazenar o histórico de alterações dos dados e permitir acessar esse histórico ao longo do tempo.
 
 É uma funcionalidade principalmente relevante em relação à:
 
-- Auditoria
-- Reprodução de experimentos e relatórios: engenheiros de ML e analistas de dados podem se beneficiar de ter o histórico dos dados para análises históricas, levantamento de hipóteses e outros tipos de experimentos que essa funcionalidade possibilita.
-- Reversão de dados
-
---- end-column ---
+- **Auditoria**
+- **Reprodução de experimentos e relatórios**: engenheiros de ML e analistas de dados podem se beneficiar de ter o histórico dos dados para análises históricas, levantamento de hipóteses e outros tipos de experimentos que essa funcionalidade possibilita.
+- **Reversão de dados**
 
 > [!info] Principais referências
 > - [Documentação](https://docs.delta.io/latest/delta-batch.html#-deltatimetravel)
 >- [Spark by Examples](https://sparkbyexamples.com/spark/time-travel-in-delta-tables-on-databricks/)
 >- 
-
---- end-multi-column
 
 ### Exemplo do versionamento de uma tabela
 

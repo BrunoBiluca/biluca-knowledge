@@ -3,7 +3,7 @@ tags:
   - engenharia_de_dados
 categoria: repositório de dados
 ---
-a# Delta lake
+# Delta lake
 
 --- start-multi-column: ExampleRegion1  
 ```column-settings  
