@@ -33,4 +33,3 @@ Uma das **principais limitações** do Context é que ele consegue **armazenar a
 > Série de dicas para evitar as principais armadilhas de utilizar Context para gerenciamento de estado.
 > Principais dicas:
 > - Cuidado com a utilização do Context e valores default, isso causa altas confusões
-> - 

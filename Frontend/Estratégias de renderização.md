@@ -10,7 +10,7 @@ Existem pelo menos 4 estratégias de renderização em aplicações web:
 - SSR - Server Side Render
 	- Renderização é feita principalmente no servidor, pode ser mais rápido e tem algumas vantagens em relação a SEO
 	- Tecnologias
-		- [[NextJS]]
+		- [[Next.js]]
 		- [[Remix]]
 		- [[React Router]] pode ser configurado para utilizar SSR
 

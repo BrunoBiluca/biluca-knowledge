@@ -46,7 +46,7 @@ As principais formas de configuração de rotas são:
 
 ### Route modules
 
-São a base para o React Router e definem principalmente:>
+São a base para o React Router e definem principalmente:
 
 - carregamento de dados
 - ações

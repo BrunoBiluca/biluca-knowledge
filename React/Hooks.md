@@ -5,13 +5,14 @@
 - **Hooks de estado** adicionam estado (memória) a um componente
 - **Hooks de contexto** adicionam contexto provenientes de parentes distantes sem a necessidade de passar propriedades
 - **Hooks de referência** permitem ao componente segurar informações que não são utilizadas para renderização, como um nó do DOM ou um ID de timeout.
-- **Hooks de efeito** permitem a componentes se conectarem e sincronizarem com sistemas externos. Isso incluir por exemplo, lidar com a rede, pesquisar no DOM, utilizar Widgets escritos em uma biblioteca diferente.
-- **Hooks de performance** são utilizados para otimizar o processo de re-renderização, por exermplo, é possível indicar ao React para reutilizar algum cálculo armazenado em cache fazendo pulando a renderização de componentes que utilizem desse cálculo.
+- **Hooks de efeito** permitem a componentes se conectarem e sincronizarem com sistemas externos. Isso inclui por exemplo, lidar com a rede, pesquisar no DOM, utilizar Widgets escritos em uma biblioteca diferente.
+- **Hooks de performance** são utilizados para otimizar o processo de re-renderização, por exemplo, é possível indicar ao [[React]] para reutilizar algum cálculo armazenado em cache fazendo pulando a renderização de componentes que utilizem desse cálculo.
 - **Outros hooks** apresentam funcionalidades diversas.
 
 A combinação desses Hooks permite ao React resolver problemas muito comuns no desenvolvimento para Web. Cada Hook deve ser empregado de acordo com sua característica, assim evitando problemas de efeitos colaterais ou problemas de performance.
 
 Também é possível [criar seus próprios Hooks](https://react.dev/learn/reusing-logic-with-custom-hooks#extracting-your-own-custom-hook-from-a-component).
+
 ### [useState](https://react.dev/reference/react/useState)
 
 É utilizado para criar uma **variável de estado**.
@@ -26,9 +27,9 @@ function MyComponent() {
   // ...
 ```
 
-A função `set` retornada apenas atualiza o estado da variável na próxima renderização. Quando essa função é chamada ela faz uma requisição para de renderização.
+A função `set` retornada serve para atualizar o estado da variável na próxima renderização. Quando essa função é chamada ela faz uma requisição de renderização.
 
-React condensa várias atualizações de estados para evitar várias re-renderizações de componentes. Assim, se vários `set` forem executados na mesma renderização apenas o último valor será considerado.
+[[React]] condensa várias atualizações de estados para evitar várias re-renderizações de componentes. Assim, se vários `set` forem executados na mesma renderização apenas o último valor será considerado.
 
 > [!info]- Objetos e arrays em estado são considerados imutáveis.
 > ```js
@@ -49,9 +50,9 @@ Resetar o estado de um componente é possível alterando o atributo `key`. Sempr
 useEffect(setup, dependencies?)
 ```
 
-Efeitos permitem ao usuário declarar efeitos colaterais causados pela renderização do componente, em vez de um evento específico. **O efeito é sempre chamado apenas a renderização.**
+Efeitos permitem ao usuário declarar efeitos colaterais causados pela renderização do componente, em vez de um evento específico.
 
-As dependências servem para controlar a renderização do componente, dessa forma um componente é re-renderizado quando uma de suas dependências é alterada. Por exemplo, conectar de uma sala de bate-papo sé deve ser feita quando o componente aparece, ou quando a sala é alterada.
+As dependências servem para controlar a renderização do componente, dessa forma um componente é re-renderizado quando uma de suas dependências é alterada. Por exemplo, conectar de uma sala de bate-papo só deve ser feito quando o componente aparece, ou quando a sala é alterada.
 
 ```js
 useEffect(() => {
@@ -69,7 +70,7 @@ useEffect(() => {
 
 > [!warning] Utilizar objetos ou funções como dependências pode ocasionar na execução da função de useEffect mais vezes que o necessário, esses casos remover todos os objetos e funções desnecessárias.
 
-Algumas operações feitas no useEffect devem ser destruídas, como é o caso de uma conexão com uma sala de bate papo:
+Algumas operações feitas no `useEffect` devem ser destruídas, como é o caso de uma conexão com uma sala de bate papo:
 
 ```js
 // Criação da conexão com uma sala de bate papo
@@ -102,6 +103,7 @@ Um exemplo disso é exibir o perfil de uma pessoa qualquer onde o usuário pode 
 useEffect(() => {
 	let ignore = false; 
 	setBio(null);
+	// ** Essa requisição por ser assíncrona pode levar a um problema de condição de corrida **
 	fetchBio(person).then(result => {
 	  if (!ignore) { // essa condição resolve o problema de 'condição de corrida'
 		setBio(result);
@@ -121,7 +123,7 @@ useEffect(() => {
 const cachedFn = useCallback(fn, dependencies)
 ```
 
-Para o Javascript, uma função sempre cria um função diferente, isso pode gerar um problema de renderização fazendo que o componente seja renderizado sem necessidade
+Para o Javascript, uma função sempre cria um função diferente, isso pode gerar um problema de renderização fazendo que o componente seja renderizado sem necessidade.
 
 Assim o useCallback persiste essa função que será atualiza apenas se suas dependências mudarem.
 

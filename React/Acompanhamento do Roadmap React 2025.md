@@ -20,7 +20,7 @@ tags: [excalidraw]
 
 [[Remix]] ^jYHgU6te
 
-[[NextJS]] ^nK5sBpL8
+[[Next.js]] ^nK5sBpL8
 
 Elementos nativos ^uLAIMlas
 

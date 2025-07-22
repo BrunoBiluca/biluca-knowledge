@@ -15,7 +15,7 @@ O Mantine é mais do que apenas uma biblioteca de estilização, ela define os c
 - **Componentes prontos**
 - **Estilização fácil** com suporte de temas personalizáveis
 - **Hooks úteis**, como `useMediaQuery` (para responsividade)
-- **Integração simples** com [[NextJS]], [[Remix]], [[Vite]]
+- **Integração simples** com [[Next.js]], [[Remix]], [[Vite]]
 - **Ecossistema de extensões** que permitem adicionar novas funcionalidades como editores de texto, gráficos, sistema de notificação e mais
 - Pacote exclusivo para **gerenciamento de formulários**
 

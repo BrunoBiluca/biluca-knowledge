@@ -38,6 +38,12 @@ Pode ser relacionado ao [[Jest-DOM]] para fazer testes utilizando a renderizaç�
 
 Para configurar o Jest é necessário criar um arquivo `jest.config.js` na raiz da pasta. Este arquivo irá integrar todas as configurações necessárias para executar, analisar e verificar os testes.
 
+#### VSCode
+
+Para integrar esses testes ao VSCode é necessário instalar a extensão [Jest](https://github.com/jest-community/vscode-jest). Esta é uma extensão completa para execução de testes em Javascript com [[Jest]] e permite exibir os testes no Testing (antigo TestExplorer), executar os testes e fazer Depuração sobre os testes.
+
+Qualquer configuração específica de um projeto é necessário adicionar configurações por meio do `jest.config.js` ou pelo próprio VScode `.vscode/settings.json`.
+
 #### Testes separados do `src`
 
 Em alguns projetos pode ser interessante separarmos os testes do código fonte. Para que os testes funcionem é necessário configurar o Jest para ele entender que existem duas pastas raízes no projeto.
@@ -89,6 +95,7 @@ Adicionar ao `.babelrc`
   "presets": [..., "@babel/preset-env"]
 }
 ```
+
 #### Importação de CSS e Arquivos
 
 Outra limitação do Jest é a análise de arquivos CSS e imagens, arquivos de texto ou qualquer arquivo que é importado no código. O Jest analisa esses arquivos como código javascript o que leva a problemas de análise. 
@@ -137,8 +144,8 @@ test("qualquer teste", () => {
 })
 ```
 
-> [!warning]- Nomenclatura da variável de mock
-> O Jest exige que a variável de mock tenha uma nomenclatura específica já que é uma variável utilizada fora do escopo do mock.
+> [!warning] Nomenclatura da variável de mock
+> O Jest exige que a variável de mock tenha uma **nomenclatura específica** já que é uma variável utilizada fora do escopo do mock.
 > 
 > Nomenclatura: `mockXXX`, onde XXX é qualquer nome dado.
 

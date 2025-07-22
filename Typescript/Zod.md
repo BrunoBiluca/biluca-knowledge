@@ -24,4 +24,4 @@ Funcionalidades
 - Mensagens de Erro descritivas
 - Evita problemas como SQL Injection ou XSS
 
-Integra facilmente com [[NextJS]], [[React]]
+Integra facilmente com [[Next.js]], [[React]]

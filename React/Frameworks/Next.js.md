@@ -1,25 +1,13 @@
 ---
 categoria: framework
 ---
-# NextJS
+# Next.js
 
---- start-multi-column: ExampleRegion1  
-```column-settings  
-number of columns: 2
-Column Size: [59%, 40%]
-Border: disabled
-Shadow: off
-```
-
-Next.js é um framework que trás um conjunto de ferramentas para desenvolvimento de aplicações para web. Utiliza os componentes do React junto com várias outras funcionalidades e otimizações.
-
---- end-column ---
+Next.js é um framework que trás um conjunto de ferramentas para desenvolvimento de aplicações para web. Utiliza os componentes do [[React]] junto com várias outras funcionalidades e otimizações.
 
 > [!info] Principais referências
 > - [Página do Next.js](https://nextjs.org/)
 >- [Documentação](https://nextjs.org/docs)
-
---- end-multi-column
 
 Principais funcionalidades
 
