@@ -1,24 +1,11 @@
 # Common Table Expressions (CTE)
 
---- start-multi-column: ExampleRegion1  
-```column-settings  
-number of columns: 2
-Column Size: [59%, 40%]
-Border: disabled
-Shadow: off
-```
-
 Um CTE é uma expressão que cria um resultado temporário em uma consulta [[Structured query language (SQL)]].
 
 Podemos utilizar esse formato para criar consultas mais legíveis, já que podemos separar em múltiplas etapas as transformações, facilitando assim o entendimento de todo o processo.
 
---- end-column ---
-
 > [!info] Principais referências
 > - [Artigo - CTE O que é? Para que serve?](https://www.alura.com.br/artigos/cte-o-que-e-para-que-serve-sql)
->- 
-
---- end-multi-column
 
 ```sql
 WITH nome_expressão [( nome_colunas [,...n] )] 

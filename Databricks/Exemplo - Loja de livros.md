@@ -270,7 +270,7 @@ Para a tabela `clientes` é necessário utilizar uma abordagem no formato [[Chan
 | 02          | update     | 2024-06-01 16:00:00 | ...                |
 Como podemos perceber os registros são instâncias de alterações na base de dados, assim para cada cliente representado pela `customer_id` podemos ter várias entradas definindo todas as alterações feitas nesse cadastro.
 
-Para isso é necessário definir dentro de uma *janela de tempo* qual o evento será considerado para o processamento, já que várias alterações podem ser feitas a um cadastros durante esse período.
+Para isso é necessário definir dentro de uma *janela de tempo* qual o evento será considerado para o processamento, já que várias alterações podem ser feitas a um cadastro durante esse período.
 
 ```python
 from pyspark.sql import functions as F

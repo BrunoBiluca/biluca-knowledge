@@ -4,81 +4,52 @@ tags:
   - banco_de_dados
   - mineração
 ---
+# Structured query language (SQL)
+
 SQL é uma linguagem declarativa, em vez de codificar o processamento dos dados, escritores de SQL estipulam as características do resultado final, enquanto que o compilador e o otimizador determinam os passos para chegar nesse resultado.
 
 Uma das principais limitações do SQL é que ele não inclui o conceito de bibliotecas e de código reutilizável.
 
-# Diferença entre GROUP BY e WINDOW
+#### Exemplos de consultas
 
-Em SQL, tanto o `GROUP BY` quanto as funções de janela (como `OVER`) podem ser usados para fazer agregações, como calcular médias. 
-
-Suponha que temos uma tabela `products` com os seguintes dados:
-
-```sql
-| product_id | category | price |
-|------------|----------|-------|
-| 1          | A        | 10    |
-| 2          | A        | 15    |
-| 3          | B        | 20    |
-| 4          | B        | 25    |
-| 5          | A        | 12    |
-```
-
-No entanto, há diferenças significativas entre os dois:
-
-1. **GROUP BY**:
-    - O `GROUP BY` é usado para agrupar linhas que possuem valores idênticos em uma ou mais colunas especificadas.
-    - Ele é usado em conjunto com funções de agregação, como `COUNT`, `SUM`, `AVG`, `MAX`, `MIN`, etc.
-    - O `GROUP BY` retorna uma linha por grupo, calculando a agregação para cada grupo.
-    - O resultado final é uma linha para cada grupo de valores.
-
-Exemplo de uso do `GROUP BY` para calcular a média:
-
-```sql
-SELECT category, AVG(price) AS avg_price
-FROM products
-GROUP BY category;
-```
-
-```sql
-// Resultado
-| category | avg_price |
-|----------|-----------|
-| A        | 12.3333   |
-| B        | 22.5      |
-```
-
-2. **Funções de Janela**:
-    - As funções de janela são usadas para realizar cálculos em um conjunto de linhas relacionadas a uma linha específica em um resultado de consulta.
-    - Elas não agrupam os dados como o `GROUP BY`; em vez disso, operam em um conjunto de linhas relacionadas definido por uma "janela".
-    - As funções de janela geralmente são usadas em conjunto com a cláusula `OVER`.
-    - Elas permitem calcular estatísticas, como média, para cada linha do resultado, mas sem necessariamente agrupar os dados.
-
-Exemplo de uso de funções de janela para calcular a média:
-
-```sql
-SELECT 
-	product_id, 
-	price, 
-	AVG(price) OVER (PARTITION BY category) 
-AS avg_price_by_category 
-FROM products;
-```
-
-```sql
-| product_id | category | price | avg_price_by_category |
-|------------|----------|-------|-----------------------|
-| 1          | A        | 10    | 12.3333               |
-| 2          | A        | 15    | 12.3333               |
-| 5          | A        | 12    | 12.3333               |
-| 3          | B        | 20    | 22.5                  |
-| 4          | B        | 25    | 22.5                  |
-```
-
-Nesse exemplo, `AVG(price) OVER (PARTITION BY category)` calcula a média dos preços para cada categoria, mas retorna a média para cada linha individualmente, sem agrupar os resultados.
-
-Em resumo, a diferença principal é que o `GROUP BY` é usado para agrupar e resumir dados em grupos, enquanto as funções de janela operam em conjuntos de linhas individuais, permitindo calcular estatísticas relacionadas a cada linha individualmente.
-
-# Operações entre conjuntos
-
+- [[Diferença entre GROUP BY e WINDOW]]
 - [MINUS](https://www.1keydata.com/pt/sql/sql-minus.php)
+
+# DDL (Data Definition Language)
+
+É usada para **definir, modificar e excluir a estrutura** do banco de dados (esquemas, tabelas, índices, etc.).
+
+- Afeta a **estrutura** do banco, não os dados em si.    
+- Geralmente usado por **administradores de banco de dados (DBAs)**.
+- Operações são **auto-commit** (não podem ser desfeitas com `ROLLBACK` em alguns SGBDs).
+
+| Comando        | Função                                                      | Exemplo                                              |
+| -------------- | ----------------------------------------------------------- | ---------------------------------------------------- |
+| **`CREATE`**   | Cria objetos (tabelas, views, índices)                      | `CREATE TABLE clientes (id INT, nome VARCHAR(100));` |
+| **`ALTER`**    | Modifica a estrutura de objetos existentes                  | `ALTER TABLE clientes ADD COLUMN email VARCHAR(50);` |
+| **`DROP`**     | Remove objetos do banco de dados                            | `DROP TABLE clientes;`                               |
+| **`TRUNCATE`** | Remove todos os dados de uma tabela, mas mantém a estrutura | `TRUNCATE TABLE clientes;`                           |
+| **`RENAME`**   | Renomeia objetos                                            | `RENAME TABLE clientes TO usuarios;`                 |
+
+# DML (Data Manipulation Language)
+
+É usada para **inserir, consultar, atualizar e excluir dados** dentro das tabelas.
+
+- Opera sobre os **dados**, não na estrutura.
+- Pode ser **revertido** com `ROLLBACK` (em transações).
+- Usado por **desenvolvedores e analistas** em operações do dia a dia.
+
+|Comando|Função|Exemplo|
+|---|---|---|
+|**`SELECT`**|Consulta dados|`SELECT * FROM clientes WHERE id = 1;`|
+|**`INSERT`**|Adiciona novos registros|`INSERT INTO clientes (id, nome) VALUES (1, 'João');`|
+|**`UPDATE`**|Modifica dados existentes|`UPDATE clientes SET nome = 'Maria' WHERE id = 1;`|
+|**`DELETE`**|Remove registros|`DELETE FROM clientes WHERE id = 1;`|
+|**`MERGE`**|Combina inserções, atualizações e exclusões em uma única operação|`MERGE INTO target USING source ON (...) WHEN MATCHED THEN UPDATE...`|
+# DCL (Data Control Language)
+
+Gerencia permissões (`GRANT`, `REVOKE`).
+
+# TCL (Transaction Control Language)
+
+Controla transações (`COMMIT`, `ROLLBACK`).
