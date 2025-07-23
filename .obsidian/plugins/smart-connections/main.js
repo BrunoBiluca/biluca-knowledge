@@ -136,10 +136,10 @@ __export(src_exports, {
   default: () => SmartConnectionsPlugin
 });
 module.exports = __toCommonJS(src_exports);
-var import_obsidian49 = __toESM(require("obsidian"), 1);
+var import_obsidian56 = __toESM(require("obsidian"), 1);
 
 // node_modules/obsidian-smart-env/smart_env.js
-var import_obsidian12 = require("obsidian");
+var import_obsidian20 = require("obsidian");
 
 // node_modules/obsidian-smart-env/node_modules/smart-environment/components/settings.js
 async function build_html(env, opts = {}) {
@@ -378,26 +378,42 @@ function deep_clone_config(input) {
 }
 
 // node_modules/obsidian-smart-env/node_modules/smart-environment/utils/deep_merge_no_overwrite.js
-function deep_merge_no_overwrite(target, source2, path2 = []) {
+function deep_merge_no_overwrite(target, source2, path = []) {
   if (!is_plain_object(target) || !is_plain_object(source2)) {
     return target;
   }
-  if (path2.includes(source2)) {
+  if (path.includes(source2)) {
     return target;
   }
-  path2.push(source2);
+  path.push(source2);
   for (const key of Object.keys(source2)) {
     if (!Object.prototype.hasOwnProperty.call(source2, key)) {
       continue;
     }
     const val = source2[key];
     if (Array.isArray(target[key]) && Array.isArray(val)) {
-      target[key].push(...val);
+      for (const item of val) {
+        if (typeof item === "function") {
+          const item_name = item.name;
+          const has_same_fn = target[key].some(
+            (el) => typeof el === "function" && el.name === item_name
+          );
+          if (!has_same_fn) {
+            target[key].push(item);
+          }
+        } else if (item === null || ["string", "number", "boolean", "undefined"].includes(typeof item)) {
+          if (!target[key].includes(item)) {
+            target[key].push(item);
+          }
+        } else {
+          target[key].push(item);
+        }
+      }
     } else if (is_plain_object(val)) {
       if (!is_plain_object(target[key])) {
         target[key] = {};
       }
-      deep_merge_no_overwrite(target[key], val, [...path2]);
+      deep_merge_no_overwrite(target[key], val, [...path]);
     } else if (!Object.prototype.hasOwnProperty.call(target, key)) {
       target[key] = val;
     }
@@ -445,7 +461,19 @@ function merge_env_config(target, incoming) {
       continue;
     }
     if (Array.isArray(value)) {
-      target[key] = [...target[key] || [], ...value];
+      if (Array.isArray(target[key])) {
+        if (value.length > 0 && (typeof value[0] === "string" || typeof value[0] === "number" || typeof value[0] === "boolean")) {
+          target[key] = Array.from(/* @__PURE__ */ new Set([...target[key], ...value]));
+        } else {
+          target[key] = [...target[key], ...value];
+        }
+      } else {
+        if (value.length > 0 && (typeof value[0] === "string" || typeof value[0] === "number" || typeof value[0] === "boolean")) {
+          target[key] = Array.from(new Set(value));
+        } else {
+          target[key] = [...value];
+        }
+      }
     } else if (value && typeof value === "object") {
       if (!target[key]) target[key] = {};
       deep_merge_no_overwrite(target[key], value);
@@ -464,7 +492,7 @@ var SmartEnv = class {
    * If a newer version is loaded into a runtime that already has an older environment,
    * an automatic reload of all existing mains will occur.
    */
-  static version = 2.139227;
+  static version = 2.139247;
   scope_name = "smart_env";
   static global_ref = ROOT_SCOPE;
   global_ref = this.constructor.global_ref;
@@ -674,8 +702,8 @@ var SmartEnv = class {
     await this.init_collections();
     for (const [main_key, { main, opts }] of Object.entries(this.smart_env_configs)) {
       this[main_key] = main;
-      await this.ready_to_load_collections(main);
     }
+    await this.ready_to_load_collections();
     await this.load_collections();
     this.state = "loaded";
   }
@@ -701,14 +729,10 @@ var SmartEnv = class {
     }
   }
   /**
-   * Hook for main classes that optionally implement `ready_to_load_collections()`.
+   * Hook/Override this method to wait for any conditions before loading collections. 
    * @param {Object} main
    */
-  async ready_to_load_collections(main) {
-    if (typeof main?.ready_to_load_collections === "function") {
-      await main.ready_to_load_collections();
-    }
-    return true;
+  async ready_to_load_collections() {
   }
   /**
    * Loads any available collections, processing their load queues.
@@ -914,12 +938,12 @@ var SmartEnv = class {
     return this.smart_fs;
   }
   get env_data_dir() {
-    const env_settings_files = this.fs.file_paths?.filter((path2) => path2.endsWith("smart_env.json")) || [];
+    const env_settings_files = this.fs.file_paths?.filter((path) => path.endsWith("smart_env.json")) || [];
     let env_data_dir = ".smart-env";
     if (env_settings_files.length > 0) {
       if (env_settings_files.length > 1) {
-        const env_data_dir_counts = env_settings_files.map((path2) => {
-          const dir = path2.split("/").slice(-2, -1)[0];
+        const env_data_dir_counts = env_settings_files.map((path) => {
+          const dir = path.split("/").slice(-2, -1)[0];
           return {
             dir,
             count: this.fs.file_paths.filter((p) => p.includes(dir)).length
@@ -1260,7 +1284,7 @@ var SmartFs = class {
   async load_exclusions() {
     const gitignore_path = ".gitignore";
     const gitignore_exists = await this.adapter.exists(gitignore_path);
-    if (gitignore_exists) {
+    if (gitignore_exists && !this.env.settings.skip_excluding_gitignore) {
       const gitignore_content = await this.adapter.read(gitignore_path, "utf-8");
       gitignore_content.split("\n").filter((line) => !line.startsWith("#")).filter(Boolean).forEach((pattern) => this.add_ignore_pattern(pattern));
     }
@@ -1268,7 +1292,6 @@ var SmartFs = class {
     this.add_ignore_pattern("**/.**");
     this.add_ignore_pattern("**/.*/**");
     this.add_ignore_pattern("**/*.ajson");
-    this.add_ignore_pattern("**/*.excalidraw.md");
   }
   /**
    * Add a new ignore pattern
@@ -1477,7 +1500,7 @@ var SmartFs = class {
   get_link_target_path(link_target, source_path) {
     if (this.adapter.get_link_target_path) return this.adapter.get_link_target_path(link_target, source_path);
     if (!this.file_paths) return console.warn("get_link_target_path: file_paths not found");
-    const matching_file_paths = this.file_paths.filter((path2) => path2.includes(link_target));
+    const matching_file_paths = this.file_paths.filter((path) => path.includes(link_target));
     return fuzzy_search(matching_file_paths, link_target)[0];
   }
   get sep() {
@@ -1849,8 +1872,8 @@ var SmartView = class {
    * @param {string} path - The path to the value.
    * @returns {*}
    */
-  get_by_path(obj, path2, settings_scope = null) {
-    return get_by_path(obj, path2, settings_scope);
+  get_by_path(obj, path, settings_scope = null) {
+    return get_by_path(obj, path, settings_scope);
   }
   /**
    * Sets a value in an object by path.
@@ -1858,16 +1881,16 @@ var SmartView = class {
    * @param {string} path - The path to set the value.
    * @param {*} value - The value to set.
    */
-  set_by_path(obj, path2, value, settings_scope = null) {
-    set_by_path(obj, path2, value, settings_scope);
+  set_by_path(obj, path, value, settings_scope = null) {
+    set_by_path(obj, path, value, settings_scope);
   }
   /**
    * Deletes a value from an object by path.
    * @param {Object} obj - The object to modify.
    * @param {string} path - The path to delete.
    */
-  delete_by_path(obj, path2, settings_scope = null) {
-    delete_by_path(obj, path2, settings_scope);
+  delete_by_path(obj, path, settings_scope = null) {
+    delete_by_path(obj, path, settings_scope);
   }
   /**
    * Escapes HTML special characters in a string.
@@ -1926,8 +1949,8 @@ ${attributes}
   add_settings_listeners(scope, container = document) {
     const elements = container.querySelectorAll("[data-smart-setting]");
     elements.forEach((elm) => {
-      const path2 = elm.dataset.smartSetting;
-      if (!path2) return;
+      const path = elm.dataset.smartSetting;
+      if (!path) return;
       if (!elm.dataset.listenerAttached) {
         elm.dataset.listenerAttached = "true";
         elm.addEventListener("change", () => {
@@ -1949,7 +1972,7 @@ ${attributes}
           } else {
             newValue = elm.value ?? elm.textContent;
           }
-          this.set_by_path(scope.settings, path2, newValue);
+          this.set_by_path(scope.settings, path, newValue);
         });
       }
     });
@@ -1972,9 +1995,9 @@ ${attributes}
     safe_inner_html(elm, html);
   }
 };
-function get_by_path(obj, path2, settings_scope = null) {
-  if (!path2) return "";
-  const keys = path2.split(".");
+function get_by_path(obj, path, settings_scope = null) {
+  if (!path) return "";
+  const keys = path.split(".");
   if (settings_scope) {
     keys.unshift(settings_scope);
   }
@@ -1985,8 +2008,8 @@ function get_by_path(obj, path2, settings_scope = null) {
   }
   return instance ? instance[finalKey] : void 0;
 }
-function set_by_path(obj, path2, value, settings_scope = null) {
-  const keys = path2.split(".");
+function set_by_path(obj, path, value, settings_scope = null) {
+  const keys = path.split(".");
   if (settings_scope) {
     keys.unshift(settings_scope);
   }
@@ -1999,8 +2022,8 @@ function set_by_path(obj, path2, value, settings_scope = null) {
   }, obj);
   target[final_key] = value;
 }
-function delete_by_path(obj, path2, settings_scope = null) {
-  const keys = path2.split(".");
+function delete_by_path(obj, path, settings_scope = null) {
+  const keys = path.split(".");
   if (settings_scope) {
     keys.unshift(settings_scope);
   }
@@ -2067,7 +2090,7 @@ var SmartViewAdapter = class {
    * @param {HTMLElement} elm - The HTML element associated with the setting.
    * @param {object} scope - The current scope containing settings and actions.
    */
-  handle_folder_select(path2, value, elm, scope) {
+  handle_folder_select(path, value, elm, scope) {
     throw new Error("handle_folder_select not implemented");
   }
   /**
@@ -2078,7 +2101,7 @@ var SmartViewAdapter = class {
    * @param {HTMLElement} elm - The HTML element associated with the setting.
    * @param {object} scope - The current scope containing settings and actions.
    */
-  handle_file_select(path2, value, elm, scope) {
+  handle_file_select(path, value, elm, scope) {
     throw new Error("handle_file_select not implemented");
   }
   /**
@@ -2089,7 +2112,7 @@ var SmartViewAdapter = class {
    * @param {HTMLElement} elm - The HTML element associated with the setting.
    * @param {object} scope - The current scope containing settings and actions.
    */
-  pre_change(path2, value, elm) {
+  pre_change(path, value, elm) {
   }
   /**
    * Performs actions after a setting is changed, such as updating UI elements.
@@ -2099,7 +2122,7 @@ var SmartViewAdapter = class {
    * @param {HTMLElement} elm - The HTML element associated with the setting.
    * @param {object} changed - Additional information about the change.
    */
-  post_change(path2, value, elm) {
+  post_change(path, value, elm) {
   }
   /**
    * Reverts a setting to its previous value in case of validation failure or error.
@@ -2108,7 +2131,7 @@ var SmartViewAdapter = class {
    * @param {HTMLElement} elm - The HTML element associated with the setting.
    * @param {object} scope - The current scope containing settings.
    */
-  revert_setting(path2, elm, scope) {
+  revert_setting(path, elm, scope) {
     console.warn("revert_setting() not implemented");
   }
   // DEFAULT IMPLEMENTATIONS (may be overridden)
@@ -2134,37 +2157,37 @@ var SmartViewAdapter = class {
   }
   async render_setting_component(elm, opts = {}) {
     this.empty(elm);
-    const path2 = elm.dataset.setting;
+    const path = elm.dataset.setting;
     const scope = opts.scope || this.main.main;
     const settings_scope = opts.settings_scope || null;
     try {
-      let value = elm.dataset.value ?? this.main.get_by_path(scope.settings, path2, settings_scope);
+      let value = elm.dataset.value ?? this.main.get_by_path(scope.settings, path, settings_scope);
       if (typeof value === "undefined" && typeof elm.dataset.default !== "undefined") {
         value = elm.dataset.default;
         if (typeof value === "string") value = value.toLowerCase() === "true" ? true : value === "false" ? false : value;
-        this.main.set_by_path(scope.settings, path2, value, settings_scope);
+        this.main.set_by_path(scope.settings, path, value, settings_scope);
       }
       const renderer = this.setting_renderers[elm.dataset.type];
       if (!renderer) {
         console.warn(`Unsupported setting type: ${elm.dataset.type}`);
         return elm;
       }
-      const setting = renderer.call(this, elm, path2, value, scope, settings_scope);
+      const setting = renderer.call(this, elm, path, value, scope, settings_scope);
       if (elm.dataset.name) setting.setName(elm.dataset.name);
       if (elm.dataset.description) {
         const frag = this.main.create_doc_fragment(`<span>${elm.dataset.description}</span>`);
         setting.setDesc(frag);
       }
       if (elm.dataset.tooltip) setting.setTooltip(elm.dataset.tooltip);
-      this.add_button_if_needed(setting, elm, path2, scope);
+      this.add_button_if_needed(setting, elm, path, scope);
       this.handle_disabled_and_hidden(elm);
       return elm;
     } catch (e) {
-      console.error(JSON.stringify({ path: path2, elm }, null, 2));
+      console.error(JSON.stringify({ path, elm }, null, 2));
       console.error(JSON.stringify(e, null, 2));
     }
   }
-  render_dropdown_component(elm, path2, value, scope, settings_scope) {
+  render_dropdown_component(elm, path, value, scope, settings_scope) {
     const smart_setting = new this.setting_class(elm);
     let options;
     if (elm.dataset.optionsCallback) {
@@ -2183,13 +2206,13 @@ var SmartViewAdapter = class {
         opt.selected = option.value === value;
       });
       dropdown.onChange((value2) => {
-        this.handle_on_change(path2, value2, elm, scope, settings_scope);
+        this.handle_on_change(path, value2, elm, scope, settings_scope);
       });
       dropdown.setValue(value);
     });
     return smart_setting;
   }
-  render_text_component(elm, path2, value, scope, settings_scope) {
+  render_text_component(elm, path, value, scope, settings_scope) {
     const smart_setting = new this.setting_class(elm);
     smart_setting.addText((text) => {
       text.setPlaceholder(elm.dataset.placeholder || "");
@@ -2198,18 +2221,18 @@ var SmartViewAdapter = class {
       if (elm.dataset.button) {
         smart_setting.addButton((button) => {
           button.setButtonText(elm.dataset.button);
-          button.onClick(async () => this.handle_on_change(path2, text.getValue(), elm, scope));
+          button.onClick(async () => this.handle_on_change(path, text.getValue(), elm, scope));
         });
       } else {
         text.onChange(async (value2) => {
           clearTimeout(debounceTimer);
-          debounceTimer = setTimeout(() => this.handle_on_change(path2, value2.trim(), elm, scope, settings_scope), 2e3);
+          debounceTimer = setTimeout(() => this.handle_on_change(path, value2.trim(), elm, scope, settings_scope), 2e3);
         });
       }
     });
     return smart_setting;
   }
-  render_password_component(elm, path2, value, scope, settings_scope) {
+  render_password_component(elm, path, value, scope, settings_scope) {
     const smart_setting = new this.setting_class(elm);
     smart_setting.addText((text) => {
       text.inputEl.type = "password";
@@ -2218,12 +2241,12 @@ var SmartViewAdapter = class {
       let debounceTimer;
       text.onChange(async (value2) => {
         clearTimeout(debounceTimer);
-        debounceTimer = setTimeout(() => this.handle_on_change(path2, value2, elm, scope, settings_scope), 2e3);
+        debounceTimer = setTimeout(() => this.handle_on_change(path, value2, elm, scope, settings_scope), 2e3);
       });
     });
     return smart_setting;
   }
-  render_number_component(elm, path2, value, scope, settings_scope) {
+  render_number_component(elm, path, value, scope, settings_scope) {
     const smart_setting = new this.setting_class(elm);
     smart_setting.addText((number) => {
       number.inputEl.type = "number";
@@ -2234,12 +2257,12 @@ var SmartViewAdapter = class {
       let debounceTimer;
       number.onChange(async (value2) => {
         clearTimeout(debounceTimer);
-        debounceTimer = setTimeout(() => this.handle_on_change(path2, parseInt(value2), elm, scope, settings_scope), 2e3);
+        debounceTimer = setTimeout(() => this.handle_on_change(path, parseInt(value2), elm, scope, settings_scope), 2e3);
       });
     });
     return smart_setting;
   }
-  render_toggle_component(elm, path2, value, scope, settings_scope) {
+  render_toggle_component(elm, path, value, scope, settings_scope) {
     const smart_setting = new this.setting_class(elm);
     smart_setting.addToggle((toggle) => {
       let checkbox_val = value ?? false;
@@ -2247,11 +2270,11 @@ var SmartViewAdapter = class {
         checkbox_val = checkbox_val.toLowerCase() === "true";
       }
       toggle.setValue(checkbox_val);
-      toggle.onChange(async (value2) => this.handle_on_change(path2, value2, elm, scope, settings_scope));
+      toggle.onChange(async (value2) => this.handle_on_change(path, value2, elm, scope, settings_scope));
     });
     return smart_setting;
   }
-  render_textarea_component(elm, path2, value, scope, settings_scope) {
+  render_textarea_component(elm, path, value, scope, settings_scope) {
     const smart_setting = new this.setting_class(elm);
     smart_setting.addTextArea((textarea) => {
       textarea.setPlaceholder(elm.dataset.placeholder || "");
@@ -2259,12 +2282,12 @@ var SmartViewAdapter = class {
       let debounceTimer;
       textarea.onChange(async (value2) => {
         clearTimeout(debounceTimer);
-        debounceTimer = setTimeout(() => this.handle_on_change(path2, value2, elm, scope, settings_scope), 2e3);
+        debounceTimer = setTimeout(() => this.handle_on_change(path, value2, elm, scope, settings_scope), 2e3);
       });
     });
     return smart_setting;
   }
-  render_textarea_array_component(elm, path2, value, scope, settings_scope) {
+  render_textarea_array_component(elm, path, value, scope, settings_scope) {
     const smart_setting = new this.setting_class(elm);
     smart_setting.addTextArea((textarea) => {
       textarea.setPlaceholder(elm.dataset.placeholder || "");
@@ -2273,12 +2296,12 @@ var SmartViewAdapter = class {
       textarea.onChange(async (value2) => {
         value2 = value2.split("\n").map((v) => v.trim()).filter((v) => v);
         clearTimeout(debounceTimer);
-        debounceTimer = setTimeout(() => this.handle_on_change(path2, value2, elm, scope, settings_scope), 2e3);
+        debounceTimer = setTimeout(() => this.handle_on_change(path, value2, elm, scope, settings_scope), 2e3);
       });
     });
     return smart_setting;
   }
-  render_button_component(elm, path2, value, scope, settings_scope) {
+  render_button_component(elm, path, value, scope, settings_scope) {
     const smart_setting = new this.setting_class(elm);
     smart_setting.addButton((button) => {
       button.setButtonText(elm.dataset.btnText || elm.dataset.name);
@@ -2287,53 +2310,53 @@ var SmartViewAdapter = class {
         if (elm.dataset.href) this.open_url(elm.dataset.href);
         if (elm.dataset.callback) {
           const callback = this.main.get_by_path(scope, elm.dataset.callback);
-          if (callback) callback(path2, value, elm, scope, settings_scope);
+          if (callback) callback(path, value, elm, scope, settings_scope);
         }
       });
     });
     return smart_setting;
   }
-  render_remove_component(elm, path2, value, scope, settings_scope) {
+  render_remove_component(elm, path, value, scope, settings_scope) {
     const smart_setting = new this.setting_class(elm);
     smart_setting.addButton((button) => {
       button.setButtonText(elm.dataset.btnText || elm.dataset.name || "Remove");
       button.onClick(async () => {
-        this.main.delete_by_path(scope.settings, path2, settings_scope);
+        this.main.delete_by_path(scope.settings, path, settings_scope);
         if (elm.dataset.callback) {
           const callback = this.main.get_by_path(scope, elm.dataset.callback);
-          if (callback) callback(path2, value, elm, scope, settings_scope);
+          if (callback) callback(path, value, elm, scope, settings_scope);
         }
       });
     });
     return smart_setting;
   }
-  render_folder_select_component(elm, path2, value, scope, settings_scope) {
+  render_folder_select_component(elm, path, value, scope, settings_scope) {
     const smart_setting = new this.setting_class(elm);
     smart_setting.addFolderSelect((folder_select) => {
       folder_select.setPlaceholder(elm.dataset.placeholder || "");
       if (value) folder_select.setValue(value);
       folder_select.inputEl.closest("div").addEventListener("click", () => {
-        this.handle_folder_select(path2, value, elm, scope);
+        this.handle_folder_select(path, value, elm, scope);
       });
       folder_select.inputEl.querySelector("input").addEventListener("change", (e) => {
         const folder = e.target.value;
-        this.handle_on_change(path2, folder, elm, scope, settings_scope);
+        this.handle_on_change(path, folder, elm, scope, settings_scope);
       });
     });
     return smart_setting;
   }
-  render_file_select_component(elm, path2, value, scope, settings_scope) {
+  render_file_select_component(elm, path, value, scope, settings_scope) {
     const smart_setting = new this.setting_class(elm);
     smart_setting.addFileSelect((file_select) => {
       file_select.setPlaceholder(elm.dataset.placeholder || "");
       if (value) file_select.setValue(value);
       file_select.inputEl.closest("div").addEventListener("click", () => {
-        this.handle_file_select(path2, value, elm, scope, settings_scope);
+        this.handle_file_select(path, value, elm, scope, settings_scope);
       });
     });
     return smart_setting;
   }
-  render_slider_component(elm, path2, value, scope, settings_scope) {
+  render_slider_component(elm, path, value, scope, settings_scope) {
     const smart_setting = new this.setting_class(elm);
     smart_setting.addSlider((slider) => {
       const min = parseFloat(elm.dataset.min) || 0;
@@ -2344,27 +2367,27 @@ var SmartViewAdapter = class {
       slider.setValue(currentValue);
       slider.onChange((newVal) => {
         const numericVal = parseFloat(newVal);
-        this.handle_on_change(path2, numericVal, elm, scope, settings_scope);
+        this.handle_on_change(path, numericVal, elm, scope, settings_scope);
       });
     });
     return smart_setting;
   }
-  render_html_component(elm, path2, value, scope) {
+  render_html_component(elm, path, value, scope) {
     this.safe_inner_html(elm, value);
     return elm;
   }
-  add_button_if_needed(smart_setting, elm, path2, scope) {
+  add_button_if_needed(smart_setting, elm, path, scope) {
     if (elm.dataset.btn) {
       smart_setting.addButton((button) => {
         button.setButtonText(elm.dataset.btn);
         button.inputEl.addEventListener("click", (e) => {
           if (elm.dataset.btnCallback && typeof scope[elm.dataset.btnCallback] === "function") {
             if (elm.dataset.btnCallbackArg) scope[elm.dataset.btnCallback](elm.dataset.btnCallbackArg);
-            else scope[elm.dataset.btnCallback](path2, null, smart_setting, scope);
+            else scope[elm.dataset.btnCallback](path, null, smart_setting, scope);
           } else if (elm.dataset.btnHref) {
             this.open_url(elm.dataset.btnHref);
           } else if (elm.dataset.callback && typeof this.main.get_by_path(scope, elm.dataset.callback) === "function") {
-            this.main.get_by_path(scope, elm.dataset.callback)(path2, null, smart_setting, scope);
+            this.main.get_by_path(scope, elm.dataset.callback)(path, null, smart_setting, scope);
           } else if (elm.dataset.href) {
             this.open_url(elm.dataset.href);
           } else {
@@ -2394,24 +2417,24 @@ var SmartViewAdapter = class {
       return acc;
     }, []);
   }
-  handle_on_change(path2, value, elm, scope, settings_scope) {
-    this.pre_change(path2, value, elm, scope);
+  handle_on_change(path, value, elm, scope, settings_scope) {
+    this.pre_change(path, value, elm, scope);
     if (elm.dataset.validate) {
-      const valid = this[elm.dataset.validate](path2, value, elm, scope);
+      const valid = this[elm.dataset.validate](path, value, elm, scope);
       if (!valid) {
         elm.querySelector(".setting-item").style.border = "2px solid red";
-        this.revert_setting(path2, elm, scope);
+        this.revert_setting(path, elm, scope);
         return;
       }
     }
-    this.main.set_by_path(scope.settings, path2, value, settings_scope);
+    this.main.set_by_path(scope.settings, path, value, settings_scope);
     if (elm.dataset.callback) {
       const callback = this.main.get_by_path(scope, elm.dataset.callback);
-      if (callback) callback(path2, value, elm, scope);
+      if (callback) callback(path, value, elm, scope);
     }
-    this.post_change(path2, value, elm, scope);
+    this.post_change(path, value, elm, scope);
   }
-  render_button_with_confirm_component(elm, path2, value, scope) {
+  render_button_with_confirm_component(elm, path, value, scope) {
     const smart_setting = new this.setting_class(elm);
     smart_setting.addButton((button) => {
       button.setButtonText(elm.dataset.btnText || elm.dataset.name);
@@ -2439,7 +2462,7 @@ var SmartViewAdapter = class {
         if (elm.dataset.href) this.open_url(elm.dataset.href);
         if (elm.dataset.callback) {
           const callback = this.main.get_by_path(scope, elm.dataset.callback);
-          if (callback) callback(path2, value, elm, scope);
+          if (callback) callback(path, value, elm, scope);
         }
         elm.querySelector(".setting-item").style.display = "block";
         confirm_row.style.display = "none";
@@ -2468,11 +2491,8 @@ var SmartViewObsidianAdapter = class extends SmartViewAdapter {
   open_url(url) {
     window.open(url);
   }
-  async render_file_select_component(elm, path2, value) {
-    return super.render_text_component(elm, path2, value);
-  }
-  async render_folder_select_component(elm, path2, value) {
-    return super.render_text_component(elm, path2, value);
+  async render_file_select_component(elm, path, value) {
+    return super.render_text_component(elm, path, value);
   }
   async render_markdown(markdown, scope) {
     const component = scope.env.smart_connections_plugin?.connections_view || new import_obsidian.Component();
@@ -2498,6 +2518,22 @@ var SmartViewObsidianAdapter = class extends SmartViewAdapter {
   // Obsidian Specific
   is_mod_event(event) {
     return import_obsidian.Keymap.isModEvent(event);
+  }
+  render_folder_select_component(elm, path, value, scope, settings_scope) {
+    const smart_setting = new this.setting_class(elm);
+    const folders = scope.env.plugin.app.vault.getAllFolders().sort((a, b) => a.path.localeCompare(b.path));
+    smart_setting.addDropdown((dropdown) => {
+      if (elm.dataset.required) dropdown.inputEl.setAttribute("required", true);
+      dropdown.addOption("", "No folder selected");
+      folders.forEach((folder) => {
+        dropdown.addOption(folder.path, folder.path);
+      });
+      dropdown.onChange((value2) => {
+        this.handle_on_change(path, value2, elm, scope, settings_scope);
+      });
+      dropdown.setValue(value);
+    });
+    return smart_setting;
   }
 };
 
@@ -2727,6 +2763,9 @@ var CollectionItem = class _CollectionItem {
    * @param {string} [filter_opts.exclude_key_starts_with] - Exclude keys starting with this string.
    * @param {string[]} [filter_opts.exclude_key_starts_with_any] - Exclude keys starting with any of these strings.
    * @param {string} [filter_opts.exclude_key_includes] - Exclude keys that include this string.
+   * @param {string[]} [filter_opts.exclude_key_includes_any] - Exclude keys that include any of these strings.
+   * @param {string} [filter_opts.exclude_key_ends_with] - Exclude keys ending with this string.
+   * @param {string[]} [filter_opts.exclude_key_ends_with_any] - Exclude keys ending with any of these strings.
    * @param {string} [filter_opts.key_ends_with] - Include only keys ending with this string.
    * @param {string} [filter_opts.key_starts_with] - Include only keys starting with this string.
    * @param {string[]} [filter_opts.key_starts_with_any] - Include only keys starting with any of these strings.
@@ -2742,6 +2781,7 @@ var CollectionItem = class _CollectionItem {
       exclude_key_includes,
       exclude_key_includes_any,
       exclude_key_ends_with,
+      exclude_key_ends_with_any,
       key_ends_with,
       key_starts_with,
       key_starts_with_any,
@@ -2754,6 +2794,7 @@ var CollectionItem = class _CollectionItem {
     if (exclude_key_includes && this.key.includes(exclude_key_includes)) return false;
     if (exclude_key_includes_any && exclude_key_includes_any.some((include) => this.key.includes(include))) return false;
     if (exclude_key_ends_with && this.key.endsWith(exclude_key_ends_with)) return false;
+    if (exclude_key_ends_with_any && exclude_key_ends_with_any.some((suffix) => this.key.endsWith(suffix))) return false;
     if (key_ends_with && !this.key.endsWith(key_ends_with)) return false;
     if (key_starts_with && !this.key.startsWith(key_starts_with)) return false;
     if (key_starts_with_any && !key_starts_with_any.some((prefix) => this.key.startsWith(prefix))) return false;
@@ -3987,12 +4028,12 @@ var SmartEntity = class extends CollectionItem {
     return this.collection.embed_model;
   }
   /**
-   * Determines if the entity should be embedded.
+   * Determines if the entity should be embedded if unembedded. NOT the same as is_unembedded.
    * @readonly
    * @returns {boolean} True if no vector is set, false otherwise.
    */
   get should_embed() {
-    return !this.vec && this.size > (this.settings?.min_chars || 300);
+    return this.size > (this.settings?.min_chars || 300);
   }
   /**
    * Sets the error for the embedding model.
@@ -4256,13 +4297,23 @@ var SmartEntities = class extends Collection {
       opts.exclude_key_starts_with_any.push(entity.source_key || entity.key);
       if (exclude_filter) {
         if (!Array.isArray(opts.exclude_key_includes_any)) opts.exclude_key_includes_any = [];
-        if (typeof exclude_filter === "string") opts.exclude_key_includes_any.push(exclude_filter);
-        else if (exclude_filter.includes(",")) opts.exclude_key_includes_any.push(...exclude_filter.split(","));
+        if (typeof exclude_filter === "string") {
+          if (exclude_filter.includes(",")) {
+            opts.exclude_key_includes_any.push(...exclude_filter.split(","));
+          } else {
+            opts.exclude_key_includes_any.push(exclude_filter);
+          }
+        }
       }
       if (include_filter) {
         if (!Array.isArray(opts.key_includes_any)) opts.key_includes_any = [];
-        if (typeof include_filter === "string") opts.key_includes_any.push(include_filter);
-        else if (include_filter.includes(",")) opts.key_includes_any.push(...include_filter.split(","));
+        if (typeof include_filter === "string") {
+          if (include_filter.includes(",")) {
+            opts.key_includes_any.push(...include_filter.split(","));
+          } else {
+            opts.key_includes_any.push(include_filter);
+          }
+        }
       }
       if (exclude_inlinks && entity?.inlinks?.length) {
         if (!Array.isArray(opts.exclude_key_starts_with_any)) opts.exclude_key_starts_with_any = [];
@@ -4348,7 +4399,11 @@ var SmartEntities = class extends Collection {
    * @returns {Array<Object>} The embed queue.
    */
   get embed_queue() {
-    if (!this._embed_queue?.length) this._embed_queue = Object.values(this.items).filter((item) => item._queue_embed && item.should_embed);
+    if (!this._embed_queue?.length) {
+      console.time(`Building embed queue`);
+      this._embed_queue = Object.values(this.items).filter((item) => item._queue_embed || item.is_unembedded && item.should_embed);
+      console.timeEnd(`Building embed queue`);
+    }
     return this._embed_queue;
   }
   /**
@@ -4387,38 +4442,44 @@ var connections_filter_config = {
   "smart_view_filter.show_full_path": {
     "name": "Show full path",
     "type": "toggle",
-    "description": "Show full path in view."
+    "description": "Turning on will include the folder path in the connections results."
   },
   "smart_view_filter.render_markdown": {
     "name": "Render markdown",
     "type": "toggle",
-    "description": "Render markdown in results."
+    "description": "Turn off to prevent rendering markdown and display connection results as plain text."
   },
   "smart_view_filter.results_limit": {
     "name": "Results limit",
     "type": "number",
-    "description": "Limit the number of results.",
+    "description": "Adjust the number of connections displayed in the connections view (default 20).",
     "default": 20
   },
   "smart_view_filter.exclude_inlinks": {
     "name": "Exclude inlinks (backlinks)",
     "type": "toggle",
-    "description": "Exclude notes that link to the current note."
+    "description": "Exclude notes that already link to the current note from the connections results."
   },
   "smart_view_filter.exclude_outlinks": {
     "name": "Exclude outlinks",
     "type": "toggle",
-    "description": "Exclude links already in the current document."
+    "description": "Exclude notes that are already linked from within the current note from appearing in the connections results."
   },
   "smart_view_filter.include_filter": {
     "name": "Include filter",
     "type": "text",
-    "description": "Require that result file path matches this value."
+    "description": "Notes must match this value in their file/folder path. Matching notes will be included in the connections results. Separate multiple values with commas."
   },
   "smart_view_filter.exclude_filter": {
     "name": "Exclude filter",
     "type": "text",
-    "description": "Exclude results with file path that matches this value."
+    "description": "Notes must *not* match this value in their file/folder path. Matching notes will be *excluded* from the connections results. Separate multiple values with commas."
+  },
+  // should be better scoped at source-level (leaving here for now since connections_filter_config needs larger refactor)
+  "smart_view_filter.exclude_blocks_from_source_connections": {
+    "name": "Hide blocks in results",
+    "type": "toggle",
+    "description": "Show only sources in the connections results (no blocks)."
   }
 };
 
@@ -4505,7 +4566,7 @@ function compute_medoid(points) {
 // node_modules/obsidian-smart-env/node_modules/smart-sources/actions/find_connections.js
 async function find_connections2(params = {}) {
   let connections;
-  if (this.block_collection.settings.embed_blocks && params.exclude_source_connections) connections = [];
+  if (this.block_collection.settings.embed_blocks && !params.exclude_blocks_from_source_connections) connections = [];
   else connections = await find_connections.call(this, params);
   const filter_opts = this.prepare_find_connections_filter_opts(params);
   const limit = params.filter?.limit || params.limit || this.env.settings.smart_view_filter?.results_limit || 20;
@@ -4571,7 +4632,7 @@ var SmartSource = class extends SmartEntity {
   async import() {
     this._queue_import = false;
     try {
-      await this.source_adapter.import();
+      await this.source_adapter?.import();
     } catch (err) {
       if (err.code === "ENOENT") {
         console.log(`Smart Connections: Deleting ${this.path} data because it no longer exists on disk`);
@@ -4582,6 +4643,9 @@ var SmartSource = class extends SmartEntity {
       }
     }
   }
+  /**
+   * @deprecated likely extraneous
+   */
   async parse_content(content = null) {
     const parse_fns = this.env?.opts?.collections?.smart_sources?.content_parsers || [];
     for (const fn of parse_fns) {
@@ -4595,7 +4659,6 @@ var SmartSource = class extends SmartEntity {
    * Finds connections relevant to this SmartSource based on provided parameters.
    * @async
    * @param {Object} [params={}] - Parameters for finding connections.
-   * @param {boolean} [params.exclude_source_connections=false] - Whether to exclude source connections.
    * @param {boolean} [params.exclude_blocks_from_source_connections=false] - Whether to exclude block connections from source connections.
    * @returns {Array<SmartSource>} An array of relevant SmartSource entities.
    */
@@ -4610,6 +4673,10 @@ var SmartSource = class extends SmartEntity {
   async get_embed_input(content = null) {
     if (typeof this._embed_input === "string" && this._embed_input.length) return this._embed_input;
     if (!content) content = await this.read();
+    if (!content) {
+      console.warn("SmartSource.get_embed_input: No content available for embedding: " + this.path);
+      return "";
+    }
     if (this.excluded_lines.length) {
       const content_lines = content.split("\n");
       this.excluded_lines.forEach((lines) => {
@@ -4896,7 +4963,7 @@ ${content}`.substring(0, max_chars);
    * @returns {number} The size.
    */
   get size() {
-    return this.file?.stat?.size || 0;
+    return this.source_adapter?.size || 0;
   }
   /**
    * Retrieves the last import stat of the SmartSource.
@@ -4981,9 +5048,6 @@ ${content}`.substring(0, max_chars);
   get path() {
     return this.data.path || this.data.key;
   }
-  get should_embed() {
-    return !this.vec || !this.embed_hash || this.embed_hash !== this.read_hash;
-  }
   get source_adapters() {
     return this.collection.source_adapters;
   }
@@ -4991,7 +5055,6 @@ ${content}`.substring(0, max_chars);
     if (this._source_adapter) return this._source_adapter;
     if (this.source_adapters[this.file_type]) this._source_adapter = new this.source_adapters[this.file_type](this);
     else {
-      console.log("No source adapter found for " + this.file_type);
     }
     return this._source_adapter;
   }
@@ -5118,6 +5181,13 @@ var SmartSources = class extends SmartEntities {
     if (!ext) {
       return;
     }
+    if (this.fs.is_excluded(file_path)) {
+      console.warn(`File ${file_path} is excluded from processing.`);
+      return;
+    }
+    if (!this.fs.files[file_path]) {
+      this.fs.include_file(file_path);
+    }
     if (this.items[file_path]) return this.items[file_path];
     const item = new this.item_type(this.env, { path: file_path });
     this.items[file_path] = item;
@@ -5137,14 +5207,16 @@ var SmartSources = class extends SmartEntities {
     if (!file_path) return void 0;
     const pcs = file_path.split(".");
     if (pcs.length < 2) return void 0;
+    let last_ext;
     pcs.shift();
     while (pcs.length) {
-      const test_ext = pcs.join(".").toLowerCase();
-      if (this.source_adapters[test_ext]) {
-        return test_ext;
+      const supported_ext = pcs.join(".").toLowerCase();
+      if (this.source_adapters[supported_ext]) {
+        return supported_ext;
       }
-      pcs.shift();
+      last_ext = pcs.shift();
     }
+    return last_ext;
     return void 0;
   }
   /**
@@ -5230,12 +5302,25 @@ var SmartSources = class extends SmartEntities {
   async lookup(params = {}) {
     const limit = params.filter?.limit || params.k || this.env.settings.lookup_k || 10;
     if (params.filter?.limit) delete params.filter.limit;
+    if (params.collection) {
+      const collection = this.env[params.collection];
+      if (collection && collection.lookup) {
+        delete params.collection;
+        params.skip_blocks = true;
+        const results2 = await collection.lookup(params);
+        if (results2.error) {
+          console.warn(results2.error);
+          return [];
+        }
+        return results2.slice(0, limit);
+      }
+    }
     let results = await super.lookup(params);
     if (results.error) {
       console.warn(results.error);
       return [];
     }
-    if (this.block_collection?.settings?.embed_blocks) {
+    if (this.block_collection?.settings?.embed_block && !params.skip_blocks) {
       results = [
         ...results,
         ...await this.block_collection.lookup(params)
@@ -5449,6 +5534,10 @@ var SmartSources = class extends SmartEntities {
       if (!item.vec) return false;
       if (item.is_gone) {
         item.reason = "is_gone";
+        return true;
+      }
+      if (!item.should_embed) {
+        item.reason = "should not embed";
         return true;
       }
       return false;
@@ -6574,6 +6663,9 @@ ${current_content}`;
     ].join("\n").trim();
     await this.update(new_content);
   }
+  get size() {
+    return this.item.file?.stat?.size || 0;
+  }
 };
 
 // node_modules/obsidian-smart-env/node_modules/smart-sources/utils/get_markdown_links.js
@@ -6607,20 +6699,6 @@ function get_markdown_links(content) {
   return result.sort(
     (a, b) => a.line - b.line || a.target.localeCompare(b.target)
   );
-}
-
-// node_modules/obsidian-smart-env/node_modules/smart-sources/content_parsers/parse_links.js
-async function parse_links(source2, content) {
-  if (!source2.source_adapter?.get_links) return;
-  const outlinks = await source2.source_adapter.get_links(content);
-  source2.data.outlinks = outlinks;
-}
-
-// node_modules/obsidian-smart-env/node_modules/smart-sources/content_parsers/parse_metadata.js
-async function parse_metadata(source2, content) {
-  if (!source2.source_adapter?.get_metadata) return;
-  const metadata = await source2.source_adapter?.get_metadata?.(content);
-  source2.data.metadata = metadata;
 }
 
 // node_modules/obsidian-smart-env/node_modules/smart-sources/utils/parse_frontmatter.js
@@ -6750,7 +6828,7 @@ var MarkdownSourceContentAdapter = class extends FileSourceContentAdapter {
     };
     this.item.loaded_at = Date.now();
     this.item.queue_save();
-    this.item.queue_embed();
+    if (this.item.should_embed) this.item.queue_embed();
   }
   // // WIP: move block parsing here
   // async read() {
@@ -6763,8 +6841,10 @@ var MarkdownSourceContentAdapter = class extends FileSourceContentAdapter {
   // }
   // Runs before configured content_parsers (for example, templates uses outlinks)
   async parse_content(content) {
-    await parse_links(this.item, content);
-    await parse_metadata(this.item, content);
+    const outlinks = await this.get_links(content);
+    this.data.outlinks = outlinks;
+    const metadata = await this.get_metadata(content);
+    this.data.metadata = metadata;
   }
   async get_links(content = null) {
     if (!content) content = await this.read();
@@ -6829,7 +6909,7 @@ var MarkdownSourceContentAdapter = class extends FileSourceContentAdapter {
   }
 };
 
-// node_modules/obsidian-smart-env/node_modules/smart-sources/adapters/obsidian_markdown.js
+// node_modules/obsidian-smart-env/adapters/smart-sources/obsidian_markdown.js
 var import_obsidian2 = require("obsidian");
 var ObsidianMarkdownSourceContentAdapter = class extends MarkdownSourceContentAdapter {
   /**
@@ -6838,8 +6918,8 @@ var ObsidianMarkdownSourceContentAdapter = class extends MarkdownSourceContentAd
    * @returns {Promise<Object>} Frontmatter data if available, otherwise undefined.
    */
   async get_metadata() {
-    const app = this.item.env.main.app;
-    const { frontmatter } = app.metadataCache.getFileCache(this.item.file) || {};
+    const app2 = this.item.env.main.app;
+    const { frontmatter } = app2.metadataCache.getFileCache(this.item.file) || {};
     return frontmatter;
   }
   /**
@@ -6856,13 +6936,13 @@ var ObsidianMarkdownSourceContentAdapter = class extends MarkdownSourceContentAd
     if (!opts.render_output) {
       return content;
     }
-    const app = this.item.env.main.app;
-    if (!app || !import_obsidian2.MarkdownRenderer || !import_obsidian2.htmlToMarkdown) {
+    const app2 = this.item.env.main.app;
+    if (!app2 || !import_obsidian2.MarkdownRenderer || !import_obsidian2.htmlToMarkdown) {
       console.warn("Obsidian environment not found; cannot render markdown.");
       return content;
     }
     const container = document.createElement("div");
-    await import_obsidian2.MarkdownRenderer.render(app, content, container, this.item.path, new import_obsidian2.Component());
+    await import_obsidian2.MarkdownRenderer.render(app2, content, container, this.item.path, new import_obsidian2.Component());
     let last_html = container.innerHTML;
     const max_wait = 1e4;
     let wait_time = 0;
@@ -6882,6 +6962,39 @@ var ObsidianMarkdownSourceContentAdapter = class extends MarkdownSourceContentAd
     }
     const newMd = (0, import_obsidian2.htmlToMarkdown)(container);
     return newMd;
+  }
+};
+
+// node_modules/obsidian-smart-env/adapters/smart-sources/excalidraw.js
+var ExcalidrawSourceContentAdapter = class extends ObsidianMarkdownSourceContentAdapter {
+  static extensions = ["excalidraw.md"];
+  is_media = true;
+  // Excalidraw files are treated as media for rendering
+  async read(opts = {}) {
+    const full_content = await super.read(opts);
+    const BEGIN_LINE_MATCHER = "# Text Elements";
+    const END_LINE_MATCHER = "# Drawing";
+    const text_elements_start = full_content.indexOf(BEGIN_LINE_MATCHER);
+    const drawing_lines_start = full_content.indexOf(END_LINE_MATCHER);
+    if (text_elements_start === -1 || drawing_lines_start === -1) {
+      console.warn("Excalidraw file does not contain expected sections. File: " + this.item.key);
+      this.item.data.last_read.size = 0;
+      return "";
+    }
+    const text_content = full_content.slice(text_elements_start + BEGIN_LINE_MATCHER.length, drawing_lines_start).trim();
+    const stripped_refs = text_content.split("\n").map((line) => {
+      if (line.trim() === "%%") return "";
+      if (line.trim() === "#") return "";
+      return line.replace(/\^[a-z0-9]+$/i, "").trim();
+    }).filter(Boolean).join("\n");
+    this.item.data.last_read.size = stripped_refs.length;
+    return stripped_refs;
+  }
+  get size() {
+    if (this.item.data?.last_read?.size) {
+      return this.item.data.last_read.size;
+    }
+    return this.file?.stat?.size || 0;
   }
 };
 
@@ -7048,7 +7161,7 @@ var SmartBlock = class extends SmartEntity {
   get excluded() {
     const block_headings = this.path.split("#").slice(1);
     if (this.source_collection.excluded_headings.some((heading) => block_headings.includes(heading))) return true;
-    return this.source.excluded;
+    return this.source?.excluded;
   }
   /**
    * Retrieves the file path of the SmartSource associated with the block.
@@ -7571,6 +7684,12 @@ var BlockContentAdapter = class {
   }
 };
 
+// node_modules/obsidian-smart-env/node_modules/smart-sources/utils/get_line_range.js
+function get_line_range2(content, start_line, end_line) {
+  const lines = content.split("\n");
+  return lines.slice(start_line - 1, end_line).join("\n");
+}
+
 // node_modules/obsidian-smart-env/node_modules/smart-blocks/adapters/markdown_block.js
 var MarkdownBlockContentAdapter = class extends BlockContentAdapter {
   /**
@@ -7580,7 +7699,11 @@ var MarkdownBlockContentAdapter = class extends BlockContentAdapter {
    * @throws {Error} If the block cannot be found.
    */
   async read() {
-    const source_content = await this.item.source.read();
+    const source_content = await this.item.source?.read();
+    if (!source_content) {
+      console.warn(`BLOCK NOT FOUND: ${this.item.key} has no source content.`);
+      return "";
+    }
     const content = this._extract_block(source_content);
     this.update_last_read(content);
     return content;
@@ -7695,9 +7818,7 @@ var MarkdownBlockContentAdapter = class extends BlockContentAdapter {
     if (!line_start || !line_end) {
       throw new Error(`BLOCK NOT FOUND: ${this.item.key} has invalid line references.`);
     }
-    const lines = source_content.split("\n");
-    const selected = lines.slice(line_start - 1, line_end);
-    return selected.join("\n");
+    return get_line_range2(source_content, line_start, line_end);
   }
   /**
    * Re-parse the source file after a CRUD operation to update line references for all blocks.
@@ -8525,6 +8646,41 @@ var SmartHttpResponseAdapter = class {
   }
 };
 
+// node_modules/obsidian-smart-env/node_modules/smart-http-request/adapters/obsidian.js
+var SmartHttpObsidianRequestAdapter = class extends SmartHttpRequestAdapter {
+  async request(request_params) {
+    let response;
+    try {
+      if (!this.main.opts.obsidian_request_url) {
+        throw new Error("obsidian_request_url is required in SmartHttp constructor opts");
+      }
+      response = await this.main.opts.obsidian_request_url({ ...request_params, throw: false });
+      if (response.status === 400) throw new Error("Obsidian request failed");
+      return new SmartHttpObsidianResponseAdapter(response);
+    } catch (error) {
+      console.error("Error in SmartHttpObsidianRequestAdapter.request():");
+      console.error(JSON.stringify(request_params, null, 2));
+      console.error(response);
+      console.error(error);
+      return null;
+    }
+  }
+};
+var SmartHttpObsidianResponseAdapter = class extends SmartHttpResponseAdapter {
+  async status() {
+    return this.response.status;
+  }
+  async json() {
+    return await this.response.json;
+  }
+  async text() {
+    return await this.response.text;
+  }
+  async headers() {
+    return this.response.headers;
+  }
+};
+
 // node_modules/obsidian-smart-env/node_modules/smart-http-request/adapters/fetch.js
 var SmartHttpRequestFetchAdapter = class extends SmartHttpRequestAdapter {
   async request(request_params) {
@@ -8962,10 +9118,10 @@ async function fetch_json_cached(url, cache_key = url) {
     return remote2;
   }
   const fs = await import("node:fs/promises");
-  const path2 = await import("node:path");
+  const path = await import("node:path");
   const os = await import("node:os");
-  const cache_dir = path2.join(os.homedir(), ".cache", "smart-embed-model");
-  const cache_file = path2.join(cache_dir, cache_key);
+  const cache_dir = path.join(os.homedir(), ".cache", "smart-embed-model");
+  const cache_file = path.join(cache_dir, cache_key);
   try {
     const txt = await fs.readFile(cache_file, "utf8");
     return JSON.parse(txt);
@@ -9358,7 +9514,7 @@ var SmartEmbedIframeAdapter = class extends SmartEmbedMessageAdapter {
 };
 
 // node_modules/obsidian-smart-env/node_modules/smart-embed-model/connectors/transformers_iframe.js
-var transformers_connector = 'var __defProp = Object.defineProperty;\nvar __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;\nvar __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);\n\n// ../smart-model/smart_model.js\nvar SmartModel = class {\n  /**\n   * Create a SmartModel instance.\n   * @param {Object} opts - Configuration options\n   * @param {Object} opts.adapters - Map of adapter names to adapter classes\n   * @param {Object} opts.settings - Model settings configuration\n   * @param {Object} opts.model_config - Model-specific configuration\n   * @param {string} opts.model_config.adapter - Name of the adapter to use\n   * @param {string} [opts.model_key] - Optional model identifier to override settings\n   * @throws {Error} If required options are missing\n   */\n  constructor(opts = {}) {\n    __publicField(this, "scope_name", "smart_model");\n    this.opts = opts;\n    this.validate_opts(opts);\n    this.state = "unloaded";\n    this._adapter = null;\n  }\n  /**\n   * Initialize the model by loading the configured adapter.\n   * @async\n   * @returns {Promise<void>}\n   */\n  async initialize() {\n    this.load_adapter(this.adapter_name);\n    await this.load();\n  }\n  /**\n   * Validate required options.\n   * @param {Object} opts - Configuration options\n   */\n  validate_opts(opts) {\n    if (!opts.adapters) throw new Error("opts.adapters is required");\n    if (!opts.settings) throw new Error("opts.settings is required");\n  }\n  /**\n   * Get the current settings\n   * @returns {Object} Current settings\n   */\n  get settings() {\n    if (!this.opts.settings) this.opts.settings = {\n      ...this.constructor.defaults\n    };\n    return this.opts.settings;\n  }\n  /**\n   * Get the current adapter name\n   * @returns {string} Current adapter name\n   */\n  get adapter_name() {\n    let adapter_key = this.opts.model_config?.adapter || this.opts.adapter || this.settings.adapter || Object.keys(this.adapters)[0];\n    if (!adapter_key || !this.adapters[adapter_key]) {\n      console.warn(`Platform "${adapter_key}" not supported`);\n      adapter_key = Object.keys(this.adapters)[0];\n    }\n    return adapter_key;\n  }\n  /**\n   * Get adapter-specific settings.\n   * @returns {Object} Settings for current adapter\n   */\n  get adapter_settings() {\n    if (!this.settings[this.adapter_name]) this.settings[this.adapter_name] = {};\n    return this.settings[this.adapter_name];\n  }\n  get adapter_config() {\n    const base_config = this.adapters[this.adapter_name]?.defaults || {};\n    return {\n      ...base_config,\n      ...this.adapter_settings,\n      ...this.opts.adapter_config\n    };\n  }\n  /**\n   * Get available models.\n   * @returns {Object} Map of model objects\n   */\n  get models() {\n    return this.adapter.models;\n  }\n  /**\n   * Get default model key.\n   * @returns {string} Default model key\n   */\n  get default_model_key() {\n    return this.adapter.constructor.defaults.default_model;\n  }\n  /**\n   * Get the current model key\n   * @returns {string} Current model key\n   */\n  get model_key() {\n    return this.opts.model_key || this.adapter_config.model_key || this.settings.model_key || this.default_model_key;\n  }\n  /**\n   * Get the current model configuration\n   * @returns {Object} Combined base and custom model configuration\n   */\n  get model_config() {\n    const model_key = this.model_key;\n    const base_model_config = this.models[model_key] || {};\n    return {\n      ...this.adapter_config,\n      ...base_model_config,\n      ...this.opts.model_config\n    };\n  }\n  get model_settings() {\n    if (!this.settings[this.model_key]) this.settings[this.model_key] = {};\n    return this.settings[this.model_key];\n  }\n  /**\n   * Load the current adapter and transition to loaded state.\n   * @async\n   * @returns {Promise<void>}\n   */\n  async load() {\n    this.set_state("loading");\n    if (!this.adapter?.is_loaded) {\n      await this.invoke_adapter_method("load");\n    }\n    this.set_state("loaded");\n  }\n  /**\n   * Unload the current adapter and transition to unloaded state.\n   * @async\n   * @returns {Promise<void>}\n   */\n  async unload() {\n    if (this.adapter?.is_loaded) {\n      this.set_state("unloading");\n      await this.invoke_adapter_method("unload");\n      this.set_state("unloaded");\n    }\n  }\n  /**\n   * Set the model\'s state.\n   * @param {(\'unloaded\'|\'loading\'|\'loaded\'|\'unloading\')} new_state - The new state\n   * @throws {Error} If the state is invalid\n   */\n  set_state(new_state) {\n    const valid_states = ["unloaded", "loading", "loaded", "unloading"];\n    if (!valid_states.includes(new_state)) {\n      throw new Error(`Invalid state: ${new_state}`);\n    }\n    this.state = new_state;\n  }\n  get is_loading() {\n    return this.state === "loading";\n  }\n  get is_loaded() {\n    return this.state === "loaded";\n  }\n  get is_unloading() {\n    return this.state === "unloading";\n  }\n  get is_unloaded() {\n    return this.state === "unloaded";\n  }\n  // ADAPTERS\n  /**\n   * Get the map of available adapters\n   * @returns {Object} Map of adapter names to adapter classes\n   */\n  get adapters() {\n    return this.opts.adapters || {};\n  }\n  /**\n   * Load a specific adapter by name.\n   * @async\n   * @param {string} adapter_name - Name of the adapter to load\n   * @throws {Error} If adapter not found or loading fails\n   * @returns {Promise<void>}\n   */\n  async load_adapter(adapter_name) {\n    this.set_adapter(adapter_name);\n    if (!this._adapter.loaded) {\n      this.set_state("loading");\n      try {\n        await this.invoke_adapter_method("load");\n        this.set_state("loaded");\n      } catch (err) {\n        this.set_state("unloaded");\n        throw new Error(`Failed to load adapter: ${err.message}`);\n      }\n    }\n  }\n  /**\n   * Set an adapter instance by name without loading it.\n   * @param {string} adapter_name - Name of the adapter to set\n   * @throws {Error} If adapter not found\n   */\n  set_adapter(adapter_name) {\n    const AdapterClass = this.adapters[adapter_name];\n    if (!AdapterClass) {\n      throw new Error(`Adapter "${adapter_name}" not found.`);\n    }\n    if (this._adapter?.constructor.name.toLowerCase() === adapter_name.toLowerCase()) {\n      return;\n    }\n    this._adapter = new AdapterClass(this);\n  }\n  /**\n   * Get the current active adapter instance\n   * @returns {Object} The active adapter instance\n   * @throws {Error} If adapter not found\n   */\n  get adapter() {\n    const adapter_name = this.adapter_name;\n    if (!adapter_name) {\n      throw new Error(`Adapter not set for model.`);\n    }\n    if (!this._adapter) {\n      this.load_adapter(adapter_name);\n    }\n    return this._adapter;\n  }\n  /**\n   * Ensure the adapter is ready to execute a method.\n   * @param {string} method - Name of the method to check\n   * @throws {Error} If adapter not loaded or method not implemented\n   */\n  ensure_adapter_ready(method) {\n    if (!this.adapter) {\n      throw new Error("No adapter loaded.");\n    }\n    if (typeof this.adapter[method] !== "function") {\n      throw new Error(`Adapter does not implement method: ${method}`);\n    }\n  }\n  /**\n   * Invoke a method on the current adapter.\n   * @async\n   * @param {string} method - Name of the method to call\n   * @param {...any} args - Arguments to pass to the method\n   * @returns {Promise<any>} Result from the adapter method\n   * @throws {Error} If adapter not ready or method fails\n   */\n  async invoke_adapter_method(method, ...args) {\n    this.ensure_adapter_ready(method);\n    return await this.adapter[method](...args);\n  }\n  /**\n   * Get platforms as dropdown options.\n   * @returns {Array<Object>} Array of {value, name} option objects\n   */\n  get_platforms_as_options() {\n    console.log("get_platforms_as_options", this.adapters);\n    return Object.entries(this.adapters).map(([key, AdapterClass]) => ({ value: key, name: AdapterClass.defaults.description || key }));\n  }\n  // SETTINGS\n  /**\n   * Get the settings configuration schema\n   * @returns {Object} Settings configuration object\n   */\n  get settings_config() {\n    return this.process_settings_config({\n      adapter: {\n        name: "Model Platform",\n        type: "dropdown",\n        description: "Select a model platform to use with Smart Model.",\n        options_callback: "get_platforms_as_options",\n        is_scope: true,\n        // trigger re-render of settings when changed\n        callback: "adapter_changed",\n        default: "default"\n      }\n    });\n  }\n  /**\n   * Process settings configuration with conditionals and prefixes.\n   * @param {Object} _settings_config - Raw settings configuration\n   * @param {string} [prefix] - Optional prefix for setting keys\n   * @returns {Object} Processed settings configuration\n   */\n  process_settings_config(_settings_config, prefix = null) {\n    return Object.entries(_settings_config).reduce((acc, [key, val]) => {\n      const new_key = (prefix ? prefix + "." : "") + this.process_setting_key(key);\n      acc[new_key] = val;\n      return acc;\n    }, {});\n  }\n  /**\n   * Process an individual setting key.\n   * Example: replace placeholders with actual adapter names.\n   * @param {string} key - The setting key with placeholders.\n   * @returns {string} Processed setting key.\n   */\n  process_setting_key(key) {\n    return key.replace(/\\[ADAPTER\\]/g, this.adapter_name);\n  }\n  re_render_settings() {\n    console.log("re_render_settings", this.opts);\n    if (typeof this.opts.re_render_settings === "function") this.opts.re_render_settings();\n    else console.warn("re_render_settings is not a function (must be passed in model opts)");\n  }\n  /**\n   * Reload model.\n   */\n  reload_model() {\n    console.log("reload_model", this.opts);\n    if (typeof this.opts.reload_model === "function") this.opts.reload_model();\n    else console.warn("reload_model is not a function (must be passed in model opts)");\n  }\n  adapter_changed() {\n    this.reload_model();\n    this.re_render_settings();\n  }\n  model_changed() {\n    this.reload_model();\n    this.re_render_settings();\n  }\n  // /**\n  //  * Render settings.\n  //  * @param {HTMLElement} [container] - Container element\n  //  * @param {Object} [opts] - Render options\n  //  * @returns {Promise<HTMLElement>} Container element\n  //  */\n  // async render_settings(container=this.settings_container, opts = {}) {\n  //   if(!this.settings_container || container !== this.settings_container) this.settings_container = container;\n  //   const model_type = this.constructor.name.toLowerCase().replace(\'smart\', \'\').replace(\'model\', \'\');\n  //   let model_settings_container;\n  //   if(this.settings_container) {\n  //     const container_id = `#${model_type}-model-settings-container`;\n  //     model_settings_container = this.settings_container.querySelector(container_id);\n  //     if(!model_settings_container) {\n  //       model_settings_container = document.createElement(\'div\');\n  //       model_settings_container.id = container_id;\n  //       this.settings_container.appendChild(model_settings_container);\n  //     }\n  //     model_settings_container.innerHTML = \'<div class="sc-loading">Loading \' + this.adapter_name + \' settings...</div>\';\n  //   }\n  //   const frag = await this.render_settings_component(this, opts);\n  //   if(model_settings_container) {\n  //     model_settings_container.innerHTML = \'\';\n  //     model_settings_container.appendChild(frag);\n  //     this.smart_view.on_open_overlay(model_settings_container);\n  //   }\n  //   return frag;\n  // }\n};\n__publicField(SmartModel, "defaults", {\n  // override in sub-class if needed\n});\n\n// smart_embed_model.js\nvar SmartEmbedModel = class extends SmartModel {\n  /**\n   * Create a SmartEmbedModel instance\n   * @param {Object} opts - Configuration options\n   * @param {Object} [opts.adapters] - Map of available adapter implementations\n   * @param {boolean} [opts.use_gpu] - Whether to enable GPU acceleration\n   * @param {number} [opts.gpu_batch_size] - Batch size when using GPU\n   * @param {number} [opts.batch_size] - Default batch size for processing\n   * @param {Object} [opts.model_config] - Model-specific configuration\n   * @param {string} [opts.model_config.adapter] - Override adapter type\n   * @param {number} [opts.model_config.dims] - Embedding dimensions\n   * @param {number} [opts.model_config.max_tokens] - Maximum tokens to process\n   * @param {Object} [opts.settings] - User settings\n   * @param {string} [opts.settings.api_key] - API key for remote models\n   * @param {number} [opts.settings.min_chars] - Minimum text length to embed\n   */\n  constructor(opts = {}) {\n    super(opts);\n    __publicField(this, "scope_name", "smart_embed_model");\n  }\n  /**\n   * Count tokens in an input string\n   * @param {string} input - Text to tokenize\n   * @returns {Promise<Object>} Token count result\n   * @property {number} tokens - Number of tokens in input\n   * \n   * @example\n   * ```javascript\n   * const result = await model.count_tokens("Hello world");\n   * console.log(result.tokens); // 2\n   * ```\n   */\n  async count_tokens(input) {\n    return await this.invoke_adapter_method("count_tokens", input);\n  }\n  /**\n   * Generate embeddings for a single input\n   * @param {string|Object} input - Text or object with embed_input property\n   * @returns {Promise<Object>} Embedding result\n   * @property {number[]} vec - Embedding vector\n   * @property {number} tokens - Token count\n   * \n   * @example\n   * ```javascript\n   * const result = await model.embed("Hello world");\n   * console.log(result.vec); // [0.1, 0.2, ...]\n   * ```\n   */\n  async embed(input) {\n    if (typeof input === "string") input = { embed_input: input };\n    return (await this.embed_batch([input]))[0];\n  }\n  /**\n   * Generate embeddings for multiple inputs in batch\n   * @param {Array<string|Object>} inputs - Array of texts or objects with embed_input\n   * @returns {Promise<Array<Object>>} Array of embedding results\n   * @property {number[]} vec - Embedding vector for each input\n   * @property {number} tokens - Token count for each input\n   * \n   * @example\n   * ```javascript\n   * const results = await model.embed_batch([\n   *   { embed_input: "First text" },\n   *   { embed_input: "Second text" }\n   * ]);\n   * ```\n   */\n  async embed_batch(inputs) {\n    return await this.invoke_adapter_method("embed_batch", inputs);\n  }\n  /**\n   * Get the current batch size based on GPU settings\n   * @returns {number} Current batch size for processing\n   */\n  get batch_size() {\n    return this.adapter.batch_size || 1;\n  }\n  /**\n   * Get settings configuration schema\n   * @returns {Object} Settings configuration object\n   */\n  get settings_config() {\n    const _settings_config = {\n      adapter: {\n        name: "Embedding model platform",\n        type: "dropdown",\n        description: "Select an embedding model platform. The default \'transformers\' utilizes built-in local models.",\n        options_callback: "get_platforms_as_options",\n        callback: "adapter_changed",\n        default: this.constructor.defaults.adapter\n      },\n      ...this.adapter.settings_config || {}\n    };\n    return this.process_settings_config(_settings_config);\n  }\n  process_setting_key(key) {\n    return key.replace(/\\[ADAPTER\\]/g, this.adapter_name);\n  }\n  /**\n   * Get available embedding model options\n   * @returns {Array<Object>} Array of model options with value and name\n   */\n  get_embedding_model_options() {\n    return Object.entries(this.models).map(([key, model2]) => ({ value: key, name: key }));\n  }\n  /**\n   * Get embedding model options including \'None\' option\n   * @returns {Array<Object>} Array of model options with value and name\n   */\n  get_block_embedding_model_options() {\n    const options = this.get_embedding_model_options();\n    options.unshift({ value: "None", name: "None" });\n    return options;\n  }\n};\n__publicField(SmartEmbedModel, "defaults", {\n  adapter: "transformers"\n});\n\n// ../smart-model/adapters/_adapter.js\nvar SmartModelAdapter = class {\n  /**\n   * Create a SmartModelAdapter instance.\n   * @param {SmartModel} model - The parent SmartModel instance\n   */\n  constructor(model2) {\n    this.model = model2;\n    this.state = "unloaded";\n  }\n  /**\n   * Load the adapter.\n   * @async\n   * @returns {Promise<void>}\n   */\n  async load() {\n    this.set_state("loaded");\n  }\n  /**\n   * Unload the adapter.\n   * @returns {void}\n   */\n  unload() {\n    this.set_state("unloaded");\n  }\n  /**\n   * Get all settings.\n   * @returns {Object} All settings\n   */\n  get settings() {\n    return this.model.settings;\n  }\n  /**\n   * Get the current model key.\n   * @returns {string} Current model identifier\n   */\n  get model_key() {\n    return this.model.model_key;\n  }\n  /**\n   * Get the current model configuration.\n   * @returns {Object} Model configuration\n   */\n  get model_config() {\n    return this.model.model_config;\n  }\n  /**\n   * Get model-specific settings.\n   * @returns {Object} Settings for current model\n   */\n  get model_settings() {\n    return this.model.model_settings;\n  }\n  /**\n   * Get adapter-specific configuration.\n   * @returns {Object} Adapter configuration\n   */\n  get adapter_config() {\n    return this.model.adapter_config;\n  }\n  /**\n   * Get adapter-specific settings.\n   * @returns {Object} Adapter settings\n   */\n  get adapter_settings() {\n    return this.model.adapter_settings;\n  }\n  /**\n   * Get the models.\n   * @returns {Object} Map of model objects\n   */\n  get models() {\n    if (typeof this.adapter_config.models === "object" && Object.keys(this.adapter_config.models || {}).length > 0) return this.adapter_config.models;\n    else {\n      return {};\n    }\n  }\n  /**\n   * Get available models from the API.\n   * @abstract\n   * @param {boolean} [refresh=false] - Whether to refresh cached models\n   * @returns {Promise<Object>} Map of model objects\n   */\n  async get_models(refresh = false) {\n    throw new Error("get_models not implemented");\n  }\n  /**\n   * Validate the parameters for get_models.\n   * @returns {boolean|Array<Object>} True if parameters are valid, otherwise an array of error objects\n   */\n  validate_get_models_params() {\n    return true;\n  }\n  /**\n   * Get available models as dropdown options synchronously.\n   * @returns {Array<Object>} Array of model options.\n   */\n  get_models_as_options() {\n    const models = this.models;\n    const params_valid = this.validate_get_models_params();\n    if (params_valid !== true) return params_valid;\n    if (!Object.keys(models || {}).length) {\n      this.get_models(true);\n      return [{ value: "", name: "No models currently available" }];\n    }\n    return Object.values(models).map((model2) => ({ value: model2.id, name: model2.name || model2.id })).sort((a, b) => a.name.localeCompare(b.name));\n  }\n  /**\n   * Set the adapter\'s state.\n   * @param {(\'unloaded\'|\'loading\'|\'loaded\'|\'unloading\')} new_state - The new state\n   * @throws {Error} If the state is invalid\n   */\n  set_state(new_state) {\n    const valid_states = ["unloaded", "loading", "loaded", "unloading"];\n    if (!valid_states.includes(new_state)) {\n      throw new Error(`Invalid state: ${new_state}`);\n    }\n    this.state = new_state;\n  }\n  // Replace individual state getters/setters with a unified state management\n  get is_loading() {\n    return this.state === "loading";\n  }\n  get is_loaded() {\n    return this.state === "loaded";\n  }\n  get is_unloading() {\n    return this.state === "unloading";\n  }\n  get is_unloaded() {\n    return this.state === "unloaded";\n  }\n};\n\n// adapters/_adapter.js\nvar SmartEmbedAdapter = class extends SmartModelAdapter {\n  /**\n   * Create adapter instance\n   * @param {SmartEmbedModel} model - Parent model instance\n   */\n  constructor(model2) {\n    super(model2);\n    this.smart_embed = model2;\n  }\n  /**\n   * Count tokens in input text\n   * @abstract\n   * @param {string} input - Text to tokenize\n   * @returns {Promise<Object>} Token count result\n   * @property {number} tokens - Number of tokens in input\n   * @throws {Error} If not implemented by subclass\n   */\n  async count_tokens(input) {\n    throw new Error("count_tokens method not implemented");\n  }\n  /**\n   * Generate embeddings for single input\n   * @abstract\n   * @param {string|Object} input - Text to embed\n   * @returns {Promise<Object>} Embedding result\n   * @property {number[]} vec - Embedding vector\n   * @property {number} tokens - Number of tokens in input\n   * @throws {Error} If not implemented by subclass\n   */\n  async embed(input) {\n    throw new Error("embed method not implemented");\n  }\n  /**\n   * Generate embeddings for multiple inputs\n   * @abstract\n   * @param {Array<string|Object>} inputs - Texts to embed\n   * @returns {Promise<Array<Object>>} Array of embedding results\n   * @property {number[]} vec - Embedding vector for each input\n   * @property {number} tokens - Number of tokens in each input\n   * @throws {Error} If not implemented by subclass\n   */\n  async embed_batch(inputs) {\n    throw new Error("embed_batch method not implemented");\n  }\n  get settings_config() {\n    return {\n      "[ADAPTER].model_key": {\n        name: "Embedding model",\n        type: "dropdown",\n        description: "Select an embedding model.",\n        options_callback: "adapter.get_models_as_options",\n        callback: "model_changed",\n        default: this.constructor.defaults.default_model\n      }\n    };\n  }\n  get dims() {\n    return this.model_config.dims;\n  }\n  get max_tokens() {\n    return this.model_config.max_tokens;\n  }\n  // get batch_size() { return this.model_config.batch_size; }\n  get use_gpu() {\n    if (typeof this._use_gpu === "undefined") {\n      if (typeof this.model.opts.use_gpu !== "undefined") this._use_gpu = this.model.opts.use_gpu;\n      else this._use_gpu = typeof navigator !== "undefined" && !!navigator?.gpu && this.model_settings.gpu_batch_size !== 0;\n    }\n    return this._use_gpu;\n  }\n  set use_gpu(value) {\n    this._use_gpu = value;\n  }\n  get batch_size() {\n    if (this.use_gpu && this.model_config?.gpu_batch_size) return this.model_config.gpu_batch_size;\n    return this.model.opts.batch_size || this.model_config.batch_size || 1;\n  }\n};\n/**\n * @override in sub-class with adapter-specific default configurations\n * @property {string} id - The adapter identifier\n * @property {string} description - Human-readable description\n * @property {string} type - Adapter type ("API")\n * @property {string} endpoint - API endpoint\n * @property {string} adapter - Adapter identifier\n * @property {string} default_model - Default model to use\n */\n__publicField(SmartEmbedAdapter, "defaults", {});\n\n// adapters/transformers.js\nvar transformers_defaults = {\n  adapter: "transformers",\n  description: "Transformers (Local, built-in)",\n  default_model: "TaylorAI/bge-micro-v2"\n};\nvar SmartEmbedTransformersAdapter = class extends SmartEmbedAdapter {\n  /**\n   * Create transformers adapter instance\n   * @param {SmartEmbedModel} model - Parent model instance\n   */\n  constructor(model2) {\n    super(model2);\n    this.pipeline = null;\n    this.tokenizer = null;\n  }\n  /**\n   * Load model and tokenizer\n   * @returns {Promise<void>}\n   */\n  async load() {\n    await this.load_transformers();\n    this.loaded = true;\n    this.set_state("loaded");\n  }\n  /**\n   * Unload model and free resources\n   * @returns {Promise<void>}\n   */\n  async unload() {\n    if (this.pipeline) {\n      if (this.pipeline.destroy) this.pipeline.destroy();\n      this.pipeline = null;\n    }\n    if (this.tokenizer) {\n      this.tokenizer = null;\n    }\n    this.loaded = false;\n    this.set_state("unloaded");\n  }\n  /**\n   * Initialize transformers pipeline and tokenizer\n   * @private\n   * @returns {Promise<void>}\n   */\n  async load_transformers() {\n    const { pipeline, env, AutoTokenizer } = await import("@huggingface/transformers");\n    env.allowLocalModels = false;\n    const pipeline_opts = {\n      quantized: true\n    };\n    if (this.use_gpu) {\n      console.log("[Transformers] Using GPU");\n      pipeline_opts.device = "webgpu";\n      pipeline_opts.dtype = "fp32";\n    } else {\n      console.log("[Transformers] Using CPU");\n      env.backends.onnx.wasm.numThreads = 8;\n    }\n    this.pipeline = await pipeline("feature-extraction", this.model_key, pipeline_opts);\n    this.tokenizer = await AutoTokenizer.from_pretrained(this.model_key);\n  }\n  /**\n   * Count tokens in input text\n   * @param {string} input - Text to tokenize\n   * @returns {Promise<Object>} Token count result\n   */\n  async count_tokens(input) {\n    if (!this.tokenizer) await this.load();\n    const { input_ids } = await this.tokenizer(input);\n    return { tokens: input_ids.data.length };\n  }\n  /**\n   * Generate embeddings for multiple inputs\n   * @param {Array<Object>} inputs - Array of input objects\n   * @returns {Promise<Array<Object>>} Processed inputs with embeddings\n   */\n  async embed_batch(inputs) {\n    if (!this.pipeline) await this.load();\n    const filtered_inputs = inputs.filter((item) => item.embed_input?.length > 0);\n    if (!filtered_inputs.length) return [];\n    if (filtered_inputs.length > this.batch_size) {\n      console.log(`Processing ${filtered_inputs.length} inputs in batches of ${this.batch_size}`);\n      const results = [];\n      for (let i = 0; i < filtered_inputs.length; i += this.batch_size) {\n        const batch = filtered_inputs.slice(i, i + this.batch_size);\n        const batch_results = await this._process_batch(batch);\n        results.push(...batch_results);\n      }\n      return results;\n    }\n    return await this._process_batch(filtered_inputs);\n  }\n  /**\n   * Process a single batch of inputs\n   * @private\n   * @param {Array<Object>} batch_inputs - Batch of inputs to process\n   * @returns {Promise<Array<Object>>} Processed batch results\n   */\n  async _process_batch(batch_inputs) {\n    const tokens = await Promise.all(batch_inputs.map((item) => this.count_tokens(item.embed_input)));\n    const embed_inputs = await Promise.all(batch_inputs.map(async (item, i) => {\n      if (tokens[i].tokens < this.max_tokens) return item.embed_input;\n      let token_ct = tokens[i].tokens;\n      let truncated_input = item.embed_input;\n      while (token_ct > this.max_tokens) {\n        const pct = this.max_tokens / token_ct;\n        const max_chars = Math.floor(truncated_input.length * pct * 0.9);\n        truncated_input = truncated_input.substring(0, max_chars) + "...";\n        token_ct = (await this.count_tokens(truncated_input)).tokens;\n      }\n      tokens[i].tokens = token_ct;\n      return truncated_input;\n    }));\n    try {\n      const resp = await this.pipeline(embed_inputs, { pooling: "mean", normalize: true });\n      return batch_inputs.map((item, i) => {\n        item.vec = Array.from(resp[i].data).map((val) => Math.round(val * 1e8) / 1e8);\n        item.tokens = tokens[i].tokens;\n        return item;\n      });\n    } catch (err) {\n      console.error("error_processing_batch", err);\n      this.pipeline?.dispose();\n      this.pipeline = null;\n      await this.load();\n      return Promise.all(batch_inputs.map(async (item) => {\n        try {\n          const result = await this.pipeline(item.embed_input, { pooling: "mean", normalize: true });\n          item.vec = Array.from(result[0].data).map((val) => Math.round(val * 1e8) / 1e8);\n          item.tokens = (await this.count_tokens(item.embed_input)).tokens;\n          return item;\n        } catch (single_err) {\n          console.error("error_processing_single_item", single_err);\n          return {\n            ...item,\n            vec: [],\n            tokens: 0,\n            error: single_err.message\n          };\n        }\n      }));\n    }\n  }\n  /** @returns {Object} Settings configuration for transformers adapter */\n  get settings_config() {\n    return transformers_settings_config;\n  }\n  /**\n   * Get available models (hardcoded list)\n   * @returns {Promise<Object>} Map of model objects\n   */\n  get_models() {\n    return Promise.resolve(this.models);\n  }\n  get models() {\n    return transformers_models;\n  }\n};\n__publicField(SmartEmbedTransformersAdapter, "defaults", transformers_defaults);\nvar transformers_models = {\n  "TaylorAI/bge-micro-v2": {\n    "id": "TaylorAI/bge-micro-v2",\n    "batch_size": 1,\n    "dims": 384,\n    "max_tokens": 512,\n    "name": "BGE-micro-v2",\n    "description": "Local, 512 tokens, 384 dim (recommended)",\n    "adapter": "transformers"\n  },\n  "TaylorAI/gte-tiny": {\n    "id": "TaylorAI/gte-tiny",\n    "batch_size": 1,\n    "dims": 384,\n    "max_tokens": 512,\n    "name": "GTE-tiny",\n    "description": "Local, 512 tokens, 384 dim",\n    "adapter": "transformers"\n  },\n  "Mihaiii/Ivysaur": {\n    "id": "Mihaiii/Ivysaur",\n    "batch_size": 1,\n    "dims": 384,\n    "max_tokens": 512,\n    "name": "Ivysaur",\n    "description": "Local, 512 tokens, 384 dim",\n    "adapter": "transformers"\n  },\n  "andersonbcdefg/bge-small-4096": {\n    "id": "andersonbcdefg/bge-small-4096",\n    "batch_size": 1,\n    "dims": 384,\n    "max_tokens": 4096,\n    "name": "BGE-small-4K",\n    "description": "Local, 4,096 tokens, 384 dim",\n    "adapter": "transformers"\n  },\n  "Xenova/jina-embeddings-v2-base-zh": {\n    "id": "Xenova/jina-embeddings-v2-base-zh",\n    "batch_size": 1,\n    "dims": 768,\n    "max_tokens": 8192,\n    "name": "Jina-v2-base-zh-8K",\n    "description": "Local, 8,192 tokens, 768 dim, Chinese/English bilingual",\n    "adapter": "transformers"\n  },\n  "Xenova/jina-embeddings-v2-small-en": {\n    "id": "Xenova/jina-embeddings-v2-small-en",\n    "batch_size": 1,\n    "dims": 512,\n    "max_tokens": 8192,\n    "name": "Jina-v2-small-en",\n    "description": "Local, 8,192 tokens, 512 dim",\n    "adapter": "transformers"\n  },\n  "nomic-ai/nomic-embed-text-v1.5": {\n    "id": "nomic-ai/nomic-embed-text-v1.5",\n    "batch_size": 1,\n    "dims": 768,\n    "max_tokens": 2048,\n    "name": "Nomic-embed-text-v1.5",\n    "description": "Local, 8,192 tokens, 768 dim",\n    "adapter": "transformers"\n  },\n  "Xenova/bge-small-en-v1.5": {\n    "id": "Xenova/bge-small-en-v1.5",\n    "batch_size": 1,\n    "dims": 384,\n    "max_tokens": 512,\n    "name": "BGE-small",\n    "description": "Local, 512 tokens, 384 dim",\n    "adapter": "transformers"\n  },\n  "nomic-ai/nomic-embed-text-v1": {\n    "id": "nomic-ai/nomic-embed-text-v1",\n    "batch_size": 1,\n    "dims": 768,\n    "max_tokens": 2048,\n    "name": "Nomic-embed-text",\n    "description": "Local, 2,048 tokens, 768 dim",\n    "adapter": "transformers"\n  }\n};\nvar transformers_settings_config = {\n  "[ADAPTER].gpu_batch_size": {\n    name: "GPU batch size",\n    type: "number",\n    description: "Number of embeddings to process per batch on GPU. Use 0 to disable GPU.",\n    placeholder: "Enter number ex. 10"\n  },\n  "[ADAPTER].legacy_transformers": {\n    name: "Legacy transformers (no GPU)",\n    type: "toggle",\n    description: "Use legacy transformers (v2) instead of v3. This may resolve issues if the local embedding isn\'t working.",\n    callback: "embed_model_changed",\n    default: true\n  }\n};\n\n// build/transformers_iframe_script.js\nvar model = null;\nasync function process_message(data) {\n  const { method, params, id, iframe_id } = data;\n  try {\n    let result;\n    switch (method) {\n      case "init":\n        console.log("init");\n        break;\n      case "load":\n        console.log("load", params);\n        model = new SmartEmbedModel({\n          ...params,\n          adapters: { transformers: SmartEmbedTransformersAdapter },\n          adapter: "transformers",\n          settings: {}\n        });\n        await model.load();\n        result = { model_loaded: true };\n        break;\n      case "embed_batch":\n        if (!model) throw new Error("Model not loaded");\n        result = await model.embed_batch(params.inputs);\n        break;\n      case "count_tokens":\n        if (!model) throw new Error("Model not loaded");\n        result = await model.count_tokens(params);\n        break;\n      default:\n        throw new Error(`Unknown method: ${method}`);\n    }\n    return { id, result, iframe_id };\n  } catch (error) {\n    console.error("Error processing message:", error);\n    return { id, error: error.message, iframe_id };\n  }\n}\nprocess_message({ method: "init" });\n';
+var transformers_connector = 'var __defProp = Object.defineProperty;\nvar __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;\nvar __publicField = (obj, key, value) => {\n  __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);\n  return value;\n};\n\n// ../smart-model/smart_model.js\nvar SmartModel = class {\n  /**\n   * Create a SmartModel instance.\n   * @param {Object} opts - Configuration options\n   * @param {Object} opts.adapters - Map of adapter names to adapter classes\n   * @param {Object} opts.settings - Model settings configuration\n   * @param {Object} opts.model_config - Model-specific configuration\n   * @param {string} opts.model_config.adapter - Name of the adapter to use\n   * @param {string} [opts.model_key] - Optional model identifier to override settings\n   * @throws {Error} If required options are missing\n   */\n  constructor(opts = {}) {\n    __publicField(this, "scope_name", "smart_model");\n    this.opts = opts;\n    this.validate_opts(opts);\n    this.state = "unloaded";\n    this._adapter = null;\n  }\n  /**\n   * Initialize the model by loading the configured adapter.\n   * @async\n   * @returns {Promise<void>}\n   */\n  async initialize() {\n    this.load_adapter(this.adapter_name);\n    await this.load();\n  }\n  /**\n   * Validate required options.\n   * @param {Object} opts - Configuration options\n   */\n  validate_opts(opts) {\n    if (!opts.adapters)\n      throw new Error("opts.adapters is required");\n    if (!opts.settings)\n      throw new Error("opts.settings is required");\n  }\n  /**\n   * Get the current settings\n   * @returns {Object} Current settings\n   */\n  get settings() {\n    if (!this.opts.settings)\n      this.opts.settings = {\n        ...this.constructor.defaults\n      };\n    return this.opts.settings;\n  }\n  /**\n   * Get the current adapter name\n   * @returns {string} Current adapter name\n   */\n  get adapter_name() {\n    let adapter_key = this.opts.model_config?.adapter || this.opts.adapter || this.settings.adapter || Object.keys(this.adapters)[0];\n    if (!adapter_key || !this.adapters[adapter_key]) {\n      console.warn(`Platform "${adapter_key}" not supported`);\n      adapter_key = Object.keys(this.adapters)[0];\n    }\n    return adapter_key;\n  }\n  /**\n   * Get adapter-specific settings.\n   * @returns {Object} Settings for current adapter\n   */\n  get adapter_settings() {\n    if (!this.settings[this.adapter_name])\n      this.settings[this.adapter_name] = {};\n    return this.settings[this.adapter_name];\n  }\n  get adapter_config() {\n    const base_config = this.adapters[this.adapter_name]?.defaults || {};\n    return {\n      ...base_config,\n      ...this.adapter_settings,\n      ...this.opts.adapter_config\n    };\n  }\n  /**\n   * Get available models.\n   * @returns {Object} Map of model objects\n   */\n  get models() {\n    return this.adapter.models;\n  }\n  /**\n   * Get default model key.\n   * @returns {string} Default model key\n   */\n  get default_model_key() {\n    return this.adapter.constructor.defaults.default_model;\n  }\n  /**\n   * Get the current model key\n   * @returns {string} Current model key\n   */\n  get model_key() {\n    return this.opts.model_key || this.adapter_config.model_key || this.settings.model_key || this.default_model_key;\n  }\n  /**\n   * Get the current model configuration\n   * @returns {Object} Combined base and custom model configuration\n   */\n  get model_config() {\n    const model_key = this.model_key;\n    const base_model_config = this.models[model_key] || {};\n    return {\n      ...this.adapter_config,\n      ...base_model_config,\n      ...this.opts.model_config\n    };\n  }\n  get model_settings() {\n    if (!this.settings[this.model_key])\n      this.settings[this.model_key] = {};\n    return this.settings[this.model_key];\n  }\n  /**\n   * Load the current adapter and transition to loaded state.\n   * @async\n   * @returns {Promise<void>}\n   */\n  async load() {\n    this.set_state("loading");\n    try {\n      if (!this.adapter?.is_loaded) {\n        await this.invoke_adapter_method("load");\n      }\n    } catch (err) {\n      this.set_state("unloaded");\n      if (!this.reload_model_timeout) {\n        this.reload_model_timeout = setTimeout(async () => {\n          this.reload_model_timeout = null;\n          await this.load();\n          this.set_state("loaded");\n          this.notices?.show("Loaded model: " + this.model_key);\n        }, 6e4);\n      }\n      throw new Error(`Failed to load model: ${err.message}`);\n    }\n    this.set_state("loaded");\n  }\n  /**\n   * Unload the current adapter and transition to unloaded state.\n   * @async\n   * @returns {Promise<void>}\n   */\n  async unload() {\n    if (this.adapter?.is_loaded) {\n      this.set_state("unloading");\n      await this.invoke_adapter_method("unload");\n      this.set_state("unloaded");\n    }\n  }\n  /**\n   * Set the model\'s state.\n   * @param {(\'unloaded\'|\'loading\'|\'loaded\'|\'unloading\')} new_state - The new state\n   * @throws {Error} If the state is invalid\n   */\n  set_state(new_state) {\n    const valid_states = ["unloaded", "loading", "loaded", "unloading"];\n    if (!valid_states.includes(new_state)) {\n      throw new Error(`Invalid state: ${new_state}`);\n    }\n    this.state = new_state;\n  }\n  get is_loading() {\n    return this.state === "loading";\n  }\n  get is_loaded() {\n    return this.state === "loaded";\n  }\n  get is_unloading() {\n    return this.state === "unloading";\n  }\n  get is_unloaded() {\n    return this.state === "unloaded";\n  }\n  // ADAPTERS\n  /**\n   * Get the map of available adapters\n   * @returns {Object} Map of adapter names to adapter classes\n   */\n  get adapters() {\n    return this.opts.adapters || {};\n  }\n  /**\n   * Load a specific adapter by name.\n   * @async\n   * @param {string} adapter_name - Name of the adapter to load\n   * @throws {Error} If adapter not found or loading fails\n   * @returns {Promise<void>}\n   */\n  async load_adapter(adapter_name) {\n    this.set_adapter(adapter_name);\n    if (!this._adapter.loaded) {\n      this.set_state("loading");\n      try {\n        await this.invoke_adapter_method("load");\n        this.set_state("loaded");\n      } catch (err) {\n        this.set_state("unloaded");\n        throw new Error(`Failed to load adapter: ${err.message}`);\n      }\n    }\n  }\n  /**\n   * Set an adapter instance by name without loading it.\n   * @param {string} adapter_name - Name of the adapter to set\n   * @throws {Error} If adapter not found\n   */\n  set_adapter(adapter_name) {\n    const AdapterClass = this.adapters[adapter_name];\n    if (!AdapterClass) {\n      throw new Error(`Adapter "${adapter_name}" not found.`);\n    }\n    if (this._adapter?.constructor.name.toLowerCase() === adapter_name.toLowerCase()) {\n      return;\n    }\n    this._adapter = new AdapterClass(this);\n  }\n  /**\n   * Get the current active adapter instance\n   * @returns {Object} The active adapter instance\n   * @throws {Error} If adapter not found\n   */\n  get adapter() {\n    const adapter_name = this.adapter_name;\n    if (!adapter_name) {\n      throw new Error(`Adapter not set for model.`);\n    }\n    if (!this._adapter) {\n      this.load_adapter(adapter_name);\n    }\n    return this._adapter;\n  }\n  /**\n   * Ensure the adapter is ready to execute a method.\n   * @param {string} method - Name of the method to check\n   * @throws {Error} If adapter not loaded or method not implemented\n   */\n  ensure_adapter_ready(method) {\n    if (!this.adapter) {\n      throw new Error("No adapter loaded.");\n    }\n    if (typeof this.adapter[method] !== "function") {\n      throw new Error(`Adapter does not implement method: ${method}`);\n    }\n  }\n  /**\n   * Invoke a method on the current adapter.\n   * @async\n   * @param {string} method - Name of the method to call\n   * @param {...any} args - Arguments to pass to the method\n   * @returns {Promise<any>} Result from the adapter method\n   * @throws {Error} If adapter not ready or method fails\n   */\n  async invoke_adapter_method(method, ...args) {\n    this.ensure_adapter_ready(method);\n    return await this.adapter[method](...args);\n  }\n  /**\n   * Get platforms as dropdown options.\n   * @returns {Array<Object>} Array of {value, name} option objects\n   */\n  get_platforms_as_options() {\n    return Object.entries(this.adapters).map(([key, AdapterClass]) => ({ value: key, name: AdapterClass.defaults.description || key }));\n  }\n  // SETTINGS\n  /**\n   * Get the settings configuration schema\n   * @returns {Object} Settings configuration object\n   */\n  get settings_config() {\n    return this.process_settings_config({\n      adapter: {\n        name: "Model Platform",\n        type: "dropdown",\n        description: "Select a model platform to use with Smart Model.",\n        options_callback: "get_platforms_as_options",\n        is_scope: true,\n        // trigger re-render of settings when changed\n        callback: "adapter_changed",\n        default: "default"\n      }\n    });\n  }\n  /**\n   * Process settings configuration with conditionals and prefixes.\n   * @param {Object} _settings_config - Raw settings configuration\n   * @param {string} [prefix] - Optional prefix for setting keys\n   * @returns {Object} Processed settings configuration\n   */\n  process_settings_config(_settings_config, prefix = null) {\n    return Object.entries(_settings_config).reduce((acc, [key, val]) => {\n      const new_key = (prefix ? prefix + "." : "") + this.process_setting_key(key);\n      acc[new_key] = val;\n      return acc;\n    }, {});\n  }\n  /**\n   * Process an individual setting key.\n   * Example: replace placeholders with actual adapter names.\n   * @param {string} key - The setting key with placeholders.\n   * @returns {string} Processed setting key.\n   */\n  process_setting_key(key) {\n    return key.replace(/\\[ADAPTER\\]/g, this.adapter_name);\n  }\n  re_render_settings() {\n    if (typeof this.opts.re_render_settings === "function")\n      this.opts.re_render_settings();\n    else\n      console.warn("re_render_settings is not a function (must be passed in model opts)");\n  }\n  /**\n   * Reload model.\n   */\n  reload_model() {\n    if (typeof this.opts.reload_model === "function")\n      this.opts.reload_model();\n    else\n      console.warn("reload_model is not a function (must be passed in model opts)");\n  }\n  adapter_changed() {\n    this.reload_model();\n    this.re_render_settings();\n  }\n  model_changed() {\n    this.reload_model();\n    this.re_render_settings();\n  }\n};\n__publicField(SmartModel, "defaults", {\n  // override in sub-class if needed\n});\n\n// smart_embed_model.js\nvar SmartEmbedModel = class extends SmartModel {\n  /**\n   * Create a SmartEmbedModel instance\n   * @param {Object} opts - Configuration options\n   * @param {Object} [opts.adapters] - Map of available adapter implementations\n   * @param {boolean} [opts.use_gpu] - Whether to enable GPU acceleration\n   * @param {number} [opts.gpu_batch_size] - Batch size when using GPU\n   * @param {number} [opts.batch_size] - Default batch size for processing\n   * @param {Object} [opts.model_config] - Model-specific configuration\n   * @param {string} [opts.model_config.adapter] - Override adapter type\n   * @param {number} [opts.model_config.dims] - Embedding dimensions\n   * @param {number} [opts.model_config.max_tokens] - Maximum tokens to process\n   * @param {Object} [opts.settings] - User settings\n   * @param {string} [opts.settings.api_key] - API key for remote models\n   * @param {number} [opts.settings.min_chars] - Minimum text length to embed\n   */\n  constructor(opts = {}) {\n    super(opts);\n    __publicField(this, "scope_name", "smart_embed_model");\n  }\n  /**\n   * Count tokens in an input string\n   * @param {string} input - Text to tokenize\n   * @returns {Promise<Object>} Token count result\n   * @property {number} tokens - Number of tokens in input\n   * \n   * @example\n   * ```javascript\n   * const result = await model.count_tokens("Hello world");\n   * console.log(result.tokens); // 2\n   * ```\n   */\n  async count_tokens(input) {\n    return await this.invoke_adapter_method("count_tokens", input);\n  }\n  /**\n   * Generate embeddings for a single input\n   * @param {string|Object} input - Text or object with embed_input property\n   * @returns {Promise<Object>} Embedding result\n   * @property {number[]} vec - Embedding vector\n   * @property {number} tokens - Token count\n   * \n   * @example\n   * ```javascript\n   * const result = await model.embed("Hello world");\n   * console.log(result.vec); // [0.1, 0.2, ...]\n   * ```\n   */\n  async embed(input) {\n    if (typeof input === "string")\n      input = { embed_input: input };\n    return (await this.embed_batch([input]))[0];\n  }\n  /**\n   * Generate embeddings for multiple inputs in batch\n   * @param {Array<string|Object>} inputs - Array of texts or objects with embed_input\n   * @returns {Promise<Array<Object>>} Array of embedding results\n   * @property {number[]} vec - Embedding vector for each input\n   * @property {number} tokens - Token count for each input\n   * \n   * @example\n   * ```javascript\n   * const results = await model.embed_batch([\n   *   { embed_input: "First text" },\n   *   { embed_input: "Second text" }\n   * ]);\n   * ```\n   */\n  async embed_batch(inputs) {\n    return await this.invoke_adapter_method("embed_batch", inputs);\n  }\n  /**\n   * Get the current batch size based on GPU settings\n   * @returns {number} Current batch size for processing\n   */\n  get batch_size() {\n    return this.adapter.batch_size || 1;\n  }\n  /**\n   * Get settings configuration schema\n   * @returns {Object} Settings configuration object\n   */\n  get settings_config() {\n    const _settings_config = {\n      adapter: {\n        name: "Embedding model platform",\n        type: "dropdown",\n        description: "Select an embedding model platform. The default \'transformers\' utilizes built-in local models.",\n        options_callback: "get_platforms_as_options",\n        callback: "adapter_changed",\n        default: this.constructor.defaults.adapter\n      },\n      ...this.adapter.settings_config || {}\n    };\n    return this.process_settings_config(_settings_config);\n  }\n  process_setting_key(key) {\n    return key.replace(/\\[ADAPTER\\]/g, this.adapter_name);\n  }\n  /**\n   * Get available embedding model options\n   * @returns {Array<Object>} Array of model options with value and name\n   */\n  get_embedding_model_options() {\n    return Object.entries(this.models).map(([key, model2]) => ({ value: key, name: key }));\n  }\n  // /**\n  //  * Get embedding model options including \'None\' option\n  //  * @returns {Array<Object>} Array of model options with value and name\n  //  */\n  // get_block_embedding_model_options() {\n  //   const options = this.get_embedding_model_options();\n  //   options.unshift({ value: \'None\', name: \'None\' });\n  //   return options;\n  // }\n};\n__publicField(SmartEmbedModel, "defaults", {\n  adapter: "transformers"\n});\n\n// ../smart-model/adapters/_adapter.js\nvar SmartModelAdapter = class {\n  /**\n   * Create a SmartModelAdapter instance.\n   * @param {SmartModel} model - The parent SmartModel instance\n   */\n  constructor(model2) {\n    this.model = model2;\n    this.state = "unloaded";\n  }\n  /**\n   * Load the adapter.\n   * @async\n   * @returns {Promise<void>}\n   */\n  async load() {\n    this.set_state("loaded");\n  }\n  /**\n   * Unload the adapter.\n   * @returns {void}\n   */\n  unload() {\n    this.set_state("unloaded");\n  }\n  /**\n   * Get all settings.\n   * @returns {Object} All settings\n   */\n  get settings() {\n    return this.model.settings;\n  }\n  /**\n   * Get the current model key.\n   * @returns {string} Current model identifier\n   */\n  get model_key() {\n    return this.model.model_key;\n  }\n  /**\n   * Get the current model configuration.\n   * @returns {Object} Model configuration\n   */\n  get model_config() {\n    return this.model.model_config;\n  }\n  /**\n   * Get model-specific settings.\n   * @returns {Object} Settings for current model\n   */\n  get model_settings() {\n    return this.model.model_settings;\n  }\n  /**\n   * Get adapter-specific configuration.\n   * @returns {Object} Adapter configuration\n   */\n  get adapter_config() {\n    return this.model.adapter_config;\n  }\n  /**\n   * Get adapter-specific settings.\n   * @returns {Object} Adapter settings\n   */\n  get adapter_settings() {\n    return this.model.adapter_settings;\n  }\n  /**\n   * Get the models.\n   * @returns {Object} Map of model objects\n   */\n  get models() {\n    if (typeof this.adapter_config.models === "object" && Object.keys(this.adapter_config.models || {}).length > 0)\n      return this.adapter_config.models;\n    else {\n      return {};\n    }\n  }\n  /**\n   * Get available models from the API.\n   * @abstract\n   * @param {boolean} [refresh=false] - Whether to refresh cached models\n   * @returns {Promise<Object>} Map of model objects\n   */\n  async get_models(refresh = false) {\n    throw new Error("get_models not implemented");\n  }\n  /**\n   * Validate the parameters for get_models.\n   * @returns {boolean|Array<Object>} True if parameters are valid, otherwise an array of error objects\n   */\n  validate_get_models_params() {\n    return true;\n  }\n  /**\n   * Get available models as dropdown options synchronously.\n   * @returns {Array<Object>} Array of model options.\n   */\n  get_models_as_options() {\n    const models = this.models;\n    const params_valid = this.validate_get_models_params();\n    if (params_valid !== true)\n      return params_valid;\n    if (!Object.keys(models || {}).length) {\n      this.get_models(true);\n      return [{ value: "", name: "No models currently available" }];\n    }\n    return Object.entries(models).map(([id, model2]) => ({ value: id, name: model2.name || id })).sort((a, b) => a.name.localeCompare(b.name));\n  }\n  /**\n   * Set the adapter\'s state.\n   * @deprecated should be handled in SmartModel (only handle once)\n   * @param {(\'unloaded\'|\'loading\'|\'loaded\'|\'unloading\')} new_state - The new state\n   * @throws {Error} If the state is invalid\n   */\n  set_state(new_state) {\n    const valid_states = ["unloaded", "loading", "loaded", "unloading"];\n    if (!valid_states.includes(new_state)) {\n      throw new Error(`Invalid state: ${new_state}`);\n    }\n    this.state = new_state;\n  }\n  // Replace individual state getters/setters with a unified state management\n  get is_loading() {\n    return this.state === "loading";\n  }\n  get is_loaded() {\n    return this.state === "loaded";\n  }\n  get is_unloading() {\n    return this.state === "unloading";\n  }\n  get is_unloaded() {\n    return this.state === "unloaded";\n  }\n};\n\n// adapters/_adapter.js\nvar SmartEmbedAdapter = class extends SmartModelAdapter {\n  /**\n   * Create adapter instance\n   * @param {SmartEmbedModel} model - Parent model instance\n   */\n  constructor(model2) {\n    super(model2);\n    this.smart_embed = model2;\n  }\n  /**\n   * Count tokens in input text\n   * @abstract\n   * @param {string} input - Text to tokenize\n   * @returns {Promise<Object>} Token count result\n   * @property {number} tokens - Number of tokens in input\n   * @throws {Error} If not implemented by subclass\n   */\n  async count_tokens(input) {\n    throw new Error("count_tokens method not implemented");\n  }\n  /**\n   * Generate embeddings for single input\n   * @abstract\n   * @param {string|Object} input - Text to embed\n   * @returns {Promise<Object>} Embedding result\n   * @property {number[]} vec - Embedding vector\n   * @property {number} tokens - Number of tokens in input\n   * @throws {Error} If not implemented by subclass\n   */\n  async embed(input) {\n    throw new Error("embed method not implemented");\n  }\n  /**\n   * Generate embeddings for multiple inputs\n   * @abstract\n   * @param {Array<string|Object>} inputs - Texts to embed\n   * @returns {Promise<Array<Object>>} Array of embedding results\n   * @property {number[]} vec - Embedding vector for each input\n   * @property {number} tokens - Number of tokens in each input\n   * @throws {Error} If not implemented by subclass\n   */\n  async embed_batch(inputs) {\n    throw new Error("embed_batch method not implemented");\n  }\n  get settings_config() {\n    return {\n      "[ADAPTER].model_key": {\n        name: "Embedding model",\n        type: "dropdown",\n        description: "Select an embedding model.",\n        options_callback: "adapter.get_models_as_options",\n        callback: "model_changed",\n        default: this.constructor.defaults.default_model\n      }\n    };\n  }\n  get dims() {\n    return this.model_config.dims;\n  }\n  get max_tokens() {\n    return this.model_config.max_tokens;\n  }\n  // get batch_size() { return this.model_config.batch_size; }\n  get use_gpu() {\n    if (typeof this._use_gpu === "undefined") {\n      if (typeof this.model.opts.use_gpu !== "undefined")\n        this._use_gpu = this.model.opts.use_gpu;\n      else\n        this._use_gpu = typeof navigator !== "undefined" && !!navigator?.gpu && this.model_settings.gpu_batch_size !== 0;\n    }\n    return this._use_gpu;\n  }\n  set use_gpu(value) {\n    this._use_gpu = value;\n  }\n  get batch_size() {\n    if (this.use_gpu && this.model_config?.gpu_batch_size)\n      return this.model_config.gpu_batch_size;\n    return this.model.opts.batch_size || this.model_config.batch_size || 1;\n  }\n};\n/**\n * @override in sub-class with adapter-specific default configurations\n * @property {string} id - The adapter identifier\n * @property {string} description - Human-readable description\n * @property {string} type - Adapter type ("API")\n * @property {string} endpoint - API endpoint\n * @property {string} adapter - Adapter identifier\n * @property {string} default_model - Default model to use\n */\n__publicField(SmartEmbedAdapter, "defaults", {});\n\n// adapters/transformers.js\nvar transformers_defaults = {\n  adapter: "transformers",\n  description: "Transformers (Local, built-in)",\n  default_model: "TaylorAI/bge-micro-v2"\n};\nvar SmartEmbedTransformersAdapter = class extends SmartEmbedAdapter {\n  /**\n   * Create transformers adapter instance\n   * @param {SmartEmbedModel} model - Parent model instance\n   */\n  constructor(model2) {\n    super(model2);\n    this.pipeline = null;\n    this.tokenizer = null;\n  }\n  /**\n   * Load model and tokenizer\n   * @returns {Promise<void>}\n   */\n  async load() {\n    await this.load_transformers();\n    this.loaded = true;\n    this.set_state("loaded");\n  }\n  /**\n   * Unload model and free resources\n   * @returns {Promise<void>}\n   */\n  async unload() {\n    if (this.pipeline) {\n      if (this.pipeline.destroy)\n        this.pipeline.destroy();\n      this.pipeline = null;\n    }\n    if (this.tokenizer) {\n      this.tokenizer = null;\n    }\n    this.loaded = false;\n    this.set_state("unloaded");\n  }\n  /**\n   * Initialize transformers pipeline and tokenizer\n   * @private\n   * @returns {Promise<void>}\n   */\n  async load_transformers() {\n    const { pipeline, env, AutoTokenizer } = await import("@huggingface/transformers");\n    env.allowLocalModels = false;\n    const pipeline_opts = {\n      quantized: true\n    };\n    if (this.use_gpu) {\n      console.log("[Transformers] Using GPU");\n      pipeline_opts.device = "webgpu";\n      pipeline_opts.dtype = "fp32";\n    } else {\n      console.log("[Transformers] Using CPU");\n      env.backends.onnx.wasm.numThreads = 8;\n    }\n    this.pipeline = await pipeline("feature-extraction", this.model_key, pipeline_opts);\n    this.tokenizer = await AutoTokenizer.from_pretrained(this.model_key);\n  }\n  /**\n   * Count tokens in input text\n   * @param {string} input - Text to tokenize\n   * @returns {Promise<Object>} Token count result\n   */\n  async count_tokens(input) {\n    if (!this.tokenizer)\n      await this.load();\n    const { input_ids } = await this.tokenizer(input);\n    return { tokens: input_ids.data.length };\n  }\n  /**\n   * Generate embeddings for multiple inputs\n   * @param {Array<Object>} inputs - Array of input objects\n   * @returns {Promise<Array<Object>>} Processed inputs with embeddings\n   */\n  async embed_batch(inputs) {\n    if (!this.pipeline)\n      await this.load();\n    const filtered_inputs = inputs.filter((item) => item.embed_input?.length > 0);\n    if (!filtered_inputs.length)\n      return [];\n    if (filtered_inputs.length > this.batch_size) {\n      console.log(`Processing ${filtered_inputs.length} inputs in batches of ${this.batch_size}`);\n      const results = [];\n      for (let i = 0; i < filtered_inputs.length; i += this.batch_size) {\n        const batch = filtered_inputs.slice(i, i + this.batch_size);\n        const batch_results = await this._process_batch(batch);\n        results.push(...batch_results);\n      }\n      return results;\n    }\n    return await this._process_batch(filtered_inputs);\n  }\n  /**\n   * Process a single batch of inputs\n   * @private\n   * @param {Array<Object>} batch_inputs - Batch of inputs to process\n   * @returns {Promise<Array<Object>>} Processed batch results\n   */\n  async _process_batch(batch_inputs) {\n    const tokens = await Promise.all(batch_inputs.map((item) => this.count_tokens(item.embed_input)));\n    const embed_inputs = await Promise.all(batch_inputs.map(async (item, i) => {\n      if (tokens[i].tokens < this.max_tokens)\n        return item.embed_input;\n      let token_ct = tokens[i].tokens;\n      let truncated_input = item.embed_input;\n      while (token_ct > this.max_tokens) {\n        const pct = this.max_tokens / token_ct;\n        const max_chars = Math.floor(truncated_input.length * pct * 0.9);\n        truncated_input = truncated_input.substring(0, max_chars) + "...";\n        token_ct = (await this.count_tokens(truncated_input)).tokens;\n      }\n      tokens[i].tokens = token_ct;\n      return truncated_input;\n    }));\n    try {\n      const resp = await this.pipeline(embed_inputs, { pooling: "mean", normalize: true });\n      return batch_inputs.map((item, i) => {\n        item.vec = Array.from(resp[i].data).map((val) => Math.round(val * 1e8) / 1e8);\n        item.tokens = tokens[i].tokens;\n        return item;\n      });\n    } catch (err) {\n      console.error("error_processing_batch", err);\n      this.pipeline?.dispose();\n      this.pipeline = null;\n      await this.load();\n      return Promise.all(batch_inputs.map(async (item) => {\n        try {\n          const result = await this.pipeline(item.embed_input, { pooling: "mean", normalize: true });\n          item.vec = Array.from(result[0].data).map((val) => Math.round(val * 1e8) / 1e8);\n          item.tokens = (await this.count_tokens(item.embed_input)).tokens;\n          return item;\n        } catch (single_err) {\n          console.error("error_processing_single_item", single_err);\n          return {\n            ...item,\n            vec: [],\n            tokens: 0,\n            error: single_err.message\n          };\n        }\n      }));\n    }\n  }\n  /** @returns {Object} Settings configuration for transformers adapter */\n  get settings_config() {\n    return transformers_settings_config;\n  }\n  /**\n   * Get available models (hardcoded list)\n   * @returns {Promise<Object>} Map of model objects\n   */\n  get_models() {\n    return Promise.resolve(this.models);\n  }\n  get models() {\n    return transformers_models;\n  }\n};\n__publicField(SmartEmbedTransformersAdapter, "defaults", transformers_defaults);\nvar transformers_models = {\n  "TaylorAI/bge-micro-v2": {\n    "id": "TaylorAI/bge-micro-v2",\n    "batch_size": 1,\n    "dims": 384,\n    "max_tokens": 512,\n    "name": "BGE-micro-v2",\n    "description": "Local, 512 tokens, 384 dim (recommended)",\n    "adapter": "transformers"\n  },\n  "Snowflake/snowflake-arctic-embed-xs": {\n    "id": "Snowflake/snowflake-arctic-embed-xs",\n    "batch_size": 1,\n    "dims": 384,\n    "max_tokens": 512,\n    "name": "Snowflake Arctic Embed XS",\n    "description": "Local, 512 tokens, 384 dim",\n    "adapter": "transformers"\n  },\n  "Snowflake/snowflake-arctic-embed-s": {\n    "id": "Snowflake/snowflake-arctic-embed-s",\n    "batch_size": 1,\n    "dims": 384,\n    "max_tokens": 512,\n    "name": "Snowflake Arctic Embed Small",\n    "description": "Local, 512 tokens, 384 dim",\n    "adapter": "transformers"\n  },\n  "Snowflake/snowflake-arctic-embed-m": {\n    "id": "Snowflake/snowflake-arctic-embed-m",\n    "batch_size": 1,\n    "dims": 768,\n    "max_tokens": 512,\n    "name": "Snowflake Arctic Embed Medium",\n    "description": "Local, 512 tokens, 768 dim",\n    "adapter": "transformers"\n  },\n  "TaylorAI/gte-tiny": {\n    "id": "TaylorAI/gte-tiny",\n    "batch_size": 1,\n    "dims": 384,\n    "max_tokens": 512,\n    "name": "GTE-tiny",\n    "description": "Local, 512 tokens, 384 dim",\n    "adapter": "transformers"\n  },\n  "Mihaiii/Ivysaur": {\n    "id": "Mihaiii/Ivysaur",\n    "batch_size": 1,\n    "dims": 384,\n    "max_tokens": 512,\n    "name": "Ivysaur",\n    "description": "Local, 512 tokens, 384 dim",\n    "adapter": "transformers"\n  },\n  "andersonbcdefg/bge-small-4096": {\n    "id": "andersonbcdefg/bge-small-4096",\n    "batch_size": 1,\n    "dims": 384,\n    "max_tokens": 4096,\n    "name": "BGE-small-4K",\n    "description": "Local, 4,096 tokens, 384 dim",\n    "adapter": "transformers"\n  },\n  // Too slow and persistent crashes\n  // "jinaai/jina-embeddings-v2-base-de": {\n  //   "id": "jinaai/jina-embeddings-v2-base-de",\n  //   "batch_size": 1,\n  //   "dims": 768,\n  //   "max_tokens": 4096,\n  //   "name": "jina-embeddings-v2-base-de",\n  //   "description": "Local, 4,096 tokens, 768 dim, German",\n  //   "adapter": "transformers"\n  // },\n  "Xenova/jina-embeddings-v2-base-zh": {\n    "id": "Xenova/jina-embeddings-v2-base-zh",\n    "batch_size": 1,\n    "dims": 768,\n    "max_tokens": 8192,\n    "name": "Jina-v2-base-zh-8K",\n    "description": "Local, 8,192 tokens, 768 dim, Chinese/English bilingual",\n    "adapter": "transformers"\n  },\n  "Xenova/jina-embeddings-v2-small-en": {\n    "id": "Xenova/jina-embeddings-v2-small-en",\n    "batch_size": 1,\n    "dims": 512,\n    "max_tokens": 8192,\n    "name": "Jina-v2-small-en",\n    "description": "Local, 8,192 tokens, 512 dim",\n    "adapter": "transformers"\n  },\n  "nomic-ai/nomic-embed-text-v1.5": {\n    "id": "nomic-ai/nomic-embed-text-v1.5",\n    "batch_size": 1,\n    "dims": 768,\n    "max_tokens": 2048,\n    "name": "Nomic-embed-text-v1.5",\n    "description": "Local, 8,192 tokens, 768 dim",\n    "adapter": "transformers"\n  },\n  "Xenova/bge-small-en-v1.5": {\n    "id": "Xenova/bge-small-en-v1.5",\n    "batch_size": 1,\n    "dims": 384,\n    "max_tokens": 512,\n    "name": "BGE-small",\n    "description": "Local, 512 tokens, 384 dim",\n    "adapter": "transformers"\n  },\n  "nomic-ai/nomic-embed-text-v1": {\n    "id": "nomic-ai/nomic-embed-text-v1",\n    "batch_size": 1,\n    "dims": 768,\n    "max_tokens": 2048,\n    "name": "Nomic-embed-text",\n    "description": "Local, 2,048 tokens, 768 dim",\n    "adapter": "transformers"\n  }\n};\nvar transformers_settings_config = {\n  "[ADAPTER].gpu_batch_size": {\n    name: "GPU batch size",\n    type: "number",\n    description: "Number of embeddings to process per batch on GPU. Use 0 to disable GPU.",\n    placeholder: "Enter number ex. 10"\n  },\n  "[ADAPTER].legacy_transformers": {\n    name: "Legacy transformers (no GPU)",\n    type: "toggle",\n    description: "Use legacy transformers (v2) instead of v3. This may resolve issues if the local embedding isn\'t working.",\n    callback: "embed_model_changed",\n    default: true\n  }\n};\n\n// build/transformers_iframe_script.js\nvar model = null;\nasync function process_message(data) {\n  const { method, params, id, iframe_id } = data;\n  try {\n    let result;\n    switch (method) {\n      case "init":\n        console.log("init");\n        break;\n      case "load":\n        console.log("load", params);\n        model = new SmartEmbedModel({\n          ...params,\n          adapters: { transformers: SmartEmbedTransformersAdapter },\n          adapter: "transformers",\n          settings: {}\n        });\n        await model.load();\n        result = { model_loaded: true };\n        break;\n      case "embed_batch":\n        if (!model)\n          throw new Error("Model not loaded");\n        result = await model.embed_batch(params.inputs);\n        break;\n      case "count_tokens":\n        if (!model)\n          throw new Error("Model not loaded");\n        result = await model.count_tokens(params);\n        break;\n      default:\n        throw new Error(`Unknown method: ${method}`);\n    }\n    return { id, result, iframe_id };\n  } catch (error) {\n    console.error("Error processing message:", error);\n    return { id, error: error.message, iframe_id };\n  }\n}\nprocess_message({ method: "init" });\n';
 
 // node_modules/obsidian-smart-env/node_modules/smart-embed-model/adapters/transformers.js
 var transformers_defaults = {
@@ -9374,6 +9530,33 @@ var transformers_models = {
     "max_tokens": 512,
     "name": "BGE-micro-v2",
     "description": "Local, 512 tokens, 384 dim (recommended)",
+    "adapter": "transformers"
+  },
+  "Snowflake/snowflake-arctic-embed-xs": {
+    "id": "Snowflake/snowflake-arctic-embed-xs",
+    "batch_size": 1,
+    "dims": 384,
+    "max_tokens": 512,
+    "name": "Snowflake Arctic Embed XS",
+    "description": "Local, 512 tokens, 384 dim",
+    "adapter": "transformers"
+  },
+  "Snowflake/snowflake-arctic-embed-s": {
+    "id": "Snowflake/snowflake-arctic-embed-s",
+    "batch_size": 1,
+    "dims": 384,
+    "max_tokens": 512,
+    "name": "Snowflake Arctic Embed Small",
+    "description": "Local, 512 tokens, 384 dim",
+    "adapter": "transformers"
+  },
+  "Snowflake/snowflake-arctic-embed-m": {
+    "id": "Snowflake/snowflake-arctic-embed-m",
+    "batch_size": 1,
+    "dims": 768,
+    "max_tokens": 512,
+    "name": "Snowflake Arctic Embed Medium",
+    "description": "Local, 512 tokens, 768 dim",
     "adapter": "transformers"
   },
   "TaylorAI/gte-tiny": {
@@ -9762,3851 +9945,8 @@ var filter_embedding_models = (models) => {
   return models.filter(is_embedding_model);
 };
 
-// node_modules/obsidian-smart-env/node_modules/smart-sources/utils/get_line_range.js
-function get_line_range2(content, start_line, end_line) {
-  const lines = content.split("\n");
-  return lines.slice(start_line - 1, end_line).join("\n");
-}
-
-// node_modules/obsidian-smart-env/node_modules/smart-blocks/content_parsers/parse_blocks.js
-function parse_blocks(source2, content) {
-  let blocks_obj = parse_markdown_blocks(content);
-  const last_read_at = source2.data.last_read?.at || Date.now();
-  for (const [sub_key, line_range] of Object.entries(blocks_obj)) {
-    const block_key = source2.key + sub_key;
-    const existing_block = source2.block_collection.get(block_key);
-    const block_content = get_line_range2(content, line_range[0], line_range[1]);
-    if (existing_block && existing_block.lines[0] === line_range[0] && existing_block.lines[1] === line_range[1] && existing_block.size === block_content.length && existing_block.vec) {
-      continue;
-    }
-    const block_outlinks = get_markdown_links(block_content);
-    const block_data = {
-      key: block_key,
-      lines: line_range,
-      size: block_content.length,
-      outlinks: block_outlinks,
-      last_read: {
-        at: last_read_at,
-        hash: murmur_hash_32_alphanumeric(block_content)
-      }
-    };
-    const new_item = new source2.block_collection.item_type(source2.env, block_data);
-    new_item.queue_embed();
-    source2.block_collection.set(new_item);
-  }
-  clean_and_update_source_blocks(source2, blocks_obj);
-}
-function clean_and_update_source_blocks(source2, blocks_obj) {
-  const current_block_keys = new Set(Object.keys(blocks_obj).map((sk) => source2.key + sk));
-  const blocks = source2.blocks;
-  for (let i = 0; i < blocks.length; i++) {
-    if (!current_block_keys.has(blocks[i].key)) {
-      blocks[i].deleted = true;
-      blocks[i].queue_save();
-    }
-  }
-  source2.data.blocks = blocks_obj;
-  source2.queue_save();
-}
-
-// node_modules/obsidian-smart-env/utils/format_collection_name.js
-function format_collection_name(key) {
-  return key.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
-}
-
-// node_modules/obsidian-smart-env/components/collection_settings.js
-async function build_html3(collection, opts = {}) {
-  const settings_html = Object.entries(collection.settings_config).map(([setting_key, setting_config]) => {
-    if (!setting_config.setting) setting_config.setting = setting_key;
-    return this.render_setting_html(setting_config);
-  }).join("\n");
-  const html = `<div><div class="collection-settings-container"><div class="source-settings collection-settings">
-    <h2>${format_collection_name(collection.collection_key)}</h2>
-    ${settings_html}
-  </div></div></div>`;
-  return html;
-}
-async function render5(collection, opts = {}) {
-  const html = await build_html3.call(this, collection, opts);
-  const frag = this.create_doc_fragment(html);
-  await this.render_setting_components(frag, { scope: collection });
-  if (opts.settings_container) {
-    this.empty(opts.settings_container);
-    opts.settings_container.appendChild(frag.querySelector(".collection-settings"));
-  } else {
-    collection.settings_container = frag.querySelector(".collection-settings-container");
-  }
-  return collection.settings_container;
-}
-
-// node_modules/obsidian-smart-env/modals/exclude_folders_fuzzy.js
-var import_obsidian4 = require("obsidian");
-var ExcludedFoldersFuzzy = class extends import_obsidian4.FuzzySuggestModal {
-  /**
-   * @param {App} app - The Obsidian app
-   * @param {Object} env - An environment-like object, must have .settings and .fs.folder_paths
-   */
-  constructor(app, env) {
-    super(app);
-    this.env = env;
-    this.setPlaceholder("Select a folder to exclude...");
-  }
-  open(callback) {
-    this.callback = callback;
-    super.open();
-  }
-  getItems() {
-    return this.env.smart_sources?.fs?.folder_paths || [];
-  }
-  getItemText(item) {
-    return item;
-  }
-  onChooseItem(item) {
-    if (!item) return;
-    const oldVal = this.env.settings.folder_exclusions || "";
-    const splitted = oldVal.split(",").map((s) => s.trim()).filter(Boolean);
-    if (!splitted.includes(item)) splitted.push(item);
-    this.env.settings.folder_exclusions = splitted.join(",");
-    this.callback?.();
-  }
-};
-
-// node_modules/obsidian-smart-env/modals/excluded_sources.js
-var import_obsidian5 = require("obsidian");
-var ExcludedSourcesModal = class extends import_obsidian5.Modal {
-  /**
-   * @param {Object} app - Obsidian app
-   * @param {Object} env - The environment instance
-   */
-  constructor(app, env) {
-    super(app);
-    this.env = env;
-  }
-  async onOpen() {
-    this.titleEl.setText("Excluded Sources");
-    this.contentEl.addClass("excluded-sources-modal");
-    this.render_excluded_list();
-  }
-  async render_excluded_list() {
-    this.contentEl.empty();
-    const list_el = this.contentEl.createEl("ul");
-    const excluded_file_paths = this.env.smart_sources.excluded_file_paths;
-    for (const file_path of excluded_file_paths) {
-      const li = list_el.createEl("li");
-      li.setText(file_path);
-    }
-  }
-};
-
-// node_modules/obsidian-smart-env/modals/env_stats.js
-var import_obsidian6 = require("obsidian");
-var EnvStatsModal = class extends import_obsidian6.Modal {
-  constructor(app, env) {
-    super(app);
-    this.env = env;
-  }
-  async onOpen() {
-    this.titleEl.setText("Smart Environment");
-    const frag = await this.env.render_component("env_stats", this.env);
-    this.contentEl.appendChild(frag);
-  }
-};
-
-// node_modules/obsidian-smart-env/modals/exclude_files_fuzzy.js
-var import_obsidian7 = require("obsidian");
-var ExcludedFilesFuzzy = class extends import_obsidian7.FuzzySuggestModal {
-  /**
-   * @param {App} app - The Obsidian app
-   * @param {Object} env - An environment-like object, must have .settings and .fs.file_paths
-   */
-  constructor(app, env) {
-    super(app);
-    this.env = env;
-    this.setPlaceholder("Select a file to exclude...");
-  }
-  open(callback) {
-    this.callback = callback;
-    super.open();
-  }
-  getItems() {
-    const fileExclusions = (this.env.settings.file_exclusions || "").split(",").map((s) => s.trim()).filter(Boolean);
-    const candidates = (this.env.smart_sources?.fs?.file_paths || []).filter((path2) => !fileExclusions.includes(path2));
-    return candidates;
-  }
-  getItemText(item) {
-    return item;
-  }
-  onChooseItem(item) {
-    if (!item) return;
-    const oldVal = this.env.settings.file_exclusions || "";
-    const splitted = oldVal.split(",").map((s) => s.trim()).filter(Boolean);
-    if (!splitted.includes(item)) splitted.push(item);
-    this.env.settings.file_exclusions = splitted.join(",");
-    this.callback?.();
-  }
-};
-
-// node_modules/obsidian-smart-env/components/env_settings.css
-var css_sheet = new CSSStyleSheet();
-css_sheet.replaceSync(`.sc-env-settings-container {
-  margin: 1rem 0;
-}
-
-.sc-env-settings-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 0.5rem;
-}
-
-.toggle-env-settings-btn {
-  cursor: pointer;
-}
-
-.smart-env-settings-header {
-  margin-bottom: 1rem;
-}
-
-.excluded-folder-item,
-.excluded-file-item {
-  margin: 0.3rem 0;
-}
-`);
-var env_settings_default = css_sheet;
-
-// node_modules/obsidian-smart-env/components/env_settings.js
-async function build_html4(env, opts = {}) {
-  const env_settings_html = Object.entries(env.settings_config).map(([setting_key, setting_config]) => {
-    if (setting_key === "file_exclusions" || setting_key === "folder_exclusions") return false;
-    if (!setting_config.setting) setting_config.setting = setting_key;
-    return this.render_setting_html(setting_config);
-  }).filter(Boolean).join("\n");
-  const add_excluded_folders_btn = `
-    <button class="sc-add-excluded-folder-btn" type="button">Add excluded folder</button>
-  `;
-  const add_excluded_files_btn = `
-    <button class="sc-add-excluded-file-btn" type="button">Add excluded file</button>
-  `;
-  const excluded_folders_list = `<div class="sc-excluded-folders-list"></div>`;
-  const excluded_files_list = `<div class="sc-excluded-files-list"></div>`;
-  return `
-    <div class="sc-env-settings-container">
-      <div class="sc-env-settings-header">
-        <h2>Smart Environment</h2>
-        <button type="button" class="toggle-env-settings-btn">Show environment settings</button>
-      </div>
-      <div class="sc-env-settings-body" style="display: none;">
-        <div class="smart-env-settings-header" id="smart-env-buttons">
-          <button class="sc-collection-stats-btn" type="button">Show stats</button>
-          <button class="smart-env_reload-sources-btn" type="button">Reload sources</button>
-          <button class="smart-env_clean-up-data-btn" type="button">Clean-up data</button>
-          <button class="smart-env_clear-sources-data-btn" type="button">Clear sources data</button>
-        </div>
-
-        ${env_settings_html}
-
-        <div class="smart-env-settings-header">
-          <h2>Excluded folders</h2>
-          ${add_excluded_folders_btn}
-        </div>
-        ${excluded_folders_list}
-
-        <div class="smart-env-settings-header">
-          <h2>Excluded files</h2>
-          ${add_excluded_files_btn}
-        </div>
-        ${excluded_files_list}
-
-        <button class="sc-excluded-sources-btn" type="button">Show excluded</button>
-
-        <div data-smart-settings="smart_sources"></div>
-        <div data-smart-settings="smart_blocks"></div>
-        <p>Notes about embedding models:</p>
-        <ul>
-          <li>IMPORTANT: make sure local <code>BGE-micro-v2</code> embedding model works before trying other local models.</li>
-          <li>API models require an API key and send your notes to third-party servers for processing.</li>
-        </ul>
-      </div>
-    </div>
-  `;
-}
-async function render6(env, opts = {}) {
-  const html = await build_html4.call(this, env, opts);
-  const frag = this.create_doc_fragment(html);
-  this.apply_style_sheet(env_settings_default);
-  await this.render_setting_components(frag, { scope: env });
-  env.settings_container = frag.querySelector(".sc-env-settings-container");
-  post_process5.call(this, env, env.settings_container, opts);
-  return frag;
-}
-async function post_process5(env, container, opts = {}) {
-  const heading_btn = container.querySelector(".toggle-env-settings-btn");
-  const body_el = container.querySelector(".sc-env-settings-body");
-  if (heading_btn && body_el) {
-    heading_btn.addEventListener("click", () => {
-      const is_hidden = body_el.style.display === "none";
-      body_el.style.display = is_hidden ? "block" : "none";
-      heading_btn.textContent = is_hidden ? "Hide environment settings" : "Show environment settings";
-    });
-  }
-  const add_folder_btn = container.querySelector(".sc-add-excluded-folder-btn");
-  if (add_folder_btn) {
-    add_folder_btn.addEventListener("click", () => {
-      const fuzzy = new ExcludedFoldersFuzzy(env.main.app, env);
-      fuzzy.open(() => {
-        render_excluded_dir_list(env, container);
-        env.update_exclusions();
-      });
-    });
-  }
-  const add_file_btn = container.querySelector(".sc-add-excluded-file-btn");
-  if (add_file_btn) {
-    add_file_btn.addEventListener("click", () => {
-      const fuzzy = new ExcludedFilesFuzzy(env.main.app, env);
-      fuzzy.open(() => {
-        render_excluded_file_list(env, container);
-        env.update_exclusions();
-      });
-    });
-  }
-  const show_excluded_btn = container.querySelector(".sc-excluded-sources-btn");
-  if (show_excluded_btn) {
-    show_excluded_btn.addEventListener("click", () => {
-      const modal = new ExcludedSourcesModal(env.main.app, env);
-      modal.open();
-    });
-  }
-  const show_stats_btn = container.querySelector(".sc-collection-stats-btn");
-  if (show_stats_btn) {
-    show_stats_btn.addEventListener("click", () => {
-      const modal = new EnvStatsModal(env.main.app, env);
-      modal.open();
-    });
-  }
-  const reload_sources_btn = container.querySelector(".smart-env_reload-sources-btn");
-  if (reload_sources_btn) {
-    reload_sources_btn.addEventListener("click", async () => {
-      const start = Date.now();
-      env.smart_sources.unload();
-      env.smart_blocks.unload();
-      await env.init_collections();
-      await env.load_collections();
-      await env.smart_sources.process_embed_queue();
-      const end = Date.now();
-      env.main.notices?.show("reload_sources", { time_ms: end - start });
-    });
-  }
-  const clean_up_data_btn = container.querySelector(".smart-env_clean-up-data-btn");
-  if (clean_up_data_btn) {
-    clean_up_data_btn.addEventListener("click", async () => {
-      await env.smart_sources.run_clean_up_data();
-    });
-  }
-  const smart_env_buttons = container.querySelector("#smart-env-buttons");
-  const clear_sources_data_btn = smart_env_buttons.querySelector(".smart-env_clear-sources-data-btn");
-  if (clear_sources_data_btn) {
-    const inline_confirm_html = `
-      <div class="sc-inline-confirm-row" style="display: none;">
-        <span style="margin-right: 10px;">
-          Are you sure you want to clear all sources data? This cannot be undone.
-        </span>
-        <span class="sc-inline-confirm-row-buttons">
-          <button class="sc-inline-confirm-yes">Yes</button>
-          <button class="sc-inline-confirm-cancel">Cancel</button>
-        </span>
-      </div>
-    `;
-    const inline_confirm_frag = this.create_doc_fragment(inline_confirm_html);
-    smart_env_buttons.appendChild(inline_confirm_frag);
-    const confirm_yes = smart_env_buttons.querySelector(".sc-inline-confirm-yes");
-    const confirm_cancel = smart_env_buttons.querySelector(".sc-inline-confirm-cancel");
-    clear_sources_data_btn.addEventListener("click", () => {
-      const confirm_row = smart_env_buttons.querySelector(".sc-inline-confirm-row");
-      confirm_row.style.display = "block";
-      clear_sources_data_btn.style.display = "none";
-    });
-    confirm_yes.addEventListener("click", async (e) => {
-      const confirm_row = e.target.closest(".sc-inline-confirm-row");
-      await env.smart_sources.run_clear_all();
-      confirm_row.style.display = "none";
-      clear_sources_data_btn.style.display = "inline-block";
-    });
-    confirm_cancel.addEventListener("click", (e) => {
-      const confirm_row = e.target.closest(".sc-inline-confirm-row");
-      confirm_row.style.display = "none";
-      clear_sources_data_btn.style.display = "inline-block";
-    });
-  }
-  const env_collections_containers = container.querySelectorAll("[data-smart-settings]");
-  for (const el of env_collections_containers) {
-    const collection_key = el.dataset.smartSettings;
-    const collection = env[collection_key];
-    if (!collection) continue;
-    const collection_settings_frag = await env.render_component("collection_settings", collection);
-    el.appendChild(collection_settings_frag);
-  }
-  render_excluded_dir_list(env, container);
-  render_excluded_file_list(env, container);
-}
-function render_excluded_dir_list(env, container) {
-  const list_container = container.querySelector(".sc-excluded-folders-list");
-  if (!list_container) return;
-  list_container.empty();
-  const ul = list_container.createEl("ul");
-  const excluded_csv = env.settings.folder_exclusions || "";
-  const arr = excluded_csv.split(",").map((s) => s.trim()).filter(Boolean);
-  arr.forEach((folder) => {
-    const li = ul.createEl("li", { cls: "excluded-folder-item" });
-    li.setText(folder + "  ");
-    const remove_btn = li.createEl("button", { text: "(x)", cls: "remove-folder-btn" });
-    remove_btn.addEventListener("click", () => {
-      const splitted = excluded_csv.split(",").map((x) => x.trim()).filter(Boolean);
-      const new_arr = splitted.filter((f) => f !== folder);
-      env.settings.folder_exclusions = new_arr.join(",");
-      render_excluded_dir_list(env, container);
-    });
-  });
-  if (!arr.length) {
-    ul.createEl("li", { text: "No folders excluded yet." });
-  }
-}
-function render_excluded_file_list(env, container) {
-  const list_container = container.querySelector(".sc-excluded-files-list");
-  if (!list_container) return;
-  list_container.empty();
-  const ul = list_container.createEl("ul");
-  const excluded_csv = env.settings.file_exclusions || "";
-  const arr = excluded_csv.split(",").map((s) => s.trim()).filter(Boolean);
-  arr.forEach((file_path) => {
-    const li = ul.createEl("li", { cls: "excluded-file-item" });
-    li.setText(file_path + "  ");
-    const remove_btn = li.createEl("button", { text: "(x)", cls: "remove-file-btn" });
-    remove_btn.addEventListener("click", () => {
-      const splitted = excluded_csv.split(",").map((s) => s.trim()).filter(Boolean);
-      const new_arr = splitted.filter((f) => f !== file_path);
-      env.settings.file_exclusions = new_arr.join(",");
-      render_excluded_file_list(env, container);
-    });
-  });
-  if (!arr.length) {
-    ul.createEl("li", { text: "No files excluded yet." });
-  }
-}
-
-// node_modules/obsidian-smart-env/components/env_stats.js
-async function build_html5(env, opts = {}) {
-  const lines = [];
-  lines.push(`<h2>Collections</h2>`);
-  const collection_keys = Object.keys(env.collections).sort((a, b) => {
-    if (a === "smart_sources" || a === "smart_blocks") return -1;
-    if (b === "smart_sources" || b === "smart_blocks") return 1;
-    return a.localeCompare(b);
-  });
-  for (const collection_key of collection_keys) {
-    const collection = env[collection_key];
-    if (!collection || !collection.items) {
-      lines.push(`
-        <div class="sc-collection-stats">
-          <h3>${format_collection_name(collection_key)}</h3>
-          <p>No valid items.</p>
-        </div>
-      `);
-      continue;
-    }
-    const snippet = generate_collection_stats(collection, collection_key);
-    lines.push(snippet);
-  }
-  return `
-    <div class="sc-env-stats-container">
-      ${lines.join("\n")}
-    </div>
-  `;
-}
-async function render7(env, opts = {}) {
-  const html = await build_html5.call(this, env, opts);
-  const frag = this.create_doc_fragment(html);
-  return await post_process6.call(this, env, frag, opts);
-}
-async function post_process6(env, frag, opts = {}) {
-  return frag;
-}
-function generate_collection_stats(collection, collectionKey) {
-  const total_items = Object.values(collection.items).length;
-  const niceName = format_collection_name(collectionKey);
-  const state = collection.env.collections[collectionKey];
-  if (state !== "loaded") {
-    return `
-      <div class="sc-collection-stats">
-        <h3>${niceName}</h3>
-        <p>Not loaded yet (${total_items} items known).</p>
-      </div>
-    `;
-  }
-  const load_time_html = collection.load_time_ms ? `<span>Load time: ${collection.load_time_ms}ms</span>` : "";
-  const state_html = `<span>State: ${state}</span>`;
-  let html = "";
-  if (collectionKey === "smart_sources") {
-    html = get_smart_sources_stats(collection, niceName, total_items);
-  } else {
-    html = get_generic_collection_stats(collection, niceName, total_items);
-  }
-  let embed_stats = "";
-  if (typeof collection.process_embed_queue === "function") {
-    embed_stats = calculate_embed_coverage(collection, total_items);
-  }
-  return `
-    <div class="sc-collection-stats">
-      <h3>${niceName}</h3>
-      ${embed_stats}
-      ${html}
-      ${load_time_html}
-      ${state_html}
-    </div>
-  `;
-}
-function get_smart_sources_stats(collection, niceName, total_items, load_time_html) {
-  const totalFiles = collection.total_files ?? total_items;
-  const included = collection.included_files ?? "Error calculating included files";
-  const excluded = totalFiles - included;
-  return `
-      <p><strong>Total Files:</strong> ${totalFiles}</p>
-      <p><strong>Excluded:</strong> ${excluded}</p>
-      <p><strong>Included:</strong> ${included}</p>
-  `;
-}
-function get_generic_collection_stats(collection, niceName, total_items, load_time_html) {
-  return `
-      <p><strong>Total:</strong> ${total_items}</p>
-  `;
-}
-function calculate_embed_coverage(collection, total_items) {
-  const embedded_items = Object.values(collection.items).filter((item) => item.vec);
-  if (!embedded_items.length) return "<p>No items embedded</p>";
-  const is_unembedded = Object.values(collection.items).filter((i) => i.should_embed && i.is_unembedded);
-  const pct = embedded_items.length / total_items * 100;
-  const percent = Math.round(pct);
-  const display = `${percent}% (${embedded_items.length} / ${total_items})`;
-  return `<p><strong>Embedding coverage:</strong> ${display}</p>` + (is_unembedded.length ? `<p><strong>Unembedded:</strong> ${is_unembedded.length}</p>` : "");
-}
-
-// node_modules/obsidian-smart-env/utils/open_url_externally.js
-function open_url_externally(plugin, url) {
-  const webviewer = plugin.app.internalPlugins?.plugins?.webviewer?.instance;
-  window.open(url, webviewer ? "_external" : "_blank");
-}
-
-// node_modules/obsidian-smart-env/components/supporter_callout.js
-function build_html6(plugin, opts = {}) {
-  const { plugin_name = plugin.manifest.name } = opts;
-  return `<div class="wrapper">
-    <div id="footer-callout" data-callout-metadata="" data-callout-fold="" data-callout="info" class="callout" style="mix-blend-mode: unset;">
-      <div class="callout-title">
-        <div class="callout-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-            stroke-linecap="round" stroke-linejoin="round" class="svg-icon lucide-info">
-            <circle cx="12" cy="12" r="10"></circle>
-            <path d="M12 16v-4"></path>
-            <path d="M12 8h.01"></path>
-          </svg>
-        </div>
-        <div class="callout-title-inner">
-          <p><strong>Fuel the circle of empowerment</strong></p>
-          <p>Your support shapes the future ${plugin_name}.</p>
-          <a href="https://smartconnections.app/community-supporters?utm_source=obsidian-${plugin_name.replace(/[^a-zA-Z0-9]/g, "-").toLowerCase()}" class="button">Become a Supporter</a>
-        </div>
-      </div>
-    </div>
-  </div>`;
-}
-function render8(plugin, opts = {}) {
-  const html = build_html6.call(this, plugin, opts);
-  const frag = this.create_doc_fragment(html);
-  const callout = frag.querySelector("#footer-callout");
-  post_process7.call(this, plugin, callout, opts);
-  return callout;
-}
-function post_process7(plugin, callout) {
-  const button = callout.querySelector("a");
-  button.addEventListener("click", (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    open_url_externally(plugin, button.href);
-  });
-}
-
-// node_modules/obsidian-smart-env/smart_env.config.js
-var smart_env_config = {
-  collections: {},
-  item_types: {},
-  components: {
-    collection_settings: render5,
-    env_settings: render6,
-    env_stats: render7,
-    supporter_callout: render8
-  }
-};
-
-// node_modules/obsidian-smart-env/default.config.js
-var smart_env_config2 = {
-  env_path: "",
-  modules: {
-    smart_fs: {
-      class: SmartFs,
-      adapter: SmartFsObsidianAdapter
-    },
-    smart_view: {
-      class: SmartView,
-      adapter: SmartViewObsidianAdapter
-    },
-    // smart_notices: {
-    //   class: SmartNotices,
-    //   adapter: Notice,
-    // },
-    smart_embed_model: {
-      class: SmartEmbedModel,
-      adapters: {
-        transformers: SmartEmbedTransformersIframeAdapter,
-        openai: SmartEmbedOpenAIAdapter,
-        ollama: SmartEmbedOllamaAdapter
-      }
-    }
-  },
-  collections: {
-    smart_sources: {
-      collection_key: "smart_sources",
-      class: SmartSources,
-      data_adapter: AjsonMultiFileSourcesDataAdapter,
-      source_adapters: {
-        "md": ObsidianMarkdownSourceContentAdapter,
-        "txt": ObsidianMarkdownSourceContentAdapter
-        // "canvas": MarkdownSourceContentAdapter,
-        // "default": MarkdownSourceContentAdapter,
-      },
-      content_parsers: [
-        parse_blocks
-      ],
-      // process_embed_queue: false,
-      process_embed_queue: true
-      // trigger embedding on load
-    },
-    smart_blocks: {
-      collection_key: "smart_blocks",
-      class: SmartBlocks,
-      data_adapter: AjsonMultiFileBlocksDataAdapter,
-      block_adapters: {
-        "md": MarkdownBlockContentAdapter,
-        "txt": MarkdownBlockContentAdapter
-        // "canvas": MarkdownBlockContentAdapter,
-      }
-    }
-  },
-  item_types: {
-    SmartSource,
-    SmartBlock
-  },
-  items: {
-    smart_source: smart_source_default,
-    smart_block: smart_block_default
-  },
-  components: {
-    smart_blocks: {
-      settings: render3
-    },
-    smart_embed_model: {
-      settings: render4
-    }
-  },
-  default_settings: {
-    is_obsidian_vault: true,
-    smart_blocks: {
-      embed_blocks: true,
-      min_chars: 200
-    },
-    smart_sources: {
-      min_chars: 200,
-      embed_model: {
-        adapter: "transformers",
-        transformers: {
-          legacy_transformers: false,
-          model_key: "TaylorAI/bge-micro-v2"
-        }
-      }
-    },
-    excluded_headings: "",
-    file_exclusions: "Untitled",
-    folder_exclusions: "",
-    language: "en",
-    new_user: true,
-    // DEPRECATED: 2025-06-05 (use localStorage instead)
-    re_import_wait_time: 13,
-    smart_chat_threads: {
-      chat_model: {
-        adapter: "ollama",
-        ollama: {}
-      }
-    },
-    smart_notices: {},
-    smart_view_filter: {
-      expanded_view: false,
-      render_markdown: true,
-      show_full_path: false
-    },
-    version: ""
-  }
-};
-merge_env_config(smart_env_config2, smart_env_config);
-var default_config_default = smart_env_config2;
-
-// node_modules/obsidian-smart-env/utils/add_icons.js
-var import_obsidian10 = require("obsidian");
-function add_smart_chat_icon() {
-  (0, import_obsidian10.addIcon)("smart-chat", `<defs>
-  <symbol id="smart-chat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M2 4c0-1.1.9-2 2-2h16c1.1 0 2 .9 2 2v11c0 1.1-.9 2-2 2h-8l-5 4v-4H4c-1.1 0-2-.9-2-2Z" stroke-width="2"></path>
-    <path d="M7 8c.5.3 1.3.3 1.8 0" stroke-width="2"></path>
-    <path d="M15.2 8c.5.3 1.3.3 1.8 0" stroke-width="2"></path>
-    <path d="M8 11.5c1 .8 2.5 1.2 4 1.2s3-.4 4-1.2" stroke-width="2"></path>
-  </symbol>
-</defs>
-<use href="#smart-chat-icon" />`);
-}
-function add_smart_connections_icon() {
-  (0, import_obsidian10.addIcon)("smart-connections", `<path d="M50,20 L80,40 L80,60 L50,100" stroke="currentColor" stroke-width="4" fill="none"/>
-    <path d="M30,50 L55,70" stroke="currentColor" stroke-width="5" fill="none"/>
-    <circle cx="50" cy="20" r="9" fill="currentColor"/>
-    <circle cx="80" cy="40" r="9" fill="currentColor"/>
-    <circle cx="80" cy="70" r="9" fill="currentColor"/>
-    <circle cx="50" cy="100" r="9" fill="currentColor"/>
-    <circle cx="30" cy="50" r="9" fill="currentColor"/>`);
-}
-
-// node_modules/obsidian-smart-env/node_modules/smart-notices/smart_notices.js
-var import_obsidian11 = require("obsidian");
-
-// node_modules/obsidian-smart-env/node_modules/smart-notices/notices.js
-var NOTICES = {
-  item_excluded: {
-    en: "Cannot show Smart Connections for excluded entity: {{entity_key}}"
-  },
-  load_env: {
-    en: "Mobile detected: to prevent performance issues, click to load Smart Environment when ready.",
-    button: {
-      en: `Load Smart Env`,
-      callback: (env) => {
-        env.load(true);
-      }
-    },
-    timeout: 1e4
-  },
-  /** @deprecated in favor of in-component insctructions (2025-06-22) */
-  missing_entity: {
-    en: "No entity found for key: {{key}}"
-  },
-  notice_muted: {
-    en: "Notice muted"
-  },
-  new_version_available: {
-    en: "A new version is available! (v{{version}})",
-    timeout: 15e3,
-    button: {
-      en: "Release notes",
-      callback: (scope) => {
-        window.open("https://github.com/brianpetro/obsidian-smart-connections/releases", "_blank");
-      }
-    }
-  },
-  new_early_access_version_available: {
-    en: "A new early access version is available! (v{{version}})"
-  },
-  supporter_key_required: {
-    en: "Supporter license key required for early access update"
-  },
-  revert_to_stable_release: {
-    en: 'Click "Check for Updates" in the community plugins tab and complete the update for Smart Connections to finish reverting to the stable release.',
-    timeout: 0
-  },
-  action_installed: {
-    en: 'Installed action "{{name}}"'
-  },
-  action_install_error: {
-    en: 'Error installing action "{{name}}": {{error}}',
-    timeout: 0
-  },
-  embed_model_not_loaded: {
-    en: "Embed model not loaded. Please wait for the model to load and try again."
-  },
-  embed_search_text_failed: {
-    en: "Failed to embed search text."
-  },
-  error_in_embedding_search: {
-    en: "Error in embedding search. See console for details."
-  },
-  copied_to_clipboard: {
-    en: "Message: {{content}} copied successfully."
-  },
-  copy_failed: {
-    en: "Unable to copy message to clipboard."
-  },
-  copied_chatgpt_url_to_clipboard: {
-    en: "ChatGPT URL copied to clipboard."
-  },
-  loading_collection: {
-    en: "Loading {{collection_key}}..."
-  },
-  done_loading_collection: {
-    en: "{{collection_key}} loaded."
-  },
-  saving_collection: {
-    en: "Saving {{collection_key}}..."
-  },
-  initial_scan: {
-    en: "[{{collection_key}}] Starting initial scan...",
-    timeout: 0
-  },
-  done_initial_scan: {
-    en: "[{{collection_key}}] Initial scan complete.",
-    timeout: 3e3
-  },
-  pruning_collection: {
-    en: "Pruning {{collection_key}}..."
-  },
-  done_pruning_collection: {
-    en: "Pruned {{count}} items from {{collection_key}}."
-  },
-  embedding_progress: {
-    en: "Embedding progress: {{progress}} / {{total}}\n{{tokens_per_second}} tokens/sec using {{model_name}}",
-    button: {
-      en: "Pause",
-      callback: (env) => {
-        console.log("pausing");
-        env.smart_sources.entities_vector_adapter.halt_embed_queue_processing();
-      }
-    },
-    timeout: 0
-  },
-  embedding_complete: {
-    en: "Embedding complete. {{total_embeddings}} embeddings created. {{tokens_per_second}} tokens/sec using {{model_name}}",
-    timeout: 0
-  },
-  embedding_paused: {
-    en: "Embedding paused. Progress: {{progress}} / {{total}}\n{{tokens_per_second}} tokens/sec using {{model_name}}",
-    button: {
-      en: "Resume",
-      callback: (env) => {
-        env.smart_sources.entities_vector_adapter.resume_embed_queue_processing(100);
-      }
-    },
-    timeout: 0
-  },
-  embedding_error: {
-    en: "Error embedding: {{error}}",
-    timeout: 0
-  },
-  import_progress: {
-    en: "Importing... {{progress}} / {{total}} sources",
-    timeout: 0
-  },
-  done_import: {
-    en: "Import complete. {{count}} sources imported in {{time_in_seconds}}s",
-    timeout: 0
-  },
-  no_import_queue: {
-    en: "No items in import queue"
-  },
-  clearing_all: {
-    en: "Clearing all data...",
-    timeout: 0
-  },
-  done_clearing_all: {
-    en: "All data cleared and reimported",
-    timeout: 3e3
-  },
-  image_extracting: {
-    en: "Extracting text from Image(s)",
-    timeout: 0
-  },
-  pdf_extracting: {
-    en: "Extracting text from PDF(s)",
-    timeout: 0
-  },
-  insufficient_settings: {
-    en: "Insufficient settings for {{key}}, missing: {{missing}}",
-    timeout: 0
-  },
-  unable_to_init_source: {
-    en: "Unable to initialize source: {{key}}",
-    timeout: 0
-  },
-  reload_sources: {
-    en: "Reloaded sources in {{time_ms}}ms"
-  }
-};
-
-// node_modules/obsidian-smart-env/node_modules/smart-notices/smart_notices.js
-function define_default_create_methods(notices) {
-  for (const key of Object.keys(notices)) {
-    const notice_obj = notices[key];
-    if (typeof notice_obj.create !== "function") {
-      notice_obj.create = function(opts = {}) {
-        let text = this.en ?? key;
-        for (const [k, v] of Object.entries(opts)) {
-          text = text.replace(new RegExp(`{{${k}}}`, "g"), String(v));
-        }
-        let button;
-        if (!opts.button && this.button) {
-          const btn_label = typeof this.button.en === "string" ? this.button.en : "OK";
-          button = {
-            text: btn_label,
-            callback: typeof this.button.callback === "function" ? this.button.callback : () => {
-            }
-            // no-op
-          };
-        } else {
-          button = opts.button;
-        }
-        let final_timeout = opts.timeout ?? this.timeout ?? 5e3;
-        return {
-          text,
-          button,
-          timeout: final_timeout,
-          confirm: opts.confirm,
-          // pass any user-provided confirm
-          immutable: opts.immutable
-          // pass any user-provided immutable
-        };
-      };
-    }
-  }
-  return notices;
-}
-var SmartNotices = class {
-  /**
-   * @param {Object} scope - The main plugin instance
-   */
-  constructor(env, opts = {}) {
-    env?.create_env_getter(this);
-    this.active = {};
-    this.adapter = opts.adapter || this.env.config.modules.smart_notices.adapter;
-    define_default_create_methods(NOTICES);
-  }
-  /** plugin settings for notices (muted, etc.) */
-  get settings() {
-    if (!this.env?.settings?.smart_notices) {
-      this.env.settings.smart_notices = {};
-    }
-    if (!this.env?.settings?.smart_notices?.muted) {
-      this.env.settings.smart_notices.muted = {};
-    }
-    return this.env?.settings?.smart_notices;
-  }
-  /**
-   * Displays a notice by key or custom message.
-   * Usage:
-   *   notices.show('load_env', { scope: this });
-   *
-   * @param {string} id - The notice key or custom ID
-   * @param {object} opts - Additional user opts
-   */
-  show(id, opts = {}) {
-    let message = null;
-    if (typeof opts === "string") {
-      message = opts;
-    } else {
-      opts = opts || {};
-    }
-    const normalized_id = this._normalize_notice_key(id);
-    if (this.settings?.muted?.[normalized_id]) {
-      if (opts.confirm?.callback) {
-        opts.confirm.callback();
-      }
-      return;
-    }
-    const notice_entry = NOTICES[id];
-    let derived = {
-      text: message || id,
-      timeout: opts.timeout ?? 5e3,
-      button: opts.button,
-      immutable: opts.immutable,
-      confirm: opts.confirm
-    };
-    if (notice_entry?.create) {
-      const result = notice_entry.create({ ...opts });
-      derived.text = message || result.text;
-      derived.timeout = result.timeout;
-      derived.button = result.button;
-      derived.immutable = result.immutable;
-      derived.confirm = result.confirm;
-    }
-    const content_fragment = this._build_fragment(normalized_id, derived.text, derived);
-    if (this.active[normalized_id]?.noticeEl?.isConnected) {
-      return this.active[normalized_id].setMessage(content_fragment, derived.timeout);
-    }
-    return this._render_notice(normalized_id, content_fragment, derived);
-  }
-  /**
-   * Normalizes the notice key to a safe string.
-   */
-  _normalize_notice_key(key) {
-    return key.replace(/[^a-zA-Z0-9_-]/g, "_");
-  }
-  /**
-   * Creates and tracks the notice instance
-   */
-  _render_notice(normalized_id, content_fragment, { timeout }) {
-    this.active[normalized_id] = new this.adapter(content_fragment, timeout);
-    return this.active[normalized_id];
-  }
-  /**
-   * Builds a DocumentFragment with notice text & possible buttons
-   */
-  _build_fragment(id, text, { button, confirm: confirm2, immutable }) {
-    const frag = document.createDocumentFragment();
-    frag.createEl("p", {
-      cls: "sc-notice-head",
-      text: `[Smart Env v${this.env.constructor.version}]`
-    });
-    const content = frag.createEl("p", { cls: "sc-notice-content", text });
-    const actions = frag.createEl("div", { cls: "sc-notice-actions" });
-    if (confirm2?.text && typeof confirm2.callback === "function") {
-      this._add_button(confirm2, actions);
-    }
-    if (button?.text && typeof button.callback === "function") {
-      this._add_button(button, actions);
-    }
-    if (!immutable) {
-      this._add_mute_button(id, actions);
-    }
-    return frag;
-  }
-  /**
-   * Creates a <button> appended to the container
-   */
-  _add_button(btnConfig, container) {
-    const btn = document.createElement("button");
-    this.env.smart_view.safe_inner_html(btn, btnConfig.text);
-    btn.addEventListener("click", (e) => {
-      if (btnConfig.stay_open) {
-        e.preventDefault();
-        e.stopPropagation();
-      }
-      btnConfig.callback?.(this.env);
-    });
-    container.appendChild(btn);
-  }
-  /**
-   * Mute button
-   */
-  _add_mute_button(id, container) {
-    const btn = document.createElement("button");
-    (0, import_obsidian11.setIcon)(btn, "bell-off");
-    btn.addEventListener("click", () => {
-      if (!this.settings.muted) this.settings.muted = {};
-      this.settings.muted[id] = true;
-      if (NOTICES["notice muted"]) {
-        this.show("notice muted", null, { timeout: 2e3 });
-      }
-    });
-    container.appendChild(btn);
-  }
-  /**
-   * Hides & clears all active notices
-   */
-  unload() {
-    for (const id in this.active) {
-      this.remove(id);
-    }
-  }
-  /**
-   * Removes an active notice by key
-   */
-  remove(id) {
-    const normalized_id = this._normalize_notice_key(id);
-    this.active[normalized_id]?.hide();
-    delete this.active[normalized_id];
-  }
-};
-
-// node_modules/obsidian-smart-env/smart_env.js
-var SmartEnv2 = class extends SmartEnv {
-  static async create(plugin, main_env_opts = null) {
-    add_smart_chat_icon();
-    add_smart_connections_icon();
-    if (!main_env_opts) main_env_opts = plugin.smart_env_config;
-    if (plugin.app.plugins.plugins["smart-connections"] && plugin.app.plugins.plugins["smart-connections"].env && !plugin.app.plugins.plugins["smart-connections"].env.constructor.version) {
-      const update_notice = "Detected older SmartEnv with 'init_main'. Reloading without the outdated plugin. Please update Smart Connections.";
-      console.warn(update_notice);
-      new import_obsidian12.Notice(update_notice, 0);
-      disable_plugin(plugin.app, "smart-connections");
-    }
-    const opts = merge_env_config(main_env_opts, default_config_default);
-    return await super.create(plugin, opts);
-  }
-  async load(force_load = false) {
-    if (import_obsidian12.Platform.isMobile && !force_load) {
-      const frag = this.smart_view.create_doc_fragment(`<div><p>Smart Environment loading deferred on mobile.</p><button>Load Environment</button></div>`);
-      frag.querySelector("button").addEventListener("click", () => {
-        this.load(true);
-      });
-      new import_obsidian12.Notice(frag, 0);
-      return;
-    }
-    await super.load();
-    const plugin = this.main;
-    plugin.registerEvent(
-      plugin.app.vault.on("create", (file) => {
-        if (file instanceof import_obsidian12.TFile && this.smart_sources?.source_adapters?.[file.extension]) {
-          const source2 = this.smart_sources?.init_file_path(file.path);
-          if (source2) this.smart_sources?.fs.include_file(file.path);
-        }
-      })
-    );
-    plugin.registerEvent(
-      plugin.app.vault.on("rename", (file, old_path) => {
-        if (file instanceof import_obsidian12.TFile && this.smart_sources?.source_adapters?.[file.extension]) {
-          const source2 = this.smart_sources?.init_file_path(file.path);
-          if (source2) this.smart_sources?.fs.include_file(file.path);
-        }
-        if (old_path) {
-          const source2 = this.smart_sources?.get(old_path);
-          if (source2) {
-            source2.delete();
-            if (this.rename_debounce_timeout) clearTimeout(this.rename_debounce_timeout);
-            this.rename_debounce_timeout = setTimeout(() => {
-              this.smart_sources?.process_save_queue();
-              this.rename_debounce_timeout = null;
-            }, 1e3);
-          }
-        }
-      })
-    );
-    plugin.registerEvent(
-      plugin.app.vault.on("modify", (file) => {
-        if (file instanceof import_obsidian12.TFile && this.smart_sources?.source_adapters?.[file.extension]) {
-          if (!this.sources_re_import_queue) this.sources_re_import_queue = {};
-          if (this.sources_re_import_queue?.[file.path]) return;
-          const source2 = this.smart_sources?.get(file.path);
-          if (source2) {
-            source2.data.last_import = { at: 0, hash: null, mtime: 0, size: 0 };
-            this.sources_re_import_queue[source2.key] = source2;
-            this.debounce_re_import_queue();
-          }
-        }
-      })
-    );
-    plugin.registerEvent(
-      plugin.app.workspace.on("editor-change", () => {
-        this.debounce_re_import_queue();
-      })
-    );
-    plugin.registerEvent(
-      plugin.app.workspace.on("active-leaf-change", () => {
-        this.debounce_re_import_queue();
-      })
-    );
-    plugin.registerEvent(
-      plugin.app.vault.on("delete", (file) => {
-        if (file instanceof import_obsidian12.TFile && this.smart_sources?.source_adapters?.[file.extension]) {
-          delete this.smart_sources?.items[file.path];
-        }
-      })
-    );
-  }
-  debounce_re_import_queue() {
-    this.sources_re_import_halted = true;
-    if (this.sources_re_import_timeout) clearTimeout(this.sources_re_import_timeout);
-    if (!this.sources_re_import_queue || Object.keys(this.sources_re_import_queue).length === 0) {
-      this.sources_re_import_timeout = null;
-      return;
-    }
-    this.sources_re_import_timeout = setTimeout(async () => {
-      this.sources_re_import_halted = false;
-      for (const [key, src] of Object.entries(this.sources_re_import_queue)) {
-        await src.import();
-        if (!this.smart_sources._embed_queue) this.smart_sources._embed_queue = [];
-        this.smart_sources._embed_queue.push(src);
-        if (this.smart_blocks.settings.embed_blocks) {
-          for (const block of src.blocks) {
-            if (block._queue_embed || block.should_embed && block.is_unembedded) {
-              this.smart_sources._embed_queue.push(block);
-              block._queue_embed = true;
-            }
-          }
-        }
-        delete this.sources_re_import_queue[key];
-        if (this.sources_re_import_halted) {
-          this.debounce_re_import_queue();
-          return;
-        }
-      }
-      await this.smart_sources?.process_embed_queue();
-      this.sources_re_import_timeout = null;
-    }, this.settings.re_import_wait_time * 1e3);
-  }
-  get notices() {
-    if (!this._notices) {
-      this._notices = new SmartNotices(this, {
-        adapter: import_obsidian12.Notice
-      });
-    }
-    return this._notices;
-  }
-  get settings_config() {
-    const config = super.settings_config;
-    delete config["is_obsidian_vault"];
-    config["re_import_wait_time"] = {
-      type: "number",
-      name: "Re-import wait time",
-      description: "Time in seconds to wait before re-importing a file after modification."
-    };
-    return config;
-  }
-};
-async function disable_plugin(app, plugin_id) {
-  console.log("disabling plugin " + plugin_id);
-  await app.plugins.unloadPlugin(plugin_id);
-  await app.plugins.disablePluginAndSave(plugin_id);
-  await app.plugins.loadManifests();
-}
-
-// node_modules/smart-collections/adapters/_adapter.js
-var CollectionDataAdapter2 = class {
-  /**
-   * @constructor
-   * @param {Object} collection - The collection instance that this adapter manages.
-   */
-  constructor(collection) {
-    this.collection = collection;
-    this.env = collection.env;
-  }
-  /**
-   * The class to use for item adapters.
-   * @type {typeof ItemDataAdapter}
-   */
-  ItemDataAdapter = ItemDataAdapter2;
-  /**
-   * Optional factory method to create item adapters.
-   * If `this.item_adapter_class` is not null, it uses that; otherwise can be overridden by subclasses.
-   * @param {Object} item - The item to create an adapter for.
-   * @returns {ItemDataAdapter}
-   */
-  create_item_adapter(item) {
-    if (!this.ItemDataAdapter) {
-      throw new Error("No item_adapter_class specified and create_item_adapter not overridden.");
-    }
-    return new this.ItemDataAdapter(item);
-  }
-  /**
-   * Load a single item by its key using an `ItemDataAdapter`.
-   * @async
-   * @param {string} key - The key of the item to load.
-   * @returns {Promise<void>} Resolves when the item is loaded.
-   */
-  async load_item(key) {
-    throw new Error("Not implemented");
-  }
-  /**
-   * Save a single item by its key using its associated `ItemDataAdapter`.
-   * @async
-   * @param {string} key - The key of the item to save.
-   * @returns {Promise<void>} Resolves when the item is saved.
-   */
-  async save_item(key) {
-    throw new Error("Not implemented");
-  }
-  /**
-   * Delete a single item by its key. This may involve updating or removing its file,
-   * as handled by the `ItemDataAdapter`.
-   * @async
-   * @param {string} key - The key of the item to delete.
-   * @returns {Promise<void>} Resolves when the item is deleted.
-   */
-  async delete_item(key) {
-    throw new Error("Not implemented");
-  }
-  /**
-   * Process any queued load operations. Typically orchestrates calling `load_item()` 
-   * on items that have been flagged for loading.
-   * @async
-   * @returns {Promise<void>}
-   */
-  async process_load_queue() {
-    throw new Error("Not implemented");
-  }
-  /**
-   * Process any queued save operations. Typically orchestrates calling `save_item()` 
-   * on items that have been flagged for saving.
-   * @async
-   * @returns {Promise<void>}
-   */
-  async process_save_queue() {
-    throw new Error("Not implemented");
-  }
-  /**
-   * Load the item's data from storage if it has been updated externally.
-   * @async
-   * @param {string} key - The key of the item to load.
-   * @returns {Promise<void>} Resolves when the item is loaded.
-   */
-  async load_item_if_updated(item) {
-    const adapter = this.create_item_adapter(item);
-    await adapter.load_if_updated();
-  }
-};
-var ItemDataAdapter2 = class {
-  /**
-   * @constructor
-   * @param {Object} item - The collection item instance that this adapter manages.
-   */
-  constructor(item) {
-    this.item = item;
-  }
-  /**
-   * Load the item's data from storage. May involve reading a file and parsing 
-   * its contents, then updating `item.data`.
-   * @async
-   * @returns {Promise<void>} Resolves when the item is fully loaded.
-   */
-  async load() {
-    throw new Error("Not implemented");
-  }
-  /**
-   * Save the item's data to storage. May involve writing to a file or appending 
-   * lines in an append-only format.
-   * @async
-   * @param {string|null} [ajson=null] - An optional serialized representation of the item’s data.
-   *                                     If not provided, the adapter should derive it from the item.
-   * @returns {Promise<void>} Resolves when the item is saved.
-   */
-  async save(ajson = null) {
-    throw new Error("Not implemented");
-  }
-  /**
-   * Delete the item's data from storage. May involve removing a file or writing 
-   * a `null` entry in an append-only file to signify deletion.
-   * @async
-   * @returns {Promise<void>} Resolves when the item’s data is deleted.
-   */
-  async delete() {
-    throw new Error("Not implemented");
-  }
-  /**
-   * Returns the file path or unique identifier used by this adapter to locate and store 
-   * the item's data. This may be a file name derived from the item's key.
-   * @returns {string} The path or identifier for the item's data.
-   */
-  get data_path() {
-    throw new Error("Not implemented");
-  }
-  /**
-   * @returns {CollectionDataAdapter} The collection data adapter that this item data adapter belongs to.
-   */
-  get collection_adapter() {
-    return this.item.collection.data_adapter;
-  }
-  get env() {
-    return this.item.env;
-  }
-  /**
-   * Load the item's data from storage if it has been updated externally.
-   * @async
-   * @returns {Promise<void>} Resolves when the item is loaded.
-   */
-  async load_if_updated() {
-    throw new Error("Not implemented");
-  }
-};
-
-// node_modules/smart-collections/adapters/_file.js
-var FileCollectionDataAdapter2 = class extends CollectionDataAdapter2 {
-  /**
-   * The class to use for item adapters.
-   * @type {typeof ItemDataAdapter}
-   */
-  ItemDataAdapter = FileItemDataAdapter2;
-  /**
-   * @returns {Object} Filesystem interface derived from environment or collection settings.
-   */
-  get fs() {
-    return this.collection.data_fs || this.collection.env.data_fs;
-  }
-};
-var FileItemDataAdapter2 = class extends ItemDataAdapter2 {
-  /**
-   * @returns {Object} Filesystem interface derived from environment or collection settings.
-   */
-  get fs() {
-    return this.item.collection.data_fs || this.item.collection.env.data_fs;
-  }
-  get data_path() {
-    throw new Error("Not implemented");
-  }
-  async load_if_updated() {
-    const data_path = this.data_path;
-    if (await this.fs.exists(data_path)) {
-      const loaded_at = this.item.loaded_at || 0;
-      const data_file_stat = await this.fs.stat(data_path);
-      if (data_file_stat.mtime > loaded_at + 1 * 60 * 1e3) {
-        console.log(`Smart Collections: Re-loading item ${this.item.key} because it has been updated on disk`);
-        await this.load();
-      }
-    }
-  }
-};
-
-// node_modules/smart-collections/adapters/ajson_multi_file.js
-var class_to_collection_key2 = {
-  "SmartSource": "smart_sources",
-  "SmartNote": "smart_sources",
-  // DEPRECATED
-  "SmartBlock": "smart_blocks",
-  "SmartDirectory": "smart_directories"
-};
-var AjsonMultiFileCollectionDataAdapter2 = class extends FileCollectionDataAdapter2 {
-  /**
-   * The class to use for item adapters.
-   * @type {typeof ItemDataAdapter}
-   */
-  ItemDataAdapter = AjsonMultiFileItemDataAdapter2;
-  /**
-   * Load a single item by its key.
-   * @async
-   * @param {string} key
-   * @returns {Promise<void>}
-   */
-  async load_item(key) {
-    const item = this.collection.get(key);
-    if (!item) return;
-    const adapter = this.create_item_adapter(item);
-    await adapter.load();
-  }
-  /**
-   * Save a single item by its key.
-   * @async
-   * @param {string} key
-   * @returns {Promise<void>}
-   */
-  async save_item(key) {
-    const item = this.collection.get(key);
-    if (!item) return;
-    const adapter = this.create_item_adapter(item);
-    await adapter.save();
-  }
-  /**
-   * Process any queued load operations.
-   * @async
-   * @returns {Promise<void>}
-   */
-  async process_load_queue() {
-    this.collection.show_process_notice("loading_collection");
-    if (!await this.fs.exists(this.collection.data_dir)) {
-      await this.fs.mkdir(this.collection.data_dir);
-    }
-    const load_queue = Object.values(this.collection.items).filter((item) => item._queue_load);
-    if (!load_queue.length) {
-      this.collection.clear_process_notice("loading_collection");
-      return;
-    }
-    console.log(`Loading ${this.collection.collection_key}: ${load_queue.length} items`);
-    const batch_size = 100;
-    for (let i = 0; i < load_queue.length; i += batch_size) {
-      const batch = load_queue.slice(i, i + batch_size);
-      await Promise.all(batch.map((item) => {
-        const adapter = this.create_item_adapter(item);
-        return adapter.load().catch((err) => {
-          console.warn(`Error loading item ${item.key}`, err);
-          item.queue_load();
-        });
-      }));
-    }
-    this.collection.loaded = load_queue.length;
-    this.collection.clear_process_notice("loading_collection");
-  }
-  /**
-   * Process any queued save operations.
-   * @async
-   * @returns {Promise<void>}
-   */
-  async process_save_queue() {
-    this.collection.show_process_notice("saving_collection");
-    const save_queue = Object.values(this.collection.items).filter((item) => item._queue_save);
-    console.log(`Saving ${this.collection.collection_key}: ${save_queue.length} items`);
-    const time_start = Date.now();
-    const batch_size = 50;
-    for (let i = 0; i < save_queue.length; i += batch_size) {
-      const batch = save_queue.slice(i, i + batch_size);
-      await Promise.all(batch.map((item) => {
-        const adapter = this.create_item_adapter(item);
-        return adapter.save().catch((err) => {
-          console.warn(`Error saving item ${item.key}`, err);
-          item.queue_save();
-        });
-      }));
-    }
-    const deleted_items = Object.values(this.collection.items).filter((item) => item.deleted);
-    if (deleted_items.length) {
-      deleted_items.forEach((item) => {
-        delete this.collection.items[item.key];
-      });
-    }
-    console.log(`Saved ${this.collection.collection_key} in ${Date.now() - time_start}ms`);
-    this.collection.clear_process_notice("saving_collection");
-  }
-  get_item_data_path(key) {
-    return [
-      this.collection.data_dir || "multi",
-      this.fs?.sep || "/",
-      this.get_data_file_name(key) + ".ajson"
-    ].join("");
-  }
-  /**
-   * Transforms the item key into a safe filename.
-   * Replaces spaces, slashes, and dots with underscores.
-   * @returns {string} safe file name
-   */
-  get_data_file_name(key) {
-    return key.split("#")[0].replace(/[\s\/\.]/g, "_").replace(".md", "");
-  }
-  /**
-   * Build a single AJSON line for the given item and data.
-   * @param {Object} item 
-   * @returns {string}
-   */
-  get_item_ajson(item) {
-    const collection_key = item.collection_key;
-    const key = item.key;
-    const data_value = item.deleted ? "null" : JSON.stringify(item.data);
-    return `${JSON.stringify(`${collection_key}:${key}`)}: ${data_value},`;
-  }
-};
-var AjsonMultiFileItemDataAdapter2 = class extends FileItemDataAdapter2 {
-  /**
-   * Derives the `.ajson` file path from the collection's data_dir and item key.
-   * @returns {string}
-   */
-  get data_path() {
-    return this.collection_adapter.get_item_data_path(this.item.key);
-  }
-  /**
-   * Load the item from its `.ajson` file.
-   * @async
-   * @returns {Promise<void>}
-   */
-  async load() {
-    try {
-      const raw_data = await this.fs.adapter.read(this.data_path, "utf-8", { no_cache: true });
-      if (!raw_data) {
-        this.item.queue_import();
-        return;
-      }
-      const { rewrite, file_data } = this._parse(raw_data);
-      if (rewrite) {
-        if (file_data.length) await this.fs.write(this.data_path, file_data);
-        else await this.fs.remove(this.data_path);
-      }
-      const last_import_mtime = this.item.data.last_import?.at || 0;
-      if (last_import_mtime && this.item.init_file_mtime > last_import_mtime) {
-        this.item.queue_import();
-      }
-    } catch (e) {
-      this.item.queue_import();
-    }
-  }
-  /**
-   * Parse the entire AJSON content as a JSON object, handle legacy keys, and extract final state.
-   * @private
-   * @param {string} ajson 
-   * @returns {boolean}
-   */
-  _parse(ajson) {
-    try {
-      let rewrite = false;
-      if (!ajson.length) return false;
-      ajson = ajson.trim();
-      const original_line_count = ajson.split("\n").length;
-      const json_str = "{" + ajson.slice(0, -1) + "}";
-      const data = JSON.parse(json_str);
-      const entries = Object.entries(data);
-      for (let i = 0; i < entries.length; i++) {
-        const [ajson_key, value] = entries[i];
-        if (!value) {
-          delete data[ajson_key];
-          rewrite = true;
-          continue;
-        }
-        const { collection_key, item_key, changed } = this._parse_ajson_key(ajson_key);
-        if (changed) {
-          rewrite = true;
-          data[collection_key + ":" + item_key] = value;
-          delete data[ajson_key];
-        }
-        const collection = this.env[collection_key];
-        if (!collection) continue;
-        const existing_item = collection.get(item_key);
-        if (!value.key) value.key = item_key;
-        if (existing_item) {
-          existing_item.data = value;
-          existing_item._queue_load = false;
-          existing_item.loaded_at = Date.now();
-        } else {
-          const ItemClass = collection.item_type;
-          const new_item = new ItemClass(this.env, value);
-          new_item._queue_load = false;
-          new_item.loaded_at = Date.now();
-          collection.set(new_item);
-        }
-      }
-      if (rewrite || original_line_count > entries.length) {
-        rewrite = true;
-      }
-      return {
-        rewrite,
-        file_data: rewrite ? Object.entries(data).map(([key, value]) => `${JSON.stringify(key)}: ${JSON.stringify(value)},`).join("\n") : null
-      };
-    } catch (e) {
-      if (ajson.split("\n").some((line) => !line.endsWith(","))) {
-        console.warn("fixing trailing comma error");
-        ajson = ajson.split("\n").map((line) => line.endsWith(",") ? line : line + ",").join("\n");
-        return this._parse(ajson);
-      }
-      console.warn("Error parsing JSON:", e);
-      return { rewrite: true, file_data: null };
-    }
-  }
-  _parse_ajson_key(ajson_key) {
-    let changed;
-    let [collection_key, ...item_key] = ajson_key.split(":");
-    if (class_to_collection_key2[collection_key]) {
-      collection_key = class_to_collection_key2[collection_key];
-      changed = true;
-    }
-    return {
-      collection_key,
-      item_key: item_key.join(":"),
-      changed
-    };
-  }
-  /**
-   * Save the current state of the item by appending a new line to its `.ajson` file.
-   * @async
-   * @returns {Promise<void>}
-   */
-  async save(retries = 0) {
-    try {
-      const ajson_line = this.get_item_ajson();
-      await this.fs.append(this.data_path, "\n" + ajson_line);
-      this.item._queue_save = false;
-    } catch (e) {
-      if (e.code === "ENOENT" && retries < 1) {
-        const dir = this.collection_adapter.collection.data_dir;
-        if (!await this.fs.exists(dir)) {
-          await this.fs.mkdir(dir);
-        }
-        return await this.save(retries + 1);
-      }
-      console.warn("Error saving item", this.data_path, this.item.key, e);
-    }
-  }
-  /**
-   * Build a single AJSON line for the given item and data.
-   * @param {Object} item 
-   * @returns {string}
-   */
-  get_item_ajson() {
-    return this.collection_adapter.get_item_ajson(this.item);
-  }
-};
-
-// node_modules/smart-file-system/utils/glob_to_regex.js
-function create_regex2(pattern, { case_sensitive, extended_glob, windows_paths }) {
-  const regex_pattern = glob_to_regex_pattern2(pattern, extended_glob);
-  const adjusted_pattern = adjust_for_windows_paths2(regex_pattern, windows_paths);
-  const flags = case_sensitive ? "" : "i";
-  return new RegExp(`^${adjusted_pattern}$`, flags);
-}
-function adjust_for_windows_paths2(pattern, windows_paths) {
-  return windows_paths ? pattern.replace(/\\\//g, "[\\\\/]").replace(/\\\\\\/g, "[\\\\/]") : pattern;
-}
-function glob_to_regex_pattern2(pattern, extended_glob) {
-  let in_class = false;
-  let in_brace = 0;
-  let result = "";
-  for (let i = 0; i < pattern.length; i++) {
-    const char = pattern[i];
-    switch (char) {
-      case "\\":
-        if (i + 1 < pattern.length) {
-          result += `\\${pattern[i + 1]}`;
-          i++;
-        } else {
-          result += "\\\\";
-        }
-        break;
-      case "/":
-        result += "\\/";
-        break;
-      case "[":
-        if (!in_class) {
-          const closingIndex = pattern.indexOf("]", i + 1);
-          if (closingIndex === -1) {
-            result += "\\[";
-          } else {
-            in_class = true;
-            if (pattern[i + 1] === "!") {
-              result += "[^";
-              i++;
-            } else {
-              result += "[";
-            }
-          }
-        } else {
-          result += "\\[";
-        }
-        break;
-      case "]":
-        if (in_class) {
-          in_class = false;
-          result += "]";
-        } else {
-          result += "\\]";
-        }
-        break;
-      case "{":
-        if (!in_class) {
-          const closingIndex = pattern.indexOf("}", i + 1);
-          if (closingIndex === -1) {
-            result += "\\{";
-          } else {
-            in_brace++;
-            result += "(";
-          }
-        } else {
-          result += "\\{";
-        }
-        break;
-      case "}":
-        if (!in_class && in_brace > 0) {
-          in_brace--;
-          result += ")";
-        } else {
-          result += "\\}";
-        }
-        break;
-      case ",":
-        if (!in_class && in_brace > 0) {
-          result += "|";
-        } else {
-          result += ",";
-        }
-        break;
-      case "*":
-        if (!in_class) {
-          if (i + 1 < pattern.length && pattern[i + 1] === "*") {
-            result += ".*";
-            i++;
-          } else {
-            result += "[^/]*";
-          }
-        } else {
-          result += "\\*";
-        }
-        break;
-      case "?":
-        if (!in_class) {
-          result += "[^/]";
-        } else {
-          result += "\\?";
-        }
-        break;
-      // We escape these to ensure they remain literal
-      case "(":
-      case ")":
-      case "+":
-      case "|":
-      case "^":
-      case "$":
-      case ".":
-        result += `\\${char}`;
-        break;
-      default:
-        result += char;
-        break;
-    }
-  }
-  if (in_class) {
-    result += "]";
-    in_class = false;
-  }
-  if (extended_glob) {
-    result = result.replace(/\\\+\\\((.*?)\\\)/g, "($1)+").replace(/\\\@\\\((.*?)\\\)/g, "($1)").replace(/\\\!\\\((.*?)\\\)/g, "(?!$1).*").replace(/\\\?\\\((.*?)\\\)/g, "($1)?").replace(/\\\*\\\((.*?)\\\)/g, "($1)*");
-  }
-  return result;
-}
-function glob_to_regex2(pattern, options = {}) {
-  const default_options = {
-    case_sensitive: true,
-    extended_glob: false,
-    windows_paths: false
-  };
-  const merged_options = { ...default_options, ...options };
-  if (pattern === "") {
-    return /^$/;
-  }
-  if (pattern === "*" && !merged_options.windows_paths) {
-    return /^[^/]+$/;
-  }
-  if (pattern === "**" && !merged_options.windows_paths) {
-    return /^.+$/;
-  }
-  return create_regex2(pattern, merged_options);
-}
-
-// node_modules/smart-file-system/utils/fuzzy_search.js
-function fuzzy_search2(arr, search_term) {
-  let matches = [];
-  for (let i = 0; i < arr.length; i++) {
-    const search_chars = search_term.toLowerCase().split("");
-    let match = true;
-    let distance = 0;
-    const name = arr[i];
-    const label_name = name.toLowerCase();
-    for (let j = 0; j < search_chars.length; j++) {
-      const search_index = label_name.substring(distance).indexOf(search_chars[j]);
-      if (search_index >= 0) {
-        distance += search_index + 1;
-      } else {
-        match = false;
-        break;
-      }
-    }
-    if (match) matches.push({ name, distance });
-  }
-  matches.sort((a, b) => a.distance - b.distance);
-  return matches.map((match) => match.name);
-}
-
-// node_modules/smart-file-system/smart_fs.js
-var SmartFs2 = class {
-  /**
-   * Create a new SmartFs instance
-   * 
-   * @param {Object} env - The Smart Environment instance
-   * @param {Object} [opts={}] - Optional configuration
-   * @param {string} [opts.fs_path] - Custom environment path
-   */
-  constructor(env, opts = {}) {
-    this.env = env;
-    this.opts = opts;
-    this.fs_path = opts.fs_path || opts.env_path || "";
-    if (!opts.adapter) throw new Error("SmartFs requires an adapter");
-    this.adapter = new opts.adapter(this);
-    this.excluded_patterns = [];
-    if (Array.isArray(opts.exclude_patterns)) {
-      opts.exclude_patterns.forEach((pattern) => this.add_ignore_pattern(pattern));
-    }
-    this.folders = {};
-    this.files = {};
-    this.file_paths = [];
-    this.folder_paths = [];
-    this.auto_excluded_files = [];
-  }
-  async refresh() {
-    this.files = {};
-    this.file_paths = [];
-    this.folders = {};
-    this.folder_paths = [];
-    await this.init();
-  }
-  async init() {
-    await this.load_exclusions();
-    await this.load_files();
-  }
-  async load_files() {
-    const all = await this.list_recursive();
-    this.file_paths = [];
-    this.folder_paths = [];
-    all.forEach((file) => {
-      if (file.type === "file") {
-        this.files[file.path] = file;
-        this.file_paths.push(file.path);
-      } else if (file.type === "folder") {
-        this.folders[file.path] = file;
-        this.folder_paths.push(file.path);
-      }
-    });
-  }
-  include_file(file_path) {
-    const file = this.adapter.get_file(file_path);
-    this.files[file.path] = file;
-    this.file_paths.push(file.path);
-    return file;
-  }
-  /**
-   * Load .gitignore patterns
-   * 
-   * @returns {Promise<RegExp[]>} Array of RegExp patterns
-   */
-  async load_exclusions() {
-    const gitignore_path = ".gitignore";
-    const gitignore_exists = await this.adapter.exists(gitignore_path);
-    if (gitignore_exists) {
-      const gitignore_content = await this.adapter.read(gitignore_path, "utf-8");
-      gitignore_content.split("\n").filter((line) => !line.startsWith("#")).filter(Boolean).forEach((pattern) => this.add_ignore_pattern(pattern));
-    }
-    this.add_ignore_pattern(".**");
-    this.add_ignore_pattern("**/.**");
-    this.add_ignore_pattern("**/.*/**");
-    this.add_ignore_pattern("**/*.ajson");
-    this.add_ignore_pattern("**/*.excalidraw.md");
-  }
-  /**
-   * Add a new ignore pattern
-   * 
-   * @param {string} pattern - The pattern to add
-   */
-  add_ignore_pattern(pattern, opts = {}) {
-    this.excluded_patterns.push(glob_to_regex2(pattern.trim(), opts));
-  }
-  /**
-   * Check if a path is ignored based on gitignore patterns
-   * 
-   * @param {string} _path - The path to check
-   * @returns {boolean} True if the path is ignored, false otherwise
-   */
-  is_excluded(_path) {
-    try {
-      if (_path.includes("#")) return true;
-      if (!this.excluded_patterns.length) return false;
-      return this.excluded_patterns.some((pattern) => pattern.test(_path));
-    } catch (e) {
-      console.error(`Error checking if path is excluded: ${e.message}`);
-      console.error(`Path: `, _path);
-      throw e;
-    }
-  }
-  /**
-   * Check if any path in an array of paths is excluded
-   * 
-   * @param {string[]} paths - Array of paths to check
-   * @returns {boolean} True if any path is excluded, false otherwise
-   */
-  has_excluded_patterns(paths) {
-    return paths.some((p) => this.is_excluded(p));
-  }
-  /**
-   * Pre-process an array of paths, throwing an error if any path is excluded
-   * 
-   * @param {string[]} paths - Array of paths to pre-process
-   * @throws {Error} If any path in the array is excluded
-   * @returns {string[]} The array of paths
-   */
-  pre_process(paths) {
-    if (this.has_excluded_patterns(paths)) {
-      throw new Error(`Path is excluded: ${paths.find((p) => this.is_excluded(p))}`);
-    }
-    return paths;
-  }
-  /**
-   * Post-process the result of an operation
-   * 
-   * @param {any} returned_value - The value returned by the operation
-   * @returns {any} The post-processed value
-   */
-  post_process(returned_value) {
-    if (this.adapter.post_process) return this.adapter.post_process(returned_value);
-    if (Array.isArray(returned_value)) {
-      returned_value = returned_value.filter((r) => {
-        if (typeof r === "string") return !this.is_excluded(r);
-        if (typeof r === "object" && r.path) return !this.is_excluded(r.path);
-        return true;
-      });
-    }
-    return returned_value;
-  }
-  // v2
-  /**
-   * Use the adapter for a method
-   * runs pre_process and post_process (checks exclusions)
-   * @param {string} method - The method to use
-   * @param {string[]} paths - The paths to use
-   * @param {...any} args - Additional arguments for the method
-   * @returns {Promise<any>} The result of the method
-   */
-  async use_adapter(method, paths, ...args) {
-    if (!this.adapter[method]) throw new Error(`Method ${method} not found in adapter`);
-    paths = this.pre_process(paths ?? []);
-    let resp = await this.adapter[method](...paths, ...args);
-    return this.post_process(resp);
-  }
-  /**
-   * Append content to a file
-   * 
-   * @param {string} rel_path - The relative path of the file to append to
-   * @param {string|Buffer} content - The content to append
-   * @returns {Promise<void>} A promise that resolves when the operation is complete
-   */
-  async append(rel_path, content) {
-    return await this.use_adapter("append", [rel_path], content);
-  }
-  /**
-   * Create a new directory
-   * 
-   * @param {string} rel_path - The relative path of the directory to create
-   * @returns {Promise<void>} A promise that resolves when the operation is complete
-   */
-  async mkdir(rel_path, opts = { recursive: true }) {
-    return await this.use_adapter("mkdir", [rel_path], opts);
-  }
-  /**
-   * Check if a file or directory exists
-   * 
-   * @param {string} rel_path - The relative path to check
-   * @returns {Promise<boolean>} True if the path exists, false otherwise
-   */
-  async exists(rel_path) {
-    return await this.use_adapter("exists", [rel_path]);
-  }
-  /**
-   * List files in a directory
-   * 
-   * @param {string} rel_path - The relative path to list
-   * @returns {Promise<string[]>} Array of file paths
-   */
-  async list(rel_path = "/") {
-    return await this.use_adapter("list", [rel_path]);
-  }
-  async list_recursive(rel_path = "/") {
-    return await this.use_adapter("list_recursive", [rel_path]);
-  }
-  async list_files(rel_path = "/") {
-    return await this.use_adapter("list_files", [rel_path]);
-  }
-  async list_files_recursive(rel_path = "/") {
-    return await this.use_adapter("list_files_recursive", [rel_path]);
-  }
-  async list_folders(rel_path = "/") {
-    return await this.use_adapter("list_folders", [rel_path]);
-  }
-  async list_folders_recursive(rel_path = "/") {
-    return await this.use_adapter("list_folders_recursive", [rel_path]);
-  }
-  /**
-   * Read the contents of a file
-   * 
-   * @param {string} rel_path - The relative path of the file to read
-   * @returns {Promise<string|Buffer>} The contents of the file
-   */
-  async read(rel_path, encoding = "utf-8") {
-    try {
-      const content = await this.adapter.read(rel_path, encoding);
-      return content;
-    } catch (error) {
-      console.warn("Error during read: " + error.message, rel_path);
-      if (error.code === "ENOENT") return null;
-      return { error: error.message };
-    }
-  }
-  /**
-   * Remove a file
-   * 
-   * @param {string} rel_path - The relative path of the file to remove
-   * @returns {Promise<void>} A promise that resolves when the operation is complete
-   */
-  async remove(rel_path) {
-    return await this.use_adapter("remove", [rel_path]);
-  }
-  /**
-   * Remove a directory
-   * 
-   * @param {string} rel_path - The relative path of the directory to remove
-   * @returns {Promise<void>} A promise that resolves when the operation is complete
-   */
-  async remove_dir(rel_path, recursive = false) {
-    return await this.use_adapter("remove_dir", [rel_path], recursive);
-  }
-  /**
-   * Rename a file or directory
-   * 
-   * @param {string} rel_path - The current relative path
-   * @param {string} new_rel_path - The new relative path
-   * @returns {Promise<void>} A promise that resolves when the operation is complete
-   */
-  async rename(rel_path, new_rel_path) {
-    await this.use_adapter("rename", [rel_path, new_rel_path]);
-    await this.refresh();
-  }
-  /**
-   * Get file or directory statistics
-   * 
-   * @param {string} rel_path - The relative path to get statistics for
-   * @returns {Promise<Object>} An object containing file or directory statistics
-   */
-  async stat(rel_path) {
-    return await this.use_adapter("stat", [rel_path]);
-  }
-  /**
-   * Write content to a file
-   * Should handle when target path is within a folder that doesn't exist
-   * 
-   * @param {string} rel_path - The relative path of the file to write to
-   * @param {string|Buffer} content - The content to write
-   * @returns {Promise<void>} A promise that resolves when the operation is complete
-   */
-  async write(rel_path, content) {
-    try {
-      await this.adapter.write(rel_path, content);
-    } catch (error) {
-      console.error("Error during write:", error);
-      throw error;
-    }
-  }
-  // // aliases
-  // async create(rel_path, content) { return await this.use_adapter('write', [rel_path], content); }
-  // async update(rel_path, content) { return await this.use_adapter('write', [rel_path], content); }
-  get_link_target_path(link_target, source_path) {
-    if (this.adapter.get_link_target_path) return this.adapter.get_link_target_path(link_target, source_path);
-    if (!this.file_paths) return console.warn("get_link_target_path: file_paths not found");
-    const matching_file_paths = this.file_paths.filter((path2) => path2.includes(link_target));
-    return fuzzy_search2(matching_file_paths, link_target)[0];
-  }
-  get sep() {
-    return this.adapter.sep || "/";
-  }
-  get_full_path(rel_path = "") {
-    return this.adapter.get_full_path(rel_path);
-  }
-  get base_path() {
-    return this.adapter.get_base_path();
-  }
-};
-
-// node_modules/smart-file-system/adapters/obsidian.js
-var obsidian2 = __toESM(require("obsidian"), 1);
-var SmartFsObsidianAdapter2 = class {
-  /**
-   * Create an SmartFsObsidianAdapter instance
-   * 
-   * @param {Object} smart_fs - The SmartFs instance
-   */
-  constructor(smart_fs) {
-    this.smart_fs = smart_fs;
-    this.obsidian = obsidian2;
-    this.obsidian_app = smart_fs.env.main.app;
-    this.obsidian_adapter = smart_fs.env.main.app.vault.adapter;
-  }
-  get fs_path() {
-    return this.smart_fs.fs_path;
-  }
-  get_file(file_path) {
-    const file = {};
-    file.path = file_path.replace(/\\/g, "/").replace(this.smart_fs.fs_path, "").replace(/^\//, "");
-    file.type = "file";
-    file.extension = file.path.split(".").pop().toLowerCase();
-    file.name = file.path.split("/").pop();
-    file.basename = file.name.split(".").shift();
-    Object.defineProperty(file, "stat", {
-      get: () => {
-        const tfile = this.obsidian_app.vault.getAbstractFileByPath(file_path);
-        if (tfile) {
-          return {
-            ctime: tfile.stat.ctime,
-            mtime: tfile.stat.mtime,
-            size: tfile.stat.size,
-            isDirectory: () => tfile instanceof this.obsidian.TFolder,
-            isFile: () => tfile instanceof this.obsidian.TFile
-          };
-        }
-        return null;
-      }
-    });
-    return file;
-  }
-  /**
-   * Append content to a file
-   * 
-   * @param {string} rel_path - The relative path of the file to append to
-   * @param {string} data - The content to append
-   * @returns {Promise<void>} A promise that resolves when the operation is complete
-   */
-  async append(rel_path, data) {
-    if (!rel_path.startsWith(this.fs_path)) rel_path = this.fs_path + "/" + rel_path;
-    return await this.obsidian_adapter.append(rel_path, data);
-  }
-  /**
-   * Create a new directory
-   * 
-   * @param {string} rel_path - The relative path of the directory to create
-   * @returns {Promise<void>} A promise that resolves when the operation is complete
-   */
-  async mkdir(rel_path) {
-    if (!rel_path.startsWith(this.fs_path)) rel_path = this.fs_path + "/" + rel_path;
-    return await this.obsidian_adapter.mkdir(rel_path);
-  }
-  /**
-   * Check if a file or directory exists
-   * 
-   * @param {string} rel_path - The relative path to check
-   * @returns {Promise<boolean>} True if the path exists, false otherwise
-   */
-  async exists(rel_path) {
-    if (!rel_path.startsWith(this.fs_path)) rel_path = this.fs_path + "/" + rel_path;
-    return await this.obsidian_adapter.exists(rel_path);
-  }
-  /**
-   * List files in a directory (NOT up-to-date with list_recursive)
-   * 
-   * @param {string} rel_path - The relative path to list
-   * @returns {Promise<string[]>} Array of file paths
-   */
-  async list(rel_path, opts = {}) {
-    if (!rel_path.startsWith(this.fs_path)) rel_path = this.fs_path + "/" + rel_path;
-    if (rel_path.startsWith("/")) rel_path = rel_path.slice(1);
-    if (rel_path.endsWith("/")) rel_path = rel_path.slice(0, -1);
-    if (rel_path.includes(".")) {
-      const { files: file_paths } = await this.obsidian_adapter.list(rel_path);
-      const files2 = file_paths.map((file_path) => {
-        if (this.smart_fs.fs_path) file_path = file_path.replace(this.smart_fs.fs_path, "").slice(1);
-        const file_name = file_path.split("/").pop();
-        const file = {
-          basename: file_name.split(".")[0],
-          extension: file_name.split(".").pop().toLowerCase(),
-          name: file_name,
-          path: file_path
-        };
-        return file;
-      });
-      return files2;
-    }
-    const files = this.obsidian_app.vault.getAllLoadedFiles().filter((file) => {
-      const last_slash = file.path.lastIndexOf("/");
-      if (last_slash === -1 && rel_path !== "") return false;
-      const folder_path = file.path.slice(0, last_slash);
-      if (folder_path !== rel_path) return false;
-      return true;
-    });
-    return files;
-  }
-  // NOTE: currently does not handle hidden files and folders
-  async list_recursive(rel_path, opts = {}) {
-    if (!rel_path.startsWith(this.fs_path)) rel_path = this.fs_path + "/" + rel_path;
-    if (rel_path.startsWith("/")) rel_path = rel_path.slice(1);
-    if (rel_path.endsWith("/")) rel_path = rel_path.slice(0, -1);
-    const files = this.obsidian_app.vault.getAllLoadedFiles().filter((file) => {
-      if (file.path.length > 200) {
-        this.smart_fs.auto_excluded_files.push(file.path);
-        return false;
-      }
-      if (rel_path !== "" && !file.path.startsWith(rel_path)) return false;
-      if (file instanceof this.obsidian.TFile) {
-        if (opts.type === "folder") return false;
-        file.type = "file";
-      } else if (file instanceof this.obsidian.TFolder) {
-        if (opts.type === "file") return false;
-        delete file.basename;
-        delete file.extension;
-        file.type = "folder";
-      }
-      if (this.smart_fs.fs_path) file.path = file.path.replace(this.smart_fs.fs_path, "").slice(1);
-      return true;
-    });
-    return files;
-  }
-  async list_files(rel_path) {
-    return await this.list(rel_path, { type: "file" });
-  }
-  async list_files_recursive(rel_path) {
-    return await this.list_recursive(rel_path, { type: "file" });
-  }
-  async list_folders(rel_path) {
-    return await this.list(rel_path, { type: "folder" });
-  }
-  async list_folders_recursive(rel_path) {
-    return await this.list_recursive(rel_path, { type: "folder" });
-  }
-  /**
-   * Read the contents of a file
-   * 
-   * @param {string} rel_path - The relative path of the file to read
-   * @returns {Promise<string>} The contents of the file
-   */
-  async read(rel_path, encoding, opts = {}) {
-    if (!rel_path.startsWith(this.fs_path)) rel_path = this.fs_path + "/" + rel_path;
-    if (encoding === "utf-8") {
-      if (!opts.no_cache) {
-        const tfile = this.obsidian_app.vault.getFileByPath(rel_path);
-        if (tfile) return await this.obsidian_app.vault.cachedRead(tfile);
-      }
-      return await this.obsidian_adapter.read(rel_path);
-    }
-    if (encoding === "base64") {
-      const array_buffer2 = await this.obsidian_adapter.readBinary(rel_path, "base64");
-      const base642 = this.obsidian.arrayBufferToBase64(array_buffer2);
-      return base642;
-    }
-    const array_buffer = await this.obsidian_adapter.readBinary(rel_path);
-    return array_buffer;
-  }
-  /**
-   * Rename a file or directory
-   * 
-   * @param {string} old_path - The current path of the file or directory
-   * @param {string} new_path - The new path for the file or directory
-   * @returns {Promise<void>} A promise that resolves when the operation is complete
-   */
-  async rename(old_path, new_path) {
-    if (!old_path.startsWith(this.fs_path)) old_path = this.fs_path + "/" + old_path;
-    if (!new_path.startsWith(this.fs_path)) new_path = this.fs_path + "/" + new_path;
-    return await this.obsidian_adapter.rename(old_path, new_path);
-  }
-  /**
-   * Remove a file
-   * 
-   * @param {string} rel_path - The relative path of the file to remove
-   * @returns {Promise<void>} A promise that resolves when the operation is complete
-   */
-  async remove(rel_path) {
-    if (!rel_path.startsWith(this.fs_path)) rel_path = this.fs_path + "/" + rel_path;
-    try {
-      return await this.obsidian_adapter.remove(rel_path);
-    } catch (error) {
-      console.warn(`Error removing file: ${rel_path}`, error);
-    }
-  }
-  /**
-   * Remove a directory
-   * 
-   * @param {string} rel_path - The relative path of the directory to remove
-   * @returns {Promise<void>} A promise that resolves when the operation is complete
-   */
-  async remove_dir(rel_path, recursive = false) {
-    if (!rel_path.startsWith(this.fs_path)) rel_path = this.fs_path + "/" + rel_path;
-    return await this.obsidian_adapter.rmdir(rel_path, recursive);
-  }
-  /**
-   * Get file or directory information
-   * 
-   * @param {string} rel_path - The relative path of the file or directory
-   * @returns {Promise<Object>} An object containing file or directory information
-   */
-  async stat(rel_path) {
-    if (!rel_path.startsWith(this.fs_path)) rel_path = this.fs_path + "/" + rel_path;
-    return await this.obsidian_adapter.stat(rel_path);
-  }
-  /**
-   * Write content to a file
-   * 
-   * @param {string} rel_path - The relative path of the file to write to
-   * @param {string} data - The content to write
-   * @returns {Promise<void>} A promise that resolves when the operation is complete
-   */
-  async write(rel_path, data) {
-    if (!data) data = "";
-    if (!rel_path.startsWith(this.fs_path)) rel_path = this.fs_path + "/" + rel_path;
-    const folder_path = rel_path.split("/").slice(0, -1).join("/");
-    if (!await this.exists(folder_path)) {
-      await this.mkdir(folder_path);
-      console.log(`Created folder: ${folder_path}`);
-    }
-    return await this.obsidian_adapter.write(rel_path, data);
-  }
-  get_link_target_path(link_path, file_path) {
-    return this.obsidian_app.metadataCache.getFirstLinkpathDest(link_path, file_path)?.path;
-  }
-  get_base_path() {
-    return this.obsidian_adapter.basePath;
-  }
-  get_full_path(rel_path = "") {
-    const sep = rel_path.includes("/") ? "/" : "\\";
-    return this.get_base_path() + sep + rel_path;
-  }
-};
-
-// node_modules/smart-view/utils/empty.js
-function empty2(elm) {
-  const range = document.createRange();
-  range.selectNodeContents(elm);
-  range.deleteContents();
-}
-
-// node_modules/smart-view/utils/replace_html.js
-var replace_html2 = /* @__PURE__ */ (() => {
-  const cache = /* @__PURE__ */ new Map();
-  return (container, html_snippet) => {
-    const key = html_snippet.trim();
-    let tpl = cache.get(key);
-    if (!tpl) {
-      tpl = document.createElement("template");
-      tpl.innerHTML = key;
-      cache.set(key, tpl);
-    }
-    container.replaceChildren(tpl.content.cloneNode(true));
-  };
-})();
-
-// node_modules/smart-view/utils/replace_with_fragment.js
-var replace_with_fragment2 = (container, html_snippet) => {
-  const range = document.createRange();
-  const frag = range.createContextualFragment(html_snippet.trim());
-  container.replaceChildren(frag);
-};
-
-// node_modules/smart-view/utils/safe_inner_html.js
-var restricted_re2 = /<(td|th|tr|thead|tbody|tfoot|caption|col|colgroup|option|optgroup|li|dt|dd|source|track)\b/i;
-var safe_inner_html2 = (container, html_snippet) => {
-  const trimmed = html_snippet.trim();
-  (restricted_re2.test(trimmed) ? replace_with_fragment2 : replace_html2)(container, trimmed);
-};
-
-// node_modules/smart-view/smart_view.js
-var SmartView2 = class {
-  /**
-   * @constructor
-   * @param {object} opts - Additional options or overrides for rendering.
-   */
-  constructor(opts = {}) {
-    this.opts = opts;
-    this._adapter = null;
-  }
-  /**
-   * Renders all setting components within a container.
-   * @async
-   * @param {HTMLElement} container - The container element.
-   * @param {Object} opts - Additional options for rendering.
-   * @returns {Promise<void>}
-   */
-  async render_setting_components(container, opts = {}) {
-    const components = container.querySelectorAll(".setting-component");
-    const promises = [];
-    for (const component of components) {
-      promises.push(this.render_setting_component(component, opts));
-    }
-    await Promise.all(promises);
-    return container;
-  }
-  /**
-   * Creates a document fragment from HTML string.
-   * @param {string} html - The HTML string.
-   * @returns {DocumentFragment}
-   */
-  create_doc_fragment(html) {
-    return document.createRange().createContextualFragment(html);
-  }
-  /**
-   * Gets the adapter instance used for rendering (e.g., Obsidian or Node, etc.).
-   * @returns {Object} The adapter instance.
-   */
-  get adapter() {
-    if (!this._adapter) {
-      if (!this.opts.adapter) {
-        throw new Error("No adapter provided to SmartView. Provide a 'smart_view.adapter' in env config.");
-      }
-      const AdapterClass = this.opts.adapter;
-      this._adapter = new AdapterClass(this);
-    }
-    return this._adapter;
-  }
-  /**
-   * Gets an icon (implemented in the adapter).
-   * @param {string} icon_name - Name of the icon to get.
-   * @returns {string} The icon HTML string.
-   */
-  get_icon_html(icon_name) {
-    return this.adapter.get_icon_html(icon_name);
-  }
-  /**
-   * Renders a single setting component (implemented in adapter).
-   * @async
-   * @param {HTMLElement} setting_elm - The DOM element for the setting.
-   * @param {Object} opts - Additional options for rendering.
-   * @returns {Promise<*>}
-   */
-  async render_setting_component(setting_elm, opts = {}) {
-    return await this.adapter.render_setting_component(setting_elm, opts);
-  }
-  /**
-   * Renders markdown content (implemented in adapter).
-   * @param {string} markdown - The markdown content.
-   * @param {object|null} scope - The scope to pass for rendering.
-   * @returns {Promise<DocumentFragment>}
-   */
-  async render_markdown(markdown, scope = null) {
-    return await this.adapter.render_markdown(markdown, scope);
-  }
-  /**
-   * Gets a value from an object by path.
-   * @param {Object} obj - The object to search in.
-   * @param {string} path - The path to the value.
-   * @returns {*}
-   */
-  get_by_path(obj, path2, settings_scope = null) {
-    return get_by_path2(obj, path2, settings_scope);
-  }
-  /**
-   * Sets a value in an object by path.
-   * @param {Object} obj - The object to modify.
-   * @param {string} path - The path to set the value.
-   * @param {*} value - The value to set.
-   */
-  set_by_path(obj, path2, value, settings_scope = null) {
-    set_by_path2(obj, path2, value, settings_scope);
-  }
-  /**
-   * Deletes a value from an object by path.
-   * @param {Object} obj - The object to modify.
-   * @param {string} path - The path to delete.
-   */
-  delete_by_path(obj, path2, settings_scope = null) {
-    delete_by_path2(obj, path2, settings_scope);
-  }
-  /**
-   * Escapes HTML special characters in a string.
-   * @param {string} str - The string to escape.
-   * @returns {string} The escaped string.
-   */
-  escape_html(str) {
-    if (typeof str !== "string") return str;
-    return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
-  }
-  /**
-   * A convenience method to build a setting HTML snippet from a config object.
-   * @param {Object} setting_config
-   * @returns {string}
-   */
-  render_setting_html(setting_config) {
-    if (setting_config.type === "html") {
-      return setting_config.value;
-    }
-    const attributes = Object.entries(setting_config).map(([attr, value]) => {
-      if (attr.includes("class")) return "";
-      if (typeof value === "number") return `data-${attr.replace(/_/g, "-")}=${value}`;
-      return `data-${attr.replace(/_/g, "-")}="${value}"`;
-    }).join("\n");
-    return `<div class="setting-component${setting_config.scope_class ? " " + setting_config.scope_class : ""}"
-data-setting="${setting_config.setting}"
-${attributes}
-></div>`;
-  }
-  /**
-   * Renders settings from a config, returning a fragment.
-   * @async
-   * @param {Object} settings_config
-   * @param {Object} opts
-   * @returns {Promise<DocumentFragment>}
-   */
-  async render_settings(settings_config5, opts = {}) {
-    const html = Object.entries(settings_config5).map(([setting_key, setting_config]) => {
-      if (!setting_config.setting) {
-        setting_config.setting = setting_key;
-      }
-      return this.render_setting_html(setting_config);
-    }).join("\n");
-    const frag = this.create_doc_fragment(`<div>${html}</div>`);
-    return await this.render_setting_components(frag, opts);
-  }
-  /**
-   * @function add_settings_listeners
-   * @description
-   * Scans the given container for elements that have `data-smart-setting` and attaches
-   * a 'change' event listener. On change, it updates the corresponding path in `scope.settings`.
-   * 
-   * @param {Object} scope - An object containing a `settings` property, where new values will be stored.
-   * @param {HTMLElement} [container=document] - The DOM element to scan. Defaults to the entire document.
-   */
-  add_settings_listeners(scope, container = document) {
-    const elements = container.querySelectorAll("[data-smart-setting]");
-    elements.forEach((elm) => {
-      const path2 = elm.dataset.smartSetting;
-      if (!path2) return;
-      if (!elm.dataset.listenerAttached) {
-        elm.dataset.listenerAttached = "true";
-        elm.addEventListener("change", () => {
-          let newValue;
-          if (elm instanceof HTMLInputElement) {
-            if (elm.type === "checkbox") {
-              newValue = elm.checked;
-            } else if (elm.type === "radio") {
-              if (elm.checked) {
-                newValue = elm.value;
-              } else {
-                return;
-              }
-            } else {
-              newValue = elm.value;
-            }
-          } else if (elm instanceof HTMLSelectElement || elm instanceof HTMLTextAreaElement) {
-            newValue = elm.value;
-          } else {
-            newValue = elm.value ?? elm.textContent;
-          }
-          this.set_by_path(scope.settings, path2, newValue);
-        });
-      }
-    });
-  }
-  apply_style_sheet(sheet) {
-    if ("adoptedStyleSheets" in Document.prototype) {
-      document.adoptedStyleSheets = [...document.adoptedStyleSheets, sheet];
-    } else {
-      const styleEl = document.createElement("style");
-      if (sheet.cssRules) {
-        styleEl.textContent = Array.from(sheet.cssRules).map((rule) => rule.cssText).join("\n");
-      }
-      document.head.appendChild(styleEl);
-    }
-  }
-  empty(elm) {
-    empty2(elm);
-  }
-  safe_inner_html(elm, html) {
-    safe_inner_html2(elm, html);
-  }
-};
-function get_by_path2(obj, path2, settings_scope = null) {
-  if (!path2) return "";
-  const keys = path2.split(".");
-  if (settings_scope) {
-    keys.unshift(settings_scope);
-  }
-  const finalKey = keys.pop();
-  const instance = keys.reduce((acc, key) => acc && acc[key], obj);
-  if (instance && typeof instance[finalKey] === "function") {
-    return instance[finalKey].bind(instance);
-  }
-  return instance ? instance[finalKey] : void 0;
-}
-function set_by_path2(obj, path2, value, settings_scope = null) {
-  const keys = path2.split(".");
-  if (settings_scope) {
-    keys.unshift(settings_scope);
-  }
-  const final_key = keys.pop();
-  const target = keys.reduce((acc, key) => {
-    if (!acc[key] || typeof acc[key] !== "object") {
-      acc[key] = {};
-    }
-    return acc[key];
-  }, obj);
-  target[final_key] = value;
-}
-function delete_by_path2(obj, path2, settings_scope = null) {
-  const keys = path2.split(".");
-  if (settings_scope) {
-    keys.unshift(settings_scope);
-  }
-  const finalKey = keys.pop();
-  const instance = keys.reduce((acc, key) => acc && acc[key], obj);
-  if (instance) {
-    delete instance[finalKey];
-  }
-}
-
-// node_modules/smart-view/adapters/_adapter.js
-var SmartViewAdapter2 = class {
-  constructor(main) {
-    this.main = main;
-  }
-  // NECESSARY OVERRIDES
-  /**
-   * Retrieves the class used for settings.
-   * Must be overridden by subclasses to return the appropriate setting class.
-   * @abstract
-   * @returns {Function} The setting class constructor.
-   * @throws Will throw an error if not implemented in the subclass.
-   */
-  get setting_class() {
-    throw new Error("setting_class() not implemented");
-  }
-  /**
-   * Generates the HTML for a specified icon.
-   * Must be overridden by subclasses to provide the correct icon HTML.
-   * @abstract
-   * @param {string} icon_name - The name of the icon to generate HTML for.
-   * @returns {string} The HTML string representing the icon.
-   * @throws Will throw an error if not implemented in the subclass.
-   */
-  get_icon_html(icon_name) {
-    throw new Error("get_icon_html() not implemented");
-  }
-  /**
-   * Renders Markdown content within a specific scope.
-   * Must be overridden by subclasses to handle Markdown rendering appropriately.
-   * @abstract
-   * @param {string} markdown - The Markdown content to render.
-   * @param {object|null} [scope=null] - The scope within which to render the Markdown.
-   * @returns {Promise<void>} A promise that resolves when rendering is complete.
-   * @throws Will throw an error if not implemented in the subclass.
-   */
-  async render_markdown(markdown, scope = null) {
-    throw new Error("render_markdown() not implemented");
-  }
-  /**
-   * Opens a specified URL.
-   * Should be overridden by subclasses to define how URLs are opened.
-   * @abstract
-   * @param {string} url - The URL to open.
-   */
-  open_url(url) {
-    throw new Error("open_url() not implemented");
-  }
-  /**
-   * Handles the selection of a folder by invoking the folder selection dialog and updating the setting.
-   * @abstract
-   * @param {string} setting - The path of the setting being modified.
-   * @param {string} value - The current value of the setting.
-   * @param {HTMLElement} elm - The HTML element associated with the setting.
-   * @param {object} scope - The current scope containing settings and actions.
-   */
-  handle_folder_select(path2, value, elm, scope) {
-    throw new Error("handle_folder_select not implemented");
-  }
-  /**
-   * Handles the selection of a file by invoking the file selection dialog and updating the setting.
-   * @abstract
-   * @param {string} setting - The path of the setting being modified.
-   * @param {string} value - The current value of the setting.
-   * @param {HTMLElement} elm - The HTML element associated with the setting.
-   * @param {object} scope - The current scope containing settings and actions.
-   */
-  handle_file_select(path2, value, elm, scope) {
-    throw new Error("handle_file_select not implemented");
-  }
-  /**
-   * Performs actions before a setting is changed, such as clearing notices and updating the UI.
-   * @abstract
-   * @param {string} setting - The path of the setting being changed.
-   * @param {*} value - The new value for the setting.
-   * @param {HTMLElement} elm - The HTML element associated with the setting.
-   * @param {object} scope - The current scope containing settings and actions.
-   */
-  pre_change(path2, value, elm) {
-  }
-  /**
-   * Performs actions after a setting is changed, such as updating UI elements.
-   * @abstract
-   * @param {string} setting - The path of the setting that was changed.
-   * @param {*} value - The new value for the setting.
-   * @param {HTMLElement} elm - The HTML element associated with the setting.
-   * @param {object} changed - Additional information about the change.
-   */
-  post_change(path2, value, elm) {
-  }
-  /**
-   * Reverts a setting to its previous value in case of validation failure or error.
-   * @abstract
-   * @param {string} setting - The path of the setting to revert.
-   * @param {HTMLElement} elm - The HTML element associated with the setting.
-   * @param {object} scope - The current scope containing settings.
-   */
-  revert_setting(path2, elm, scope) {
-    console.warn("revert_setting() not implemented");
-  }
-  // DEFAULT IMPLEMENTATIONS (may be overridden)
-  get setting_renderers() {
-    return {
-      text: this.render_text_component,
-      string: this.render_text_component,
-      password: this.render_password_component,
-      number: this.render_number_component,
-      dropdown: this.render_dropdown_component,
-      toggle: this.render_toggle_component,
-      textarea: this.render_textarea_component,
-      textarea_array: this.render_textarea_array_component,
-      button: this.render_button_component,
-      remove: this.render_remove_component,
-      folder: this.render_folder_select_component,
-      "text-file": this.render_file_select_component,
-      file: this.render_file_select_component,
-      slider: this.render_slider_component,
-      html: this.render_html_component,
-      button_with_confirm: this.render_button_with_confirm_component
-    };
-  }
-  async render_setting_component(elm, opts = {}) {
-    this.empty(elm);
-    const path2 = elm.dataset.setting;
-    const scope = opts.scope || this.main.main;
-    const settings_scope = opts.settings_scope || null;
-    try {
-      let value = elm.dataset.value ?? this.main.get_by_path(scope.settings, path2, settings_scope);
-      if (typeof value === "undefined" && typeof elm.dataset.default !== "undefined") {
-        value = elm.dataset.default;
-        if (typeof value === "string") value = value.toLowerCase() === "true" ? true : value === "false" ? false : value;
-        this.main.set_by_path(scope.settings, path2, value, settings_scope);
-      }
-      const renderer = this.setting_renderers[elm.dataset.type];
-      if (!renderer) {
-        console.warn(`Unsupported setting type: ${elm.dataset.type}`);
-        return elm;
-      }
-      const setting = renderer.call(this, elm, path2, value, scope, settings_scope);
-      if (elm.dataset.name) setting.setName(elm.dataset.name);
-      if (elm.dataset.description) {
-        const frag = this.main.create_doc_fragment(`<span>${elm.dataset.description}</span>`);
-        setting.setDesc(frag);
-      }
-      if (elm.dataset.tooltip) setting.setTooltip(elm.dataset.tooltip);
-      this.add_button_if_needed(setting, elm, path2, scope);
-      this.handle_disabled_and_hidden(elm);
-      return elm;
-    } catch (e) {
-      console.error(JSON.stringify({ path: path2, elm }, null, 2));
-      console.error(JSON.stringify(e, null, 2));
-    }
-  }
-  render_dropdown_component(elm, path2, value, scope, settings_scope) {
-    const smart_setting = new this.setting_class(elm);
-    let options;
-    if (elm.dataset.optionsCallback) {
-      console.log(`getting options callback: ${elm.dataset.optionsCallback}`);
-      const opts_callback = this.main.get_by_path(scope, elm.dataset.optionsCallback);
-      if (typeof opts_callback === "function") options = opts_callback();
-      else console.warn(`optionsCallback is not a function: ${elm.dataset.optionsCallback}`, scope);
-    }
-    if (!options || !options.length) {
-      options = this.get_dropdown_options(elm);
-    }
-    smart_setting.addDropdown((dropdown) => {
-      if (elm.dataset.required) dropdown.inputEl.setAttribute("required", true);
-      options.forEach((option) => {
-        const opt = dropdown.addOption(option.value, option.name ?? option.value);
-        opt.selected = option.value === value;
-      });
-      dropdown.onChange((value2) => {
-        this.handle_on_change(path2, value2, elm, scope, settings_scope);
-      });
-      dropdown.setValue(value);
-    });
-    return smart_setting;
-  }
-  render_text_component(elm, path2, value, scope, settings_scope) {
-    const smart_setting = new this.setting_class(elm);
-    smart_setting.addText((text) => {
-      text.setPlaceholder(elm.dataset.placeholder || "");
-      if (value) text.setValue(value);
-      let debounceTimer;
-      if (elm.dataset.button) {
-        smart_setting.addButton((button) => {
-          button.setButtonText(elm.dataset.button);
-          button.onClick(async () => this.handle_on_change(path2, text.getValue(), elm, scope));
-        });
-      } else {
-        text.onChange(async (value2) => {
-          clearTimeout(debounceTimer);
-          debounceTimer = setTimeout(() => this.handle_on_change(path2, value2.trim(), elm, scope, settings_scope), 2e3);
-        });
-      }
-    });
-    return smart_setting;
-  }
-  render_password_component(elm, path2, value, scope, settings_scope) {
-    const smart_setting = new this.setting_class(elm);
-    smart_setting.addText((text) => {
-      text.inputEl.type = "password";
-      text.setPlaceholder(elm.dataset.placeholder || "");
-      if (value) text.setValue(value);
-      let debounceTimer;
-      text.onChange(async (value2) => {
-        clearTimeout(debounceTimer);
-        debounceTimer = setTimeout(() => this.handle_on_change(path2, value2, elm, scope, settings_scope), 2e3);
-      });
-    });
-    return smart_setting;
-  }
-  render_number_component(elm, path2, value, scope, settings_scope) {
-    const smart_setting = new this.setting_class(elm);
-    smart_setting.addText((number) => {
-      number.inputEl.type = "number";
-      number.setPlaceholder(elm.dataset.placeholder || "");
-      if (typeof value !== "undefined") number.inputEl.value = parseInt(value);
-      number.inputEl.min = elm.dataset.min || 0;
-      if (elm.dataset.max) number.inputEl.max = elm.dataset.max;
-      let debounceTimer;
-      number.onChange(async (value2) => {
-        clearTimeout(debounceTimer);
-        debounceTimer = setTimeout(() => this.handle_on_change(path2, parseInt(value2), elm, scope, settings_scope), 2e3);
-      });
-    });
-    return smart_setting;
-  }
-  render_toggle_component(elm, path2, value, scope, settings_scope) {
-    const smart_setting = new this.setting_class(elm);
-    smart_setting.addToggle((toggle) => {
-      let checkbox_val = value ?? false;
-      if (typeof checkbox_val === "string") {
-        checkbox_val = checkbox_val.toLowerCase() === "true";
-      }
-      toggle.setValue(checkbox_val);
-      toggle.onChange(async (value2) => this.handle_on_change(path2, value2, elm, scope, settings_scope));
-    });
-    return smart_setting;
-  }
-  render_textarea_component(elm, path2, value, scope, settings_scope) {
-    const smart_setting = new this.setting_class(elm);
-    smart_setting.addTextArea((textarea) => {
-      textarea.setPlaceholder(elm.dataset.placeholder || "");
-      textarea.setValue(value || "");
-      let debounceTimer;
-      textarea.onChange(async (value2) => {
-        clearTimeout(debounceTimer);
-        debounceTimer = setTimeout(() => this.handle_on_change(path2, value2, elm, scope, settings_scope), 2e3);
-      });
-    });
-    return smart_setting;
-  }
-  render_textarea_array_component(elm, path2, value, scope, settings_scope) {
-    const smart_setting = new this.setting_class(elm);
-    smart_setting.addTextArea((textarea) => {
-      textarea.setPlaceholder(elm.dataset.placeholder || "");
-      textarea.setValue(Array.isArray(value) ? value.join("\n") : value || "");
-      let debounceTimer;
-      textarea.onChange(async (value2) => {
-        value2 = value2.split("\n").map((v) => v.trim()).filter((v) => v);
-        clearTimeout(debounceTimer);
-        debounceTimer = setTimeout(() => this.handle_on_change(path2, value2, elm, scope, settings_scope), 2e3);
-      });
-    });
-    return smart_setting;
-  }
-  render_button_component(elm, path2, value, scope, settings_scope) {
-    const smart_setting = new this.setting_class(elm);
-    smart_setting.addButton((button) => {
-      button.setButtonText(elm.dataset.btnText || elm.dataset.name);
-      button.onClick(async () => {
-        if (elm.dataset.confirm && !confirm(elm.dataset.confirm)) return;
-        if (elm.dataset.href) this.open_url(elm.dataset.href);
-        if (elm.dataset.callback) {
-          const callback = this.main.get_by_path(scope, elm.dataset.callback);
-          if (callback) callback(path2, value, elm, scope, settings_scope);
-        }
-      });
-    });
-    return smart_setting;
-  }
-  render_remove_component(elm, path2, value, scope, settings_scope) {
-    const smart_setting = new this.setting_class(elm);
-    smart_setting.addButton((button) => {
-      button.setButtonText(elm.dataset.btnText || elm.dataset.name || "Remove");
-      button.onClick(async () => {
-        this.main.delete_by_path(scope.settings, path2, settings_scope);
-        if (elm.dataset.callback) {
-          const callback = this.main.get_by_path(scope, elm.dataset.callback);
-          if (callback) callback(path2, value, elm, scope, settings_scope);
-        }
-      });
-    });
-    return smart_setting;
-  }
-  render_folder_select_component(elm, path2, value, scope, settings_scope) {
-    const smart_setting = new this.setting_class(elm);
-    smart_setting.addFolderSelect((folder_select) => {
-      folder_select.setPlaceholder(elm.dataset.placeholder || "");
-      if (value) folder_select.setValue(value);
-      folder_select.inputEl.closest("div").addEventListener("click", () => {
-        this.handle_folder_select(path2, value, elm, scope);
-      });
-      folder_select.inputEl.querySelector("input").addEventListener("change", (e) => {
-        const folder = e.target.value;
-        this.handle_on_change(path2, folder, elm, scope, settings_scope);
-      });
-    });
-    return smart_setting;
-  }
-  render_file_select_component(elm, path2, value, scope, settings_scope) {
-    const smart_setting = new this.setting_class(elm);
-    smart_setting.addFileSelect((file_select) => {
-      file_select.setPlaceholder(elm.dataset.placeholder || "");
-      if (value) file_select.setValue(value);
-      file_select.inputEl.closest("div").addEventListener("click", () => {
-        this.handle_file_select(path2, value, elm, scope, settings_scope);
-      });
-    });
-    return smart_setting;
-  }
-  render_slider_component(elm, path2, value, scope, settings_scope) {
-    const smart_setting = new this.setting_class(elm);
-    smart_setting.addSlider((slider) => {
-      const min = parseFloat(elm.dataset.min) || 0;
-      const max = parseFloat(elm.dataset.max) || 100;
-      const step = parseFloat(elm.dataset.step) || 1;
-      const currentValue = typeof value !== "undefined" ? parseFloat(value) : min;
-      slider.setLimits(min, max, step);
-      slider.setValue(currentValue);
-      slider.onChange((newVal) => {
-        const numericVal = parseFloat(newVal);
-        this.handle_on_change(path2, numericVal, elm, scope, settings_scope);
-      });
-    });
-    return smart_setting;
-  }
-  render_html_component(elm, path2, value, scope) {
-    this.safe_inner_html(elm, value);
-    return elm;
-  }
-  add_button_if_needed(smart_setting, elm, path2, scope) {
-    if (elm.dataset.btn) {
-      smart_setting.addButton((button) => {
-        button.setButtonText(elm.dataset.btn);
-        button.inputEl.addEventListener("click", (e) => {
-          if (elm.dataset.btnCallback && typeof scope[elm.dataset.btnCallback] === "function") {
-            if (elm.dataset.btnCallbackArg) scope[elm.dataset.btnCallback](elm.dataset.btnCallbackArg);
-            else scope[elm.dataset.btnCallback](path2, null, smart_setting, scope);
-          } else if (elm.dataset.btnHref) {
-            this.open_url(elm.dataset.btnHref);
-          } else if (elm.dataset.callback && typeof this.main.get_by_path(scope, elm.dataset.callback) === "function") {
-            this.main.get_by_path(scope, elm.dataset.callback)(path2, null, smart_setting, scope);
-          } else if (elm.dataset.href) {
-            this.open_url(elm.dataset.href);
-          } else {
-            console.error("No callback or href found for button.");
-          }
-        });
-        if (elm.dataset.btnDisabled || elm.dataset.disabled && elm.dataset.btnDisabled !== "false") {
-          button.inputEl.disabled = true;
-        }
-      });
-    }
-  }
-  handle_disabled_and_hidden(elm) {
-    if (elm.dataset.disabled && elm.dataset.disabled !== "false") {
-      elm.classList.add("disabled");
-      elm.querySelector("input, select, textarea, button").disabled = true;
-    }
-    if (elm.dataset.hidden && elm.dataset.hidden !== "false") {
-      elm.style.display = "none";
-    }
-  }
-  get_dropdown_options(elm) {
-    return Object.entries(elm.dataset).reduce((acc, [k, v]) => {
-      if (!k.startsWith("option")) return acc;
-      const [value, name] = v.split("|");
-      acc.push({ value, name: name || value });
-      return acc;
-    }, []);
-  }
-  handle_on_change(path2, value, elm, scope, settings_scope) {
-    this.pre_change(path2, value, elm, scope);
-    if (elm.dataset.validate) {
-      const valid = this[elm.dataset.validate](path2, value, elm, scope);
-      if (!valid) {
-        elm.querySelector(".setting-item").style.border = "2px solid red";
-        this.revert_setting(path2, elm, scope);
-        return;
-      }
-    }
-    this.main.set_by_path(scope.settings, path2, value, settings_scope);
-    if (elm.dataset.callback) {
-      const callback = this.main.get_by_path(scope, elm.dataset.callback);
-      if (callback) callback(path2, value, elm, scope);
-    }
-    this.post_change(path2, value, elm, scope);
-  }
-  render_button_with_confirm_component(elm, path2, value, scope) {
-    const smart_setting = new this.setting_class(elm);
-    smart_setting.addButton((button) => {
-      button.setButtonText(elm.dataset.btnText || elm.dataset.name);
-      elm.appendChild(this.main.create_doc_fragment(`
-        <div class="sc-inline-confirm-row" style="
-          display: none;
-        ">
-          <span style="margin-right: 10px;">
-            ${elm.dataset.confirm || "Are you sure?"}
-          </span>
-          <span class="sc-inline-confirm-row-buttons">
-            <button class="sc-inline-confirm-yes">Yes</button>
-            <button class="sc-inline-confirm-cancel">Cancel</button>
-          </span>
-        </div>
-      `));
-      const confirm_row = elm.querySelector(".sc-inline-confirm-row");
-      const confirm_yes = confirm_row.querySelector(".sc-inline-confirm-yes");
-      const confirm_cancel = confirm_row.querySelector(".sc-inline-confirm-cancel");
-      button.onClick(async () => {
-        confirm_row.style.display = "block";
-        elm.querySelector(".setting-item").style.display = "none";
-      });
-      confirm_yes.addEventListener("click", async () => {
-        if (elm.dataset.href) this.open_url(elm.dataset.href);
-        if (elm.dataset.callback) {
-          const callback = this.main.get_by_path(scope, elm.dataset.callback);
-          if (callback) callback(path2, value, elm, scope);
-        }
-        elm.querySelector(".setting-item").style.display = "block";
-        confirm_row.style.display = "none";
-      });
-      confirm_cancel.addEventListener("click", () => {
-        confirm_row.style.display = "none";
-        elm.querySelector(".setting-item").style.display = "block";
-      });
-    });
-    return smart_setting;
-  }
-  empty(elm) {
-    empty2(elm);
-  }
-  safe_inner_html(elm, html) {
-    safe_inner_html2(elm, html);
-  }
-};
-
-// node_modules/smart-view/adapters/obsidian.js
-var import_obsidian13 = require("obsidian");
-var SmartViewObsidianAdapter2 = class extends SmartViewAdapter2 {
-  get setting_class() {
-    return import_obsidian13.Setting;
-  }
-  open_url(url) {
-    window.open(url);
-  }
-  async render_file_select_component(elm, path2, value) {
-    return super.render_text_component(elm, path2, value);
-  }
-  async render_folder_select_component(elm, path2, value) {
-    return super.render_text_component(elm, path2, value);
-  }
-  async render_markdown(markdown, scope) {
-    const component = scope.env.smart_connections_plugin?.connections_view || new import_obsidian13.Component();
-    if (!scope) return console.warn("Scope required for rendering markdown in Obsidian adapter");
-    const frag = this.main.create_doc_fragment("<div><div class='inner'></div></div>");
-    const container = frag.querySelector(".inner");
-    try {
-      await import_obsidian13.MarkdownRenderer.render(
-        scope.env.plugin.app,
-        markdown,
-        container,
-        scope?.file_path || "",
-        component
-      );
-    } catch (e) {
-      console.warn("Error rendering markdown in Obsidian adapter", e);
-    }
-    return frag;
-  }
-  get_icon_html(name) {
-    return (0, import_obsidian13.getIcon)(name).outerHTML;
-  }
-  // Obsidian Specific
-  is_mod_event(event) {
-    return import_obsidian13.Keymap.isModEvent(event);
-  }
-};
-
-// node_modules/smart-collections/components/settings.js
-async function render9(scope, opts = {}) {
-  const html = Object.entries(scope.settings_config).map(([setting_key, setting_config]) => {
-    if (!setting_config.setting) setting_config.setting = setting_key;
-    return this.render_setting_html(setting_config);
-  }).join("\n");
-  const heading_html = `<h2>${scope.collection_key.split("_").map((word) => word.charAt(0).toUpperCase() + word.slice(1)).join(" ")} Settings</h2>`;
-  const frag = this.create_doc_fragment(heading_html + html);
-  return await post_process8.call(this, scope, frag, opts);
-}
-async function post_process8(scope, frag, opts = {}) {
-  await this.render_setting_components(frag, { scope });
-  return frag;
-}
-
-// node_modules/smart-model/components/settings.js
-async function render10(scope, opts = {}) {
-  const html = Object.entries(scope.settings_config).map(([setting_key, setting_config]) => {
-    if (!setting_config.setting) setting_config.setting = setting_key;
-    return this.render_setting_html(setting_config);
-  }).join("\n");
-  const frag = this.create_doc_fragment(html);
-  return await post_process9.call(this, scope, frag, opts);
-}
-async function post_process9(scope, frag, opts = {}) {
-  await this.render_setting_components(frag, { scope });
-  return frag;
-}
-
-// node_modules/obsidian-smart-env/modals/story.js
-var import_obsidian14 = require("obsidian");
-var StoryModal = class _StoryModal extends import_obsidian14.Modal {
-  constructor(plugin, { title, url }) {
-    super(plugin.app);
-    this.plugin = plugin;
-    this.title = title;
-    this.url = url;
-  }
-  static open(plugin, story_url) {
-    const modal = new _StoryModal(plugin, story_url);
-    modal.open();
-  }
-  onOpen() {
-    this.titleEl.setText(this.title);
-    this.modalEl.addClass("sc-story-modal");
-    const container = this.contentEl.createEl("div", {
-      cls: "sc-story-container"
-    });
-    if (import_obsidian14.Platform.isMobile) {
-      const btn = container.createEl("button", { text: "Open in browser" });
-      btn.addEventListener("click", () => {
-        open_url_externally(this.plugin, this.url);
-        this.close();
-      });
-      return;
-    } else {
-      const webview = container.createEl("webview", {
-        attr: { src: this.url, allowpopups: "" }
-      });
-      webview.style.width = "100%";
-      webview.style.height = "100%";
-      webview.addEventListener("did-navigate", (event) => {
-        const new_url = event.url || webview.getAttribute("src");
-        if (new_url && new_url !== this.url) {
-          open_url_externally(this.plugin, new_url);
-          this.close();
-        }
-      });
-    }
-  }
-  onClose() {
-    this.contentEl.empty();
-  }
-};
-
-// src/components/connections.js
-function build_top_bar_buttons(view) {
-  const expanded_view = view.env.settings.smart_view_filter.expanded_view ?? view.env.settings.expanded_view;
-  const buttons = [
-    { title: "Refresh", icon: "refresh-cw" },
-    { title: "Fold all toggle", icon: expanded_view ? "fold-vertical" : "unfold-vertical" },
-    { title: "Lookup", icon: "search" },
-    { title: "Settings", icon: "settings" },
-    { title: "Help", icon: "help-circle" }
-  ];
-  return buttons.map((btn) => `
-    <button
-      title="${btn.title}"
-      aria-label="${btn.title} button"
-    >
-      ${this.get_icon_html(btn.icon)}
-    </button>
-  `).join("");
-}
-async function build_html7(view, opts = {}) {
-  const top_bar_buttons = build_top_bar_buttons.call(this, view);
-  const html = `<div class="sc-connections-view">
-    <div class="sc-top-bar">
-      <p class="sc-context" data-key="">
-        Loading...
-      </p>
-      ${top_bar_buttons}
-    </div>
-    <div class="sc-list">
-    </div>
-    <div class="sc-bottom-bar">
-      <span class="sc-context" data-key="" title="Loading context...">
-        Loading context...
-      </span>
-      ${opts.attribution || ""}
-    </div>
-  </div>`;
-  return html;
-}
-async function render11(view, opts = {}) {
-  const html = await build_html7.call(this, view, opts);
-  const frag = this.create_doc_fragment(html);
-  return await post_process10.call(this, view, frag, opts);
-}
-async function post_process10(view, frag, opts = {}) {
-  const container = frag.querySelector(".sc-list");
-  const toggle_button = frag.querySelector("[title='Fold all toggle']");
-  toggle_button.addEventListener("click", () => {
-    const expanded = view.env.settings.smart_view_filter.expanded_view ?? view.env.settings.expanded_view;
-    if (!view.env.settings.smart_view_filter) view.env.settings.smart_view_filter = {};
-    view.env.settings.smart_view_filter.expanded_view = !expanded;
-    container.querySelectorAll(".sc-result").forEach(async (elm) => {
-      if (expanded) {
-        elm.classList.add("sc-collapsed");
-      } else {
-        elm.classList.remove("sc-collapsed");
-      }
-    });
-    const updated_expanded_view = view.env.settings.smart_view_filter.expanded_view;
-    this.safe_inner_html(toggle_button, this.get_icon_html(updated_expanded_view ? "fold-vertical" : "unfold-vertical"));
-    toggle_button.setAttribute("aria-label", updated_expanded_view ? "Fold all" : "Unfold all");
-  });
-  const refresh_button = frag.querySelector("[title='Refresh']");
-  refresh_button.addEventListener("click", () => {
-    view.refresh();
-  });
-  const lookup_button = frag.querySelector("[title='Lookup']");
-  lookup_button?.addEventListener("click", () => {
-    view.plugin.open_lookup_view();
-  });
-  const help_button = frag.querySelector("[title='Help']");
-  help_button?.addEventListener("click", () => {
-    StoryModal.open(view.plugin, {
-      title: "Getting Started With Smart Connections",
-      url: "https://smartconnections.app/story/smart-connections-getting-started/?utm_source=connections-view-help"
-    });
-  });
-  const settings_button = frag.querySelector("[title='Settings']");
-  settings_button?.addEventListener("click", () => {
-    view.open_settings();
-  });
-  if (typeof opts.post_process === "function") {
-    await opts.post_process(view, frag, opts);
-  }
-  return frag;
-}
-
-// src/components/lookup.js
-async function build_html8(collection, opts = {}) {
-  const expanded_view = collection.env.settings.smart_view_filter?.expanded_view ?? collection.env.settings.expanded_view;
-  return `<div id="sc-lookup-view">
-    <div class="sc-top-bar">
-      <button class="sc-fold-toggle">${this.get_icon_html(expanded_view ? "fold-vertical" : "unfold-vertical")}</button>
-    </div>
-    <div class="sc-container">
-      <h2>Smart Lookup</h2>
-      <div class="sc-textarea-container">
-        <textarea
-          id="query"
-          name="query"
-          placeholder="Describe what you're looking for (e.g., 'PKM strategies', 'story elements', 'personal AI alignment')"
-        ></textarea>
-        <div class="sc-textarea-btn-container">
-          <button class="send-button">${this.get_icon_html("search")}</button>
-        </div>
-      </div>
-      <p>Use semantic (embeddings) search to surface relevant notes. Results are sorted by similarity to your query. Note: returns different results than lexical (keyword) search.</p>
-    </div>
-    <div class="sc-list">
-    </div>
-    <div class="sc-bottom-bar">
-      ${opts.attribution || ""}
-    </div>
-  </div>`;
-}
-async function render12(collection, opts = {}) {
-  let html = await build_html8.call(this, collection, opts);
-  const frag = this.create_doc_fragment(html);
-  return await post_process11.call(this, collection, frag, opts);
-}
-async function post_process11(collection, frag, opts = {}) {
-  const query_input = frag.querySelector("#query");
-  const results_container = frag.querySelector(".sc-list");
-  const render_lookup = async (query, results_container2) => {
-    const results = await collection.lookup({ hypotheticals: [query] });
-    this.empty(results_container2);
-    const results_frag = await collection.env.render_component("connections_results", results, opts);
-    Array.from(results_frag.children).forEach((elm) => results_container2.appendChild(elm));
-  };
-  let timeout;
-  query_input.addEventListener("input", (event) => {
-    clearTimeout(timeout);
-    const query = event.target.value.trim();
-    if (query) {
-      timeout = setTimeout(async () => {
-        await render_lookup(query, results_container);
-      }, 500);
-    }
-  });
-  if (opts.query) {
-    query_input.value = opts.query;
-    await render_lookup(opts.query, results_container);
-  }
-  const send_button = frag.querySelector(".send-button");
-  send_button.addEventListener("click", async (event) => {
-    clearTimeout(timeout);
-    const query = query_input.value.trim();
-    if (query) {
-      await render_lookup(query, results_container);
-    }
-  });
-  const fold_toggle = frag.querySelector(".sc-fold-toggle");
-  fold_toggle.addEventListener("click", async (event) => {
-    const container = event.target.closest("#sc-lookup-view");
-    const expanded = collection.env.settings.smart_view_filter?.expanded_view ?? collection.env.settings.expanded_view;
-    const results = container.querySelectorAll(".sc-result");
-    for (const elm of results) {
-      if (expanded) {
-        elm.classList.add("sc-collapsed");
-      } else {
-        elm.click();
-      }
-    }
-    if (!collection.settings.smart_view_filter) collection.settings.smart_view_filter = {};
-    collection.settings.smart_view_filter.expanded_view = !expanded;
-    const updated_expanded_view = collection.settings.smart_view_filter.expanded_view;
-    this.safe_inner_html(fold_toggle, this.get_icon_html(updated_expanded_view ? "fold-vertical" : "unfold-vertical"));
-    fold_toggle.setAttribute("aria-label", updated_expanded_view ? "Fold all" : "Unfold all");
-  });
-  return frag;
-}
-
-// src/components/connections_results.js
-async function build_html9(results, opts = {}) {
-  return ``;
-}
-async function render13(results, opts = {}) {
-  const html = await build_html9.call(this, results, opts);
-  const frag = this.create_doc_fragment(html);
-  if (!results || !Array.isArray(results) || results.length === 0) {
-    const no_results = this.create_doc_fragment(`<p class="sc-no-results">No results found.<br><em>Try using the refresh button. If that doesn't work, try running "Clear sources data" and then "Reload sources" in the Smart Environment settings.</em></p>`);
-    frag.appendChild(no_results);
-    return frag;
-  }
-  const result_frags = await Promise.all(results.map((result) => {
-    return result.item.env.render_component("connections_result", result, { ...opts });
-  }));
-  result_frags.forEach((result_frag) => frag.appendChild(result_frag));
-  return frag;
-}
-
-// src/views/smart_chat.js
-function build_html10(obsidian_view, opts = {}) {
-  const top_bar_buttons = [
-    // { title: 'Open Conversation Note', icon: 'external-link' },
-    { title: "New Chat", icon: "plus" },
-    { title: "Chat History", icon: "history" },
-    { title: "Chat Options", icon: "sliders-horizontal", style: "display: none;" },
-    { title: "Chat Settings", icon: "settings" },
-    { title: "Help", icon: "help-circle" }
-  ].map((btn) => `
-    <button title="${btn.title}" ${btn.style ? `style="${btn.style}"` : ""}>
-      ${this.get_icon_html(btn.icon)}
-    </button>
-  `).join("");
-  return `
-    <div class="sc-chat-container">
-      <div class="sc-top-bar-container">
-        <input class="sc-chat-name-input" type="text" value="" placeholder="Add name to save this chat">
-        ${top_bar_buttons}
-      </div>
-      <div id="settings" class="smart-chat-overlay" style="display: none;">
-        <div class="smart-chat-overlay-header">
-          <button class="smart-chat-overlay-close">
-            ${this.get_icon_html("x")}
-          </button>
-        </div>
-        <div class="sc-settings"></div>
-      </div>
-      <div class="sc-thread">
-        <!-- Thread messages will be inserted here -->
-      </div>
-    </div>
-    ${obsidian_view.attribution || ""}
-  `;
-}
-async function render14(obsidian_view, opts = {}) {
-  const html = build_html10.call(this, obsidian_view, opts);
-  const frag = this.create_doc_fragment(html);
-  return await post_process12.call(this, obsidian_view, frag, opts);
-}
-async function post_process12(obsidian_view, frag, opts) {
-  const chat_box = frag.querySelector(".sc-thread");
-  const settings_button = frag.querySelector('button[title="Chat Settings"]');
-  const overlay_container = frag.querySelector(".smart-chat-overlay");
-  const settings_container = overlay_container.querySelector(".sc-settings");
-  while (!obsidian_view.env.smart_threads) {
-    await new Promise((resolve) => setTimeout(resolve, 300));
-  }
-  const threads_collection = obsidian_view.env.smart_threads;
-  threads_collection.container = frag.querySelector(".sc-chat-container");
-  let thread;
-  if (opts.thread_key) {
-    thread = threads_collection.get(opts.thread_key);
-  }
-  if (!thread) thread = threads_collection.get_active_thread();
-  if (!thread) {
-    thread = await threads_collection.create_or_update({});
-  }
-  chat_box.setAttribute("data-thread-key", thread.key);
-  await thread.render(chat_box, opts);
-  const chat_input = frag.querySelector(".sc-chat-form textarea");
-  if (chat_input) {
-    chat_input.addEventListener("keydown", obsidian_view.handle_chat_input_keydown.bind(obsidian_view));
-  }
-  const close_button = overlay_container.querySelector(".smart-chat-overlay-close");
-  if (close_button) {
-    close_button.addEventListener("click", () => {
-      overlay_container.style.display = "none";
-    });
-  }
-  settings_button.addEventListener("click", () => {
-    if (overlay_container.style.display === "none") {
-      threads_collection.render_settings(settings_container);
-      overlay_container.style.display = "block";
-    } else {
-      overlay_container.style.display = "none";
-    }
-  });
-  const help_button = frag.querySelector("[title='Help']");
-  help_button.addEventListener("click", () => {
-    window.open("https://docs.smartconnections.app/smart-chat", "_blank");
-  });
-  const new_chat_button = frag.querySelector('button[title="New Chat"]');
-  new_chat_button.addEventListener("click", async () => {
-    this.empty(threads_collection.container);
-    opts.thread_key = null;
-    obsidian_view.render_view();
-  });
-  const chat_history_button = frag.querySelector('button[title="Chat History"]');
-  chat_history_button.addEventListener("click", () => {
-    obsidian_view.open_chat_history();
-  });
-  setup_chat_name_input_handler.call(this, frag, thread);
-  return frag;
-}
-function setup_chat_name_input_handler(frag, thread) {
-  const name_input = frag.querySelector(".sc-chat-name-input");
-  if (!name_input) return;
-  if (!thread.key.startsWith("Untitled")) {
-    name_input.value = thread.key;
-  }
-  name_input.addEventListener("blur", async () => {
-    const new_name = name_input.value.trim();
-    if (new_name && new_name !== thread.key) {
-      try {
-        await thread.rename(new_name);
-        console.log(`Thread renamed to "${new_name}"`);
-      } catch (error) {
-        console.error("Error renaming thread:", error);
-        name_input.value = thread.key;
-      }
-    }
-  });
-  name_input.addEventListener("keydown", async (e) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      name_input.blur();
-    }
-  });
-}
-
-// node_modules/smart-model/smart_model.js
-var SmartModel2 = class {
-  scope_name = "smart_model";
-  static defaults = {
-    // override in sub-class if needed
-  };
-  /**
-   * Create a SmartModel instance.
-   * @param {Object} opts - Configuration options
-   * @param {Object} opts.adapters - Map of adapter names to adapter classes
-   * @param {Object} opts.settings - Model settings configuration
-   * @param {Object} opts.model_config - Model-specific configuration
-   * @param {string} opts.model_config.adapter - Name of the adapter to use
-   * @param {string} [opts.model_key] - Optional model identifier to override settings
-   * @throws {Error} If required options are missing
-   */
-  constructor(opts = {}) {
-    this.opts = opts;
-    this.validate_opts(opts);
-    this.state = "unloaded";
-    this._adapter = null;
-  }
-  /**
-   * Initialize the model by loading the configured adapter.
-   * @async
-   * @returns {Promise<void>}
-   */
-  async initialize() {
-    this.load_adapter(this.adapter_name);
-    await this.load();
-  }
-  /**
-   * Validate required options.
-   * @param {Object} opts - Configuration options
-   */
-  validate_opts(opts) {
-    if (!opts.adapters) throw new Error("opts.adapters is required");
-    if (!opts.settings) throw new Error("opts.settings is required");
-  }
-  /**
-   * Get the current settings
-   * @returns {Object} Current settings
-   */
-  get settings() {
-    if (!this.opts.settings) this.opts.settings = {
-      ...this.constructor.defaults
-    };
-    return this.opts.settings;
-  }
-  /**
-   * Get the current adapter name
-   * @returns {string} Current adapter name
-   */
-  get adapter_name() {
-    let adapter_key = this.opts.model_config?.adapter || this.opts.adapter || this.settings.adapter || Object.keys(this.adapters)[0];
-    if (!adapter_key || !this.adapters[adapter_key]) {
-      console.warn(`Platform "${adapter_key}" not supported`);
-      adapter_key = Object.keys(this.adapters)[0];
-    }
-    return adapter_key;
-  }
-  /**
-   * Get adapter-specific settings.
-   * @returns {Object} Settings for current adapter
-   */
-  get adapter_settings() {
-    if (!this.settings[this.adapter_name]) this.settings[this.adapter_name] = {};
-    return this.settings[this.adapter_name];
-  }
-  get adapter_config() {
-    const base_config = this.adapters[this.adapter_name]?.defaults || {};
-    return {
-      ...base_config,
-      ...this.adapter_settings,
-      ...this.opts.adapter_config
-    };
-  }
-  /**
-   * Get available models.
-   * @returns {Object} Map of model objects
-   */
-  get models() {
-    return this.adapter.models;
-  }
-  /**
-   * Get default model key.
-   * @returns {string} Default model key
-   */
-  get default_model_key() {
-    return this.adapter.constructor.defaults.default_model;
-  }
-  /**
-   * Get the current model key
-   * @returns {string} Current model key
-   */
-  get model_key() {
-    return this.opts.model_key || this.adapter_config.model_key || this.settings.model_key || this.default_model_key;
-  }
-  /**
-   * Get the current model configuration
-   * @returns {Object} Combined base and custom model configuration
-   */
-  get model_config() {
-    const model_key = this.model_key;
-    const base_model_config = this.models[model_key] || {};
-    return {
-      ...this.adapter_config,
-      ...base_model_config,
-      ...this.opts.model_config
-    };
-  }
-  get model_settings() {
-    if (!this.settings[this.model_key]) this.settings[this.model_key] = {};
-    return this.settings[this.model_key];
-  }
-  /**
-   * Load the current adapter and transition to loaded state.
-   * @async
-   * @returns {Promise<void>}
-   */
-  async load() {
-    this.set_state("loading");
-    try {
-      if (!this.adapter?.is_loaded) {
-        await this.invoke_adapter_method("load");
-      }
-    } catch (err) {
-      this.set_state("unloaded");
-      if (!this.reload_model_timeout) {
-        this.reload_model_timeout = setTimeout(async () => {
-          this.reload_model_timeout = null;
-          await this.load();
-          this.set_state("loaded");
-          this.notices?.show("Loaded model: " + this.model_key);
-        }, 6e4);
-      }
-      throw new Error(`Failed to load model: ${err.message}`);
-    }
-    this.set_state("loaded");
-  }
-  /**
-   * Unload the current adapter and transition to unloaded state.
-   * @async
-   * @returns {Promise<void>}
-   */
-  async unload() {
-    if (this.adapter?.is_loaded) {
-      this.set_state("unloading");
-      await this.invoke_adapter_method("unload");
-      this.set_state("unloaded");
-    }
-  }
-  /**
-   * Set the model's state.
-   * @param {('unloaded'|'loading'|'loaded'|'unloading')} new_state - The new state
-   * @throws {Error} If the state is invalid
-   */
-  set_state(new_state) {
-    const valid_states = ["unloaded", "loading", "loaded", "unloading"];
-    if (!valid_states.includes(new_state)) {
-      throw new Error(`Invalid state: ${new_state}`);
-    }
-    this.state = new_state;
-  }
-  get is_loading() {
-    return this.state === "loading";
-  }
-  get is_loaded() {
-    return this.state === "loaded";
-  }
-  get is_unloading() {
-    return this.state === "unloading";
-  }
-  get is_unloaded() {
-    return this.state === "unloaded";
-  }
-  // ADAPTERS
-  /**
-   * Get the map of available adapters
-   * @returns {Object} Map of adapter names to adapter classes
-   */
-  get adapters() {
-    return this.opts.adapters || {};
-  }
-  /**
-   * Load a specific adapter by name.
-   * @async
-   * @param {string} adapter_name - Name of the adapter to load
-   * @throws {Error} If adapter not found or loading fails
-   * @returns {Promise<void>}
-   */
-  async load_adapter(adapter_name) {
-    this.set_adapter(adapter_name);
-    if (!this._adapter.loaded) {
-      this.set_state("loading");
-      try {
-        await this.invoke_adapter_method("load");
-        this.set_state("loaded");
-      } catch (err) {
-        this.set_state("unloaded");
-        throw new Error(`Failed to load adapter: ${err.message}`);
-      }
-    }
-  }
-  /**
-   * Set an adapter instance by name without loading it.
-   * @param {string} adapter_name - Name of the adapter to set
-   * @throws {Error} If adapter not found
-   */
-  set_adapter(adapter_name) {
-    const AdapterClass = this.adapters[adapter_name];
-    if (!AdapterClass) {
-      throw new Error(`Adapter "${adapter_name}" not found.`);
-    }
-    if (this._adapter?.constructor.name.toLowerCase() === adapter_name.toLowerCase()) {
-      return;
-    }
-    this._adapter = new AdapterClass(this);
-  }
-  /**
-   * Get the current active adapter instance
-   * @returns {Object} The active adapter instance
-   * @throws {Error} If adapter not found
-   */
-  get adapter() {
-    const adapter_name = this.adapter_name;
-    if (!adapter_name) {
-      throw new Error(`Adapter not set for model.`);
-    }
-    if (!this._adapter) {
-      this.load_adapter(adapter_name);
-    }
-    return this._adapter;
-  }
-  /**
-   * Ensure the adapter is ready to execute a method.
-   * @param {string} method - Name of the method to check
-   * @throws {Error} If adapter not loaded or method not implemented
-   */
-  ensure_adapter_ready(method) {
-    if (!this.adapter) {
-      throw new Error("No adapter loaded.");
-    }
-    if (typeof this.adapter[method] !== "function") {
-      throw new Error(`Adapter does not implement method: ${method}`);
-    }
-  }
-  /**
-   * Invoke a method on the current adapter.
-   * @async
-   * @param {string} method - Name of the method to call
-   * @param {...any} args - Arguments to pass to the method
-   * @returns {Promise<any>} Result from the adapter method
-   * @throws {Error} If adapter not ready or method fails
-   */
-  async invoke_adapter_method(method, ...args) {
-    this.ensure_adapter_ready(method);
-    return await this.adapter[method](...args);
-  }
-  /**
-   * Get platforms as dropdown options.
-   * @returns {Array<Object>} Array of {value, name} option objects
-   */
-  get_platforms_as_options() {
-    return Object.entries(this.adapters).map(([key, AdapterClass]) => ({ value: key, name: AdapterClass.defaults.description || key }));
-  }
-  // SETTINGS
-  /**
-   * Get the settings configuration schema
-   * @returns {Object} Settings configuration object
-   */
-  get settings_config() {
-    return this.process_settings_config({
-      adapter: {
-        name: "Model Platform",
-        type: "dropdown",
-        description: "Select a model platform to use with Smart Model.",
-        options_callback: "get_platforms_as_options",
-        is_scope: true,
-        // trigger re-render of settings when changed
-        callback: "adapter_changed",
-        default: "default"
-      }
-    });
-  }
-  /**
-   * Process settings configuration with conditionals and prefixes.
-   * @param {Object} _settings_config - Raw settings configuration
-   * @param {string} [prefix] - Optional prefix for setting keys
-   * @returns {Object} Processed settings configuration
-   */
-  process_settings_config(_settings_config, prefix = null) {
-    return Object.entries(_settings_config).reduce((acc, [key, val]) => {
-      const new_key = (prefix ? prefix + "." : "") + this.process_setting_key(key);
-      acc[new_key] = val;
-      return acc;
-    }, {});
-  }
-  /**
-   * Process an individual setting key.
-   * Example: replace placeholders with actual adapter names.
-   * @param {string} key - The setting key with placeholders.
-   * @returns {string} Processed setting key.
-   */
-  process_setting_key(key) {
-    return key.replace(/\[ADAPTER\]/g, this.adapter_name);
-  }
-  re_render_settings() {
-    if (typeof this.opts.re_render_settings === "function") this.opts.re_render_settings();
-    else console.warn("re_render_settings is not a function (must be passed in model opts)");
-  }
-  /**
-   * Reload model.
-   */
-  reload_model() {
-    if (typeof this.opts.reload_model === "function") this.opts.reload_model();
-    else console.warn("reload_model is not a function (must be passed in model opts)");
-  }
-  adapter_changed() {
-    this.reload_model();
-    this.re_render_settings();
-  }
-  model_changed() {
-    this.reload_model();
-    this.re_render_settings();
-  }
-};
-
-// node_modules/smart-chat-model/smart_chat_model.js
-var SmartChatModel = class extends SmartModel2 {
+// node_modules/obsidian-smart-env/node_modules/smart-chat-model/smart_chat_model.js
+var SmartChatModel = class extends SmartModel {
   scope_name = "smart_chat_model";
   static defaults = {
     adapter: "openai"
@@ -13699,7 +10039,7 @@ var SmartChatModel = class extends SmartModel2 {
       adapter: {
         name: "Chat Model Platform",
         type: "dropdown",
-        description: "Select a chat model platform to use with Smart Chat.",
+        description: "Select a platform/provider for chat models.",
         options_callback: "get_platforms_as_options",
         is_scope: true,
         // trigger re-render of settings when changed
@@ -13727,131 +10067,7 @@ var SmartChatModel = class extends SmartModel2 {
   }
 };
 
-// node_modules/smart-http-request/smart_http_request.js
-var SmartHttpRequest2 = class {
-  /**
-   * @param {object} opts - Options for the SmartHttpRequest class
-   * @param {SmartHttpRequestAdapter} opts.adapter - The adapter constructor to use for making HTTP requests
-   * @param {Obsidian.requestUrl} opts.obsidian_request_adapter - For use with Obsidian adapter
-   */
-  constructor(opts = {}) {
-    this.opts = opts;
-    if (!opts.adapter) throw new Error("HttpRequestAdapter is required");
-    this.adapter = new opts.adapter(this);
-  }
-  /**
-   * Returns a well-formed response object
-   * @param {object} request_params - Parameters for the HTTP request
-   * @param {string} request_params.url - The URL to make the request to
-   * @param {string} [request_params.method='GET'] - The HTTP method to use
-   * @param {object} [request_params.headers] - Headers to include in the request
-   * @param {*} [request_params.body] - The body of the request (for POST, PUT, etc.)
-   * @returns {SmartHttpResponseAdapter} instance of the SmartHttpResponseAdapter class
-   * @example
-   * const response = await smart_http_request.request({
-   *   url: 'https://api.example.com/data',
-   *   method: 'GET',
-   *   headers: { 'Content-Type': 'application/json' }
-   * });
-   * console.log(await response.json());
-   */
-  async request(request_params) {
-    return await this.adapter.request(request_params);
-  }
-};
-
-// node_modules/smart-http-request/adapters/_adapter.js
-var SmartHttpRequestAdapter2 = class {
-  constructor(main) {
-    this.main = main;
-  }
-  async request(request_params) {
-    throw new Error("request not implemented");
-  }
-};
-var SmartHttpResponseAdapter2 = class {
-  constructor(response) {
-    this.response = response;
-  }
-  async headers() {
-    throw new Error("headers not implemented");
-  }
-  async json() {
-    throw new Error("json not implemented");
-  }
-  async status() {
-    throw new Error("status not implemented");
-  }
-  async text() {
-    throw new Error("text not implemented");
-  }
-};
-
-// node_modules/smart-http-request/adapters/obsidian.js
-var SmartHttpObsidianRequestAdapter2 = class extends SmartHttpRequestAdapter2 {
-  async request(request_params) {
-    let response;
-    try {
-      if (!this.main.opts.obsidian_request_url) {
-        throw new Error("obsidian_request_url is required in SmartHttp constructor opts");
-      }
-      response = await this.main.opts.obsidian_request_url({ ...request_params, throw: false });
-      if (response.status === 400) throw new Error("Obsidian request failed");
-      return new SmartHttpObsidianResponseAdapter(response);
-    } catch (error) {
-      console.error("Error in SmartHttpObsidianRequestAdapter.request():");
-      console.error(JSON.stringify(request_params, null, 2));
-      console.error(response);
-      console.error(error);
-      return null;
-    }
-  }
-};
-var SmartHttpObsidianResponseAdapter = class extends SmartHttpResponseAdapter2 {
-  async status() {
-    return this.response.status;
-  }
-  async json() {
-    return await this.response.json;
-  }
-  async text() {
-    return await this.response.text;
-  }
-  async headers() {
-    return this.response.headers;
-  }
-};
-
-// node_modules/smart-http-request/adapters/fetch.js
-var SmartHttpRequestFetchAdapter2 = class extends SmartHttpRequestAdapter2 {
-  async request(request_params) {
-    const { url, ...opts } = request_params;
-    const resp = await fetch(url, opts);
-    return new SmartHttpResponseFetchAdapter2(resp);
-  }
-};
-var SmartHttpResponseFetchAdapter2 = class extends SmartHttpResponseAdapter2 {
-  async headers() {
-    return this.response.headers;
-  }
-  async json() {
-    if (!this._json) {
-      this._json = await this.response.json();
-    }
-    return this._json;
-  }
-  async status() {
-    return this.response.status;
-  }
-  async text() {
-    if (!this._text) {
-      this._text = await this.response.text();
-    }
-    return this._text;
-  }
-};
-
-// node_modules/smart-chat-model/streamer.js
+// node_modules/obsidian-smart-env/node_modules/smart-chat-model/streamer.js
 var SmartStreamer = class {
   constructor(url, options = {}) {
     const {
@@ -14014,143 +10230,8 @@ var SmartStreamer = class {
   }
 };
 
-// node_modules/smart-model/adapters/_adapter.js
-var SmartModelAdapter2 = class {
-  /**
-   * Create a SmartModelAdapter instance.
-   * @param {SmartModel} model - The parent SmartModel instance
-   */
-  constructor(model) {
-    this.model = model;
-    this.state = "unloaded";
-  }
-  /**
-   * Load the adapter.
-   * @async
-   * @returns {Promise<void>}
-   */
-  async load() {
-    this.set_state("loaded");
-  }
-  /**
-   * Unload the adapter.
-   * @returns {void}
-   */
-  unload() {
-    this.set_state("unloaded");
-  }
-  /**
-   * Get all settings.
-   * @returns {Object} All settings
-   */
-  get settings() {
-    return this.model.settings;
-  }
-  /**
-   * Get the current model key.
-   * @returns {string} Current model identifier
-   */
-  get model_key() {
-    return this.model.model_key;
-  }
-  /**
-   * Get the current model configuration.
-   * @returns {Object} Model configuration
-   */
-  get model_config() {
-    return this.model.model_config;
-  }
-  /**
-   * Get model-specific settings.
-   * @returns {Object} Settings for current model
-   */
-  get model_settings() {
-    return this.model.model_settings;
-  }
-  /**
-   * Get adapter-specific configuration.
-   * @returns {Object} Adapter configuration
-   */
-  get adapter_config() {
-    return this.model.adapter_config;
-  }
-  /**
-   * Get adapter-specific settings.
-   * @returns {Object} Adapter settings
-   */
-  get adapter_settings() {
-    return this.model.adapter_settings;
-  }
-  /**
-   * Get the models.
-   * @returns {Object} Map of model objects
-   */
-  get models() {
-    if (typeof this.adapter_config.models === "object" && Object.keys(this.adapter_config.models || {}).length > 0) return this.adapter_config.models;
-    else {
-      return {};
-    }
-  }
-  /**
-   * Get available models from the API.
-   * @abstract
-   * @param {boolean} [refresh=false] - Whether to refresh cached models
-   * @returns {Promise<Object>} Map of model objects
-   */
-  async get_models(refresh = false) {
-    throw new Error("get_models not implemented");
-  }
-  /**
-   * Validate the parameters for get_models.
-   * @returns {boolean|Array<Object>} True if parameters are valid, otherwise an array of error objects
-   */
-  validate_get_models_params() {
-    return true;
-  }
-  /**
-   * Get available models as dropdown options synchronously.
-   * @returns {Array<Object>} Array of model options.
-   */
-  get_models_as_options() {
-    const models = this.models;
-    const params_valid = this.validate_get_models_params();
-    if (params_valid !== true) return params_valid;
-    if (!Object.keys(models || {}).length) {
-      this.get_models(true);
-      return [{ value: "", name: "No models currently available" }];
-    }
-    return Object.entries(models).map(([id, model]) => ({ value: id, name: model.name || id })).sort((a, b) => a.name.localeCompare(b.name));
-  }
-  /**
-   * Set the adapter's state.
-   * @deprecated should be handled in SmartModel (only handle once)
-   * @param {('unloaded'|'loading'|'loaded'|'unloading')} new_state - The new state
-   * @throws {Error} If the state is invalid
-   */
-  set_state(new_state) {
-    const valid_states = ["unloaded", "loading", "loaded", "unloading"];
-    if (!valid_states.includes(new_state)) {
-      throw new Error(`Invalid state: ${new_state}`);
-    }
-    this.state = new_state;
-  }
-  // Replace individual state getters/setters with a unified state management
-  get is_loading() {
-    return this.state === "loading";
-  }
-  get is_loaded() {
-    return this.state === "loaded";
-  }
-  get is_unloading() {
-    return this.state === "unloading";
-  }
-  get is_unloaded() {
-    return this.state === "unloaded";
-  }
-};
-
-// node_modules/smart-chat-model/adapters/_adapter.js
-var SmartChatModelAdapter = class extends SmartModelAdapter2 {
+// node_modules/obsidian-smart-env/node_modules/smart-chat-model/adapters/_adapter.js
+var SmartChatModelAdapter = class extends SmartModelAdapter {
   /**
    * @override in sub-class with adapter-specific default configurations
    * @property {string} id - The adapter identifier
@@ -14225,7 +10306,7 @@ var SmartChatModelAdapter = class extends SmartModelAdapter2 {
       "[CHAT_ADAPTER].model_key": {
         name: "Chat Model",
         type: "dropdown",
-        description: "Select a chat model to use with Smart Chat.",
+        description: "Select a chat model.",
         options_callback: "adapter.get_models_as_options",
         callback: "reload_model",
         default: this.constructor.defaults.default_model
@@ -14251,7 +10332,7 @@ var SmartChatModelAdapter = class extends SmartModelAdapter2 {
   }
 };
 
-// node_modules/smart-chat-model/adapters/_api.js
+// node_modules/obsidian-smart-env/node_modules/smart-chat-model/adapters/_api.js
 var SmartChatModelApiAdapter = class extends SmartChatModelAdapter {
   /**
    * Get the request adapter class.
@@ -14274,7 +10355,7 @@ var SmartChatModelApiAdapter = class extends SmartChatModelAdapter {
   get http_adapter() {
     if (!this._http_adapter) {
       if (this.model.opts.http_adapter) this._http_adapter = this.model.opts.http_adapter;
-      else this._http_adapter = new SmartHttpRequest2({ adapter: SmartHttpRequestFetchAdapter2 });
+      else this._http_adapter = new SmartHttpRequest({ adapter: SmartHttpRequestFetchAdapter });
     }
     return this._http_adapter;
   }
@@ -14939,7 +11020,7 @@ var SmartChatModelResponseAdapter = class {
   }
 };
 
-// node_modules/smart-chat-model/adapters/anthropic.js
+// node_modules/obsidian-smart-env/node_modules/smart-chat-model/adapters/anthropic.js
 var SmartChatModelAnthropicAdapter = class extends SmartChatModelApiAdapter {
   static key = "anthropic";
   static defaults = {
@@ -15406,7 +11487,28 @@ var SmartChatModelAnthropicResponseAdapter = class extends SmartChatModelRespons
   }
 };
 
-// node_modules/smart-chat-model/adapters/openai.js
+// node_modules/obsidian-smart-env/node_modules/smart-chat-model/adapters/openai.js
+var EXCLUDED_PREFIXES = [
+  "text-",
+  "davinci",
+  "babbage",
+  "ada",
+  "curie",
+  "dall-e",
+  "whisper",
+  "omni",
+  "tts",
+  "gpt-4o-mini-tts",
+  "computer-use",
+  "codex",
+  "gpt-4o-transcribe",
+  "gpt-4o-mini-transcribe",
+  "gpt-4o-mini-realtime",
+  "gpt-4o-realtime",
+  "o4-mini-deep-research",
+  "o3-deep-research",
+  "gpt-image"
+];
 var SmartChatModelOpenaiAdapter = class extends SmartChatModelApiAdapter {
   static key = "openai";
   static defaults = {
@@ -15427,12 +11529,12 @@ var SmartChatModelOpenaiAdapter = class extends SmartChatModelApiAdapter {
    * @returns {Object} Map of model objects with capabilities and limits
    */
   parse_model_data(model_data) {
-    return model_data.data.filter((model) => ["gpt-", "o1-"].some((m) => model.id.startsWith(m)) && !model.id.includes("-instruct")).reduce((acc, model) => {
+    return model_data.data.filter((model) => !EXCLUDED_PREFIXES.some((m) => model.id.startsWith(m)) && !model.id.includes("-instruct")).reduce((acc, model) => {
       const out = {
         model_name: model.id,
         id: model.id,
-        multimodal: model.id.includes("vision") || model.id.includes("gpt-4-turbo") || model.id.startsWith("gpt-4o"),
-        can_use_tools: model.id.startsWith("o1-") ? false : true,
+        multimodal: true,
+        can_use_tools: true,
         max_input_tokens: get_max_input_tokens(model.id)
       };
       acc[model.id] = out;
@@ -15468,6 +11570,11 @@ var SmartChatModelOpenaiAdapter = class extends SmartChatModelApiAdapter {
         default: "low"
       };
     }
+    config["[CHAT_ADAPTER].open_ai_note"] = {
+      name: "Note about using OpenAI",
+      type: "html",
+      value: "<b>OpenAI models:</b> Some models require extra verification steps in your OpenAI account for them to appear in the model list."
+    };
     return config;
   }
 };
@@ -15492,7 +11599,7 @@ function get_max_input_tokens(model_id) {
 var SmartChatModelOpenaiResponseAdapter = class extends SmartChatModelResponseAdapter {
 };
 
-// node_modules/smart-chat-model/adapters/azure.js
+// node_modules/obsidian-smart-env/node_modules/smart-chat-model/adapters/azure.js
 var SmartChatModelAzureAdapter = class extends SmartChatModelOpenaiAdapter {
   static key = "azure";
   static defaults = {
@@ -15617,7 +11724,7 @@ var SmartChatModelAzureAdapter = class extends SmartChatModelOpenaiAdapter {
   }
 };
 
-// node_modules/smart-chat-model/adapters/google.js
+// node_modules/obsidian-smart-env/node_modules/smart-chat-model/adapters/google.js
 var SmartChatModelGeminiAdapter = class extends SmartChatModelApiAdapter {
   static key = "gemini";
   static defaults = {
@@ -15988,7 +12095,7 @@ var SmartChatModelGeminiResponseAdapter = class extends SmartChatModelResponseAd
   }
 };
 
-// node_modules/smart-chat-model/adapters/open_router.js
+// node_modules/obsidian-smart-env/node_modules/smart-chat-model/adapters/open_router.js
 var SmartChatModelOpenRouterAdapter = class extends SmartChatModelApiAdapter {
   static key = "open_router";
   static defaults = {
@@ -16112,7 +12219,7 @@ ${JSON.stringify(this._res.error.metadata.raw, null, 2)}`;
   }
 };
 
-// node_modules/smart-chat-model/adapters/lm_studio.js
+// node_modules/obsidian-smart-env/node_modules/smart-chat-model/adapters/lm_studio.js
 var SmartChatModelLmStudioAdapter = class extends SmartChatModelApiAdapter {
   static key = "lm_studio";
   /** @type {import('./_adapter.js').SmartChatModelAdapter['constructor']['defaults']} */
@@ -16238,7 +12345,7 @@ var SmartChatModelLmStudioRequestAdapter = class extends SmartChatModelRequestAd
 var SmartChatModelLmStudioResponseAdapter = class extends SmartChatModelResponseAdapter {
 };
 
-// node_modules/smart-chat-model/adapters/ollama.js
+// node_modules/obsidian-smart-env/node_modules/smart-chat-model/adapters/ollama.js
 var SmartChatModelOllamaAdapter = class extends SmartChatModelApiAdapter {
   static key = "ollama";
   static defaults = {
@@ -16531,7 +12638,7 @@ var SmartChatModelOllamaResponseAdapter = class extends SmartChatModelResponseAd
   }
 };
 
-// node_modules/smart-chat-model/adapters/_custom.js
+// node_modules/obsidian-smart-env/node_modules/smart-chat-model/adapters/_custom.js
 var adapters_map = {
   "openai": {
     req: SmartChatModelRequestAdapter,
@@ -16597,9 +12704,9 @@ var SmartChatModelCustomAdapter = class extends SmartChatModelApiAdapter {
     const protocol = this.adapter_config.protocol || "http";
     const hostname = this.adapter_config.hostname || "localhost";
     const port = this.adapter_config.port ? `:${this.adapter_config.port}` : "";
-    let path2 = this.adapter_config.path || "";
-    if (path2 && !path2.startsWith("/")) path2 = `/${path2}`;
-    return `${protocol}://${hostname}${port}${path2}`;
+    let path = this.adapter_config.path || "";
+    if (path && !path.startsWith("/")) path = `/${path}`;
+    return `${protocol}://${hostname}${port}${path}`;
   }
   get_adapters_as_options() {
     return Object.keys(adapters_map).map((adapter_name) => ({ value: adapter_name, name: adapter_name }));
@@ -16687,7 +12794,7 @@ var SmartChatModelCustomAdapter = class extends SmartChatModelApiAdapter {
   }
 };
 
-// node_modules/smart-chat-model/adapters/groq.js
+// node_modules/obsidian-smart-env/node_modules/smart-chat-model/adapters/groq.js
 var SmartChatModelGroqAdapter = class extends SmartChatModelApiAdapter {
   static key = "groq";
   static defaults = {
@@ -16806,8 +12913,9134 @@ var SmartChatModelGroqRequestAdapter = class extends SmartChatModelRequestAdapte
 var SmartChatModelGroqResponseAdapter = class extends SmartChatModelResponseAdapter {
 };
 
-// src/smart_env.config.js
+// node_modules/obsidian-smart-env/node_modules/smart-chat-model/adapters/xai.js
+var SmartChatModelXaiAdapter = class extends SmartChatModelApiAdapter {
+  /** Human-readable platform key used by SmartChatModel */
+  static key = "xai";
+  /** @type {import('./_adapter.js').SmartChatModelAdapter['constructor']['defaults']} */
+  static defaults = {
+    description: "xAI Grok",
+    type: "API",
+    adapter: "xAI_Grok",
+    endpoint: "https://api.x.ai/v1/chat/completions",
+    streaming: true,
+    models_endpoint: "https://api.x.ai/v1/models",
+    default_model: "grok-3-mini-beta",
+    signup_url: "https://ide.x.ai",
+    can_use_tools: true
+  };
+  /** Grok is OpenAI-compatible → reuse the stock adapters */
+  get req_adapter() {
+    return SmartChatModelRequestAdapter;
+  }
+  get res_adapter() {
+    return SmartChatModelResponseAdapter;
+  }
+  /* ------------------------------------------------------------------ *
+   *  Model-list helpers
+   * ------------------------------------------------------------------ */
+  /**
+   * The Grok `/v1/models` route is **GET**, not POST.
+   * Override the HTTP verb so `get_models()` works.
+   * @returns {string} 'GET'
+   */
+  get models_endpoint_method() {
+    return "GET";
+  }
+  /**
+   * Parse `/v1/models` payload to the canonical shape used by SmartChat.
+   *
+   * Grok returns:
+   * ```json
+   * { "object":"list",
+   *   "data":[{ "id":"grok-3-beta", "context_length":128000, …}] }
+   * ```
+   */
+  parse_model_data(model_data = {}) {
+    const list = model_data.data || model_data.models || [];
+    return list.reduce((acc, m) => {
+      const id = m.id || m.name;
+      acc[id] = {
+        id,
+        model_name: id,
+        description: m.description || `context: ${m.context_length || "n/a"}`,
+        max_input_tokens: m.context_length || 128e3,
+        multimodal: !!m.modality && m.modality.includes("vision"),
+        raw: m
+      };
+      return acc;
+    }, {});
+  }
+  /* ------------------------------------------------------------------ *
+   *  Validation helpers
+   * ------------------------------------------------------------------ */
+  validate_config() {
+    if (!this.adapter_config.model_key) {
+      return { valid: false, message: "No model selected." };
+    }
+    if (!this.api_key) {
+      return { valid: false, message: "API key is missing." };
+    }
+    return { valid: true, message: "Configuration is valid." };
+  }
+};
+
+// node_modules/obsidian-smart-env/default.config.js
+var import_obsidian13 = require("obsidian");
+
+// node_modules/obsidian-smart-env/node_modules/smart-completions/smart_completions.js
+var SmartCompletions = class extends Collection {
+  /**
+   * Lazily instantiates and returns a chat_model. Similar to how
+   * SmartEntities implements embed_model. You can adapt this
+   * depending on how your environment is structured.
+   *
+   * @returns {Object|null} The chat model instance or null if not configured
+   */
+  get chat_model() {
+    if (!this._chat_model) {
+      this._chat_model = this.env.init_module("smart_chat_model", {
+        model_config: {},
+        settings: this.settings.chat_model ?? this.env.smart_chat_threads?.settings?.chat_model ?? {},
+        reload_model: this.reload_chat_model.bind(this),
+        re_render_settings: this.re_render_settings?.bind(this) ?? (() => {
+          console.log("no re_render_settings");
+        })
+      });
+    }
+    return this._chat_model;
+  }
+  /**
+   * Force unload & reload of chat model if user changes adapter or settings.
+   */
+  reload_chat_model() {
+    if (this._chat_model?.unload) {
+      this._chat_model.unload();
+    }
+    this._chat_model = null;
+  }
+  /**
+   * In addition to base collection settings, merges `chat_model.settings_config`.
+   * Allows the SmartCompletions UI to show chat-model relevant settings.
+   * @returns {Object} Merged settings config
+   */
+  get settings_config() {
+    return {};
+  }
+  /**
+   * (Optional) An array of request adapter classes. SmartCompletion items will invoke these
+   * in `run_completion_adapters()`. For example, we can list the context adapter or other custom ones.
+   */
+  get completion_adapters() {
+    if (!this._completion_adapters) {
+      this._completion_adapters = {};
+      Object.values(this.opts.completion_adapters).forEach((adapter) => {
+        this._completion_adapters[adapter.property_name] = adapter;
+      });
+    }
+    return this._completion_adapters;
+  }
+};
+
+// node_modules/smart-utils/coerce_primitives.js
+function coerce_primitives(value) {
+  if (typeof value !== "string") {
+    return value;
+  }
+  const trimmed_value = value.trim();
+  if (trimmed_value === "true") {
+    return true;
+  }
+  if (trimmed_value === "false") {
+    return false;
+  }
+  const float_pattern = /^-?\d+\.\d+$/;
+  if (float_pattern.test(trimmed_value)) {
+    const num = parseFloat(trimmed_value);
+    if (num.toString() === trimmed_value) {
+      return num;
+    }
+  }
+  const int_pattern = /^-?(?:0|[1-9]\d*)$/;
+  if (int_pattern.test(trimmed_value)) {
+    return Number(trimmed_value);
+  }
+  return value;
+}
+
+// node_modules/smart-utils/parse_xml_fragments.js
+function parse_xml_fragments(xml_input) {
+  if (typeof xml_input !== "string" || xml_input.trim() === "") {
+    return null;
+  }
+  const VERBATIM_TAGS = /* @__PURE__ */ new Set(["think"]);
+  const compress_whitespace = (str) => str.replace(/\s+/g, " ").trim();
+  const parse_attributes = (str) => {
+    if (!str) return {};
+    const attrs = {};
+    const attr_re = /(\w[\w.\-]*)\s*=\s*"([^"]*)"/g;
+    let m;
+    while ((m = attr_re.exec(str)) !== null) {
+      const [, key, raw_val] = m;
+      attrs[key] = coerce_primitives(raw_val);
+    }
+    return attrs;
+  };
+  const attach_child = (map, tag, node) => {
+    if (tag in map) {
+      const existing = map[tag];
+      map[tag] = Array.isArray(existing) ? [...existing, node] : [existing, node];
+    } else {
+      map[tag] = node;
+    }
+  };
+  const finalize_node = (ctx) => {
+    const text_raw = ctx.verbatim ? ctx.text.replace(/^\s*\n/, "").replace(/\s+$/, "") : compress_whitespace(ctx.text);
+    if (Object.keys(ctx.children_map).length) {
+      ctx.node.contents = ctx.children_map;
+    } else if (text_raw !== "") {
+      ctx.node.contents = ctx.verbatim ? text_raw : coerce_primitives(text_raw);
+    } else {
+      ctx.node.contents = null;
+    }
+  };
+  const cleaned = xml_input.replace(/<!--[\s\S]*?-->/g, "");
+  const token_re = /<[^>]+>|[^<]+/g;
+  const root_map = {};
+  const stack = [];
+  let match;
+  while ((match = token_re.exec(cleaned)) !== null) {
+    const token = match[0];
+    if (stack.length) {
+      const top = stack[stack.length - 1];
+      if (top.verbatim) {
+        if (token.startsWith(`</${top.tag_name}`)) {
+          stack.pop();
+          finalize_node(top);
+          if (stack.length === 0) {
+            attach_child(root_map, top.tag_name, top.node);
+          } else {
+            attach_child(stack[stack.length - 1].children_map, top.tag_name, top.node);
+          }
+          continue;
+        }
+        top.text += token;
+        continue;
+      }
+    }
+    if (token.startsWith("<")) {
+      if (token.startsWith("</")) {
+        const tag_name = token.slice(2, -1).trim();
+        if (!stack.length) return null;
+        const ctx = stack.pop();
+        if (ctx.tag_name !== tag_name) return null;
+        finalize_node(ctx);
+        if (stack.length === 0) {
+          attach_child(root_map, tag_name, ctx.node);
+        } else {
+          attach_child(stack[stack.length - 1].children_map, tag_name, ctx.node);
+        }
+      } else {
+        const self_closing = token.endsWith("/>");
+        const body = self_closing ? token.slice(1, -2) : token.slice(1, -1);
+        const first_space = body.indexOf(" ");
+        const tag_name = first_space === -1 ? body : body.slice(0, first_space);
+        const attr_str = first_space === -1 ? "" : body.slice(first_space + 1);
+        const attributes = parse_attributes(attr_str);
+        const node = Object.keys(attributes).length ? { attributes } : {};
+        if (self_closing) {
+          node.contents = null;
+          if (stack.length === 0) {
+            attach_child(root_map, tag_name, node);
+          } else {
+            attach_child(stack[stack.length - 1].children_map, tag_name, node);
+          }
+        } else {
+          stack.push({
+            tag_name,
+            node,
+            text: "",
+            children_map: {},
+            verbatim: VERBATIM_TAGS.has(tag_name)
+          });
+        }
+      }
+    } else {
+      if (stack.length) stack[stack.length - 1].text += token;
+    }
+  }
+  while (stack.length) {
+    const ctx = stack.pop();
+    finalize_node(ctx);
+    if (stack.length === 0) {
+      attach_child(root_map, ctx.tag_name, ctx.node);
+    } else {
+      attach_child(stack[stack.length - 1].children_map, ctx.tag_name, ctx.node);
+    }
+  }
+  return Object.keys(root_map).length ? root_map : null;
+}
+
+// node_modules/obsidian-smart-env/node_modules/smart-completions/smart_completion.js
+var SmartCompletion = class extends CollectionItem {
+  constructor(env, data = null) {
+    super(env, data);
+    this.run_adapter_item_constructors();
+  }
+  run_adapter_item_constructors() {
+    for (const [key, AdapterClass] of Object.entries(this.completion_adapters)) {
+      AdapterClass.item_constructor?.(this);
+    }
+  }
+  /**
+   * Default data structure for a new SmartCompletion item.
+   * @static
+   * @returns {Object}
+   */
+  static get defaults() {
+    return {
+      data: {
+        completion: {
+          request: {},
+          responses: [],
+          chat_model: null
+        }
+      }
+    };
+  }
+  /**
+   * get_key
+   * Overridden to produce a unique key based on a hash of this.data plus the current timestamp.
+   * @returns {string}
+   */
+  get_key() {
+    const hash = murmur_hash_32_alphanumeric(JSON.stringify(this.data));
+    const ts = Date.now();
+    return `${hash}-${ts}`;
+  }
+  /**
+   * Called automatically in many cases (via create_or_update).
+   * You can also call it manually if needed.
+   */
+  async init(completion_opts = {}) {
+    if (this.data.chat_model_config) {
+      this.chat_model = this.env.init_module("smart_chat_model", {
+        settings: this.data.chat_model_config
+      });
+    }
+    await this.build_request();
+    await this.complete(completion_opts);
+    await this.parse_response();
+    this.queue_save();
+    this.collection.process_save_queue();
+  }
+  /**
+   * Collects or transforms data into a final `completion.request` structure
+   * by running any applicable completion adapters.
+   * @returns {Promise<void>}
+   */
+  async build_request() {
+    this.data.completion.request = {};
+    const adapters = Object.entries(this.completion_adapters).map(([key, AdapterClass]) => ({
+      key,
+      AdapterClass,
+      order: AdapterClass.order ?? 0
+    })).sort((a, b) => a.order - b.order);
+    for (const { AdapterClass, key } of adapters) {
+      const property = AdapterClass.property_name;
+      if (property && this.data[property]) {
+        const adapter = new AdapterClass(this);
+        await adapter.to_request?.();
+      }
+    }
+    return this.data.completion.request;
+  }
+  async parse_response() {
+    const data_keys = Object.keys(this.data);
+    for (const key of data_keys) {
+      const AdapterClass = this.completion_adapters[key];
+      if (AdapterClass) {
+        const adapter = new AdapterClass(this);
+        await adapter.from_response?.();
+      }
+    }
+    return this.data.completion.responses;
+  }
+  /**
+   * Calls the underlying chat model, stores the response in completion.responses.
+   * @returns {Promise<void>}
+   */
+  async complete(opts = {}) {
+    if (!this.data.completion || !this.data.completion.request) {
+      console.warn("No completion.request found, skipping complete().");
+      return;
+    }
+    const chat_model = this.get_chat_model(opts);
+    this.data.completion.chat_model = {
+      model_key: chat_model.model_key,
+      platform_key: chat_model.adapter_name
+    };
+    if (!chat_model) {
+      console.warn("No chat model available for SmartCompletion. Check environment config.");
+      return;
+    }
+    try {
+      const request_payload = this.data.completion.request;
+      const stream = opts.stream;
+      const result = stream ? await chat_model.stream(request_payload, this.stream_handlers(opts.stream_handlers)) : await chat_model.complete(request_payload);
+      if (!stream) {
+        this.data.completion.responses.push({
+          timestamp: Date.now(),
+          ...result
+        });
+      }
+      const typing_indicator = this.container?.closest(".smart-chat-thread")?.querySelector(".smart-chat-typing-indicator");
+      if (typing_indicator) typing_indicator.style.display = "none";
+      this.queue_save();
+    } catch (err) {
+      console.error("Error in SmartCompletion.complete():", err);
+    }
+  }
+  stream_handlers(stream_handlers = {}) {
+    return {
+      chunk: async (resp) => {
+        this.data.completion.responses[0] = {
+          timestamp: Date.now(),
+          ...resp
+        };
+        await stream_handlers.chunk?.(this);
+      },
+      done: async (resp) => {
+        this.data.completion.responses[0] = {
+          timestamp: Date.now(),
+          ...resp
+        };
+        await stream_handlers.done?.(this);
+      },
+      error: async (err) => {
+        console.error("error", err);
+        await stream_handlers.error?.(err);
+      }
+    };
+  }
+  /**
+   * Access the completion adapters from the parent collection, if any.
+   */
+  get completion_adapters() {
+    return this.collection?.completion_adapters || {};
+  }
+  /**
+   * If a local chat_model config is present, creates a dedicated instance.
+   * Otherwise, returns the collection-level chat_model or null.
+   * @returns {Object|null}
+   */
+  get_chat_model() {
+    if (this.chat_model) {
+      return this.chat_model;
+    } else {
+      console.log("no chat_model, using collection chat_model");
+      return this.collection?.chat_model || null;
+    }
+  }
+  get response() {
+    return this.data.completion.responses[0];
+  }
+  /**
+   * @method response_text
+   * @returns {string} The best guess at the main text from the model's first response.
+   */
+  get response_text() {
+    const resp = this.data?.completion?.responses[0];
+    if (!resp) return "";
+    if (Array.isArray(resp.choices) && resp.choices[0]) {
+      const choice = resp.choices[0];
+      if (choice.message && choice.message.content) {
+        return choice.message.content;
+      }
+      if (choice.text) return choice.text;
+    }
+    if (resp.text) return resp.text;
+    return "";
+  }
+  get response_structured_output() {
+    if (!this.response) return null;
+    if (this.action_call) {
+      try {
+        const parsed2 = JSON.parse(this.action_call);
+        return parsed2;
+      } catch (e) {
+        console.log("failed to parse tool_call in response_structured_output");
+      }
+    }
+    if (!this.response_text) return null;
+    const parsed = parse_xml_fragments(this.response_text);
+    if (!parsed) return null;
+    return parsed;
+  }
+  get action_call() {
+    const resp = this.response;
+    if (!resp) return null;
+    return resp.choices?.[0]?.message?.tool_calls?.[0]?.function?.arguments;
+  }
+  get messages() {
+    const messages = [];
+    if (this.data.system_message) {
+      messages.push({
+        role: "system",
+        content: this.data.system_message
+      });
+    }
+    if (this.data.user_message) {
+      messages.push({
+        role: "user",
+        content: this.data.user_message
+      });
+    }
+    if (this.response_text) {
+      messages.push({
+        role: "assistant",
+        content: this.response_text
+      });
+    }
+    return messages;
+  }
+  get is_completed() {
+    return this.data.completion.responses.length > 0;
+  }
+};
+
+// node_modules/obsidian-smart-env/node_modules/smart-collections/utils/ajson_merge.js
+function ajson_merge(existing, new_obj) {
+  if (new_obj === null) return null;
+  if (new_obj === void 0) return existing;
+  if (typeof new_obj !== "object") return new_obj;
+  if (typeof existing !== "object" || existing === null) existing = {};
+  const keys = Object.keys(new_obj);
+  const length = keys.length;
+  for (let i = 0; i < length; i++) {
+    const key = keys[i];
+    const new_val = new_obj[key];
+    const existing_val = existing[key];
+    if (Array.isArray(new_val)) {
+      existing[key] = new_val.slice();
+    } else if (is_object(new_val)) {
+      existing[key] = ajson_merge(is_object(existing_val) ? existing_val : {}, new_val);
+    } else if (new_val !== void 0) {
+      existing[key] = new_val;
+    }
+  }
+  return existing;
+}
+function is_object(obj) {
+  return obj !== null && typeof obj === "object" && !Array.isArray(obj);
+}
+
+// node_modules/obsidian-smart-env/node_modules/smart-collections/adapters/ajson_single_file.js
+var class_to_collection_key2 = {
+  "SmartSource": "smart_sources",
+  "SmartNote": "smart_sources",
+  // DEPRECATED
+  "SmartBlock": "smart_blocks",
+  "SmartDirectory": "smart_directories"
+};
+function _parse_ajson_key(ajson_key) {
+  let changed = false;
+  let [collection_key, ...item_key] = ajson_key.split(":");
+  if (class_to_collection_key2[collection_key]) {
+    collection_key = class_to_collection_key2[collection_key];
+    changed = true;
+  }
+  return {
+    collection_key,
+    item_key: item_key.join(":"),
+    changed
+  };
+}
+var AjsonSingleFileCollectionDataAdapter = class extends AjsonMultiFileCollectionDataAdapter {
+  /**
+   * Returns the single shared `.ajson` file path for this collection.
+   * @param {string} [key] - (unused) Item key, ignored in single-file mode.
+   * @returns {string} The single .ajson file path for the entire collection.
+   */
+  get_item_data_path(key) {
+    const file_name = (this.collection?.collection_key || "collection") + ".ajson";
+    const sep = this.fs?.sep || "/";
+    const dir = this.collection.data_dir || "data";
+    return [dir, file_name].join(sep);
+  }
+  /**
+   * Override process_load_queue to parse the entire single-file .ajson once,
+   * distributing final states to items.
+   *
+   * @async
+   * @returns {Promise<void>}
+   */
+  async process_load_queue() {
+    this.collection.show_process_notice("loading_collection");
+    if (!await this.fs.exists(this.collection.data_dir)) {
+      await this.fs.mkdir(this.collection.data_dir);
+    }
+    const path = this.get_item_data_path();
+    if (!await this.fs.exists(path)) {
+      for (const item of Object.values(this.collection.items)) {
+        if (item._queue_load) {
+          item.queue_import?.();
+        }
+      }
+      this.collection.clear_process_notice("loading_collection");
+      return;
+    }
+    const raw_data = await this.fs.read(path, "utf-8", { no_cache: true });
+    if (!raw_data) {
+      for (const item of Object.values(this.collection.items)) {
+        if (item._queue_load) {
+          item.queue_import?.();
+        }
+      }
+      this.collection.clear_process_notice("loading_collection");
+      return;
+    }
+    const { rewrite, file_data } = this.parse_single_file_ajson(raw_data);
+    if (rewrite) {
+      if (file_data.length) {
+        await this.fs.write(path, file_data);
+      } else {
+        await this.fs.remove(path);
+      }
+    }
+    for (const item of Object.values(this.collection.items)) {
+      item._queue_load = false;
+      item.loaded_at = Date.now();
+    }
+    this.collection.clear_process_notice("loading_collection");
+  }
+  /**
+   * Helper to parse single-file .ajson content, distributing states to items.
+   *
+   * @param {string} raw
+   * @returns {{ rewrite: boolean, file_data: string }}
+   */
+  parse_single_file_ajson(raw) {
+    let rewrite = false;
+    const lines = raw.trim().split("\n").filter(Boolean);
+    let data_map = {};
+    let line_count = 0;
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i].trim();
+      if (!line.endsWith(",")) {
+        rewrite = true;
+      }
+      const trimmed = line.replace(/,$/, "");
+      const combined = "{" + trimmed + "}";
+      try {
+        const obj = JSON.parse(combined);
+        const [fullKey, value] = Object.entries(obj)[0];
+        let { collection_key, item_key, changed } = _parse_ajson_key(fullKey);
+        const newKey = `${collection_key}:${item_key}`;
+        if (!value) {
+          delete data_map[newKey];
+          if (changed || newKey !== fullKey) {
+            delete data_map[fullKey];
+          }
+          rewrite = true;
+        } else {
+          data_map[newKey] = value;
+          if (changed || newKey !== fullKey) {
+            delete data_map[fullKey];
+            rewrite = true;
+          }
+        }
+      } catch (err) {
+        console.warn("parse error for line: ", line, err);
+        rewrite = true;
+      }
+      line_count++;
+    }
+    for (const [ajson_key, val] of Object.entries(data_map)) {
+      const [collection_key, ...rest] = ajson_key.split(":");
+      const item_key = rest.join(":");
+      const collection = this.collection.env[collection_key];
+      if (!collection) continue;
+      let item = collection.get(item_key);
+      if (!item) {
+        const ItemClass = collection.item_type;
+        item = new ItemClass(this.env, val);
+        collection.set(item);
+      } else {
+        item.data = ajson_merge(item.data, val);
+      }
+      item.loaded_at = Date.now();
+      item._queue_load = false;
+      if (!val.key) val.key = item_key;
+    }
+    if (line_count > Object.keys(data_map).length) {
+      rewrite = true;
+    }
+    let minimal_lines = [];
+    for (const [ajson_key, val] of Object.entries(data_map)) {
+      minimal_lines.push(`${JSON.stringify(ajson_key)}: ${JSON.stringify(val)},`);
+    }
+    return {
+      rewrite,
+      file_data: minimal_lines.join("\n")
+    };
+  }
+  /**
+   * Override process_save_queue for single-file approach.
+   * We'll simply call save_item for each queued item, which appends a line to the same `.ajson`.
+   *
+   * @async
+   * @returns {Promise<void>}
+   */
+  async process_save_queue() {
+    this.collection.show_process_notice("saving_collection");
+    const save_queue = Object.values(this.collection.items).filter((item) => item._queue_save);
+    const time_start = Date.now();
+    const batch_size = 50;
+    for (let i = 0; i < save_queue.length; i += batch_size) {
+      const batch = save_queue.slice(i, i + batch_size);
+      await Promise.all(batch.map((item) => {
+        const adapter = this.create_item_adapter(item);
+        return adapter.save().catch((err) => {
+          console.warn(`Error saving item ${item.key}`, err);
+          item.queue_save();
+        });
+      }));
+    }
+    const deleted_items = Object.values(this.collection.items).filter((item) => item.deleted);
+    if (deleted_items.length) {
+      deleted_items.forEach((item) => {
+        delete this.collection.items[item.key];
+      });
+    }
+    console.log(`Saved (single-file) ${this.collection.collection_key} in ${Date.now() - time_start}ms`);
+    this.collection.clear_process_notice("saving_collection");
+  }
+};
+
+// node_modules/obsidian-smart-env/node_modules/smart-completions/utils/insert_user_message.js
+function insert_user_message(request, user_message, opts = {}) {
+  if (!user_message) return;
+  const { position = "end", new_user_message = false } = opts;
+  if (!request.messages) {
+    request.messages = [];
+  }
+  const last_user_index = request.messages.findLastIndex((x) => x.role === "user");
+  if (last_user_index === -1 || new_user_message) {
+    const new_user_message2 = {
+      role: "user",
+      content: [{ type: "text", text: user_message }]
+    };
+    request.messages.push(new_user_message2);
+    return;
+  }
+  const last_user_message = request.messages[last_user_index];
+  if (!Array.isArray(last_user_message.content)) {
+    last_user_message.content = [
+      {
+        type: "text",
+        text: last_user_message.content
+      }
+    ];
+  }
+  if (position === "start") {
+    last_user_message.content.unshift({
+      type: "text",
+      text: user_message
+    });
+  } else {
+    last_user_message.content.push({
+      type: "text",
+      text: user_message
+    });
+  }
+}
+
+// node_modules/obsidian-smart-env/node_modules/smart-completions/adapters/_adapter.js
+var SmartCompletionAdapter = class {
+  constructor(item) {
+    this.item = item;
+  }
+  get data() {
+    return this.item.data;
+  }
+  get env() {
+    return this.item.env;
+  }
+  get completion() {
+    return this.data.completion;
+  }
+  get request() {
+    return this.item.data.completion.request;
+  }
+  get response() {
+    return this.item.response;
+  }
+  insert_user_message(user_message, opts = {}) {
+    insert_user_message(this.request, user_message, opts);
+  }
+  // Override these methods in subclasses
+  static get property_name() {
+    return null;
+  }
+  /**
+   * @returns {Promise<void>}
+   */
+  async to_request() {
+  }
+  /**
+   * @returns {Promise<void>}
+   */
+  async from_response() {
+  }
+};
+
+// node_modules/obsidian-smart-env/node_modules/smart-completions/utils/insert_image.js
+async function insert_image(request, image_path, fs) {
+  const base64_image = await convert_image_to_base64(fs, image_path);
+  if (!base64_image) return;
+  const last_user_index = request.messages.findLastIndex((x) => x.role === "user");
+  const image_content = {
+    role: "user",
+    content: [{ type: "image_url", image_url: { url: base64_image } }]
+  };
+  if (last_user_index === -1) {
+    request.messages.unshift(image_content);
+  }
+  const last_user_message = request.messages[last_user_index];
+  if (!last_user_message) return console.warn("insert_image: no last_user_message");
+  if (!Array.isArray(last_user_message.content)) {
+    last_user_message.content = [];
+  }
+  last_user_message.content.push(image_content.content[0]);
+}
+async function convert_image_to_base64(fs, image_path) {
+  if (!image_path) return;
+  const image_exts = ["png", "jpg", "jpeg", "gif", "webp", "svg", "bmp", "ico"];
+  const ext = image_path.split(".").pop().toLowerCase();
+  if (!image_exts.includes(ext)) return;
+  try {
+    const base64_data = await fs.read(image_path, "base64");
+    const base64_url = `data:image/${ext};base64,${base64_data}`;
+    return base64_url;
+  } catch (err) {
+    console.warn(`Failed to convert image ${image_path} to base64`, err);
+  }
+}
+
+// node_modules/obsidian-smart-env/node_modules/smart-completions/utils/insert_pdf.js
+async function insert_pdf(request, pdf_path, fs) {
+  const base64_pdf = await convert_pdf_to_base64(fs, pdf_path);
+  if (!base64_pdf) return;
+  const last_user_index = request.messages.findLastIndex((x) => x.role === "user");
+  const pdf_content = {
+    role: "user",
+    content: [{
+      type: "file",
+      file: {
+        filename: pdf_path.split(/[\\/]/).pop(),
+        file_data: `data:application/pdf;base64,${base64_pdf}`
+        // <-- Prefix added
+      }
+    }]
+  };
+  if (last_user_index === -1) {
+    request.messages.unshift(pdf_content);
+    return;
+  }
+  const last_user_message = request.messages[last_user_index];
+  if (!last_user_message) return console.warn("insert_pdf: no last_user_message");
+  if (!Array.isArray(last_user_message.content)) {
+    last_user_message.content = [];
+  }
+  last_user_message.content.push(pdf_content.content[0]);
+}
+async function convert_pdf_to_base64(fs, pdf_path) {
+  if (!pdf_path) return;
+  const ext = pdf_path.split(".").pop().toLowerCase();
+  if (ext !== "pdf") return;
+  try {
+    const base64_data = await fs.read(pdf_path, "base64");
+    return base64_data;
+  } catch (err) {
+    console.warn(`Failed to convert PDF ${pdf_path} to base64`, err);
+  }
+}
+
+// node_modules/obsidian-smart-env/node_modules/smart-completions/adapters/context.js
+var SmartCompletionContextAdapter = class extends SmartCompletionAdapter {
+  static order = 10;
+  static get property_name() {
+    return "context_key";
+  }
+  async to_request() {
+    const context_key = this.data.context_key;
+    if (!context_key) return;
+    const context_opts = this.data.context_opts;
+    const context_collection = this.item.env.smart_contexts;
+    if (!context_collection) {
+      console.warn("No 'smart_contexts' collection found; skipping context adapter.");
+      return;
+    }
+    const ctx_item = context_collection.get(context_key);
+    if (!ctx_item) {
+      console.warn(`SmartContext not found for key '${context_key}'`);
+      return;
+    }
+    if (!ctx_item.has_context_items) {
+      console.warn(`SmartContext '${context_key}' has no context items; skipping context adapter.`);
+      return;
+    }
+    await ctx_item.save();
+    let compiled;
+    try {
+      compiled = await ctx_item.compile(context_opts);
+    } catch (err) {
+      console.warn("Error compiling ephemeral context", err);
+      return;
+    }
+    if (compiled.context) {
+      this.insert_user_message(compiled.context);
+      if (this.data.user_message) {
+        this.insert_user_message(this.data.user_message, { position: "end" });
+      }
+    }
+    if (compiled.images?.length > 0) {
+      await this.insert_images(compiled.images);
+    }
+    if (compiled.pdfs?.length > 0) {
+      await this.insert_pdfs(compiled.pdfs);
+    }
+  }
+  async insert_images(image_paths) {
+    if (!Array.isArray(image_paths) || !image_paths.length) return;
+    for (const img_path of image_paths) {
+      await insert_image(this.request, img_path, this.item.env.fs);
+    }
+  }
+  async insert_pdfs(pdf_paths) {
+    if (!Array.isArray(pdf_paths) || !pdf_paths.length) return;
+    for (const pdf_path of pdf_paths) {
+      await insert_pdf(this.request, pdf_path, this.item.env.fs);
+    }
+  }
+  /**
+   * No special post-processing after we get model response.
+   */
+  async from_response() {
+  }
+};
+
+// node_modules/obsidian-smart-env/node_modules/smart-completions/adapters/user.js
+var SmartCompletionUserAdapter = class extends SmartCompletionAdapter {
+  static order = 1;
+  /**
+   * @returns {string}
+   */
+  static get property_name() {
+    return "user_message";
+  }
+  get request() {
+    return this.item.data.completion.request;
+  }
+  /**
+   * to_request: Checks `data.user`, adds a user message to `request.messages`.
+   * @returns {Promise<void>}
+   */
+  async to_request() {
+    const user_message = this.data.user_message;
+    const new_user_message = this.data.new_user_message;
+    this.insert_user_message(user_message, {
+      position: "start",
+      // always at start so that other adapters may add again to end (e.g. context adapter)
+      new_user_message
+    });
+  }
+  /**
+   * from_response: No post-processing needed for default user message.
+   * @returns {Promise<void>}
+   */
+  async from_response() {
+  }
+};
+
+// node_modules/obsidian-smart-env/node_modules/smart-completions/adapters/action.js
+var ActionCompletionAdapter = class extends SmartCompletionAdapter {
+  static get property_name() {
+    return "action_key";
+  }
+  /**
+   * @returns {Promise<void>}
+   */
+  async to_request() {
+    const action_key = this.data.action_key;
+    if (!action_key) return;
+    const thread = this.item.thread;
+    if (thread && thread.current_completion !== this.item) return console.log("ActionCompletionAdapter: skipping tools, not the current completion");
+    const action_opts = this.data.action_opts;
+    const action_collection = this.item.env.smart_actions;
+    if (!action_collection) {
+      console.warn("No 'smart_actions' collection found; skipping action adapter.");
+      return;
+    }
+    const action_item = action_collection.get(action_key);
+    if (!action_item) {
+      console.warn(`SmartAction not found for key '${action_key}'`);
+      return;
+    }
+    let tools;
+    try {
+      const tool2 = action_item.as_tool;
+      tools = tool2 ? [tool2] : [];
+    } catch (err) {
+      console.warn("Error generating action tool", err);
+      return;
+    }
+    if (!tools.length) return;
+    if (!this.data.actions) this.data.actions = {};
+    this.data.actions[action_key] = true;
+    this.insert_tools(tools, { force: true });
+  }
+  get default_action_params() {
+    return this.data.action_opts || {};
+  }
+  /**
+   * @returns {Promise<void>}
+   */
+  async from_response() {
+    console.log("ActionCompletionAdapter: from_response");
+    const tool_call = this.response.choices[0].message?.tool_calls?.[0];
+    if (!tool_call) return console.warn("No tool call found in response");
+    const action_key = tool_call?.function?.name;
+    const tool_arguments = tool_call?.function?.arguments;
+    if (!action_key) return;
+    const action_collection = this.item.env.smart_actions;
+    if (!action_collection) return;
+    const action_item = action_collection.get(action_key);
+    if (!action_item) return;
+    let parsed_args = tool_arguments;
+    if (typeof parsed_args === "string") {
+      try {
+        parsed_args = JSON.parse(parsed_args);
+      } catch (err) {
+        console.warn("Could not parse tool_call arguments", err);
+        return;
+      }
+    }
+    const action_params = {
+      ...this.default_action_params,
+      ...parsed_args
+    };
+    const result = await action_item.run_action(action_params);
+    if (result && typeof result === "object" && result.final) {
+      if (!this.item.data.completion.responses[0]) {
+        this.item.data.completion.responses[0] = { choices: [{ message: {} }] };
+      } else if (!this.item.data.completion.responses[0].choices?.[0]) {
+        this.item.data.completion.responses[0].choices = [{ message: {} }];
+      }
+      this.item.data.completion.responses[0].choices[0].message = {
+        ...this.item.data.completion.responses[0].choices[0].message,
+        role: "assistant",
+        content: result.final
+      };
+    }
+    if (!this.data.actions) this.data.actions = {};
+    this.data.actions[action_key] = result;
+  }
+  /**
+   * Insert the ephemeral tools into the request
+   * @param {Array<object>} tools
+   * @param {object} opts
+   * @returns {void}
+   */
+  insert_tools(tools, opts = {}) {
+    this.request.tools = tools;
+    if (opts.force) {
+      this.request.tool_choice = {
+        type: "function",
+        function: {
+          name: tools[0].function.name
+        }
+      };
+    }
+  }
+};
+
+// node_modules/obsidian-smart-env/node_modules/smart-completions/adapters/action_xml.js
+function scaffold_xml(root_tag, root_desc, params) {
+  return [
+    `<${root_tag} instructions="${root_desc}">`,
+    ...Object.entries(params).map(
+      ([p, v]) => `  <${p} instructions="${v.description || ""}">VALUE</${p}>`
+    ),
+    `</${root_tag}>`
+  ].join("\n");
+}
+function strip_instruction_attrs(xml) {
+  return xml.replace(/\s+instructions="[^"]*"/g, "");
+}
+var ActionXmlCompletionAdapter = class extends ActionCompletionAdapter {
+  static get property_name() {
+    return "action_xml_key";
+  }
+  /* ────────────────────────────────────────────────────────────────────────
+     REQUEST CONSTRUCTION
+     ────────────────────────────────────────────────────────────────────── */
+  async to_request() {
+    const action_key = this.data.action_xml_key;
+    if (!action_key) return;
+    const thread = this.item.thread;
+    if (thread.current_completion !== this.item) return console.log("ActionXmlCompletionAdapter: skipping tools, not the current completion");
+    const action_item = this.env.smart_actions?.get(action_key);
+    if (!action_item) {
+      return console.warn(`SmartAction '${action_key}' not found`);
+    }
+    let tools;
+    try {
+      const tool2 = action_item.as_tool;
+      tools = tool2 ? [tool2] : [];
+    } catch (err) {
+      return console.warn("Unable to compile OpenAPI \u2192 tools", err);
+    }
+    if (!tools.length) return;
+    const func_def = tools[0].function;
+    const param_props = func_def.parameters?.properties || {};
+    const required_params = func_def.parameters?.required || [];
+    this._func_name = func_def.name;
+    this._required_params = required_params;
+    const action_instruction = [
+      "Important Instructions:",
+      `1. You must invoke the action '${func_def.name}' exactly once.`,
+      "2. You must respond *only* with XML in the exact structure provided below.",
+      "3. Replace VALUE with real arguments based on the property-specific instructions below.",
+      "4. Do not include any other text or instructions.",
+      "5. Follow these property-specific instructions for producing the XML response.",
+      "Action Instructions:",
+      `- ${func_def.description || ""}`,
+      "Property-Specific Instructions:",
+      ...Object.entries(param_props).map(
+        ([p, v]) => `- ${p}: ${v.description || ""}`
+      )
+    ].join("\n");
+    const xml_scaffold = scaffold_xml(func_def.name, func_def.description, param_props);
+    const xml_template = strip_instruction_attrs(xml_scaffold);
+    const action_instruction_msg = [
+      action_instruction,
+      `You are ready to invoke the action '${func_def.name}'.`
+    ].join("\n");
+    const xml_template_msg = [
+      `To invoke the action '${func_def.name}', respond *only* with XML in this exact structure (replace VALUE with real arguments based on the action and property-specific instructions above):`,
+      xml_template
+    ].join("\n");
+    this.insert_user_message(action_instruction_msg);
+    this.insert_user_message(xml_template_msg);
+    this.data.actions ??= {};
+    this.data.actions[action_key] = true;
+    this.data.action_key = action_key;
+  }
+  /* ────────────────────────────────────────────────────────────────────────
+     RESPONSE PARSING
+     ────────────────────────────────────────────────────────────────────── */
+  async from_response() {
+    const action_key = this.data.action_xml_key;
+    if (!action_key) return;
+    const assistant_msg = this.response?.choices?.[0]?.message;
+    if (!assistant_msg) {
+      return console.warn("ActionXmlCompletionAdapter: assistant message not found");
+    }
+    const func_name = this._func_name || action_key;
+    let parsed_xml = this.item?.response_structured_output;
+    let root_node = parsed_xml[func_name];
+    if (!root_node) {
+      const candidate = Object.keys(parsed_xml)[0];
+      console.warn(`ActionXmlCompletionAdapter: expected root <${func_name}>, found <${candidate}> \u2013 using candidate`);
+      root_node = parsed_xml[candidate];
+    }
+    if (!root_node) {
+      return console.warn(`ActionXmlCompletionAdapter: root tag '${func_name}' not found`);
+    }
+    const node_to_value = (node) => {
+      if (!node || typeof node !== "object") return node;
+      const { attributes = {}, contents } = node;
+      if (contents === null || typeof contents !== "object") {
+        return Object.keys(attributes).length ? { ...attributes, value: contents } : contents;
+      }
+      const out = {};
+      for (const [k, v] of Object.entries(contents)) {
+        out[k] = Array.isArray(v) ? v.map(node_to_value) : node_to_value(v);
+      }
+      return Object.keys(attributes).length ? { ...attributes, ...out } : out;
+    };
+    const args = node_to_value(root_node);
+    const missing = (this._required_params || []).filter(
+      (p) => args[p] === void 0 || args[p] === "" || args[p] === null
+    );
+    if (missing.length) {
+      return console.warn(`ActionXmlCompletionAdapter: missing ${missing.join(", ")}`);
+    }
+    assistant_msg.tool_calls = [
+      { function: { name: action_key, arguments: args } }
+    ];
+    delete assistant_msg.content;
+    await super.from_response();
+  }
+};
+
+// node_modules/obsidian-smart-env/node_modules/smart-completions/adapters/system.js
+var SmartCompletionSystemAdapter = class extends SmartCompletionAdapter {
+  /**
+   * Identifies the data property that triggers this adapter.
+   * @returns {string}
+   */
+  static get property_name() {
+    return "system_message";
+  }
+  /**
+   * to_request: If `data.system_message` is present, prepends a system message to request.messages.
+   * @returns {Promise<void>}
+   */
+  async to_request() {
+    const sys_msg = this.data.system_message;
+    if (!sys_msg) return;
+    if (!this.request.messages) {
+      this.request.messages = [];
+    }
+    this.request.messages.unshift({
+      role: "system",
+      content: sys_msg
+    });
+  }
+  /**
+   * from_response: No post-processing needed here.
+   * @returns {Promise<void>}
+   */
+  async from_response() {
+  }
+};
+
+// node_modules/obsidian-smart-env/node_modules/smart-completions/index.js
+var smart_completions_default_config = {
+  class: SmartCompletions,
+  data_adapter: AjsonSingleFileCollectionDataAdapter,
+  item_type: SmartCompletion,
+  completion_adapters: {
+    // SmartCompletionTemplateAdapter,
+    SmartCompletionContextAdapter,
+    SmartCompletionUserAdapter,
+    ActionCompletionAdapter,
+    ActionXmlCompletionAdapter,
+    SmartCompletionSystemAdapter
+  }
+};
+
+// node_modules/obsidian-smart-env/node_modules/smart-blocks/content_parsers/parse_blocks.js
+function parse_blocks(source2, content) {
+  let blocks_obj = parse_markdown_blocks(content);
+  const last_read_at = source2.data.last_read?.at || Date.now();
+  for (const [sub_key, line_range] of Object.entries(blocks_obj)) {
+    const block_key = source2.key + sub_key;
+    const existing_block = source2.block_collection.get(block_key);
+    const block_content = get_line_range2(content, line_range[0], line_range[1]);
+    if (existing_block && existing_block.lines[0] === line_range[0] && existing_block.lines[1] === line_range[1] && existing_block.size === block_content.length && existing_block.vec) {
+      continue;
+    }
+    const block_outlinks = get_markdown_links(block_content);
+    const block_data = {
+      key: block_key,
+      lines: line_range,
+      size: block_content.length,
+      outlinks: block_outlinks,
+      last_read: {
+        at: last_read_at,
+        hash: murmur_hash_32_alphanumeric(block_content)
+      }
+    };
+    if (!existing_block || existing_block?.data.last_read?.hash !== block_data.last_read.hash) {
+      const new_item = new source2.block_collection.item_type(source2.env, block_data);
+      source2.block_collection.set(new_item);
+    } else {
+      existing_block.data = {
+        ...existing_block.data,
+        ...block_data
+        // overwrites lines, last_read
+      };
+    }
+  }
+  clean_and_update_source_blocks(source2, blocks_obj);
+  for (const block of source2.blocks) {
+    if (!block.vec) {
+      block.queue_embed();
+    }
+  }
+}
+function clean_and_update_source_blocks(source2, blocks_obj) {
+  const current_block_keys = new Set(Object.keys(blocks_obj).map((sk) => source2.key + sk));
+  const blocks = source2.blocks;
+  for (let i = 0; i < blocks.length; i++) {
+    if (!current_block_keys.has(blocks[i].key)) {
+      blocks[i].deleted = true;
+      blocks[i].queue_save();
+    }
+  }
+  source2.data.blocks = blocks_obj;
+  source2.queue_save();
+}
+
+// node_modules/obsidian-smart-env/utils/format_collection_name.js
+function format_collection_name(key) {
+  return key.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+}
+
+// node_modules/obsidian-smart-env/components/collection_settings.js
+async function build_html3(collection, opts = {}) {
+  const settings_html = Object.entries(collection.settings_config).map(([setting_key, setting_config]) => {
+    if (!setting_config.setting) setting_config.setting = setting_key;
+    return this.render_setting_html(setting_config);
+  }).join("\n");
+  const html = `<div><div class="collection-settings-container"><div class="source-settings collection-settings">
+    <h2>${format_collection_name(collection.collection_key)}</h2>
+    ${settings_html}
+  </div></div></div>`;
+  return html;
+}
+async function render5(collection, opts = {}) {
+  const html = await build_html3.call(this, collection, opts);
+  const frag = this.create_doc_fragment(html);
+  await this.render_setting_components(frag, { scope: collection });
+  if (opts.settings_container) {
+    this.empty(opts.settings_container);
+    opts.settings_container.appendChild(frag.querySelector(".collection-settings"));
+  } else {
+    collection.settings_container = frag.querySelector(".collection-settings-container");
+  }
+  return collection.settings_container;
+}
+
+// node_modules/obsidian-smart-env/modals/exclude_folders_fuzzy.js
+var import_obsidian4 = require("obsidian");
+var ExcludedFoldersFuzzy = class extends import_obsidian4.FuzzySuggestModal {
+  /**
+   * @param {App} app - The Obsidian app
+   * @param {Object} env - An environment-like object, must have .settings and .fs.folder_paths
+   */
+  constructor(app2, env) {
+    super(app2);
+    this.env = env;
+    this.setPlaceholder("Select a folder to exclude...");
+  }
+  open(callback) {
+    this.callback = callback;
+    super.open();
+  }
+  getItems() {
+    return this.env.smart_sources?.fs?.folder_paths || [];
+  }
+  getItemText(item) {
+    return item;
+  }
+  onChooseItem(item) {
+    if (!item) return;
+    const oldVal = this.env.settings.folder_exclusions || "";
+    const splitted = oldVal.split(",").map((s) => s.trim()).filter(Boolean);
+    if (!splitted.includes(item)) splitted.push(item);
+    this.env.settings.folder_exclusions = splitted.join(",");
+    this.callback?.();
+  }
+};
+
+// node_modules/obsidian-smart-env/modals/excluded_sources.js
+var import_obsidian5 = require("obsidian");
+var ExcludedSourcesModal = class extends import_obsidian5.Modal {
+  /**
+   * @param {Object} app - Obsidian app
+   * @param {Object} env - The environment instance
+   */
+  constructor(app2, env) {
+    super(app2);
+    this.env = env;
+  }
+  async onOpen() {
+    this.titleEl.setText("Excluded Sources");
+    this.contentEl.addClass("excluded-sources-modal");
+    this.render_excluded_list();
+  }
+  async render_excluded_list() {
+    this.contentEl.empty();
+    const list_el = this.contentEl.createEl("ul");
+    const excluded_file_paths = this.env.smart_sources.excluded_file_paths;
+    for (const file_path of excluded_file_paths) {
+      const li = list_el.createEl("li");
+      li.setText(file_path);
+    }
+  }
+};
+
+// node_modules/obsidian-smart-env/modals/env_stats.js
+var import_obsidian6 = require("obsidian");
+var EnvStatsModal = class extends import_obsidian6.Modal {
+  constructor(app2, env) {
+    super(app2);
+    this.env = env;
+  }
+  onOpen() {
+    this.titleEl.setText("Smart Environment");
+    this.contentEl.empty();
+    this.contentEl.createEl("p", { text: "Loading stats..." });
+    setTimeout(this.render.bind(this), 100);
+  }
+  async render() {
+    const frag = await this.env.render_component("env_stats", this.env);
+    this.contentEl.empty();
+    if (frag) {
+      this.contentEl.appendChild(frag);
+    } else {
+      this.contentEl.createEl("p", { text: "Failed to load stats." });
+    }
+  }
+};
+
+// node_modules/obsidian-smart-env/modals/exclude_files_fuzzy.js
+var import_obsidian7 = require("obsidian");
+var ExcludedFilesFuzzy = class extends import_obsidian7.FuzzySuggestModal {
+  /**
+   * @param {App} app - The Obsidian app
+   * @param {Object} env - An environment-like object, must have .settings and .fs.file_paths
+   */
+  constructor(app2, env) {
+    super(app2);
+    this.env = env;
+    this.setPlaceholder("Select a file to exclude...");
+  }
+  open(callback) {
+    this.callback = callback;
+    super.open();
+  }
+  getItems() {
+    const fileExclusions = (this.env.settings.file_exclusions || "").split(",").map((s) => s.trim()).filter(Boolean);
+    const candidates = (this.env.smart_sources?.fs?.file_paths || []).filter((path) => !fileExclusions.includes(path));
+    return candidates;
+  }
+  getItemText(item) {
+    return item;
+  }
+  onChooseItem(item) {
+    if (!item) return;
+    const oldVal = this.env.settings.file_exclusions || "";
+    const splitted = oldVal.split(",").map((s) => s.trim()).filter(Boolean);
+    if (!splitted.includes(item)) splitted.push(item);
+    this.env.settings.file_exclusions = splitted.join(",");
+    this.callback?.();
+  }
+};
+
+// node_modules/obsidian-smart-env/components/env_settings.css
+var css_sheet = new CSSStyleSheet();
+css_sheet.replaceSync(`.sc-env-settings-container {
+  margin: 1rem 0;
+}
+
+.sc-env-settings-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.toggle-env-settings-btn {
+  cursor: pointer;
+}
+
+.smart-env-settings-header {
+  margin-bottom: 1rem;
+}
+
+.excluded-folder-item,
+.excluded-file-item {
+  margin: 0.3rem 0;
+}
+`);
+var env_settings_default = css_sheet;
+
+// node_modules/obsidian-smart-env/components/env_settings.js
+async function build_html4(env, opts = {}) {
+  const env_settings_html = Object.entries(env.settings_config).map(([setting_key, setting_config]) => {
+    if (setting_key === "file_exclusions" || setting_key === "folder_exclusions") return false;
+    if (!setting_config.setting) setting_config.setting = setting_key;
+    return this.render_setting_html(setting_config);
+  }).filter(Boolean).join("\n");
+  const add_excluded_folders_btn = `
+    <button class="sc-add-excluded-folder-btn" type="button">Add excluded folder</button>
+  `;
+  const add_excluded_files_btn = `
+    <button class="sc-add-excluded-file-btn" type="button">Add excluded file</button>
+  `;
+  const excluded_folders_list = `<div class="sc-excluded-folders-list"></div>`;
+  const excluded_files_list = `<div class="sc-excluded-files-list"></div>`;
+  return `
+    <div class="sc-env-settings-container">
+      <div class="sc-env-settings-header">
+        <h2>Smart Environment</h2>
+        <button type="button" class="toggle-env-settings-btn">Show environment settings</button>
+      </div>
+      <div class="sc-env-settings-body" style="display: none;">
+        <div class="smart-env-settings-header" id="smart-env-buttons">
+          <button class="sc-collection-stats-btn" type="button">Show stats</button>
+          <button class="smart-env_reload-sources-btn" type="button">Reload sources</button>
+          <button class="smart-env_clean-up-data-btn" type="button">Clean-up data</button>
+          <button class="smart-env_clear-sources-data-btn" type="button">Clear sources data</button>
+        </div>
+
+        ${env_settings_html}
+
+        <div class="smart-env-settings-header">
+          <h2>Excluded folders</h2>
+          ${add_excluded_folders_btn}
+        </div>
+        ${excluded_folders_list}
+
+        <div class="smart-env-settings-header">
+          <h2>Excluded files</h2>
+          ${add_excluded_files_btn}
+        </div>
+        ${excluded_files_list}
+
+        <button class="sc-excluded-sources-btn" type="button">Show excluded</button>
+
+        <div data-smart-settings="smart_sources"></div>
+        <div data-smart-settings="smart_blocks"></div>
+        <p>Notes about embedding models:</p>
+        <ul>
+          <li>IMPORTANT: make sure local <code>BGE-micro-v2</code> embedding model works before trying other local models.</li>
+          <li>API models require an API key and send your notes to third-party servers for processing.</li>
+        </ul>
+        <div data-smart-notices></div>
+        <hr>
+      </div>
+      ${render_sign_in_or_open_smart_plugins(env)}
+    </div>
+  `;
+}
+async function render6(env, opts = {}) {
+  const html = await build_html4.call(this, env, opts);
+  const frag = this.create_doc_fragment(html);
+  this.apply_style_sheet(env_settings_default);
+  await this.render_setting_components(frag, { scope: env });
+  env.settings_container = frag.querySelector(".sc-env-settings-container");
+  const lean_coffee_callout = await env.render_component("lean_coffee_callout", env);
+  env.settings_container.appendChild(lean_coffee_callout);
+  post_process5.call(this, env, env.settings_container, opts);
+  return frag;
+}
+async function post_process5(env, container, opts = {}) {
+  const heading_btn = container.querySelector(".toggle-env-settings-btn");
+  const body_el = container.querySelector(".sc-env-settings-body");
+  if (heading_btn && body_el) {
+    heading_btn.addEventListener("click", () => {
+      const is_hidden = body_el.style.display === "none";
+      body_el.style.display = is_hidden ? "block" : "none";
+      heading_btn.textContent = is_hidden ? "Hide environment settings" : "Show environment settings";
+    });
+  }
+  const muted_notices_frag = await env.render_component("muted_notices", env);
+  await this.render_setting_components(muted_notices_frag, { scope: env });
+  container.querySelector("[data-smart-notices]").appendChild(muted_notices_frag);
+  const add_folder_btn = container.querySelector(".sc-add-excluded-folder-btn");
+  if (add_folder_btn) {
+    add_folder_btn.addEventListener("click", () => {
+      const fuzzy = new ExcludedFoldersFuzzy(env.main.app, env);
+      fuzzy.open(() => {
+        render_excluded_dir_list(env, container);
+        env.update_exclusions();
+      });
+    });
+  }
+  const add_file_btn = container.querySelector(".sc-add-excluded-file-btn");
+  if (add_file_btn) {
+    add_file_btn.addEventListener("click", () => {
+      const fuzzy = new ExcludedFilesFuzzy(env.main.app, env);
+      fuzzy.open(() => {
+        render_excluded_file_list(env, container);
+        env.update_exclusions();
+      });
+    });
+  }
+  const show_excluded_btn = container.querySelector(".sc-excluded-sources-btn");
+  if (show_excluded_btn) {
+    show_excluded_btn.addEventListener("click", () => {
+      const modal = new ExcludedSourcesModal(env.main.app, env);
+      modal.open();
+    });
+  }
+  const show_stats_btn = container.querySelector(".sc-collection-stats-btn");
+  if (show_stats_btn) {
+    show_stats_btn.addEventListener("click", () => {
+      const modal = new EnvStatsModal(env.main.app, env);
+      modal.open();
+    });
+  }
+  const reload_sources_btn = container.querySelector(".smart-env_reload-sources-btn");
+  if (reload_sources_btn) {
+    reload_sources_btn.addEventListener("click", async () => {
+      const start = Date.now();
+      env.smart_sources.unload();
+      env.smart_blocks.unload();
+      await env.init_collections();
+      await env.load_collections();
+      await env.smart_sources.process_embed_queue();
+      const end = Date.now();
+      env.main.notices?.show("reload_sources", { time_ms: end - start });
+    });
+  }
+  const clean_up_data_btn = container.querySelector(".smart-env_clean-up-data-btn");
+  if (clean_up_data_btn) {
+    clean_up_data_btn.addEventListener("click", async () => {
+      await env.smart_sources.run_clean_up_data();
+    });
+  }
+  const smart_env_buttons = container.querySelector("#smart-env-buttons");
+  const clear_sources_data_btn = smart_env_buttons.querySelector(".smart-env_clear-sources-data-btn");
+  if (clear_sources_data_btn) {
+    const inline_confirm_html = `
+      <div class="sc-inline-confirm-row" style="display: none;">
+        <span style="margin-right: 10px;">
+          Are you sure you want to clear all sources data? This cannot be undone.
+        </span>
+        <span class="sc-inline-confirm-row-buttons">
+          <button class="sc-inline-confirm-yes">Yes</button>
+          <button class="sc-inline-confirm-cancel">Cancel</button>
+        </span>
+      </div>
+    `;
+    const inline_confirm_frag = this.create_doc_fragment(inline_confirm_html);
+    smart_env_buttons.appendChild(inline_confirm_frag);
+    const confirm_yes = smart_env_buttons.querySelector(".sc-inline-confirm-yes");
+    const confirm_cancel = smart_env_buttons.querySelector(".sc-inline-confirm-cancel");
+    clear_sources_data_btn.addEventListener("click", () => {
+      const confirm_row = smart_env_buttons.querySelector(".sc-inline-confirm-row");
+      confirm_row.style.display = "block";
+      clear_sources_data_btn.style.display = "none";
+    });
+    confirm_yes.addEventListener("click", async (e) => {
+      const confirm_row = e.target.closest(".sc-inline-confirm-row");
+      await env.smart_sources.run_clear_all();
+      confirm_row.style.display = "none";
+      clear_sources_data_btn.style.display = "inline-block";
+    });
+    confirm_cancel.addEventListener("click", (e) => {
+      const confirm_row = e.target.closest(".sc-inline-confirm-row");
+      confirm_row.style.display = "none";
+      clear_sources_data_btn.style.display = "inline-block";
+    });
+  }
+  const env_collections_containers = container.querySelectorAll("[data-smart-settings]");
+  for (const el of env_collections_containers) {
+    const collection_key = el.dataset.smartSettings;
+    const collection = env[collection_key];
+    if (!collection) continue;
+    const collection_settings_frag = await env.render_component("collection_settings", collection);
+    el.appendChild(collection_settings_frag);
+  }
+  render_excluded_dir_list(env, container);
+  render_excluded_file_list(env, container);
+}
+function render_excluded_dir_list(env, container) {
+  const list_container = container.querySelector(".sc-excluded-folders-list");
+  if (!list_container) return;
+  list_container.empty();
+  const ul = list_container.createEl("ul");
+  const excluded_csv = env.settings.folder_exclusions || "";
+  const arr = excluded_csv.split(",").map((s) => s.trim()).filter(Boolean);
+  arr.forEach((folder) => {
+    const li = ul.createEl("li", { cls: "excluded-folder-item" });
+    li.setText(folder + "  ");
+    const remove_btn = li.createEl("button", { text: "(x)", cls: "remove-folder-btn" });
+    remove_btn.addEventListener("click", () => {
+      const splitted = excluded_csv.split(",").map((x) => x.trim()).filter(Boolean);
+      const new_arr = splitted.filter((f) => f !== folder);
+      env.settings.folder_exclusions = new_arr.join(",");
+      render_excluded_dir_list(env, container);
+    });
+  });
+  if (!arr.length) {
+    ul.createEl("li", { text: "No folders excluded yet." });
+  }
+}
+function render_excluded_file_list(env, container) {
+  const list_container = container.querySelector(".sc-excluded-files-list");
+  if (!list_container) return;
+  list_container.empty();
+  const ul = list_container.createEl("ul");
+  const excluded_csv = env.settings.file_exclusions || "";
+  const arr = excluded_csv.split(",").map((s) => s.trim()).filter(Boolean);
+  arr.forEach((file_path) => {
+    const li = ul.createEl("li", { cls: "excluded-file-item" });
+    li.setText(file_path + "  ");
+    const remove_btn = li.createEl("button", { text: "(x)", cls: "remove-file-btn" });
+    remove_btn.addEventListener("click", () => {
+      const splitted = excluded_csv.split(",").map((s) => s.trim()).filter(Boolean);
+      const new_arr = splitted.filter((f) => f !== file_path);
+      env.settings.file_exclusions = new_arr.join(",");
+      render_excluded_file_list(env, container);
+    });
+  });
+  if (!arr.length) {
+    ul.createEl("li", { text: "No files excluded yet." });
+  }
+}
+function render_sign_in_or_open_smart_plugins(env) {
+  const oauth_storage_prefix = env.plugin.app.vault.getName().toLowerCase().replace(/[^a-z0-9]/g, "_") + "_smart_plugins_oauth_";
+  const isLoggedIn = !!localStorage.getItem(oauth_storage_prefix + "token");
+  const buttonLabel = isLoggedIn ? "Open Smart Plugins" : "Sign in";
+  const buttonCallback = isLoggedIn ? "open_smart_plugins_settings" : "initiate_smart_plugins_oauth";
+  return `
+    <div class="setting-component"
+      data-name="Smart Plugins - Early Access"
+      data-type="button"
+      data-btn-text="${buttonLabel}"
+      data-description="Supporters can sign in to access early-release Smart Plugins"
+      data-callback="${buttonCallback}"
+    ></div>
+  `;
+}
+
+// node_modules/obsidian-smart-env/components/env_stats.js
+async function build_html5(env, opts = {}) {
+  const lines = [];
+  lines.push(`<h2>Collections</h2>`);
+  const collection_keys = Object.keys(env.collections).sort((a, b) => {
+    if (a === "smart_sources" || a === "smart_blocks") return -1;
+    if (b === "smart_sources" || b === "smart_blocks") return 1;
+    return a.localeCompare(b);
+  });
+  for (const collection_key of collection_keys) {
+    const collection = env[collection_key];
+    if (!collection || !collection.items) {
+      lines.push(`
+        <div class="sc-collection-stats">
+          <h3>${format_collection_name(collection_key)}</h3>
+          <p>No valid items.</p>
+        </div>
+      `);
+      continue;
+    }
+    const snippet = generate_collection_stats(collection, collection_key);
+    lines.push(snippet);
+  }
+  return `
+    <div class="sc-env-stats-container">
+      ${lines.join("\n")}
+    </div>
+  `;
+}
+async function render7(env, opts = {}) {
+  const html = await build_html5.call(this, env, opts);
+  const frag = this.create_doc_fragment(html);
+  return await post_process6.call(this, env, frag, opts);
+}
+async function post_process6(env, frag, opts = {}) {
+  return frag;
+}
+function generate_collection_stats(collection, collectionKey) {
+  const total_items = Object.values(collection.items).length;
+  const niceName = format_collection_name(collectionKey);
+  const state = collection.env.collections[collectionKey];
+  if (state !== "loaded") {
+    return `
+      <div class="sc-collection-stats">
+        <h3>${niceName}</h3>
+        <p>Not loaded yet (${total_items} items known).</p>
+      </div>
+    `;
+  }
+  const load_time_html = collection.load_time_ms ? `<span>Load time: ${collection.load_time_ms}ms</span>` : "";
+  const state_html = `<span>State: ${state}</span>`;
+  let html = "";
+  if (collectionKey === "smart_sources") {
+    html = get_smart_sources_stats(collection, niceName, total_items);
+  } else {
+    html = get_generic_collection_stats(collection, niceName, total_items);
+  }
+  let embed_stats = "";
+  if (typeof collection.process_embed_queue === "function") {
+    embed_stats = calculate_embed_coverage(collection, total_items);
+  }
+  return `
+    <div class="sc-collection-stats">
+      <h3>${niceName}</h3>
+      ${embed_stats}
+      ${html}
+      ${load_time_html}
+      ${state_html}
+    </div>
+  `;
+}
+function get_smart_sources_stats(collection, niceName, total_items, load_time_html) {
+  const totalFiles = collection.total_files ?? total_items;
+  const included = collection.included_files ?? "Error calculating included files";
+  const excluded = totalFiles - included;
+  return `
+      <p><strong>Total Files:</strong> ${totalFiles}</p>
+      <p><strong>Excluded:</strong> ${excluded}</p>
+      <p><strong>Included:</strong> ${included}</p>
+  `;
+}
+function get_generic_collection_stats(collection, niceName, total_items, load_time_html) {
+  return `
+      <p><strong>Total:</strong> ${total_items}</p>
+  `;
+}
+function calculate_embed_coverage(collection, total_items) {
+  const embedded_items = Object.values(collection.items).filter((item) => item.vec);
+  if (!embedded_items.length) return "<p>No items embedded</p>";
+  const is_unembedded = Object.values(collection.items).filter((i) => i.should_embed && i.is_unembedded);
+  const pct = embedded_items.length / total_items * 100;
+  const percent = Math.round(pct);
+  const display = `${percent}% (${embedded_items.length} / ${total_items})`;
+  return `<p><strong>Embedding coverage:</strong> ${display}</p>` + (is_unembedded.length ? `<p><strong>Unembedded:</strong> ${is_unembedded.length}</p>` : "");
+}
+
+// node_modules/obsidian-smart-env/components/lean_coffee_callout.js
+var import_obsidian8 = require("obsidian");
+function build_html6(env, opts = {}) {
+  return `<div class="wrapper">
+    <div id="lean-coffee-callout" data-callout-metadata="" data-callout-fold="" data-callout="info" class="callout" style="mix-blend-mode: unset;">
+      <div class="callout-title" style="align-items: center;">
+        <div class="callout-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round" class="svg-icon lucide-info">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M12 16v-4"></path>
+            <path d="M12 8h.01"></path>
+          </svg>
+        </div>
+        <div class="callout-title-inner">
+          <strong>Community Lean Coffee</strong>
+        </div>
+      </div>
+      <div class="callout-content">
+        <p dir="auto">
+          <span>Ask questions. Bring challenges. Request features. Show workflows. Be ready to share.</span>
+          <br>
+          <i>Join the next <a href="https://lu.ma/calendar/cal-ZJtdnzAdURyouM7" target="_external">Community Lean Coffee</a> meeting.</i> Unable to attend? Submit a question <a href="https://docs.google.com/forms/d/e/1FAIpQLSdqOtTjksMwg1BOuGNCncpMQ_QT-wcd-3AgZGIe3A_isut5aQ/viewform?usp=dialog" target="_external">here</a> \u{1F334}
+        </p>
+      </div>
+    </div>
+  </div>`;
+}
+function render8(env, opts = {}) {
+  const html = build_html6.call(this, env, opts);
+  const frag = this.create_doc_fragment(html);
+  const callout = frag.querySelector("#lean-coffee-callout");
+  const icon_container = callout.querySelector(".callout-icon");
+  const icon = (0, import_obsidian8.getIcon)("smart-chat");
+  if (icon) {
+    this.empty(icon_container);
+    icon_container.appendChild(icon);
+  }
+  post_process7.call(this, env, callout, opts);
+  return callout;
+}
+function post_process7(env, callout) {
+}
+
+// node_modules/obsidian-smart-env/components/muted_notices.js
+async function build_html7(env, opts = {}) {
+  let html = `<div class="muted-notice-container" style="display: flex; flex-direction: column; gap: 10px;">
+    <h2>Muted notices</h2>
+  `;
+  if (Object.keys(env.notices.settings?.muted || {}).length) {
+    for (const notice in env.notices.settings?.muted) {
+      html += `<div class="muted-notice" data-notice="${notice}" style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+        <span>${notice}</span>
+        <button class="unmute-button">Remove</button>
+      </div>`;
+    }
+  } else {
+    html += `<p>No muted notices.</p>`;
+  }
+  html += `</div>`;
+  return html;
+}
+async function render9(env, opts = {}) {
+  let html = await build_html7.call(this, env, opts);
+  const frag = this.create_doc_fragment(html);
+  post_process8.call(this, env, frag, opts);
+  return frag;
+}
+async function post_process8(env, frag, opts = {}) {
+  const unmute_buttons = frag.querySelectorAll(".unmute-button");
+  unmute_buttons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const notice = button.parentElement.dataset.notice;
+      env.notices.settings.muted[notice] = false;
+      delete env.notices.settings.muted[notice];
+      button.parentElement.remove();
+    });
+  });
+}
+
+// node_modules/obsidian-smart-env/components/source_inspector.css
+var css_sheet2 = new CSSStyleSheet();
+css_sheet2.replaceSync(`.source-inspector {
+  background-color: var(--background-secondary-alt);
+  margin: var(--size-4-3) 0;
+  padding: var(--size-4-3);
+  border-radius: var(--radius-m);
+}
+
+.source-inspector-blocks-container {
+  margin-top: var(--size-4-2);
+  display: flex;
+  flex-direction: column;
+  gap: var(--size-4-3);
+}
+
+.source-inspector-blocks-container blockquote {
+  margin-left: var(--size-4-3);
+  padding-left: var(--size-4-3);
+  border-left: 2px solid var(--text-faint);
+}
+`);
+var source_inspector_default = css_sheet2;
+
+// node_modules/obsidian-smart-env/components/source_inspector.js
+function build_html8(source2, opts = {}) {
+  return `<div>
+    <div class="source-inspector-source-info">
+      <button class="source-inspector-show-data-btn" type="button">Show source data</button>
+      <div class="source-inspector-source-data" style="display:none; margin: 0.5em 0;">
+        <pre style="max-height:300px; overflow:auto; background:#222; color:#fff; padding:0.5em; border-radius:4px;"></pre>
+      </div>
+    </div>
+    <div class="smart-chat-message source-inspector">
+      <h2>Blocks</h2>
+      <div class="source-inspector-blocks-container"></div>
+    </div>
+  </div>`;
+}
+async function render10(source2, opts = {}) {
+  const html = build_html8(source2, opts);
+  const frag = this.create_doc_fragment(html);
+  this.apply_style_sheet(source_inspector_default);
+  await post_process9.call(this, source2, frag, opts);
+  return frag;
+}
+async function post_process9(source2, frag, opts = {}) {
+  const container = frag.querySelector(".source-inspector .source-inspector-blocks-container");
+  if (!container) return frag;
+  const source_info = frag.querySelector(".source-inspector-source-info");
+  const btn = frag.querySelector(".source-inspector-show-data-btn");
+  const data_div = frag.querySelector(".source-inspector-source-data");
+  const pre = data_div?.querySelector("pre");
+  if (btn && data_div && pre) {
+    btn.addEventListener("click", () => {
+      if (data_div.style.display === "none") {
+        pre.textContent = JSON.stringify(source2.data, null, 2);
+        data_div.style.display = "";
+        btn.textContent = "Hide source data";
+      } else {
+        data_div.style.display = "none";
+        btn.textContent = "Show source data";
+      }
+    });
+  }
+  const source_should_embed = source2.should_embed ? `<span style="color: green;">should embed</span>` : `<span style="color: orange;">embedding skipped</span>`;
+  const source_embed_status = source2.vec ? `<span style="color: green;">vectorized</span>` : `<span style="color: orange;">not vectorized</span>`;
+  const source_info_frag = this.create_doc_fragment(`<p>${source_should_embed} | ${source_embed_status}</p>`);
+  source_info.appendChild(source_info_frag);
+  if (!source2 || !source2.blocks || source2.blocks.length === 0) {
+    this.safe_inner_html(container, `<p>No blocks</p>`);
+    return frag;
+  }
+  const sorted_blocks = source2.blocks.sort((a, b) => a.line_start - b.line_start);
+  for (const block of sorted_blocks) {
+    const sub_key_display = block.sub_key.split("#").join(" > ");
+    const block_info = `${sub_key_display} (${block.size} chars; lines: ${block.line_start}-${block.line_end})`;
+    const should_embed = block.should_embed ? `<span style="color: green;">should embed</span>` : `<span style="color: orange;">embedding skipped</span>`;
+    const embed_status = block.vec ? `<span style="color: green;">vectorized</span>` : `<span style="color: orange;">not vectorized</span>`;
+    let block_content = "";
+    try {
+      const raw = await block.read();
+      block_content = raw.replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\n/g, "<br>").replace(/\t/g, "&nbsp;&nbsp;");
+    } catch (err) {
+      console.error("[source_inspector] Error reading block:", err);
+      block_content = `<em style="color:red;">Error reading block content</em>`;
+    }
+    const block_frag = this.create_doc_fragment(`
+      <p>
+        ${block_info}<br>
+        ${should_embed} | ${embed_status}
+      </p>
+      <blockquote>${block_content}</blockquote>
+      <hr>
+    `);
+    container.appendChild(block_frag);
+  }
+  return frag;
+}
+
+// node_modules/obsidian-smart-env/components/supporter_callout.js
+var import_obsidian9 = require("obsidian");
+function build_html9(plugin, opts = {}) {
+  const { plugin_name = plugin.manifest.name } = opts;
+  return `<div class="wrapper">
+    <div id="footer-callout" data-callout-metadata="" data-callout-fold="" data-callout="info" class="callout" style="mix-blend-mode: unset;">
+      <div class="callout-title" style="align-items: center;">
+        <div class="callout-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round" class="svg-icon lucide-info">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M12 16v-4"></path>
+            <path d="M12 8h.01"></path>
+          </svg>
+        </div>
+        <div class="callout-title-inner"><strong>Become a Supporter</strong></div>
+      </div>
+      <div class="callout-content">
+        <p>Try early &amp; experimental features:
+          <ul>
+            <li><b>Smart Connections Early Release:</b>
+              <ul>
+                <li>Inline block connections</li>
+                <li>Footer connections view</li>
+                <li>Connections re-ranking</li>
+              </ul>
+            </li>
+            <li><b>Smart Context Early Release:</b>
+              <ul>
+                <li>Named contexts</li>
+                <li>External sources: include code from external repositories</li>
+                <li>Context codeblocks: embed context in notes ("My most valuable workflow" - \u{1F334} Brian)</li>
+              </ul>
+            </li>
+            <li><b>Smart Editor:</b>
+              <ul>
+                <li>Generate &amp; review changes</li>
+              </ul>
+            </li>
+            <li><em>Be the first to know what's coming next!</em></li>
+          </ul>
+        </p>
+        <p>Access the Supporter Community Campfire Chat:
+          <ul>
+            <li>Supporter-only private discussions</li>
+            <li>Share workflows</li>
+            <li>Get priority help &amp; support</li>
+          </ul>
+        </p>
+        <p>Guaranteed seat in the Community Lean Coffee meetings.</p>
+        <p><i>Your support shapes the future of ${plugin_name}.</i></p>
+        <p>
+          <strong>Fuel the circle of empowerment.</strong> <a href="https://smartconnections.app/community-supporters?utm_source=obsidian-${plugin_name.replace(/[^a-zA-Z0-9]/g, "-").toLowerCase()}" class="button" target="_external">Become a Supporter</a>
+        </p>
+      </div>
+    </div>
+  </div>`;
+}
+function render11(plugin, opts = {}) {
+  const html = build_html9.call(this, plugin, opts);
+  const frag = this.create_doc_fragment(html);
+  const callout = frag.querySelector("#footer-callout");
+  const icon_container = callout.querySelector(".callout-icon");
+  const icon = (0, import_obsidian9.getIcon)("hand-heart");
+  if (icon) {
+    this.empty(icon_container);
+    icon_container.appendChild(icon);
+  }
+  post_process10.call(this, plugin, callout, opts);
+  return callout;
+}
+function post_process10(plugin, callout) {
+}
+
+// node_modules/obsidian-smart-env/components/user_agreement_callout.js
+var import_obsidian10 = require("obsidian");
+function build_html10(plugin, opts = {}) {
+  const { plugin_name = plugin.manifest.name } = opts;
+  return `<div class="wrapper">
+    <div id="footer-callout" data-callout-metadata="" data-callout-fold="" data-callout="info" class="callout" style="mix-blend-mode: unset;">
+      <div class="callout-title" style="align-items: center;">
+        <div class="callout-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round" class="svg-icon lucide-info">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M12 16v-4"></path>
+            <path d="M12 8h.01"></path>
+          </svg>
+        </div>
+        <div class="callout-title-inner"><strong>User Agreement</strong></div>
+      </div>
+      <div class="callout-content">
+        <p>By using ${plugin_name} you agree to share how it helps you with at least one other person \u{1F60A}\u{1F334}</p>
+      </div>
+    </div>
+  </div>`;
+}
+function render12(plugin, opts = {}) {
+  const html = build_html10.call(this, plugin, opts);
+  const frag = this.create_doc_fragment(html);
+  const callout = frag.querySelector("#footer-callout");
+  const icon_container = callout.querySelector(".callout-icon");
+  const icon = (0, import_obsidian10.getIcon)("smart-connections");
+  if (icon) {
+    this.empty(icon_container);
+    icon_container.appendChild(icon);
+  }
+  post_process11.call(this, plugin, callout, opts);
+  return callout;
+}
+function post_process11(plugin, callout) {
+}
+
+// node_modules/obsidian-smart-env/smart_env.config.js
+var smart_env_config = {
+  collections: {},
+  item_types: {},
+  components: {
+    collection_settings: render5,
+    env_settings: render6,
+    env_stats: render7,
+    lean_coffee_callout: render8,
+    muted_notices: render9,
+    source_inspector: render10,
+    supporter_callout: render11,
+    user_agreement_callout: render12
+  }
+};
+
+// node_modules/obsidian-smart-env/default.config.js
+var smart_env_config2 = {
+  env_path: "",
+  modules: {
+    smart_fs: {
+      class: SmartFs,
+      adapter: SmartFsObsidianAdapter
+    },
+    smart_view: {
+      class: SmartView,
+      adapter: SmartViewObsidianAdapter
+    },
+    // smart_notices: {
+    //   class: SmartNotices,
+    //   adapter: Notice,
+    // },
+    smart_embed_model: {
+      class: SmartEmbedModel,
+      adapters: {
+        transformers: SmartEmbedTransformersIframeAdapter,
+        openai: SmartEmbedOpenAIAdapter,
+        ollama: SmartEmbedOllamaAdapter
+      }
+    },
+    smart_chat_model: {
+      class: SmartChatModel,
+      // DEPRECATED FORMAT: will be changed (requires SmartModel adapters getters update)
+      adapters: {
+        anthropic: SmartChatModelAnthropicAdapter,
+        azure: SmartChatModelAzureAdapter,
+        custom: SmartChatModelCustomAdapter,
+        gemini: SmartChatModelGeminiAdapter,
+        groq: SmartChatModelGroqAdapter,
+        lm_studio: SmartChatModelLmStudioAdapter,
+        ollama: SmartChatModelOllamaAdapter,
+        open_router: SmartChatModelOpenRouterAdapter,
+        openai: SmartChatModelOpenaiAdapter,
+        xai: SmartChatModelXaiAdapter
+      },
+      http_adapter: new SmartHttpRequest({
+        adapter: SmartHttpObsidianRequestAdapter,
+        obsidian_request_url: import_obsidian13.requestUrl
+      })
+    }
+  },
+  collections: {
+    smart_sources: {
+      collection_key: "smart_sources",
+      class: SmartSources,
+      data_adapter: AjsonMultiFileSourcesDataAdapter,
+      source_adapters: {
+        "md": ObsidianMarkdownSourceContentAdapter,
+        "txt": ObsidianMarkdownSourceContentAdapter,
+        "excalidraw.md": ExcalidrawSourceContentAdapter
+        // "canvas": MarkdownSourceContentAdapter,
+        // "default": MarkdownSourceContentAdapter,
+      },
+      content_parsers: [
+        parse_blocks
+      ],
+      // process_embed_queue: false,
+      process_embed_queue: true
+      // trigger embedding on load
+    },
+    smart_blocks: {
+      collection_key: "smart_blocks",
+      class: SmartBlocks,
+      data_adapter: AjsonMultiFileBlocksDataAdapter,
+      block_adapters: {
+        "md": MarkdownBlockContentAdapter,
+        "txt": MarkdownBlockContentAdapter,
+        "excalidraw.md": MarkdownBlockContentAdapter
+        // "canvas": MarkdownBlockContentAdapter,
+      }
+    },
+    smart_completions: smart_completions_default_config
+  },
+  item_types: {
+    SmartSource,
+    SmartBlock,
+    SmartCompletion
+  },
+  items: {
+    smart_source: smart_source_default,
+    smart_block: smart_block_default
+  },
+  components: {
+    smart_blocks: {
+      settings: render3
+    },
+    smart_embed_model: {
+      settings: render4
+    }
+  },
+  default_settings: {
+    is_obsidian_vault: true,
+    smart_blocks: {
+      embed_blocks: true,
+      min_chars: 200
+    },
+    smart_sources: {
+      min_chars: 200,
+      embed_model: {
+        adapter: "transformers",
+        transformers: {
+          legacy_transformers: false,
+          model_key: "TaylorAI/bge-micro-v2"
+        }
+      }
+    },
+    excluded_headings: "",
+    file_exclusions: "Untitled",
+    folder_exclusions: "",
+    language: "en",
+    new_user: true,
+    // DEPRECATED: 2025-06-05 (use localStorage instead)
+    re_import_wait_time: 13,
+    smart_chat_threads: {
+      chat_model: {
+        adapter: "ollama",
+        ollama: {}
+      }
+    },
+    smart_notices: {},
+    smart_view_filter: {
+      expanded_view: false,
+      render_markdown: true,
+      show_full_path: false
+    },
+    version: ""
+  }
+};
+merge_env_config(smart_env_config2, smart_env_config);
+var default_config_default = smart_env_config2;
+
+// node_modules/obsidian-smart-env/utils/add_icons.js
+var import_obsidian14 = require("obsidian");
+function add_smart_chat_icon() {
+  (0, import_obsidian14.addIcon)("smart-chat", `<defs>
+  <symbol id="smart-chat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M2 4c0-1.1.9-2 2-2h16c1.1 0 2 .9 2 2v11c0 1.1-.9 2-2 2h-8l-5 4v-4H4c-1.1 0-2-.9-2-2Z" stroke-width="2"></path>
+    <path d="M7 8c.5.3 1.3.3 1.8 0" stroke-width="2"></path>
+    <path d="M15.2 8c.5.3 1.3.3 1.8 0" stroke-width="2"></path>
+    <path d="M8 11.5c1 .8 2.5 1.2 4 1.2s3-.4 4-1.2" stroke-width="2"></path>
+  </symbol>
+</defs>
+<use href="#smart-chat-icon" />`);
+}
+function add_smart_connections_icon() {
+  (0, import_obsidian14.addIcon)("smart-connections", `<path d="M50,20 L80,40 L80,60 L50,100" stroke="currentColor" stroke-width="4" fill="none"/>
+    <path d="M30,50 L55,70" stroke="currentColor" stroke-width="5" fill="none"/>
+    <circle cx="50" cy="20" r="9" fill="currentColor"/>
+    <circle cx="80" cy="40" r="9" fill="currentColor"/>
+    <circle cx="80" cy="70" r="9" fill="currentColor"/>
+    <circle cx="50" cy="100" r="9" fill="currentColor"/>
+    <circle cx="30" cy="50" r="9" fill="currentColor"/>`);
+}
+
+// node_modules/obsidian-smart-env/node_modules/smart-notices/smart_notices.js
+var import_obsidian15 = require("obsidian");
+
+// node_modules/obsidian-smart-env/node_modules/smart-notices/notices.js
+var NOTICES = {
+  item_excluded: {
+    en: "Cannot show Smart Connections for excluded entity: {{entity_key}}"
+  },
+  load_env: {
+    en: "Mobile detected: to prevent performance issues, click to load Smart Environment when ready.",
+    button: {
+      en: `Load Smart Env`,
+      callback: (env) => {
+        env.load(true);
+      }
+    },
+    timeout: 1e4
+  },
+  /** @deprecated in favor of in-component insctructions (2025-06-22) */
+  missing_entity: {
+    en: "No entity found for key: {{key}}"
+  },
+  notice_muted: {
+    en: "Notice muted"
+  },
+  new_version_available: {
+    en: "A new version is available! (v{{version}})",
+    timeout: 15e3,
+    button: {
+      en: "Release notes",
+      callback: (scope) => {
+        window.open("https://github.com/brianpetro/obsidian-smart-connections/releases", "_blank");
+      }
+    }
+  },
+  new_early_access_version_available: {
+    en: "A new early access version is available! (v{{version}})"
+  },
+  supporter_key_required: {
+    en: "Supporter license key required for early access update"
+  },
+  revert_to_stable_release: {
+    en: 'Click "Check for Updates" in the community plugins tab and complete the update for Smart Connections to finish reverting to the stable release.',
+    timeout: 0
+  },
+  action_installed: {
+    en: 'Installed action "{{name}}"'
+  },
+  action_install_error: {
+    en: 'Error installing action "{{name}}": {{error}}',
+    timeout: 0
+  },
+  embed_model_not_loaded: {
+    en: "Embed model not loaded. Please wait for the model to load and try again."
+  },
+  embed_search_text_failed: {
+    en: "Failed to embed search text."
+  },
+  error_in_embedding_search: {
+    en: "Error in embedding search. See console for details."
+  },
+  copied_to_clipboard: {
+    en: "Message: {{content}} copied successfully."
+  },
+  copy_failed: {
+    en: "Unable to copy message to clipboard."
+  },
+  copied_chatgpt_url_to_clipboard: {
+    en: "ChatGPT URL copied to clipboard."
+  },
+  loading_collection: {
+    en: "Loading {{collection_key}}..."
+  },
+  done_loading_collection: {
+    en: "{{collection_key}} loaded."
+  },
+  saving_collection: {
+    en: "Saving {{collection_key}}..."
+  },
+  initial_scan: {
+    en: "[{{collection_key}}] Starting initial scan...",
+    timeout: 0
+  },
+  done_initial_scan: {
+    en: "[{{collection_key}}] Initial scan complete.",
+    timeout: 3e3
+  },
+  pruning_collection: {
+    en: "Pruning {{collection_key}}..."
+  },
+  done_pruning_collection: {
+    en: "Pruned {{count}} items from {{collection_key}}."
+  },
+  embedding_progress: {
+    en: "Embedding progress: {{progress}} / {{total}}\n{{tokens_per_second}} tokens/sec using {{model_name}}",
+    button: {
+      en: "Pause",
+      callback: (env) => {
+        console.log("pausing");
+        env.smart_sources.entities_vector_adapter.halt_embed_queue_processing();
+      }
+    },
+    timeout: 0
+  },
+  embedding_complete: {
+    en: "Embedding complete. {{total_embeddings}} embeddings created. {{tokens_per_second}} tokens/sec using {{model_name}}",
+    timeout: 0
+  },
+  embedding_paused: {
+    en: "Embedding paused. Progress: {{progress}} / {{total}}\n{{tokens_per_second}} tokens/sec using {{model_name}}",
+    button: {
+      en: "Resume",
+      callback: (env) => {
+        env.smart_sources.entities_vector_adapter.resume_embed_queue_processing(100);
+      }
+    },
+    timeout: 0
+  },
+  embedding_error: {
+    en: "Error embedding: {{error}}",
+    timeout: 0
+  },
+  import_progress: {
+    en: "Importing... {{progress}} / {{total}} sources",
+    timeout: 0
+  },
+  done_import: {
+    en: "Import complete. {{count}} sources imported in {{time_in_seconds}}s",
+    timeout: 0
+  },
+  no_import_queue: {
+    en: "No items in import queue"
+  },
+  clearing_all: {
+    en: "Clearing all data...",
+    timeout: 0
+  },
+  done_clearing_all: {
+    en: "All data cleared and reimported",
+    timeout: 3e3
+  },
+  image_extracting: {
+    en: "Extracting text from Image(s)",
+    timeout: 0
+  },
+  pdf_extracting: {
+    en: "Extracting text from PDF(s)",
+    timeout: 0
+  },
+  insufficient_settings: {
+    en: "Insufficient settings for {{key}}, missing: {{missing}}",
+    timeout: 0
+  },
+  unable_to_init_source: {
+    en: "Unable to initialize source: {{key}}",
+    timeout: 0
+  },
+  reload_sources: {
+    en: "Reloaded sources in {{time_ms}}ms"
+  }
+};
+
+// node_modules/obsidian-smart-env/node_modules/smart-notices/smart_notices.js
+function define_default_create_methods(notices) {
+  for (const key of Object.keys(notices)) {
+    const notice_obj = notices[key];
+    if (typeof notice_obj.create !== "function") {
+      notice_obj.create = function(opts = {}) {
+        let text = this.en ?? key;
+        for (const [k, v] of Object.entries(opts)) {
+          text = text.replace(new RegExp(`{{${k}}}`, "g"), String(v));
+        }
+        let button;
+        if (!opts.button && this.button) {
+          const btn_label = typeof this.button.en === "string" ? this.button.en : "OK";
+          button = {
+            text: btn_label,
+            callback: typeof this.button.callback === "function" ? this.button.callback : () => {
+            }
+            // no-op
+          };
+        } else {
+          button = opts.button;
+        }
+        let final_timeout = opts.timeout ?? this.timeout ?? 5e3;
+        return {
+          text,
+          button,
+          timeout: final_timeout,
+          confirm: opts.confirm,
+          // pass any user-provided confirm
+          immutable: opts.immutable
+          // pass any user-provided immutable
+        };
+      };
+    }
+  }
+  return notices;
+}
+var SmartNotices = class {
+  /**
+   * @param {Object} scope - The main plugin instance
+   */
+  constructor(env, opts = {}) {
+    env?.create_env_getter(this);
+    this.active = {};
+    this.adapter = opts.adapter || this.env.config.modules.smart_notices.adapter;
+    define_default_create_methods(NOTICES);
+  }
+  /** plugin settings for notices (muted, etc.) */
+  get settings() {
+    if (!this.env?.settings?.smart_notices) {
+      this.env.settings.smart_notices = {};
+    }
+    if (!this.env?.settings?.smart_notices?.muted) {
+      this.env.settings.smart_notices.muted = {};
+    }
+    return this.env?.settings?.smart_notices;
+  }
+  /**
+   * Displays a notice by key or custom message.
+   * Usage:
+   *   notices.show('load_env', { scope: this });
+   *
+   * @param {string} id - The notice key or custom ID
+   * @param {object} opts - Additional user opts
+   */
+  show(id, opts = {}) {
+    let message = null;
+    if (typeof opts === "string") {
+      message = opts;
+    } else {
+      opts = opts || {};
+    }
+    const normalized_id = this._normalize_notice_key(id);
+    if (this.settings?.muted?.[normalized_id]) {
+      if (opts.confirm?.callback) {
+        opts.confirm.callback();
+      }
+      return;
+    }
+    const notice_entry = NOTICES[id];
+    let derived = {
+      text: message || id,
+      timeout: opts.timeout ?? 5e3,
+      button: opts.button,
+      immutable: opts.immutable,
+      confirm: opts.confirm
+    };
+    if (notice_entry?.create) {
+      const result = notice_entry.create({ ...opts });
+      derived.text = message || result.text;
+      derived.timeout = result.timeout;
+      derived.button = result.button;
+      derived.immutable = result.immutable;
+      derived.confirm = result.confirm;
+    }
+    const content_fragment = this._build_fragment(normalized_id, derived.text, derived);
+    if (this.active[normalized_id]?.noticeEl?.isConnected) {
+      return this.active[normalized_id].setMessage(content_fragment, derived.timeout);
+    }
+    return this._render_notice(normalized_id, content_fragment, derived);
+  }
+  /**
+   * Normalizes the notice key to a safe string.
+   */
+  _normalize_notice_key(key) {
+    return key.replace(/[^a-zA-Z0-9_-]/g, "_");
+  }
+  /**
+   * Creates and tracks the notice instance
+   */
+  _render_notice(normalized_id, content_fragment, { timeout }) {
+    this.active[normalized_id] = new this.adapter(content_fragment, timeout);
+    return this.active[normalized_id];
+  }
+  /**
+   * Builds a DocumentFragment with notice text & possible buttons
+   */
+  _build_fragment(id, text, { button, confirm: confirm2, immutable }) {
+    const frag = document.createDocumentFragment();
+    frag.createEl("p", {
+      cls: "sc-notice-head",
+      text: `[Smart Env v${this.env.constructor.version}]`
+    });
+    const content = frag.createEl("p", { cls: "sc-notice-content", text });
+    const actions = frag.createEl("div", { cls: "sc-notice-actions" });
+    if (confirm2?.text && typeof confirm2.callback === "function") {
+      this._add_button(confirm2, actions);
+    }
+    if (button?.text && typeof button.callback === "function") {
+      this._add_button(button, actions);
+    }
+    if (!immutable) {
+      this._add_mute_button(id, actions);
+    }
+    return frag;
+  }
+  /**
+   * Creates a <button> appended to the container
+   */
+  _add_button(btnConfig, container) {
+    const btn = document.createElement("button");
+    this.env.smart_view.safe_inner_html(btn, btnConfig.text);
+    btn.addEventListener("click", (e) => {
+      if (btnConfig.stay_open) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+      btnConfig.callback?.(this.env);
+    });
+    container.appendChild(btn);
+  }
+  /**
+   * Mute button
+   */
+  _add_mute_button(id, container) {
+    const btn = document.createElement("button");
+    (0, import_obsidian15.setIcon)(btn, "bell-off");
+    btn.addEventListener("click", () => {
+      if (!this.settings.muted) this.settings.muted = {};
+      this.settings.muted[id] = true;
+      if (NOTICES["notice muted"]) {
+        this.show("notice muted", null, { timeout: 2e3 });
+      }
+    });
+    container.appendChild(btn);
+  }
+  /**
+   * Hides & clears all active notices
+   */
+  unload() {
+    for (const id in this.active) {
+      this.remove(id);
+    }
+  }
+  /**
+   * Removes an active notice by key
+   */
+  remove(id) {
+    const normalized_id = this._normalize_notice_key(id);
+    this.active[normalized_id]?.hide();
+    delete this.active[normalized_id];
+  }
+};
+
+// node_modules/obsidian-smart-env/styles.css
+var css_sheet3 = new CSSStyleSheet();
+css_sheet3.replaceSync(`.status-bar-item:has(.smart-env-status-container) {
+  padding: 0 0.5em;
+
+  &:hover {
+    background-color: var(--background-modifier-hover);
+  }
+  &> .smart-env-status-container {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    text-decoration: none;
+    color: var(--status-bar-text-color);
+  }
+}`);
+var styles_default = css_sheet3;
+
+// node_modules/obsidian-smart-env/sc_oauth.js
+var import_obsidian17 = require("obsidian");
+
+// node_modules/obsidian-smart-env/node_modules/smart-plugins-obsidian/utils.js
+var import_obsidian16 = require("obsidian");
+function get_smart_server_url() {
+  if (typeof window !== "undefined" && window.SMART_SERVER_URL_OVERRIDE) {
+    return window.SMART_SERVER_URL_OVERRIDE;
+  }
+  return "https://connect.smartconnections.app";
+}
+function try_get_zlib() {
+  if (typeof window?.require === "function") {
+    try {
+      return window.require("zlib");
+    } catch {
+    }
+  }
+  return null;
+}
+function inflate_deflate_data(compressed) {
+  const zlib = try_get_zlib();
+  if (!zlib) {
+    throw new Error("zlib not available (maybe Obsidian mobile?).");
+  }
+  const buf = Buffer.from(compressed);
+  const out = zlib.inflateRawSync(buf);
+  return new Uint8Array(out.buffer, out.byteOffset, out.length);
+}
+async function parse_zip_into_files(zipBuffer) {
+  const dv = new DataView(zipBuffer);
+  let offset = 0;
+  const length = dv.byteLength;
+  const files = [];
+  let pluginManifest = null;
+  while (offset + 4 <= length) {
+    const localSig = dv.getUint32(offset, true);
+    if (localSig === 33639248 || localSig === 134695760) {
+      break;
+    }
+    if (localSig !== 67324752) {
+      break;
+    }
+    offset += 4;
+    const versionNeeded = dv.getUint16(offset, true);
+    const generalPurposeBitFlag = dv.getUint16(offset + 2, true);
+    const compressionMethod = dv.getUint16(offset + 4, true);
+    offset += 6;
+    const lastModTimeDate = dv.getUint32(offset, true);
+    offset += 4;
+    let crc32 = dv.getUint32(offset, true);
+    let compressedSize = dv.getUint32(offset + 4, true);
+    let uncompressedSize = dv.getUint32(offset + 8, true);
+    offset += 12;
+    const fileNameLen = dv.getUint16(offset, true);
+    const extraLen = dv.getUint16(offset + 2, true);
+    offset += 4;
+    const fileNameBytes = new Uint8Array(zipBuffer.slice(offset, offset + fileNameLen));
+    const fileName = new TextDecoder("utf-8").decode(fileNameBytes);
+    offset += fileNameLen;
+    offset += extraLen;
+    const hasDataDescriptor = (generalPurposeBitFlag & 8) !== 0;
+    let compDataStart = offset;
+    let compDataEnd;
+    if (!hasDataDescriptor) {
+      compDataEnd = compDataStart + compressedSize;
+    } else {
+      let scanPos = compDataStart;
+      let foundSig = false;
+      while (scanPos + 4 <= length) {
+        const sig = dv.getUint32(scanPos, true);
+        if (sig === 134695760 || sig === 67324752 || sig === 33639248) {
+          foundSig = true;
+          break;
+        }
+        scanPos++;
+      }
+      compDataEnd = foundSig ? scanPos : length;
+    }
+    if (compDataEnd > length) {
+      break;
+    }
+    const fileDataCompressed = new Uint8Array(zipBuffer.slice(compDataStart, compDataEnd));
+    offset = compDataEnd;
+    if (hasDataDescriptor) {
+      if (offset + 4 <= length) {
+        const ddSig = dv.getUint32(offset, true);
+        if (ddSig === 134695760) {
+          offset += 4;
+        }
+        if (offset + 12 <= length) {
+          crc32 = dv.getUint32(offset, true);
+          compressedSize = dv.getUint32(offset + 4, true);
+          uncompressedSize = dv.getUint32(offset + 8, true);
+          offset += 12;
+        } else {
+          break;
+        }
+      }
+    }
+    let rawData;
+    if (compressionMethod === 0) {
+      rawData = fileDataCompressed;
+    } else if (compressionMethod === 8) {
+      rawData = inflate_deflate_data(fileDataCompressed);
+    } else {
+      continue;
+    }
+    files.push({ fileName, data: rawData });
+    if (fileName.toLowerCase().endsWith("manifest.json") && !fileName.includes("/")) {
+      try {
+        pluginManifest = JSON.parse(new TextDecoder("utf-8").decode(rawData));
+      } catch {
+      }
+    }
+  }
+  return { files, pluginManifest };
+}
+async function write_files_with_adapter(adapter, baseFolder, files) {
+  const hasWriteBinary = typeof adapter.writeBinary === "function";
+  if (!await adapter.exists(baseFolder)) {
+    await adapter.mkdir(baseFolder);
+  }
+  for (const { fileName, data } of files) {
+    const fullPath = baseFolder + "/" + fileName;
+    if (hasWriteBinary) {
+      await adapter.writeBinary(fullPath, data);
+    } else {
+      const base642 = btoa(String.fromCharCode(...data));
+      await adapter.write(fullPath, base642);
+    }
+  }
+}
+async function fetch_plugin_zip(repoName, token) {
+  const resp = await (0, import_obsidian16.requestUrl)({
+    url: `${get_smart_server_url()}/plugin_download`,
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`
+    },
+    body: JSON.stringify({ repo: repoName })
+  });
+  if (resp.status !== 200) {
+    throw new Error(`plugin_download error ${resp.status}: ${resp.text}`);
+  }
+  const ab = resp.arrayBuffer;
+  if (ab.byteLength < 4) {
+    throw new Error("Server returned too few bytes, not a valid ZIP.");
+  }
+  const dv = new DataView(ab);
+  if (dv.getUint32(0, true) !== 67324752) {
+    const txt = new TextDecoder().decode(new Uint8Array(ab));
+    throw new Error(`Server did not return a valid ZIP. Text:
+${txt}`);
+  }
+  return ab;
+}
+async function enable_plugin(app2, plugin_id) {
+  await app2.plugins.enablePlugin(plugin_id);
+  app2.plugins.enabledPlugins.add(plugin_id);
+  app2.plugins.requestSaveConfig();
+  app2.plugins.loadManifests();
+}
+
+// node_modules/obsidian-smart-env/sc_oauth.js
+var CLIENT_ID = "smart-plugins-op";
+var CLIENT_SECRET = "smart-plugins-op-secret";
+function get_local_storage_token(oauth_storage_prefix) {
+  return {
+    token: localStorage.getItem(oauth_storage_prefix + "token") || "",
+    refresh: localStorage.getItem(oauth_storage_prefix + "refresh") || ""
+  };
+}
+function set_local_storage_token({ access_token, refresh_token }, oauth_storage_prefix) {
+  localStorage.setItem(oauth_storage_prefix + "token", access_token);
+  if (refresh_token) {
+    localStorage.setItem(oauth_storage_prefix + "refresh", refresh_token);
+  }
+}
+async function exchange_code_for_tokens(code, plugin) {
+  const oauth_storage_prefix = plugin.app.vault.getName().toLowerCase().replace(/[^a-z0-9]/g, "_") + "_smart_plugins_oauth_";
+  const url = `${get_smart_server_url()}/auth/oauth_exchange2`;
+  const resp = await (0, import_obsidian17.requestUrl)({
+    url,
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      client_id: CLIENT_ID,
+      client_secret: CLIENT_SECRET,
+      code
+    })
+  });
+  if (resp.status !== 200) {
+    throw new Error(`OAuth exchange error ${resp.status} ${resp.text}`);
+  }
+  const { access_token, refresh_token } = resp.json;
+  if (!access_token) {
+    throw new Error("No access_token in response");
+  }
+  set_local_storage_token({ access_token, refresh_token }, oauth_storage_prefix);
+}
+async function install_smart_plugins_plugin(plugin) {
+  const oauth_storage_prefix = plugin.app.vault.getName().toLowerCase().replace(/[^a-z0-9]/g, "_") + "_smart_plugins_oauth_";
+  const { token } = get_local_storage_token(oauth_storage_prefix);
+  if (!token) throw new Error('No token found to install "smart-plugins"');
+  const repo = "brianpetro/smart-plugins-obsidian";
+  const zipData = await fetch_plugin_zip(repo, token);
+  const { files, pluginManifest } = await parse_zip_into_files(zipData);
+  let folder_name = (pluginManifest?.id || "smart-plugins").trim();
+  folder_name = folder_name.replace(/[^\w-]/g, "_");
+  const base_folder = ".obsidian/plugins/" + folder_name;
+  await write_files_with_adapter(plugin.app.vault.adapter, base_folder, files);
+  await plugin.app.plugins.loadManifests();
+  if (plugin.app.plugins.manifests[folder_name]) {
+    await enable_plugin(plugin.app, folder_name);
+  }
+}
+
+// node_modules/obsidian-smart-env/utils/open_url_externally.js
+function open_url_externally(plugin, url) {
+  const webviewer = plugin.app.internalPlugins?.plugins?.webviewer?.instance;
+  window.open(url, webviewer ? "_external" : "_blank");
+}
+
+// node_modules/obsidian-smart-env/utils/register_status_bar_context_menu.js
+var import_obsidian19 = require("obsidian");
+
+// node_modules/obsidian-smart-env/views/source_inspector.js
 var import_obsidian18 = require("obsidian");
+var SmartNoteInspectModal = class extends import_obsidian18.Modal {
+  constructor(smart_connections_plugin, entity) {
+    super(smart_connections_plugin.app);
+    this.smart_connections_plugin = smart_connections_plugin;
+    this.entity = entity;
+  }
+  get env() {
+    return this.smart_connections_plugin.env;
+  }
+  onOpen() {
+    this.titleEl.innerText = this.entity.key;
+    this.render();
+  }
+  async render() {
+    this.contentEl.empty();
+    const frag = await this.env.render_component("source_inspector", this.entity);
+    this.contentEl.appendChild(frag);
+  }
+};
+
+// node_modules/obsidian-smart-env/utils/register_status_bar_context_menu.js
+function register_status_bar_context_menu(env, status_container) {
+  const plugin = env.main;
+  const on_context_menu = (ev) => {
+    ev.preventDefault();
+    ev.stopPropagation();
+    const menu = new import_obsidian19.Menu(plugin.app);
+    menu.addItem(
+      (item) => item.setTitle("Inspect active note").setIcon("search").onClick(async () => {
+        const active_file = plugin.app.workspace.getActiveFile();
+        if (!active_file) {
+          new import_obsidian19.Notice("No active note found");
+          return;
+        }
+        const src = env.smart_sources?.get(active_file.path);
+        if (!src) {
+          new import_obsidian19.Notice("Active note is not indexed by Smart Environment");
+          return;
+        }
+        new SmartNoteInspectModal(plugin, src).open();
+      })
+    );
+    menu.addItem(
+      (item) => item.setTitle("Show stats").setIcon("chart-pie").onClick(() => {
+        const modal = new EnvStatsModal(plugin.app, env);
+        modal.open();
+      })
+    );
+    menu.addSeparator();
+    menu.addItem(
+      (item) => item.setTitle("Learn about Community Supporters").setIcon("hand-heart").onClick(() => {
+        const url = "https://smartconnections.app/community-supporters/?utm_source=status-bar";
+        window.open(url, "_external");
+      })
+    );
+    menu.showAtPosition({ x: ev.pageX, y: ev.pageY });
+  };
+  plugin.registerDomEvent(status_container, "contextmenu", on_context_menu);
+  return on_context_menu;
+}
+
+// node_modules/obsidian-smart-env/smart_env.js
+var SmartEnv2 = class extends SmartEnv {
+  static async create(plugin, main_env_opts = null) {
+    add_smart_chat_icon();
+    add_smart_connections_icon();
+    if (!main_env_opts) main_env_opts = plugin.smart_env_config;
+    if (plugin.app.plugins.plugins["smart-connections"] && plugin.app.plugins.plugins["smart-connections"].env && !plugin.app.plugins.plugins["smart-connections"].env.constructor.version) {
+      const update_notice = "Detected older SmartEnv with 'init_main'. Reloading without the outdated plugin. Please update Smart Connections.";
+      console.warn(update_notice);
+      new import_obsidian20.Notice(update_notice, 0);
+      disable_plugin(plugin.app, "smart-connections");
+    }
+    const opts = merge_env_config(main_env_opts, default_config_default);
+    return await super.create(plugin, opts);
+  }
+  async load(force_load = false) {
+    if (!import_obsidian20.Platform.isMobile && !this.plugin.app.workspace.protocolHandlers.has("sc-op/callback")) {
+      this.plugin.registerObsidianProtocolHandler("sc-op/callback", async (params) => {
+        await this.handle_sc_op_oauth_callback(params);
+      });
+    }
+    if (import_obsidian20.Platform.isMobile && !force_load) {
+      const frag = this.smart_view.create_doc_fragment(`<div><p>Smart Environment loading deferred on mobile.</p><button>Load Environment</button></div>`);
+      frag.querySelector("button").addEventListener("click", () => {
+        this.load(true);
+      });
+      new import_obsidian20.Notice(frag, 0);
+      return;
+    }
+    await super.load();
+    const plugin = this.main;
+    plugin.registerEvent(
+      plugin.app.vault.on("create", (file) => {
+        if (file instanceof import_obsidian20.TFile && this.smart_sources?.source_adapters?.[file.extension]) {
+          const source2 = this.smart_sources?.init_file_path(file.path);
+          if (source2) {
+            this.queue_source_re_import(source2);
+          } else {
+            console.warn("SmartEnv: Unable to init source for newly created file", file.path);
+          }
+        }
+      })
+    );
+    plugin.registerEvent(
+      plugin.app.vault.on("rename", (file, old_path) => {
+        if (file instanceof import_obsidian20.TFile && this.smart_sources?.source_adapters?.[file.extension]) {
+          const source2 = this.smart_sources?.init_file_path(file.path);
+          if (source2) {
+            this.queue_source_re_import(source2);
+          } else {
+            console.warn("SmartEnv: Unable to init source for renamed file", file.path);
+          }
+        }
+        if (old_path) {
+          const source2 = this.smart_sources?.get(old_path);
+          if (source2) {
+            source2.delete();
+            if (this.rename_debounce_timeout) clearTimeout(this.rename_debounce_timeout);
+            this.rename_debounce_timeout = setTimeout(() => {
+              this.smart_sources?.process_save_queue();
+              this.rename_debounce_timeout = null;
+            }, 1e3);
+          }
+        }
+      })
+    );
+    plugin.registerEvent(
+      plugin.app.vault.on("modify", (file) => {
+        if (file instanceof import_obsidian20.TFile && this.smart_sources?.source_adapters?.[file.extension]) {
+          const source2 = this.smart_sources?.get(file.path);
+          if (source2) {
+            this.queue_source_re_import(source2);
+          } else {
+            console.warn("SmartEnv: Unable to get source for modified file", file.path);
+          }
+        }
+      })
+    );
+    plugin.registerEvent(
+      plugin.app.workspace.on("editor-change", () => {
+        this.debounce_re_import_queue();
+      })
+    );
+    plugin.registerEvent(
+      plugin.app.workspace.on("active-leaf-change", () => {
+        this.debounce_re_import_queue();
+      })
+    );
+    plugin.registerEvent(
+      plugin.app.vault.on("delete", (file) => {
+        if (file instanceof import_obsidian20.TFile && this.smart_sources?.source_adapters?.[file.extension]) {
+          delete this.smart_sources?.items[file.path];
+        }
+      })
+    );
+    this.refresh_status();
+  }
+  // queue re-import the file
+  queue_source_re_import(source2) {
+    if (!source2 || !source2.key) return;
+    if (!this.sources_re_import_queue) this.sources_re_import_queue = {};
+    if (this.sources_re_import_queue?.[source2.key]) return;
+    source2.data.last_import = { at: 0, hash: null, mtime: 0, size: 0 };
+    this.sources_re_import_queue[source2.key] = source2;
+    this.debounce_re_import_queue();
+  }
+  debounce_re_import_queue() {
+    this.refresh_status();
+    this.sources_re_import_halted = true;
+    if (this.sources_re_import_timeout) clearTimeout(this.sources_re_import_timeout);
+    if (!this.sources_re_import_queue || Object.keys(this.sources_re_import_queue).length === 0) {
+      this.sources_re_import_timeout = null;
+      return;
+    }
+    this.sources_re_import_timeout = setTimeout(this.run_re_import.bind(this), this.settings.re_import_wait_time * 1e3);
+  }
+  async run_re_import() {
+    this.sources_re_import_halted = false;
+    const queue_length = Object.keys(this.sources_re_import_queue || {}).length;
+    if (queue_length) {
+      for (const [key, src] of Object.entries(this.sources_re_import_queue)) {
+        await src.import();
+        if (!this.smart_sources._embed_queue) this.smart_sources._embed_queue = [];
+        if (src.should_embed) this.smart_sources._embed_queue.push(src);
+        if (this.smart_blocks.settings.embed_blocks) {
+          for (const block of src.blocks) {
+            if (block._queue_embed || block.should_embed && block.is_unembedded) {
+              this.smart_sources._embed_queue.push(block);
+              block._queue_embed = true;
+            }
+          }
+        }
+        delete this.sources_re_import_queue[key];
+        if (this.sources_re_import_halted) {
+          this.debounce_re_import_queue();
+        }
+      }
+      if (this.smart_sources?._embed_queue?.length) {
+        await this.smart_sources.process_embed_queue();
+      }
+    }
+    if (this.sources_re_import_timeout) clearTimeout(this.sources_re_import_timeout);
+    this.sources_re_import_timeout = null;
+    this.refresh_status();
+  }
+  refresh_status() {
+    if (!this.status_elm) {
+      const existing = this.main.app.statusBar.containerEl.querySelector(".smart-env-status-container");
+      if (existing) {
+        existing.closest(".status-bar-item")?.remove();
+      }
+      this.status_elm = this.main.addStatusBarItem();
+      this.smart_view.apply_style_sheet(styles_default);
+      this.status_container = this.status_elm.createEl("a", {
+        cls: "smart-env-status-container"
+      });
+      (0, import_obsidian20.setIcon)(this.status_container, "smart-connections");
+      this.status_msg = this.status_container.createSpan(
+        "smart-env-status-msg"
+      );
+      this.open_context_menu_handler = register_status_bar_context_menu(
+        this,
+        this.status_container
+      );
+    }
+    const queue_length = Object.keys(this.sources_re_import_queue || {}).length;
+    if (queue_length) {
+      this.status_msg.setText(`Embed now (${queue_length})`);
+      this.status_container.setAttribute("title", "Click to re\u2011import.");
+      this.status_container.removeAttribute("href");
+      this.status_container.removeEventListener(
+        "click",
+        this.open_menu_click_handler
+      );
+      this.status_container.removeEventListener(
+        "click",
+        re_embed_click_handler
+      );
+      this.status_container.addEventListener("click", re_embed_click_handler);
+      return;
+    }
+    this.status_msg.setText("Smart Env " + this.constructor.version);
+    this.status_container.setAttribute("title", "Smart Environment status");
+    this.status_container.removeEventListener("click", re_embed_click_handler);
+    this.status_container.removeAttribute("href");
+    this.status_container.removeAttribute("target");
+    if (!this.open_menu_click_handler) {
+      this.open_menu_click_handler = (e) => {
+        const evt = new MouseEvent("contextmenu", e);
+        this.status_container.dispatchEvent(evt);
+      };
+    }
+    this.status_container.removeEventListener(
+      "click",
+      this.open_menu_click_handler
+    );
+    this.status_container.addEventListener("click", this.open_menu_click_handler);
+  }
+  get notices() {
+    if (!this._notices) {
+      this._notices = new SmartNotices(this, {
+        adapter: import_obsidian20.Notice
+      });
+    }
+    return this._notices;
+  }
+  get settings_config() {
+    const config = super.settings_config;
+    delete config["is_obsidian_vault"];
+    config["re_import_wait_time"] = {
+      type: "number",
+      name: "Re-import wait time",
+      description: "Time in seconds to wait before re-importing a file after modification."
+    };
+    return config;
+  }
+  // Smart Plugins
+  /**
+   * This is the function that is called by the new "Sign in with Smart Plugins" button.
+   * It replicates the old 'initiate_oauth()' logic from sc_settings_tab.js
+   */
+  initiate_smart_plugins_oauth() {
+    console.log("initiate_smart_plugins_oauth");
+    const state = Math.random().toString(36).slice(2);
+    const redirect_uri = encodeURIComponent("obsidian://sc-op/callback");
+    const url = `${get_smart_server_url()}/oauth?client_id=smart-plugins-op&redirect_uri=${redirect_uri}&state=${state}`;
+    open_url_externally(this.plugin, url);
+  }
+  /**
+   * Handles the OAuth callback from the Smart Plugins server.
+   * @param {Object} params - The URL parameters from the OAuth callback.
+   */
+  async handle_sc_op_oauth_callback(params) {
+    const code = params.code;
+    if (!code) {
+      new import_obsidian20.Notice("No OAuth code provided in URL. Login failed.");
+      return;
+    }
+    try {
+      await exchange_code_for_tokens(code, this.plugin);
+      await install_smart_plugins_plugin(this.plugin);
+      new import_obsidian20.Notice("Smart Plugins installed / updated successfully!");
+      this.open_smart_plugins_settings();
+    } catch (err) {
+      console.error("OAuth callback error", err);
+      new import_obsidian20.Notice(`OAuth callback error: ${err.message}`);
+    }
+  }
+  /**
+   * Opens the Obsidian settings window with the 'Smart Plugins' tab active.
+   * @public
+   */
+  async open_smart_plugins_settings() {
+    const spInstalled = this.plugin.app.plugins.plugins["smart-plugins"];
+    if (!spInstalled) {
+      await install_smart_plugins_plugin(this.plugin);
+      await new Promise((r) => setTimeout(r, 500));
+    }
+    const spEnabled = this.plugin.app.plugins.enabledPlugins.has("smart-plugins");
+    if (!spEnabled) {
+      await enable_plugin(this.plugin.app, "smart-plugins");
+      await new Promise((r) => setTimeout(r, 500));
+    }
+    this.plugin.app.commands.executeCommandById("app:open-settings");
+    const spTab = this.plugin.app.setting.pluginTabs.find((t) => t.name === "Smart Plugins");
+    if (spTab) {
+      this.plugin.app.setting.openTab(spTab);
+    }
+  }
+  // WAIT FOR OBSIDIAN SYNC
+  async ready_to_load_collections() {
+    await new Promise((r) => setTimeout(r, 3e3));
+    await this.wait_for_obsidian_sync();
+  }
+  async wait_for_obsidian_sync() {
+    while (this.obsidian_is_syncing) {
+      console.log("Smart Connections: Waiting for Obsidian Sync to finish");
+      await new Promise((r) => setTimeout(r, 1e3));
+      if (!this.plugin) throw new Error("Plugin disabled while waiting for obsidian sync, reload required.");
+    }
+  }
+  get obsidian_is_syncing() {
+    const obsidian_sync_instance = this.plugin?.app?.internalPlugins?.plugins?.sync?.instance;
+    if (!obsidian_sync_instance) return false;
+    if (obsidian_sync_instance?.syncStatus.startsWith("Uploading")) return false;
+    if (obsidian_sync_instance?.syncStatus.startsWith("Fully synced")) return false;
+    return obsidian_sync_instance?.syncing;
+  }
+};
+async function disable_plugin(app2, plugin_id) {
+  console.log("disabling plugin " + plugin_id);
+  await app2.plugins.unloadPlugin(plugin_id);
+  await app2.plugins.disablePluginAndSave(plugin_id);
+  await app2.plugins.loadManifests();
+}
+function re_embed_click_handler(e) {
+  e.preventDefault();
+  e.stopPropagation();
+  smart_env.status_msg.setText(`Embedding...`);
+  smart_env.run_re_import();
+}
+
+// node_modules/smart-collections/adapters/_adapter.js
+var CollectionDataAdapter2 = class {
+  /**
+   * @constructor
+   * @param {Object} collection - The collection instance that this adapter manages.
+   */
+  constructor(collection) {
+    this.collection = collection;
+    this.env = collection.env;
+  }
+  /**
+   * The class to use for item adapters.
+   * @type {typeof ItemDataAdapter}
+   */
+  ItemDataAdapter = ItemDataAdapter2;
+  /**
+   * Optional factory method to create item adapters.
+   * If `this.item_adapter_class` is not null, it uses that; otherwise can be overridden by subclasses.
+   * @param {Object} item - The item to create an adapter for.
+   * @returns {ItemDataAdapter}
+   */
+  create_item_adapter(item) {
+    if (!this.ItemDataAdapter) {
+      throw new Error("No item_adapter_class specified and create_item_adapter not overridden.");
+    }
+    return new this.ItemDataAdapter(item);
+  }
+  /**
+   * Load a single item by its key using an `ItemDataAdapter`.
+   * @async
+   * @param {string} key - The key of the item to load.
+   * @returns {Promise<void>} Resolves when the item is loaded.
+   */
+  async load_item(key) {
+    throw new Error("Not implemented");
+  }
+  /**
+   * Save a single item by its key using its associated `ItemDataAdapter`.
+   * @async
+   * @param {string} key - The key of the item to save.
+   * @returns {Promise<void>} Resolves when the item is saved.
+   */
+  async save_item(key) {
+    throw new Error("Not implemented");
+  }
+  /**
+   * Delete a single item by its key. This may involve updating or removing its file,
+   * as handled by the `ItemDataAdapter`.
+   * @async
+   * @param {string} key - The key of the item to delete.
+   * @returns {Promise<void>} Resolves when the item is deleted.
+   */
+  async delete_item(key) {
+    throw new Error("Not implemented");
+  }
+  /**
+   * Process any queued load operations. Typically orchestrates calling `load_item()` 
+   * on items that have been flagged for loading.
+   * @async
+   * @returns {Promise<void>}
+   */
+  async process_load_queue() {
+    throw new Error("Not implemented");
+  }
+  /**
+   * Process any queued save operations. Typically orchestrates calling `save_item()` 
+   * on items that have been flagged for saving.
+   * @async
+   * @returns {Promise<void>}
+   */
+  async process_save_queue() {
+    throw new Error("Not implemented");
+  }
+  /**
+   * Load the item's data from storage if it has been updated externally.
+   * @async
+   * @param {string} key - The key of the item to load.
+   * @returns {Promise<void>} Resolves when the item is loaded.
+   */
+  async load_item_if_updated(item) {
+    const adapter = this.create_item_adapter(item);
+    await adapter.load_if_updated();
+  }
+};
+var ItemDataAdapter2 = class {
+  /**
+   * @constructor
+   * @param {Object} item - The collection item instance that this adapter manages.
+   */
+  constructor(item) {
+    this.item = item;
+  }
+  /**
+   * Load the item's data from storage. May involve reading a file and parsing 
+   * its contents, then updating `item.data`.
+   * @async
+   * @returns {Promise<void>} Resolves when the item is fully loaded.
+   */
+  async load() {
+    throw new Error("Not implemented");
+  }
+  /**
+   * Save the item's data to storage. May involve writing to a file or appending 
+   * lines in an append-only format.
+   * @async
+   * @param {string|null} [ajson=null] - An optional serialized representation of the item’s data.
+   *                                     If not provided, the adapter should derive it from the item.
+   * @returns {Promise<void>} Resolves when the item is saved.
+   */
+  async save(ajson = null) {
+    throw new Error("Not implemented");
+  }
+  /**
+   * Delete the item's data from storage. May involve removing a file or writing 
+   * a `null` entry in an append-only file to signify deletion.
+   * @async
+   * @returns {Promise<void>} Resolves when the item’s data is deleted.
+   */
+  async delete() {
+    throw new Error("Not implemented");
+  }
+  /**
+   * Returns the file path or unique identifier used by this adapter to locate and store 
+   * the item's data. This may be a file name derived from the item's key.
+   * @returns {string} The path or identifier for the item's data.
+   */
+  get data_path() {
+    throw new Error("Not implemented");
+  }
+  /**
+   * @returns {CollectionDataAdapter} The collection data adapter that this item data adapter belongs to.
+   */
+  get collection_adapter() {
+    return this.item.collection.data_adapter;
+  }
+  get env() {
+    return this.item.env;
+  }
+  /**
+   * Load the item's data from storage if it has been updated externally.
+   * @async
+   * @returns {Promise<void>} Resolves when the item is loaded.
+   */
+  async load_if_updated() {
+    throw new Error("Not implemented");
+  }
+};
+
+// node_modules/smart-collections/adapters/_file.js
+var FileCollectionDataAdapter2 = class extends CollectionDataAdapter2 {
+  /**
+   * The class to use for item adapters.
+   * @type {typeof ItemDataAdapter}
+   */
+  ItemDataAdapter = FileItemDataAdapter2;
+  /**
+   * @returns {Object} Filesystem interface derived from environment or collection settings.
+   */
+  get fs() {
+    return this.collection.data_fs || this.collection.env.data_fs;
+  }
+};
+var FileItemDataAdapter2 = class extends ItemDataAdapter2 {
+  /**
+   * @returns {Object} Filesystem interface derived from environment or collection settings.
+   */
+  get fs() {
+    return this.item.collection.data_fs || this.item.collection.env.data_fs;
+  }
+  get data_path() {
+    throw new Error("Not implemented");
+  }
+  async load_if_updated() {
+    const data_path = this.data_path;
+    if (await this.fs.exists(data_path)) {
+      const loaded_at = this.item.loaded_at || 0;
+      const data_file_stat = await this.fs.stat(data_path);
+      if (data_file_stat.mtime > loaded_at + 1 * 60 * 1e3) {
+        console.log(`Smart Collections: Re-loading item ${this.item.key} because it has been updated on disk`);
+        await this.load();
+      }
+    }
+  }
+};
+
+// node_modules/smart-collections/adapters/ajson_multi_file.js
+var class_to_collection_key3 = {
+  "SmartSource": "smart_sources",
+  "SmartNote": "smart_sources",
+  // DEPRECATED
+  "SmartBlock": "smart_blocks",
+  "SmartDirectory": "smart_directories"
+};
+var AjsonMultiFileCollectionDataAdapter2 = class extends FileCollectionDataAdapter2 {
+  /**
+   * The class to use for item adapters.
+   * @type {typeof ItemDataAdapter}
+   */
+  ItemDataAdapter = AjsonMultiFileItemDataAdapter2;
+  /**
+   * Load a single item by its key.
+   * @async
+   * @param {string} key
+   * @returns {Promise<void>}
+   */
+  async load_item(key) {
+    const item = this.collection.get(key);
+    if (!item) return;
+    const adapter = this.create_item_adapter(item);
+    await adapter.load();
+  }
+  /**
+   * Save a single item by its key.
+   * @async
+   * @param {string} key
+   * @returns {Promise<void>}
+   */
+  async save_item(key) {
+    const item = this.collection.get(key);
+    if (!item) return;
+    const adapter = this.create_item_adapter(item);
+    await adapter.save();
+  }
+  /**
+   * Process any queued load operations.
+   * @async
+   * @returns {Promise<void>}
+   */
+  async process_load_queue() {
+    this.collection.show_process_notice("loading_collection");
+    if (!await this.fs.exists(this.collection.data_dir)) {
+      await this.fs.mkdir(this.collection.data_dir);
+    }
+    const load_queue = Object.values(this.collection.items).filter((item) => item._queue_load);
+    if (!load_queue.length) {
+      this.collection.clear_process_notice("loading_collection");
+      return;
+    }
+    console.log(`Loading ${this.collection.collection_key}: ${load_queue.length} items`);
+    const batch_size = 100;
+    for (let i = 0; i < load_queue.length; i += batch_size) {
+      const batch = load_queue.slice(i, i + batch_size);
+      await Promise.all(batch.map((item) => {
+        const adapter = this.create_item_adapter(item);
+        return adapter.load().catch((err) => {
+          console.warn(`Error loading item ${item.key}`, err);
+          item.queue_load();
+        });
+      }));
+    }
+    this.collection.loaded = load_queue.length;
+    this.collection.clear_process_notice("loading_collection");
+  }
+  /**
+   * Process any queued save operations.
+   * @async
+   * @returns {Promise<void>}
+   */
+  async process_save_queue() {
+    this.collection.show_process_notice("saving_collection");
+    const save_queue = Object.values(this.collection.items).filter((item) => item._queue_save);
+    console.log(`Saving ${this.collection.collection_key}: ${save_queue.length} items`);
+    const time_start = Date.now();
+    const batch_size = 50;
+    for (let i = 0; i < save_queue.length; i += batch_size) {
+      const batch = save_queue.slice(i, i + batch_size);
+      await Promise.all(batch.map((item) => {
+        const adapter = this.create_item_adapter(item);
+        return adapter.save().catch((err) => {
+          console.warn(`Error saving item ${item.key}`, err);
+          item.queue_save();
+        });
+      }));
+    }
+    const deleted_items = Object.values(this.collection.items).filter((item) => item.deleted);
+    if (deleted_items.length) {
+      deleted_items.forEach((item) => {
+        delete this.collection.items[item.key];
+      });
+    }
+    console.log(`Saved ${this.collection.collection_key} in ${Date.now() - time_start}ms`);
+    this.collection.clear_process_notice("saving_collection");
+  }
+  get_item_data_path(key) {
+    return [
+      this.collection.data_dir || "multi",
+      this.fs?.sep || "/",
+      this.get_data_file_name(key) + ".ajson"
+    ].join("");
+  }
+  /**
+   * Transforms the item key into a safe filename.
+   * Replaces spaces, slashes, and dots with underscores.
+   * @returns {string} safe file name
+   */
+  get_data_file_name(key) {
+    return key.split("#")[0].replace(/[\s\/\.]/g, "_").replace(".md", "");
+  }
+  /**
+   * Build a single AJSON line for the given item and data.
+   * @param {Object} item 
+   * @returns {string}
+   */
+  get_item_ajson(item) {
+    const collection_key = item.collection_key;
+    const key = item.key;
+    const data_value = item.deleted ? "null" : JSON.stringify(item.data);
+    return `${JSON.stringify(`${collection_key}:${key}`)}: ${data_value},`;
+  }
+};
+var AjsonMultiFileItemDataAdapter2 = class extends FileItemDataAdapter2 {
+  /**
+   * Derives the `.ajson` file path from the collection's data_dir and item key.
+   * @returns {string}
+   */
+  get data_path() {
+    return this.collection_adapter.get_item_data_path(this.item.key);
+  }
+  /**
+   * Load the item from its `.ajson` file.
+   * @async
+   * @returns {Promise<void>}
+   */
+  async load() {
+    try {
+      const raw_data = await this.fs.adapter.read(this.data_path, "utf-8", { no_cache: true });
+      if (!raw_data) {
+        this.item.queue_import();
+        return;
+      }
+      const { rewrite, file_data } = this._parse(raw_data);
+      if (rewrite) {
+        if (file_data.length) await this.fs.write(this.data_path, file_data);
+        else await this.fs.remove(this.data_path);
+      }
+      const last_import_mtime = this.item.data.last_import?.at || 0;
+      if (last_import_mtime && this.item.init_file_mtime > last_import_mtime) {
+        this.item.queue_import();
+      }
+    } catch (e) {
+      this.item.queue_import();
+    }
+  }
+  /**
+   * Parse the entire AJSON content as a JSON object, handle legacy keys, and extract final state.
+   * @private
+   * @param {string} ajson 
+   * @returns {boolean}
+   */
+  _parse(ajson) {
+    try {
+      let rewrite = false;
+      if (!ajson.length) return false;
+      ajson = ajson.trim();
+      const original_line_count = ajson.split("\n").length;
+      const json_str = "{" + ajson.slice(0, -1) + "}";
+      const data = JSON.parse(json_str);
+      const entries = Object.entries(data);
+      for (let i = 0; i < entries.length; i++) {
+        const [ajson_key, value] = entries[i];
+        if (!value) {
+          delete data[ajson_key];
+          rewrite = true;
+          continue;
+        }
+        const { collection_key, item_key, changed } = this._parse_ajson_key(ajson_key);
+        if (changed) {
+          rewrite = true;
+          data[collection_key + ":" + item_key] = value;
+          delete data[ajson_key];
+        }
+        const collection = this.env[collection_key];
+        if (!collection) continue;
+        const existing_item = collection.get(item_key);
+        if (!value.key) value.key = item_key;
+        if (existing_item) {
+          existing_item.data = value;
+          existing_item._queue_load = false;
+          existing_item.loaded_at = Date.now();
+        } else {
+          const ItemClass = collection.item_type;
+          const new_item = new ItemClass(this.env, value);
+          new_item._queue_load = false;
+          new_item.loaded_at = Date.now();
+          collection.set(new_item);
+        }
+      }
+      if (rewrite || original_line_count > entries.length) {
+        rewrite = true;
+      }
+      return {
+        rewrite,
+        file_data: rewrite ? Object.entries(data).map(([key, value]) => `${JSON.stringify(key)}: ${JSON.stringify(value)},`).join("\n") : null
+      };
+    } catch (e) {
+      if (ajson.split("\n").some((line) => !line.endsWith(","))) {
+        console.warn("fixing trailing comma error");
+        ajson = ajson.split("\n").map((line) => line.endsWith(",") ? line : line + ",").join("\n");
+        return this._parse(ajson);
+      }
+      console.warn("Error parsing JSON:", e);
+      return { rewrite: true, file_data: null };
+    }
+  }
+  _parse_ajson_key(ajson_key) {
+    let changed;
+    let [collection_key, ...item_key] = ajson_key.split(":");
+    if (class_to_collection_key3[collection_key]) {
+      collection_key = class_to_collection_key3[collection_key];
+      changed = true;
+    }
+    return {
+      collection_key,
+      item_key: item_key.join(":"),
+      changed
+    };
+  }
+  /**
+   * Save the current state of the item by appending a new line to its `.ajson` file.
+   * @async
+   * @returns {Promise<void>}
+   */
+  async save(retries = 0) {
+    try {
+      const ajson_line = this.get_item_ajson();
+      await this.fs.append(this.data_path, "\n" + ajson_line);
+      this.item._queue_save = false;
+    } catch (e) {
+      if (e.code === "ENOENT" && retries < 1) {
+        const dir = this.collection_adapter.collection.data_dir;
+        if (!await this.fs.exists(dir)) {
+          await this.fs.mkdir(dir);
+        }
+        return await this.save(retries + 1);
+      }
+      console.warn("Error saving item", this.data_path, this.item.key, e);
+    }
+  }
+  /**
+   * Build a single AJSON line for the given item and data.
+   * @param {Object} item 
+   * @returns {string}
+   */
+  get_item_ajson() {
+    return this.collection_adapter.get_item_ajson(this.item);
+  }
+};
+
+// node_modules/smart-file-system/utils/glob_to_regex.js
+function create_regex2(pattern, { case_sensitive, extended_glob, windows_paths }) {
+  const regex_pattern = glob_to_regex_pattern2(pattern, extended_glob);
+  const adjusted_pattern = adjust_for_windows_paths2(regex_pattern, windows_paths);
+  const flags = case_sensitive ? "" : "i";
+  return new RegExp(`^${adjusted_pattern}$`, flags);
+}
+function adjust_for_windows_paths2(pattern, windows_paths) {
+  return windows_paths ? pattern.replace(/\\\//g, "[\\\\/]").replace(/\\\\\\/g, "[\\\\/]") : pattern;
+}
+function glob_to_regex_pattern2(pattern, extended_glob) {
+  let in_class = false;
+  let in_brace = 0;
+  let result = "";
+  for (let i = 0; i < pattern.length; i++) {
+    const char = pattern[i];
+    switch (char) {
+      case "\\":
+        if (i + 1 < pattern.length) {
+          result += `\\${pattern[i + 1]}`;
+          i++;
+        } else {
+          result += "\\\\";
+        }
+        break;
+      case "/":
+        result += "\\/";
+        break;
+      case "[":
+        if (!in_class) {
+          const closingIndex = pattern.indexOf("]", i + 1);
+          if (closingIndex === -1) {
+            result += "\\[";
+          } else {
+            in_class = true;
+            if (pattern[i + 1] === "!") {
+              result += "[^";
+              i++;
+            } else {
+              result += "[";
+            }
+          }
+        } else {
+          result += "\\[";
+        }
+        break;
+      case "]":
+        if (in_class) {
+          in_class = false;
+          result += "]";
+        } else {
+          result += "\\]";
+        }
+        break;
+      case "{":
+        if (!in_class) {
+          const closingIndex = pattern.indexOf("}", i + 1);
+          if (closingIndex === -1) {
+            result += "\\{";
+          } else {
+            in_brace++;
+            result += "(";
+          }
+        } else {
+          result += "\\{";
+        }
+        break;
+      case "}":
+        if (!in_class && in_brace > 0) {
+          in_brace--;
+          result += ")";
+        } else {
+          result += "\\}";
+        }
+        break;
+      case ",":
+        if (!in_class && in_brace > 0) {
+          result += "|";
+        } else {
+          result += ",";
+        }
+        break;
+      case "*":
+        if (!in_class) {
+          if (i + 1 < pattern.length && pattern[i + 1] === "*") {
+            result += ".*";
+            i++;
+          } else {
+            result += "[^/]*";
+          }
+        } else {
+          result += "\\*";
+        }
+        break;
+      case "?":
+        if (!in_class) {
+          result += "[^/]";
+        } else {
+          result += "\\?";
+        }
+        break;
+      // We escape these to ensure they remain literal
+      case "(":
+      case ")":
+      case "+":
+      case "|":
+      case "^":
+      case "$":
+      case ".":
+        result += `\\${char}`;
+        break;
+      default:
+        result += char;
+        break;
+    }
+  }
+  if (in_class) {
+    result += "]";
+    in_class = false;
+  }
+  if (extended_glob) {
+    result = result.replace(/\\\+\\\((.*?)\\\)/g, "($1)+").replace(/\\\@\\\((.*?)\\\)/g, "($1)").replace(/\\\!\\\((.*?)\\\)/g, "(?!$1).*").replace(/\\\?\\\((.*?)\\\)/g, "($1)?").replace(/\\\*\\\((.*?)\\\)/g, "($1)*");
+  }
+  return result;
+}
+function glob_to_regex2(pattern, options = {}) {
+  const default_options = {
+    case_sensitive: true,
+    extended_glob: false,
+    windows_paths: false
+  };
+  const merged_options = { ...default_options, ...options };
+  if (pattern === "") {
+    return /^$/;
+  }
+  if (pattern === "*" && !merged_options.windows_paths) {
+    return /^[^/]+$/;
+  }
+  if (pattern === "**" && !merged_options.windows_paths) {
+    return /^.+$/;
+  }
+  return create_regex2(pattern, merged_options);
+}
+
+// node_modules/smart-file-system/utils/fuzzy_search.js
+function fuzzy_search2(arr, search_term) {
+  let matches = [];
+  for (let i = 0; i < arr.length; i++) {
+    const search_chars = search_term.toLowerCase().split("");
+    let match = true;
+    let distance = 0;
+    const name = arr[i];
+    const label_name = name.toLowerCase();
+    for (let j = 0; j < search_chars.length; j++) {
+      const search_index = label_name.substring(distance).indexOf(search_chars[j]);
+      if (search_index >= 0) {
+        distance += search_index + 1;
+      } else {
+        match = false;
+        break;
+      }
+    }
+    if (match) matches.push({ name, distance });
+  }
+  matches.sort((a, b) => a.distance - b.distance);
+  return matches.map((match) => match.name);
+}
+
+// node_modules/smart-file-system/smart_fs.js
+var SmartFs2 = class {
+  /**
+   * Create a new SmartFs instance
+   * 
+   * @param {Object} env - The Smart Environment instance
+   * @param {Object} [opts={}] - Optional configuration
+   * @param {string} [opts.fs_path] - Custom environment path
+   */
+  constructor(env, opts = {}) {
+    this.env = env;
+    this.opts = opts;
+    this.fs_path = opts.fs_path || opts.env_path || "";
+    if (!opts.adapter) throw new Error("SmartFs requires an adapter");
+    this.adapter = new opts.adapter(this);
+    this.excluded_patterns = [];
+    if (Array.isArray(opts.exclude_patterns)) {
+      opts.exclude_patterns.forEach((pattern) => this.add_ignore_pattern(pattern));
+    }
+    this.folders = {};
+    this.files = {};
+    this.file_paths = [];
+    this.folder_paths = [];
+    this.auto_excluded_files = [];
+  }
+  async refresh() {
+    this.files = {};
+    this.file_paths = [];
+    this.folders = {};
+    this.folder_paths = [];
+    await this.init();
+  }
+  async init() {
+    await this.load_exclusions();
+    await this.load_files();
+  }
+  async load_files() {
+    const all = await this.list_recursive();
+    this.file_paths = [];
+    this.folder_paths = [];
+    all.forEach((file) => {
+      if (file.type === "file") {
+        this.files[file.path] = file;
+        this.file_paths.push(file.path);
+      } else if (file.type === "folder") {
+        this.folders[file.path] = file;
+        this.folder_paths.push(file.path);
+      }
+    });
+  }
+  include_file(file_path) {
+    const file = this.adapter.get_file(file_path);
+    this.files[file.path] = file;
+    this.file_paths.push(file.path);
+    return file;
+  }
+  /**
+   * Load .gitignore patterns
+   * 
+   * @returns {Promise<RegExp[]>} Array of RegExp patterns
+   */
+  async load_exclusions() {
+    const gitignore_path = ".gitignore";
+    const gitignore_exists = await this.adapter.exists(gitignore_path);
+    if (gitignore_exists && !this.env.settings.skip_excluding_gitignore) {
+      const gitignore_content = await this.adapter.read(gitignore_path, "utf-8");
+      gitignore_content.split("\n").filter((line) => !line.startsWith("#")).filter(Boolean).forEach((pattern) => this.add_ignore_pattern(pattern));
+    }
+    this.add_ignore_pattern(".**");
+    this.add_ignore_pattern("**/.**");
+    this.add_ignore_pattern("**/.*/**");
+    this.add_ignore_pattern("**/*.ajson");
+  }
+  /**
+   * Add a new ignore pattern
+   * 
+   * @param {string} pattern - The pattern to add
+   */
+  add_ignore_pattern(pattern, opts = {}) {
+    this.excluded_patterns.push(glob_to_regex2(pattern.trim(), opts));
+  }
+  /**
+   * Check if a path is ignored based on gitignore patterns
+   * 
+   * @param {string} _path - The path to check
+   * @returns {boolean} True if the path is ignored, false otherwise
+   */
+  is_excluded(_path) {
+    try {
+      if (_path.includes("#")) return true;
+      if (!this.excluded_patterns.length) return false;
+      return this.excluded_patterns.some((pattern) => pattern.test(_path));
+    } catch (e) {
+      console.error(`Error checking if path is excluded: ${e.message}`);
+      console.error(`Path: `, _path);
+      throw e;
+    }
+  }
+  /**
+   * Check if any path in an array of paths is excluded
+   * 
+   * @param {string[]} paths - Array of paths to check
+   * @returns {boolean} True if any path is excluded, false otherwise
+   */
+  has_excluded_patterns(paths) {
+    return paths.some((p) => this.is_excluded(p));
+  }
+  /**
+   * Pre-process an array of paths, throwing an error if any path is excluded
+   * 
+   * @param {string[]} paths - Array of paths to pre-process
+   * @throws {Error} If any path in the array is excluded
+   * @returns {string[]} The array of paths
+   */
+  pre_process(paths) {
+    if (this.has_excluded_patterns(paths)) {
+      throw new Error(`Path is excluded: ${paths.find((p) => this.is_excluded(p))}`);
+    }
+    return paths;
+  }
+  /**
+   * Post-process the result of an operation
+   * 
+   * @param {any} returned_value - The value returned by the operation
+   * @returns {any} The post-processed value
+   */
+  post_process(returned_value) {
+    if (this.adapter.post_process) return this.adapter.post_process(returned_value);
+    if (Array.isArray(returned_value)) {
+      returned_value = returned_value.filter((r) => {
+        if (typeof r === "string") return !this.is_excluded(r);
+        if (typeof r === "object" && r.path) return !this.is_excluded(r.path);
+        return true;
+      });
+    }
+    return returned_value;
+  }
+  // v2
+  /**
+   * Use the adapter for a method
+   * runs pre_process and post_process (checks exclusions)
+   * @param {string} method - The method to use
+   * @param {string[]} paths - The paths to use
+   * @param {...any} args - Additional arguments for the method
+   * @returns {Promise<any>} The result of the method
+   */
+  async use_adapter(method, paths, ...args) {
+    if (!this.adapter[method]) throw new Error(`Method ${method} not found in adapter`);
+    paths = this.pre_process(paths ?? []);
+    let resp = await this.adapter[method](...paths, ...args);
+    return this.post_process(resp);
+  }
+  /**
+   * Append content to a file
+   * 
+   * @param {string} rel_path - The relative path of the file to append to
+   * @param {string|Buffer} content - The content to append
+   * @returns {Promise<void>} A promise that resolves when the operation is complete
+   */
+  async append(rel_path, content) {
+    return await this.use_adapter("append", [rel_path], content);
+  }
+  /**
+   * Create a new directory
+   * 
+   * @param {string} rel_path - The relative path of the directory to create
+   * @returns {Promise<void>} A promise that resolves when the operation is complete
+   */
+  async mkdir(rel_path, opts = { recursive: true }) {
+    return await this.use_adapter("mkdir", [rel_path], opts);
+  }
+  /**
+   * Check if a file or directory exists
+   * 
+   * @param {string} rel_path - The relative path to check
+   * @returns {Promise<boolean>} True if the path exists, false otherwise
+   */
+  async exists(rel_path) {
+    return await this.use_adapter("exists", [rel_path]);
+  }
+  /**
+   * List files in a directory
+   * 
+   * @param {string} rel_path - The relative path to list
+   * @returns {Promise<string[]>} Array of file paths
+   */
+  async list(rel_path = "/") {
+    return await this.use_adapter("list", [rel_path]);
+  }
+  async list_recursive(rel_path = "/") {
+    return await this.use_adapter("list_recursive", [rel_path]);
+  }
+  async list_files(rel_path = "/") {
+    return await this.use_adapter("list_files", [rel_path]);
+  }
+  async list_files_recursive(rel_path = "/") {
+    return await this.use_adapter("list_files_recursive", [rel_path]);
+  }
+  async list_folders(rel_path = "/") {
+    return await this.use_adapter("list_folders", [rel_path]);
+  }
+  async list_folders_recursive(rel_path = "/") {
+    return await this.use_adapter("list_folders_recursive", [rel_path]);
+  }
+  /**
+   * Read the contents of a file
+   * 
+   * @param {string} rel_path - The relative path of the file to read
+   * @returns {Promise<string|Buffer>} The contents of the file
+   */
+  async read(rel_path, encoding = "utf-8") {
+    try {
+      const content = await this.adapter.read(rel_path, encoding);
+      return content;
+    } catch (error) {
+      console.warn("Error during read: " + error.message, rel_path);
+      if (error.code === "ENOENT") return null;
+      return { error: error.message };
+    }
+  }
+  /**
+   * Remove a file
+   * 
+   * @param {string} rel_path - The relative path of the file to remove
+   * @returns {Promise<void>} A promise that resolves when the operation is complete
+   */
+  async remove(rel_path) {
+    return await this.use_adapter("remove", [rel_path]);
+  }
+  /**
+   * Remove a directory
+   * 
+   * @param {string} rel_path - The relative path of the directory to remove
+   * @returns {Promise<void>} A promise that resolves when the operation is complete
+   */
+  async remove_dir(rel_path, recursive = false) {
+    return await this.use_adapter("remove_dir", [rel_path], recursive);
+  }
+  /**
+   * Rename a file or directory
+   * 
+   * @param {string} rel_path - The current relative path
+   * @param {string} new_rel_path - The new relative path
+   * @returns {Promise<void>} A promise that resolves when the operation is complete
+   */
+  async rename(rel_path, new_rel_path) {
+    await this.use_adapter("rename", [rel_path, new_rel_path]);
+    await this.refresh();
+  }
+  /**
+   * Get file or directory statistics
+   * 
+   * @param {string} rel_path - The relative path to get statistics for
+   * @returns {Promise<Object>} An object containing file or directory statistics
+   */
+  async stat(rel_path) {
+    return await this.use_adapter("stat", [rel_path]);
+  }
+  /**
+   * Write content to a file
+   * Should handle when target path is within a folder that doesn't exist
+   * 
+   * @param {string} rel_path - The relative path of the file to write to
+   * @param {string|Buffer} content - The content to write
+   * @returns {Promise<void>} A promise that resolves when the operation is complete
+   */
+  async write(rel_path, content) {
+    try {
+      await this.adapter.write(rel_path, content);
+    } catch (error) {
+      console.error("Error during write:", error);
+      throw error;
+    }
+  }
+  // // aliases
+  // async create(rel_path, content) { return await this.use_adapter('write', [rel_path], content); }
+  // async update(rel_path, content) { return await this.use_adapter('write', [rel_path], content); }
+  get_link_target_path(link_target, source_path) {
+    if (this.adapter.get_link_target_path) return this.adapter.get_link_target_path(link_target, source_path);
+    if (!this.file_paths) return console.warn("get_link_target_path: file_paths not found");
+    const matching_file_paths = this.file_paths.filter((path) => path.includes(link_target));
+    return fuzzy_search2(matching_file_paths, link_target)[0];
+  }
+  get sep() {
+    return this.adapter.sep || "/";
+  }
+  get_full_path(rel_path = "") {
+    return this.adapter.get_full_path(rel_path);
+  }
+  get base_path() {
+    return this.adapter.get_base_path();
+  }
+};
+
+// node_modules/smart-file-system/adapters/obsidian.js
+var obsidian2 = __toESM(require("obsidian"), 1);
+var SmartFsObsidianAdapter2 = class {
+  /**
+   * Create an SmartFsObsidianAdapter instance
+   * 
+   * @param {Object} smart_fs - The SmartFs instance
+   */
+  constructor(smart_fs) {
+    this.smart_fs = smart_fs;
+    this.obsidian = obsidian2;
+    this.obsidian_app = smart_fs.env.main.app;
+    this.obsidian_adapter = smart_fs.env.main.app.vault.adapter;
+  }
+  get fs_path() {
+    return this.smart_fs.fs_path;
+  }
+  get_file(file_path) {
+    const file = {};
+    file.path = file_path.replace(/\\/g, "/").replace(this.smart_fs.fs_path, "").replace(/^\//, "");
+    file.type = "file";
+    file.extension = file.path.split(".").pop().toLowerCase();
+    file.name = file.path.split("/").pop();
+    file.basename = file.name.split(".").shift();
+    Object.defineProperty(file, "stat", {
+      get: () => {
+        const tfile = this.obsidian_app.vault.getAbstractFileByPath(file_path);
+        if (tfile) {
+          return {
+            ctime: tfile.stat.ctime,
+            mtime: tfile.stat.mtime,
+            size: tfile.stat.size,
+            isDirectory: () => tfile instanceof this.obsidian.TFolder,
+            isFile: () => tfile instanceof this.obsidian.TFile
+          };
+        }
+        return null;
+      }
+    });
+    return file;
+  }
+  /**
+   * Append content to a file
+   * 
+   * @param {string} rel_path - The relative path of the file to append to
+   * @param {string} data - The content to append
+   * @returns {Promise<void>} A promise that resolves when the operation is complete
+   */
+  async append(rel_path, data) {
+    if (!rel_path.startsWith(this.fs_path)) rel_path = this.fs_path + "/" + rel_path;
+    return await this.obsidian_adapter.append(rel_path, data);
+  }
+  /**
+   * Create a new directory
+   * 
+   * @param {string} rel_path - The relative path of the directory to create
+   * @returns {Promise<void>} A promise that resolves when the operation is complete
+   */
+  async mkdir(rel_path) {
+    if (!rel_path.startsWith(this.fs_path)) rel_path = this.fs_path + "/" + rel_path;
+    return await this.obsidian_adapter.mkdir(rel_path);
+  }
+  /**
+   * Check if a file or directory exists
+   * 
+   * @param {string} rel_path - The relative path to check
+   * @returns {Promise<boolean>} True if the path exists, false otherwise
+   */
+  async exists(rel_path) {
+    if (!rel_path.startsWith(this.fs_path)) rel_path = this.fs_path + "/" + rel_path;
+    return await this.obsidian_adapter.exists(rel_path);
+  }
+  /**
+   * List files in a directory (NOT up-to-date with list_recursive)
+   * 
+   * @param {string} rel_path - The relative path to list
+   * @returns {Promise<string[]>} Array of file paths
+   */
+  async list(rel_path, opts = {}) {
+    if (!rel_path.startsWith(this.fs_path)) rel_path = this.fs_path + "/" + rel_path;
+    if (rel_path.startsWith("/")) rel_path = rel_path.slice(1);
+    if (rel_path.endsWith("/")) rel_path = rel_path.slice(0, -1);
+    if (rel_path.includes(".")) {
+      const { files: file_paths } = await this.obsidian_adapter.list(rel_path);
+      const files2 = file_paths.map((file_path) => {
+        if (this.smart_fs.fs_path) file_path = file_path.replace(this.smart_fs.fs_path, "").slice(1);
+        const file_name = file_path.split("/").pop();
+        const file = {
+          basename: file_name.split(".")[0],
+          extension: file_name.split(".").pop().toLowerCase(),
+          name: file_name,
+          path: file_path
+        };
+        return file;
+      });
+      return files2;
+    }
+    const files = this.obsidian_app.vault.getAllLoadedFiles().filter((file) => {
+      const last_slash = file.path.lastIndexOf("/");
+      if (last_slash === -1 && rel_path !== "") return false;
+      const folder_path = file.path.slice(0, last_slash);
+      if (folder_path !== rel_path) return false;
+      return true;
+    });
+    return files;
+  }
+  // NOTE: currently does not handle hidden files and folders
+  async list_recursive(rel_path, opts = {}) {
+    if (!rel_path.startsWith(this.fs_path)) rel_path = this.fs_path + "/" + rel_path;
+    if (rel_path.startsWith("/")) rel_path = rel_path.slice(1);
+    if (rel_path.endsWith("/")) rel_path = rel_path.slice(0, -1);
+    const files = this.obsidian_app.vault.getAllLoadedFiles().filter((file) => {
+      if (file.path.length > 200) {
+        this.smart_fs.auto_excluded_files.push(file.path);
+        return false;
+      }
+      if (rel_path !== "" && !file.path.startsWith(rel_path)) return false;
+      if (file instanceof this.obsidian.TFile) {
+        if (opts.type === "folder") return false;
+        file.type = "file";
+      } else if (file instanceof this.obsidian.TFolder) {
+        if (opts.type === "file") return false;
+        delete file.basename;
+        delete file.extension;
+        file.type = "folder";
+      }
+      if (this.smart_fs.fs_path) file.path = file.path.replace(this.smart_fs.fs_path, "").slice(1);
+      return true;
+    });
+    return files;
+  }
+  async list_files(rel_path) {
+    return await this.list(rel_path, { type: "file" });
+  }
+  async list_files_recursive(rel_path) {
+    return await this.list_recursive(rel_path, { type: "file" });
+  }
+  async list_folders(rel_path) {
+    return await this.list(rel_path, { type: "folder" });
+  }
+  async list_folders_recursive(rel_path) {
+    return await this.list_recursive(rel_path, { type: "folder" });
+  }
+  /**
+   * Read the contents of a file
+   * 
+   * @param {string} rel_path - The relative path of the file to read
+   * @returns {Promise<string>} The contents of the file
+   */
+  async read(rel_path, encoding, opts = {}) {
+    if (!rel_path.startsWith(this.fs_path)) rel_path = this.fs_path + "/" + rel_path;
+    if (encoding === "utf-8") {
+      if (!opts.no_cache) {
+        const tfile = this.obsidian_app.vault.getFileByPath(rel_path);
+        if (tfile) return await this.obsidian_app.vault.cachedRead(tfile);
+      }
+      return await this.obsidian_adapter.read(rel_path);
+    }
+    if (encoding === "base64") {
+      const array_buffer2 = await this.obsidian_adapter.readBinary(rel_path, "base64");
+      const base642 = this.obsidian.arrayBufferToBase64(array_buffer2);
+      return base642;
+    }
+    const array_buffer = await this.obsidian_adapter.readBinary(rel_path);
+    return array_buffer;
+  }
+  /**
+   * Rename a file or directory
+   * 
+   * @param {string} old_path - The current path of the file or directory
+   * @param {string} new_path - The new path for the file or directory
+   * @returns {Promise<void>} A promise that resolves when the operation is complete
+   */
+  async rename(old_path, new_path) {
+    if (!old_path.startsWith(this.fs_path)) old_path = this.fs_path + "/" + old_path;
+    if (!new_path.startsWith(this.fs_path)) new_path = this.fs_path + "/" + new_path;
+    return await this.obsidian_adapter.rename(old_path, new_path);
+  }
+  /**
+   * Remove a file
+   * 
+   * @param {string} rel_path - The relative path of the file to remove
+   * @returns {Promise<void>} A promise that resolves when the operation is complete
+   */
+  async remove(rel_path) {
+    if (!rel_path.startsWith(this.fs_path)) rel_path = this.fs_path + "/" + rel_path;
+    try {
+      return await this.obsidian_adapter.remove(rel_path);
+    } catch (error) {
+      console.warn(`Error removing file: ${rel_path}`, error);
+    }
+  }
+  /**
+   * Remove a directory
+   * 
+   * @param {string} rel_path - The relative path of the directory to remove
+   * @returns {Promise<void>} A promise that resolves when the operation is complete
+   */
+  async remove_dir(rel_path, recursive = false) {
+    if (!rel_path.startsWith(this.fs_path)) rel_path = this.fs_path + "/" + rel_path;
+    return await this.obsidian_adapter.rmdir(rel_path, recursive);
+  }
+  /**
+   * Get file or directory information
+   * 
+   * @param {string} rel_path - The relative path of the file or directory
+   * @returns {Promise<Object>} An object containing file or directory information
+   */
+  async stat(rel_path) {
+    if (!rel_path.startsWith(this.fs_path)) rel_path = this.fs_path + "/" + rel_path;
+    return await this.obsidian_adapter.stat(rel_path);
+  }
+  /**
+   * Write content to a file
+   * 
+   * @param {string} rel_path - The relative path of the file to write to
+   * @param {string} data - The content to write
+   * @returns {Promise<void>} A promise that resolves when the operation is complete
+   */
+  async write(rel_path, data) {
+    if (!data) data = "";
+    if (!rel_path.startsWith(this.fs_path)) rel_path = this.fs_path + "/" + rel_path;
+    const folder_path = rel_path.split("/").slice(0, -1).join("/");
+    if (!await this.exists(folder_path)) {
+      await this.mkdir(folder_path);
+      console.log(`Created folder: ${folder_path}`);
+    }
+    return await this.obsidian_adapter.write(rel_path, data);
+  }
+  get_link_target_path(link_path, file_path) {
+    return this.obsidian_app.metadataCache.getFirstLinkpathDest(link_path, file_path)?.path;
+  }
+  get_base_path() {
+    return this.obsidian_adapter.basePath;
+  }
+  get_full_path(rel_path = "") {
+    const sep = rel_path.includes("/") ? "/" : "\\";
+    return this.get_base_path() + sep + rel_path;
+  }
+};
+
+// node_modules/smart-view/utils/empty.js
+function empty2(elm) {
+  const range = document.createRange();
+  range.selectNodeContents(elm);
+  range.deleteContents();
+}
+
+// node_modules/smart-view/utils/replace_html.js
+var replace_html2 = /* @__PURE__ */ (() => {
+  const cache = /* @__PURE__ */ new Map();
+  return (container, html_snippet) => {
+    const key = html_snippet.trim();
+    let tpl = cache.get(key);
+    if (!tpl) {
+      tpl = document.createElement("template");
+      tpl.innerHTML = key;
+      cache.set(key, tpl);
+    }
+    container.replaceChildren(tpl.content.cloneNode(true));
+  };
+})();
+
+// node_modules/smart-view/utils/replace_with_fragment.js
+var replace_with_fragment2 = (container, html_snippet) => {
+  const range = document.createRange();
+  const frag = range.createContextualFragment(html_snippet.trim());
+  container.replaceChildren(frag);
+};
+
+// node_modules/smart-view/utils/safe_inner_html.js
+var restricted_re2 = /<(td|th|tr|thead|tbody|tfoot|caption|col|colgroup|option|optgroup|li|dt|dd|source|track)\b/i;
+var safe_inner_html2 = (container, html_snippet) => {
+  const trimmed = html_snippet.trim();
+  (restricted_re2.test(trimmed) ? replace_with_fragment2 : replace_html2)(container, trimmed);
+};
+
+// node_modules/smart-view/smart_view.js
+var SmartView2 = class {
+  /**
+   * @constructor
+   * @param {object} opts - Additional options or overrides for rendering.
+   */
+  constructor(opts = {}) {
+    this.opts = opts;
+    this._adapter = null;
+  }
+  /**
+   * Renders all setting components within a container.
+   * @async
+   * @param {HTMLElement} container - The container element.
+   * @param {Object} opts - Additional options for rendering.
+   * @returns {Promise<void>}
+   */
+  async render_setting_components(container, opts = {}) {
+    const components = container.querySelectorAll(".setting-component");
+    const promises = [];
+    for (const component of components) {
+      promises.push(this.render_setting_component(component, opts));
+    }
+    await Promise.all(promises);
+    return container;
+  }
+  /**
+   * Creates a document fragment from HTML string.
+   * @param {string} html - The HTML string.
+   * @returns {DocumentFragment}
+   */
+  create_doc_fragment(html) {
+    return document.createRange().createContextualFragment(html);
+  }
+  /**
+   * Gets the adapter instance used for rendering (e.g., Obsidian or Node, etc.).
+   * @returns {Object} The adapter instance.
+   */
+  get adapter() {
+    if (!this._adapter) {
+      if (!this.opts.adapter) {
+        throw new Error("No adapter provided to SmartView. Provide a 'smart_view.adapter' in env config.");
+      }
+      const AdapterClass = this.opts.adapter;
+      this._adapter = new AdapterClass(this);
+    }
+    return this._adapter;
+  }
+  /**
+   * Gets an icon (implemented in the adapter).
+   * @param {string} icon_name - Name of the icon to get.
+   * @returns {string} The icon HTML string.
+   */
+  get_icon_html(icon_name) {
+    return this.adapter.get_icon_html(icon_name);
+  }
+  /**
+   * Renders a single setting component (implemented in adapter).
+   * @async
+   * @param {HTMLElement} setting_elm - The DOM element for the setting.
+   * @param {Object} opts - Additional options for rendering.
+   * @returns {Promise<*>}
+   */
+  async render_setting_component(setting_elm, opts = {}) {
+    return await this.adapter.render_setting_component(setting_elm, opts);
+  }
+  /**
+   * Renders markdown content (implemented in adapter).
+   * @param {string} markdown - The markdown content.
+   * @param {object|null} scope - The scope to pass for rendering.
+   * @returns {Promise<DocumentFragment>}
+   */
+  async render_markdown(markdown, scope = null) {
+    return await this.adapter.render_markdown(markdown, scope);
+  }
+  /**
+   * Gets a value from an object by path.
+   * @param {Object} obj - The object to search in.
+   * @param {string} path - The path to the value.
+   * @returns {*}
+   */
+  get_by_path(obj, path, settings_scope = null) {
+    return get_by_path2(obj, path, settings_scope);
+  }
+  /**
+   * Sets a value in an object by path.
+   * @param {Object} obj - The object to modify.
+   * @param {string} path - The path to set the value.
+   * @param {*} value - The value to set.
+   */
+  set_by_path(obj, path, value, settings_scope = null) {
+    set_by_path2(obj, path, value, settings_scope);
+  }
+  /**
+   * Deletes a value from an object by path.
+   * @param {Object} obj - The object to modify.
+   * @param {string} path - The path to delete.
+   */
+  delete_by_path(obj, path, settings_scope = null) {
+    delete_by_path2(obj, path, settings_scope);
+  }
+  /**
+   * Escapes HTML special characters in a string.
+   * @param {string} str - The string to escape.
+   * @returns {string} The escaped string.
+   */
+  escape_html(str) {
+    if (typeof str !== "string") return str;
+    return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+  }
+  /**
+   * A convenience method to build a setting HTML snippet from a config object.
+   * @param {Object} setting_config
+   * @returns {string}
+   */
+  render_setting_html(setting_config) {
+    if (setting_config.type === "html") {
+      return setting_config.value;
+    }
+    const attributes = Object.entries(setting_config).map(([attr, value]) => {
+      if (attr.includes("class")) return "";
+      if (typeof value === "number") return `data-${attr.replace(/_/g, "-")}=${value}`;
+      return `data-${attr.replace(/_/g, "-")}="${value}"`;
+    }).join("\n");
+    return `<div class="setting-component${setting_config.scope_class ? " " + setting_config.scope_class : ""}"
+data-setting="${setting_config.setting}"
+${attributes}
+></div>`;
+  }
+  /**
+   * Renders settings from a config, returning a fragment.
+   * @async
+   * @param {Object} settings_config
+   * @param {Object} opts
+   * @returns {Promise<DocumentFragment>}
+   */
+  async render_settings(settings_config5, opts = {}) {
+    const html = Object.entries(settings_config5).map(([setting_key, setting_config]) => {
+      if (!setting_config.setting) {
+        setting_config.setting = setting_key;
+      }
+      return this.render_setting_html(setting_config);
+    }).join("\n");
+    const frag = this.create_doc_fragment(`<div>${html}</div>`);
+    return await this.render_setting_components(frag, opts);
+  }
+  /**
+   * @function add_settings_listeners
+   * @description
+   * Scans the given container for elements that have `data-smart-setting` and attaches
+   * a 'change' event listener. On change, it updates the corresponding path in `scope.settings`.
+   * 
+   * @param {Object} scope - An object containing a `settings` property, where new values will be stored.
+   * @param {HTMLElement} [container=document] - The DOM element to scan. Defaults to the entire document.
+   */
+  add_settings_listeners(scope, container = document) {
+    const elements = container.querySelectorAll("[data-smart-setting]");
+    elements.forEach((elm) => {
+      const path = elm.dataset.smartSetting;
+      if (!path) return;
+      if (!elm.dataset.listenerAttached) {
+        elm.dataset.listenerAttached = "true";
+        elm.addEventListener("change", () => {
+          let newValue;
+          if (elm instanceof HTMLInputElement) {
+            if (elm.type === "checkbox") {
+              newValue = elm.checked;
+            } else if (elm.type === "radio") {
+              if (elm.checked) {
+                newValue = elm.value;
+              } else {
+                return;
+              }
+            } else {
+              newValue = elm.value;
+            }
+          } else if (elm instanceof HTMLSelectElement || elm instanceof HTMLTextAreaElement) {
+            newValue = elm.value;
+          } else {
+            newValue = elm.value ?? elm.textContent;
+          }
+          this.set_by_path(scope.settings, path, newValue);
+        });
+      }
+    });
+  }
+  apply_style_sheet(sheet) {
+    if ("adoptedStyleSheets" in Document.prototype) {
+      document.adoptedStyleSheets = [...document.adoptedStyleSheets, sheet];
+    } else {
+      const styleEl = document.createElement("style");
+      if (sheet.cssRules) {
+        styleEl.textContent = Array.from(sheet.cssRules).map((rule) => rule.cssText).join("\n");
+      }
+      document.head.appendChild(styleEl);
+    }
+  }
+  empty(elm) {
+    empty2(elm);
+  }
+  safe_inner_html(elm, html) {
+    safe_inner_html2(elm, html);
+  }
+};
+function get_by_path2(obj, path, settings_scope = null) {
+  if (!path) return "";
+  const keys = path.split(".");
+  if (settings_scope) {
+    keys.unshift(settings_scope);
+  }
+  const finalKey = keys.pop();
+  const instance = keys.reduce((acc, key) => acc && acc[key], obj);
+  if (instance && typeof instance[finalKey] === "function") {
+    return instance[finalKey].bind(instance);
+  }
+  return instance ? instance[finalKey] : void 0;
+}
+function set_by_path2(obj, path, value, settings_scope = null) {
+  const keys = path.split(".");
+  if (settings_scope) {
+    keys.unshift(settings_scope);
+  }
+  const final_key = keys.pop();
+  const target = keys.reduce((acc, key) => {
+    if (!acc[key] || typeof acc[key] !== "object") {
+      acc[key] = {};
+    }
+    return acc[key];
+  }, obj);
+  target[final_key] = value;
+}
+function delete_by_path2(obj, path, settings_scope = null) {
+  const keys = path.split(".");
+  if (settings_scope) {
+    keys.unshift(settings_scope);
+  }
+  const finalKey = keys.pop();
+  const instance = keys.reduce((acc, key) => acc && acc[key], obj);
+  if (instance) {
+    delete instance[finalKey];
+  }
+}
+
+// node_modules/smart-view/adapters/_adapter.js
+var SmartViewAdapter2 = class {
+  constructor(main) {
+    this.main = main;
+  }
+  // NECESSARY OVERRIDES
+  /**
+   * Retrieves the class used for settings.
+   * Must be overridden by subclasses to return the appropriate setting class.
+   * @abstract
+   * @returns {Function} The setting class constructor.
+   * @throws Will throw an error if not implemented in the subclass.
+   */
+  get setting_class() {
+    throw new Error("setting_class() not implemented");
+  }
+  /**
+   * Generates the HTML for a specified icon.
+   * Must be overridden by subclasses to provide the correct icon HTML.
+   * @abstract
+   * @param {string} icon_name - The name of the icon to generate HTML for.
+   * @returns {string} The HTML string representing the icon.
+   * @throws Will throw an error if not implemented in the subclass.
+   */
+  get_icon_html(icon_name) {
+    throw new Error("get_icon_html() not implemented");
+  }
+  /**
+   * Renders Markdown content within a specific scope.
+   * Must be overridden by subclasses to handle Markdown rendering appropriately.
+   * @abstract
+   * @param {string} markdown - The Markdown content to render.
+   * @param {object|null} [scope=null] - The scope within which to render the Markdown.
+   * @returns {Promise<void>} A promise that resolves when rendering is complete.
+   * @throws Will throw an error if not implemented in the subclass.
+   */
+  async render_markdown(markdown, scope = null) {
+    throw new Error("render_markdown() not implemented");
+  }
+  /**
+   * Opens a specified URL.
+   * Should be overridden by subclasses to define how URLs are opened.
+   * @abstract
+   * @param {string} url - The URL to open.
+   */
+  open_url(url) {
+    throw new Error("open_url() not implemented");
+  }
+  /**
+   * Handles the selection of a folder by invoking the folder selection dialog and updating the setting.
+   * @abstract
+   * @param {string} setting - The path of the setting being modified.
+   * @param {string} value - The current value of the setting.
+   * @param {HTMLElement} elm - The HTML element associated with the setting.
+   * @param {object} scope - The current scope containing settings and actions.
+   */
+  handle_folder_select(path, value, elm, scope) {
+    throw new Error("handle_folder_select not implemented");
+  }
+  /**
+   * Handles the selection of a file by invoking the file selection dialog and updating the setting.
+   * @abstract
+   * @param {string} setting - The path of the setting being modified.
+   * @param {string} value - The current value of the setting.
+   * @param {HTMLElement} elm - The HTML element associated with the setting.
+   * @param {object} scope - The current scope containing settings and actions.
+   */
+  handle_file_select(path, value, elm, scope) {
+    throw new Error("handle_file_select not implemented");
+  }
+  /**
+   * Performs actions before a setting is changed, such as clearing notices and updating the UI.
+   * @abstract
+   * @param {string} setting - The path of the setting being changed.
+   * @param {*} value - The new value for the setting.
+   * @param {HTMLElement} elm - The HTML element associated with the setting.
+   * @param {object} scope - The current scope containing settings and actions.
+   */
+  pre_change(path, value, elm) {
+  }
+  /**
+   * Performs actions after a setting is changed, such as updating UI elements.
+   * @abstract
+   * @param {string} setting - The path of the setting that was changed.
+   * @param {*} value - The new value for the setting.
+   * @param {HTMLElement} elm - The HTML element associated with the setting.
+   * @param {object} changed - Additional information about the change.
+   */
+  post_change(path, value, elm) {
+  }
+  /**
+   * Reverts a setting to its previous value in case of validation failure or error.
+   * @abstract
+   * @param {string} setting - The path of the setting to revert.
+   * @param {HTMLElement} elm - The HTML element associated with the setting.
+   * @param {object} scope - The current scope containing settings.
+   */
+  revert_setting(path, elm, scope) {
+    console.warn("revert_setting() not implemented");
+  }
+  // DEFAULT IMPLEMENTATIONS (may be overridden)
+  get setting_renderers() {
+    return {
+      text: this.render_text_component,
+      string: this.render_text_component,
+      password: this.render_password_component,
+      number: this.render_number_component,
+      dropdown: this.render_dropdown_component,
+      toggle: this.render_toggle_component,
+      textarea: this.render_textarea_component,
+      textarea_array: this.render_textarea_array_component,
+      button: this.render_button_component,
+      remove: this.render_remove_component,
+      folder: this.render_folder_select_component,
+      "text-file": this.render_file_select_component,
+      file: this.render_file_select_component,
+      slider: this.render_slider_component,
+      html: this.render_html_component,
+      button_with_confirm: this.render_button_with_confirm_component
+    };
+  }
+  async render_setting_component(elm, opts = {}) {
+    this.empty(elm);
+    const path = elm.dataset.setting;
+    const scope = opts.scope || this.main.main;
+    const settings_scope = opts.settings_scope || null;
+    try {
+      let value = elm.dataset.value ?? this.main.get_by_path(scope.settings, path, settings_scope);
+      if (typeof value === "undefined" && typeof elm.dataset.default !== "undefined") {
+        value = elm.dataset.default;
+        if (typeof value === "string") value = value.toLowerCase() === "true" ? true : value === "false" ? false : value;
+        this.main.set_by_path(scope.settings, path, value, settings_scope);
+      }
+      const renderer = this.setting_renderers[elm.dataset.type];
+      if (!renderer) {
+        console.warn(`Unsupported setting type: ${elm.dataset.type}`);
+        return elm;
+      }
+      const setting = renderer.call(this, elm, path, value, scope, settings_scope);
+      if (elm.dataset.name) setting.setName(elm.dataset.name);
+      if (elm.dataset.description) {
+        const frag = this.main.create_doc_fragment(`<span>${elm.dataset.description}</span>`);
+        setting.setDesc(frag);
+      }
+      if (elm.dataset.tooltip) setting.setTooltip(elm.dataset.tooltip);
+      this.add_button_if_needed(setting, elm, path, scope);
+      this.handle_disabled_and_hidden(elm);
+      return elm;
+    } catch (e) {
+      console.error(JSON.stringify({ path, elm }, null, 2));
+      console.error(JSON.stringify(e, null, 2));
+    }
+  }
+  render_dropdown_component(elm, path, value, scope, settings_scope) {
+    const smart_setting = new this.setting_class(elm);
+    let options;
+    if (elm.dataset.optionsCallback) {
+      console.log(`getting options callback: ${elm.dataset.optionsCallback}`);
+      const opts_callback = this.main.get_by_path(scope, elm.dataset.optionsCallback);
+      if (typeof opts_callback === "function") options = opts_callback();
+      else console.warn(`optionsCallback is not a function: ${elm.dataset.optionsCallback}`, scope);
+    }
+    if (!options || !options.length) {
+      options = this.get_dropdown_options(elm);
+    }
+    smart_setting.addDropdown((dropdown) => {
+      if (elm.dataset.required) dropdown.inputEl.setAttribute("required", true);
+      options.forEach((option) => {
+        const opt = dropdown.addOption(option.value, option.name ?? option.value);
+        opt.selected = option.value === value;
+      });
+      dropdown.onChange((value2) => {
+        this.handle_on_change(path, value2, elm, scope, settings_scope);
+      });
+      dropdown.setValue(value);
+    });
+    return smart_setting;
+  }
+  render_text_component(elm, path, value, scope, settings_scope) {
+    const smart_setting = new this.setting_class(elm);
+    smart_setting.addText((text) => {
+      text.setPlaceholder(elm.dataset.placeholder || "");
+      if (value) text.setValue(value);
+      let debounceTimer;
+      if (elm.dataset.button) {
+        smart_setting.addButton((button) => {
+          button.setButtonText(elm.dataset.button);
+          button.onClick(async () => this.handle_on_change(path, text.getValue(), elm, scope));
+        });
+      } else {
+        text.onChange(async (value2) => {
+          clearTimeout(debounceTimer);
+          debounceTimer = setTimeout(() => this.handle_on_change(path, value2.trim(), elm, scope, settings_scope), 2e3);
+        });
+      }
+    });
+    return smart_setting;
+  }
+  render_password_component(elm, path, value, scope, settings_scope) {
+    const smart_setting = new this.setting_class(elm);
+    smart_setting.addText((text) => {
+      text.inputEl.type = "password";
+      text.setPlaceholder(elm.dataset.placeholder || "");
+      if (value) text.setValue(value);
+      let debounceTimer;
+      text.onChange(async (value2) => {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => this.handle_on_change(path, value2, elm, scope, settings_scope), 2e3);
+      });
+    });
+    return smart_setting;
+  }
+  render_number_component(elm, path, value, scope, settings_scope) {
+    const smart_setting = new this.setting_class(elm);
+    smart_setting.addText((number) => {
+      number.inputEl.type = "number";
+      number.setPlaceholder(elm.dataset.placeholder || "");
+      if (typeof value !== "undefined") number.inputEl.value = parseInt(value);
+      number.inputEl.min = elm.dataset.min || 0;
+      if (elm.dataset.max) number.inputEl.max = elm.dataset.max;
+      let debounceTimer;
+      number.onChange(async (value2) => {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => this.handle_on_change(path, parseInt(value2), elm, scope, settings_scope), 2e3);
+      });
+    });
+    return smart_setting;
+  }
+  render_toggle_component(elm, path, value, scope, settings_scope) {
+    const smart_setting = new this.setting_class(elm);
+    smart_setting.addToggle((toggle) => {
+      let checkbox_val = value ?? false;
+      if (typeof checkbox_val === "string") {
+        checkbox_val = checkbox_val.toLowerCase() === "true";
+      }
+      toggle.setValue(checkbox_val);
+      toggle.onChange(async (value2) => this.handle_on_change(path, value2, elm, scope, settings_scope));
+    });
+    return smart_setting;
+  }
+  render_textarea_component(elm, path, value, scope, settings_scope) {
+    const smart_setting = new this.setting_class(elm);
+    smart_setting.addTextArea((textarea) => {
+      textarea.setPlaceholder(elm.dataset.placeholder || "");
+      textarea.setValue(value || "");
+      let debounceTimer;
+      textarea.onChange(async (value2) => {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => this.handle_on_change(path, value2, elm, scope, settings_scope), 2e3);
+      });
+    });
+    return smart_setting;
+  }
+  render_textarea_array_component(elm, path, value, scope, settings_scope) {
+    const smart_setting = new this.setting_class(elm);
+    smart_setting.addTextArea((textarea) => {
+      textarea.setPlaceholder(elm.dataset.placeholder || "");
+      textarea.setValue(Array.isArray(value) ? value.join("\n") : value || "");
+      let debounceTimer;
+      textarea.onChange(async (value2) => {
+        value2 = value2.split("\n").map((v) => v.trim()).filter((v) => v);
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => this.handle_on_change(path, value2, elm, scope, settings_scope), 2e3);
+      });
+    });
+    return smart_setting;
+  }
+  render_button_component(elm, path, value, scope, settings_scope) {
+    const smart_setting = new this.setting_class(elm);
+    smart_setting.addButton((button) => {
+      button.setButtonText(elm.dataset.btnText || elm.dataset.name);
+      button.onClick(async () => {
+        if (elm.dataset.confirm && !confirm(elm.dataset.confirm)) return;
+        if (elm.dataset.href) this.open_url(elm.dataset.href);
+        if (elm.dataset.callback) {
+          const callback = this.main.get_by_path(scope, elm.dataset.callback);
+          if (callback) callback(path, value, elm, scope, settings_scope);
+        }
+      });
+    });
+    return smart_setting;
+  }
+  render_remove_component(elm, path, value, scope, settings_scope) {
+    const smart_setting = new this.setting_class(elm);
+    smart_setting.addButton((button) => {
+      button.setButtonText(elm.dataset.btnText || elm.dataset.name || "Remove");
+      button.onClick(async () => {
+        this.main.delete_by_path(scope.settings, path, settings_scope);
+        if (elm.dataset.callback) {
+          const callback = this.main.get_by_path(scope, elm.dataset.callback);
+          if (callback) callback(path, value, elm, scope, settings_scope);
+        }
+      });
+    });
+    return smart_setting;
+  }
+  render_folder_select_component(elm, path, value, scope, settings_scope) {
+    const smart_setting = new this.setting_class(elm);
+    smart_setting.addFolderSelect((folder_select) => {
+      folder_select.setPlaceholder(elm.dataset.placeholder || "");
+      if (value) folder_select.setValue(value);
+      folder_select.inputEl.closest("div").addEventListener("click", () => {
+        this.handle_folder_select(path, value, elm, scope);
+      });
+      folder_select.inputEl.querySelector("input").addEventListener("change", (e) => {
+        const folder = e.target.value;
+        this.handle_on_change(path, folder, elm, scope, settings_scope);
+      });
+    });
+    return smart_setting;
+  }
+  render_file_select_component(elm, path, value, scope, settings_scope) {
+    const smart_setting = new this.setting_class(elm);
+    smart_setting.addFileSelect((file_select) => {
+      file_select.setPlaceholder(elm.dataset.placeholder || "");
+      if (value) file_select.setValue(value);
+      file_select.inputEl.closest("div").addEventListener("click", () => {
+        this.handle_file_select(path, value, elm, scope, settings_scope);
+      });
+    });
+    return smart_setting;
+  }
+  render_slider_component(elm, path, value, scope, settings_scope) {
+    const smart_setting = new this.setting_class(elm);
+    smart_setting.addSlider((slider) => {
+      const min = parseFloat(elm.dataset.min) || 0;
+      const max = parseFloat(elm.dataset.max) || 100;
+      const step = parseFloat(elm.dataset.step) || 1;
+      const currentValue = typeof value !== "undefined" ? parseFloat(value) : min;
+      slider.setLimits(min, max, step);
+      slider.setValue(currentValue);
+      slider.onChange((newVal) => {
+        const numericVal = parseFloat(newVal);
+        this.handle_on_change(path, numericVal, elm, scope, settings_scope);
+      });
+    });
+    return smart_setting;
+  }
+  render_html_component(elm, path, value, scope) {
+    this.safe_inner_html(elm, value);
+    return elm;
+  }
+  add_button_if_needed(smart_setting, elm, path, scope) {
+    if (elm.dataset.btn) {
+      smart_setting.addButton((button) => {
+        button.setButtonText(elm.dataset.btn);
+        button.inputEl.addEventListener("click", (e) => {
+          if (elm.dataset.btnCallback && typeof scope[elm.dataset.btnCallback] === "function") {
+            if (elm.dataset.btnCallbackArg) scope[elm.dataset.btnCallback](elm.dataset.btnCallbackArg);
+            else scope[elm.dataset.btnCallback](path, null, smart_setting, scope);
+          } else if (elm.dataset.btnHref) {
+            this.open_url(elm.dataset.btnHref);
+          } else if (elm.dataset.callback && typeof this.main.get_by_path(scope, elm.dataset.callback) === "function") {
+            this.main.get_by_path(scope, elm.dataset.callback)(path, null, smart_setting, scope);
+          } else if (elm.dataset.href) {
+            this.open_url(elm.dataset.href);
+          } else {
+            console.error("No callback or href found for button.");
+          }
+        });
+        if (elm.dataset.btnDisabled || elm.dataset.disabled && elm.dataset.btnDisabled !== "false") {
+          button.inputEl.disabled = true;
+        }
+      });
+    }
+  }
+  handle_disabled_and_hidden(elm) {
+    if (elm.dataset.disabled && elm.dataset.disabled !== "false") {
+      elm.classList.add("disabled");
+      elm.querySelector("input, select, textarea, button").disabled = true;
+    }
+    if (elm.dataset.hidden && elm.dataset.hidden !== "false") {
+      elm.style.display = "none";
+    }
+  }
+  get_dropdown_options(elm) {
+    return Object.entries(elm.dataset).reduce((acc, [k, v]) => {
+      if (!k.startsWith("option")) return acc;
+      const [value, name] = v.split("|");
+      acc.push({ value, name: name || value });
+      return acc;
+    }, []);
+  }
+  handle_on_change(path, value, elm, scope, settings_scope) {
+    this.pre_change(path, value, elm, scope);
+    if (elm.dataset.validate) {
+      const valid = this[elm.dataset.validate](path, value, elm, scope);
+      if (!valid) {
+        elm.querySelector(".setting-item").style.border = "2px solid red";
+        this.revert_setting(path, elm, scope);
+        return;
+      }
+    }
+    this.main.set_by_path(scope.settings, path, value, settings_scope);
+    if (elm.dataset.callback) {
+      const callback = this.main.get_by_path(scope, elm.dataset.callback);
+      if (callback) callback(path, value, elm, scope);
+    }
+    this.post_change(path, value, elm, scope);
+  }
+  render_button_with_confirm_component(elm, path, value, scope) {
+    const smart_setting = new this.setting_class(elm);
+    smart_setting.addButton((button) => {
+      button.setButtonText(elm.dataset.btnText || elm.dataset.name);
+      elm.appendChild(this.main.create_doc_fragment(`
+        <div class="sc-inline-confirm-row" style="
+          display: none;
+        ">
+          <span style="margin-right: 10px;">
+            ${elm.dataset.confirm || "Are you sure?"}
+          </span>
+          <span class="sc-inline-confirm-row-buttons">
+            <button class="sc-inline-confirm-yes">Yes</button>
+            <button class="sc-inline-confirm-cancel">Cancel</button>
+          </span>
+        </div>
+      `));
+      const confirm_row = elm.querySelector(".sc-inline-confirm-row");
+      const confirm_yes = confirm_row.querySelector(".sc-inline-confirm-yes");
+      const confirm_cancel = confirm_row.querySelector(".sc-inline-confirm-cancel");
+      button.onClick(async () => {
+        confirm_row.style.display = "block";
+        elm.querySelector(".setting-item").style.display = "none";
+      });
+      confirm_yes.addEventListener("click", async () => {
+        if (elm.dataset.href) this.open_url(elm.dataset.href);
+        if (elm.dataset.callback) {
+          const callback = this.main.get_by_path(scope, elm.dataset.callback);
+          if (callback) callback(path, value, elm, scope);
+        }
+        elm.querySelector(".setting-item").style.display = "block";
+        confirm_row.style.display = "none";
+      });
+      confirm_cancel.addEventListener("click", () => {
+        confirm_row.style.display = "none";
+        elm.querySelector(".setting-item").style.display = "block";
+      });
+    });
+    return smart_setting;
+  }
+  empty(elm) {
+    empty2(elm);
+  }
+  safe_inner_html(elm, html) {
+    safe_inner_html2(elm, html);
+  }
+};
+
+// node_modules/smart-view/adapters/obsidian.js
+var import_obsidian21 = require("obsidian");
+var SmartViewObsidianAdapter2 = class extends SmartViewAdapter2 {
+  get setting_class() {
+    return import_obsidian21.Setting;
+  }
+  open_url(url) {
+    window.open(url);
+  }
+  async render_file_select_component(elm, path, value) {
+    return super.render_text_component(elm, path, value);
+  }
+  async render_markdown(markdown, scope) {
+    const component = scope.env.smart_connections_plugin?.connections_view || new import_obsidian21.Component();
+    if (!scope) return console.warn("Scope required for rendering markdown in Obsidian adapter");
+    const frag = this.main.create_doc_fragment("<div><div class='inner'></div></div>");
+    const container = frag.querySelector(".inner");
+    try {
+      await import_obsidian21.MarkdownRenderer.render(
+        scope.env.plugin.app,
+        markdown,
+        container,
+        scope?.file_path || "",
+        component
+      );
+    } catch (e) {
+      console.warn("Error rendering markdown in Obsidian adapter", e);
+    }
+    return frag;
+  }
+  get_icon_html(name) {
+    return (0, import_obsidian21.getIcon)(name).outerHTML;
+  }
+  // Obsidian Specific
+  is_mod_event(event) {
+    return import_obsidian21.Keymap.isModEvent(event);
+  }
+  render_folder_select_component(elm, path, value, scope, settings_scope) {
+    const smart_setting = new this.setting_class(elm);
+    const folders = scope.env.plugin.app.vault.getAllFolders().sort((a, b) => a.path.localeCompare(b.path));
+    smart_setting.addDropdown((dropdown) => {
+      if (elm.dataset.required) dropdown.inputEl.setAttribute("required", true);
+      dropdown.addOption("", "No folder selected");
+      folders.forEach((folder) => {
+        dropdown.addOption(folder.path, folder.path);
+      });
+      dropdown.onChange((value2) => {
+        this.handle_on_change(path, value2, elm, scope, settings_scope);
+      });
+      dropdown.setValue(value);
+    });
+    return smart_setting;
+  }
+};
+
+// node_modules/smart-collections/components/settings.js
+async function render13(scope, opts = {}) {
+  const html = Object.entries(scope.settings_config).map(([setting_key, setting_config]) => {
+    if (!setting_config.setting) setting_config.setting = setting_key;
+    return this.render_setting_html(setting_config);
+  }).join("\n");
+  const heading_html = `<h2>${scope.collection_key.split("_").map((word) => word.charAt(0).toUpperCase() + word.slice(1)).join(" ")} Settings</h2>`;
+  const frag = this.create_doc_fragment(heading_html + html);
+  return await post_process12.call(this, scope, frag, opts);
+}
+async function post_process12(scope, frag, opts = {}) {
+  await this.render_setting_components(frag, { scope });
+  return frag;
+}
+
+// node_modules/smart-model/components/settings.js
+async function render14(scope, opts = {}) {
+  const html = Object.entries(scope.settings_config).map(([setting_key, setting_config]) => {
+    if (!setting_config.setting) setting_config.setting = setting_key;
+    return this.render_setting_html(setting_config);
+  }).join("\n");
+  const frag = this.create_doc_fragment(html);
+  return await post_process13.call(this, scope, frag, opts);
+}
+async function post_process13(scope, frag, opts = {}) {
+  await this.render_setting_components(frag, { scope });
+  return frag;
+}
+
+// node_modules/obsidian-smart-env/modals/story.js
+var import_obsidian22 = require("obsidian");
+var StoryModal = class _StoryModal extends import_obsidian22.Modal {
+  constructor(plugin, { title, url }) {
+    super(plugin.app);
+    this.plugin = plugin;
+    this.title = title;
+    this.url = url;
+  }
+  static open(plugin, story_url) {
+    const modal = new _StoryModal(plugin, story_url);
+    modal.open();
+  }
+  onOpen() {
+    this.titleEl.setText(this.title);
+    this.modalEl.addClass("sc-story-modal");
+    const container = this.contentEl.createEl("div", {
+      cls: "sc-story-container"
+    });
+    if (import_obsidian22.Platform.isMobile) {
+      const btn = container.createEl("button", { text: "Open in browser" });
+      btn.addEventListener("click", () => {
+        open_url_externally(this.plugin, this.url);
+        this.close();
+      });
+      return;
+    } else {
+      const webview = container.createEl("webview", {
+        attr: { src: this.url, allowpopups: "" }
+      });
+      webview.style.width = "100%";
+      webview.style.height = "100%";
+      webview.addEventListener("did-navigate", (event) => {
+        const new_url = event.url || webview.getAttribute("src");
+        if (new_url && new_url !== this.url) {
+          open_url_externally(this.plugin, new_url);
+          this.close();
+        }
+      });
+    }
+  }
+  onClose() {
+    this.contentEl.empty();
+  }
+};
+
+// src/components/connections.js
+function build_top_bar_buttons(view_env) {
+  const expanded_view = view_env.settings.smart_view_filter.expanded_view ?? view_env.settings.expanded_view;
+  const buttons = [
+    { title: "Refresh", icon: "refresh-cw" },
+    { title: "Fold all toggle", icon: expanded_view ? "fold-vertical" : "unfold-vertical" },
+    { title: "Lookup", icon: "search" },
+    { title: "Settings", icon: "settings" },
+    { title: "Help", icon: "help-circle" }
+  ];
+  return buttons.map(
+    (btn) => `
+    <button title="${btn.title}" aria-label="${btn.title} button">
+      ${this.get_icon_html(btn.icon)}
+    </button>`
+  ).join("");
+}
+async function build_html11(entity, opts = {}) {
+  const top_bar_buttons = build_top_bar_buttons.call(this, entity.env);
+  return `<div><div class="sc-connections-view">
+    <div class="sc-top-bar">
+      <p class="sc-context" data-key="">Loading\u2026</p>
+      ${top_bar_buttons}
+    </div>
+    <div class="sc-list"></div>
+    <div class="sc-bottom-bar">
+      <span class="sc-context" data-key="" title="Loading context\u2026">Loading context\u2026</span>
+      ${opts.attribution || ""}
+    </div>
+  </div></div>`;
+}
+async function render15(entity, opts = {}) {
+  const html = await build_html11.call(this, entity, opts);
+  const frag = this.create_doc_fragment(html);
+  const container = frag.querySelector(".sc-connections-view");
+  post_process14.call(this, entity, container, opts);
+  return container;
+}
+async function post_process14(entity, container, opts = {}) {
+  const plugin = entity.env.smart_connections_plugin;
+  const list_el = container.querySelector(".sc-list");
+  const header_ctx = container.querySelector(".sc-top-bar .sc-context");
+  const footer_ctx = container.querySelector(".sc-bottom-bar .sc-context");
+  const filter_settings = entity.env.settings.smart_view_filter;
+  const render_results = async () => {
+    const exclude_keys = Object.keys(entity.data.hidden_connections || {});
+    const results = await entity.find_connections({
+      exclude_key_ends_with: "---frontmatter---",
+      exclude_blocks_from_source_connections: filter_settings.exclude_blocks_from_source_connections ?? false,
+      exclude_keys,
+      ...opts.filter || {}
+    });
+    const results_frag = await entity.env.render_component(
+      "connections_results",
+      results,
+      opts
+    );
+    this.empty(list_el);
+    Array.from(results_frag.children).forEach((el) => list_el.appendChild(el));
+    header_ctx.innerText = entity.path.split("/").pop();
+    footer_ctx.innerText = entity.path.split("/").pop();
+    header_ctx.dataset.key = entity.key;
+    footer_ctx.dataset.key = entity.key;
+    list_el.dataset.key = entity.key;
+  };
+  if (entity.vec) {
+    await render_results();
+  } else {
+    list_el.createEl("p", {
+      text: "This source is not embedded. Check your Smart Environment settings. For example, the current content may be less than the minimum embedding size.",
+      cls: "sc-warning"
+    });
+    const inspect_btn = list_el.createEl("button", {
+      text: "Inspect Source",
+      cls: "sc-inspect-source-btn",
+      title: "Inspect source details"
+    });
+    inspect_btn.addEventListener("click", async () => {
+      new SmartNoteInspectModal(plugin, entity).open();
+    });
+  }
+  const toggle_btn = container.querySelector('[title="Fold all toggle"]');
+  toggle_btn.addEventListener("click", () => {
+    const expanded = entity.env.settings.smart_view_filter.expanded_view ?? entity.env.settings.expanded_view;
+    entity.env.settings.smart_view_filter.expanded_view = !expanded;
+    list_el.querySelectorAll(".sc-result").forEach(
+      (elm) => expanded ? elm.classList.add("sc-collapsed") : elm.classList.remove("sc-collapsed")
+    );
+    this.safe_inner_html(
+      toggle_btn,
+      this.get_icon_html(expanded ? "unfold-vertical" : "fold-vertical")
+    );
+  });
+  const refresh_btn = container.querySelector('[title="Refresh"]');
+  refresh_btn.addEventListener("click", async () => {
+    await entity.read();
+    entity.queue_import();
+    await entity.collection.process_source_import_queue?.();
+    await render_results();
+  });
+  container.querySelector('[title="Lookup"]')?.addEventListener("click", () => plugin.open_lookup_view());
+  container.querySelector('[title="Help"]')?.addEventListener(
+    "click",
+    () => StoryModal.open(plugin, {
+      title: "Getting Started With Smart Connections",
+      url: "https://smartconnections.app/story/smart-connections-getting-started/?utm_source=connections-view-help#page=understanding-connections-1"
+    })
+  );
+  container.querySelector('[title="Settings"]')?.addEventListener("click", async () => {
+    await app.setting.open();
+    await app.setting.openTabById("smart-connections");
+  });
+  if (!filter_settings.render_markdown) list_el.classList.add("sc-result-plaintext");
+  container.querySelectorAll(".sc-context").forEach((el) => {
+    el.addEventListener("click", (event) => {
+      new SmartNoteInspectModal(plugin, entity).open();
+    });
+  });
+  return container;
+}
+
+// src/components/lookup.js
+async function build_html12(collection, opts = {}) {
+  const expanded_view = collection.env.settings.smart_view_filter?.expanded_view ?? collection.env.settings.expanded_view;
+  return `<div id="sc-lookup-view">
+    <div class="sc-top-bar">
+      <button class="sc-fold-toggle">${this.get_icon_html(expanded_view ? "fold-vertical" : "unfold-vertical")}</button>
+    </div>
+    <div class="sc-container">
+      <h2>Smart Lookup</h2>
+      <div class="sc-textarea-container">
+        <textarea
+          id="query"
+          name="query"
+          placeholder="Describe what you're looking for (e.g., 'PKM strategies', 'story elements', 'personal AI alignment')"
+        ></textarea>
+        <div class="sc-textarea-btn-container">
+          <button class="send-button">${this.get_icon_html("search")}</button>
+        </div>
+      </div>
+      <p>Use semantic (embeddings) search to surface relevant notes. Results are sorted by similarity to your query. Note: returns different results than lexical (keyword) search.</p>
+    </div>
+    <div class="sc-list">
+    </div>
+    <div class="sc-bottom-bar">
+      ${opts.attribution || ""}
+    </div>
+  </div>`;
+}
+async function render16(collection, opts = {}) {
+  let html = await build_html12.call(this, collection, opts);
+  const frag = this.create_doc_fragment(html);
+  return await post_process15.call(this, collection, frag, opts);
+}
+async function post_process15(collection, frag, opts = {}) {
+  const query_input = frag.querySelector("#query");
+  const results_container = frag.querySelector(".sc-list");
+  const render_lookup = async (query, results_container2) => {
+    const lookup_params = {
+      hypotheticals: [query],
+      filter: opts.filter
+    };
+    const results = await collection.lookup(lookup_params);
+    this.empty(results_container2);
+    const results_frag = await collection.env.render_component("connections_results", results, opts);
+    Array.from(results_frag.children).forEach((elm) => results_container2.appendChild(elm));
+  };
+  let timeout;
+  query_input.addEventListener("input", (event) => {
+    clearTimeout(timeout);
+    const query = event.target.value.trim();
+    if (query) {
+      timeout = setTimeout(async () => {
+        await render_lookup(query, results_container);
+      }, 500);
+    }
+  });
+  if (opts.query) {
+    query_input.value = opts.query;
+    await render_lookup(opts.query, results_container);
+  }
+  const send_button = frag.querySelector(".send-button");
+  send_button.addEventListener("click", async (event) => {
+    clearTimeout(timeout);
+    const query = query_input.value.trim();
+    if (query) {
+      await render_lookup(query, results_container);
+    }
+  });
+  const fold_toggle = frag.querySelector(".sc-fold-toggle");
+  fold_toggle.addEventListener("click", async (event) => {
+    const container = event.target.closest("#sc-lookup-view");
+    const expanded = collection.env.settings.smart_view_filter?.expanded_view ?? collection.env.settings.expanded_view;
+    const results = container.querySelectorAll(".sc-result");
+    for (const elm of results) {
+      if (expanded) {
+        elm.classList.add("sc-collapsed");
+      } else {
+        elm.click();
+      }
+    }
+    if (!collection.settings.smart_view_filter) collection.settings.smart_view_filter = {};
+    collection.settings.smart_view_filter.expanded_view = !expanded;
+    const updated_expanded_view = collection.settings.smart_view_filter.expanded_view;
+    this.safe_inner_html(fold_toggle, this.get_icon_html(updated_expanded_view ? "fold-vertical" : "unfold-vertical"));
+    fold_toggle.setAttribute("aria-label", updated_expanded_view ? "Fold all" : "Unfold all");
+  });
+  return frag;
+}
+
+// src/components/connections_results.js
+async function build_html13(results, opts = {}) {
+  return ``;
+}
+async function render17(results, opts = {}) {
+  const html = await build_html13.call(this, results, opts);
+  const frag = this.create_doc_fragment(html);
+  if (!results || !Array.isArray(results) || results.length === 0) {
+    const no_results = this.create_doc_fragment(`<p class="sc-no-results">No results found.<br><em>Try using the refresh button. If that doesn't work, try running "Clear sources data" and then "Reload sources" in the Smart Environment settings.</em></p>`);
+    frag.appendChild(no_results);
+    return frag;
+  }
+  const result_frags = await Promise.all(results.map((result) => {
+    return result.item.env.render_component("connections_result", result, { ...opts });
+  }));
+  result_frags.forEach((result_frag) => frag.appendChild(result_frag));
+  return frag;
+}
+
+// src/views/smart_chat.js
+function build_html14(obsidian_view, opts = {}) {
+  const top_bar_buttons = [
+    // { title: 'Open Conversation Note', icon: 'external-link' },
+    { title: "New Chat", icon: "plus" },
+    { title: "Chat History", icon: "history" },
+    { title: "Chat Options", icon: "sliders-horizontal", style: "display: none;" },
+    { title: "Chat Settings", icon: "settings" },
+    { title: "Help", icon: "help-circle" }
+  ].map((btn) => `
+    <button title="${btn.title}" ${btn.style ? `style="${btn.style}"` : ""}>
+      ${this.get_icon_html(btn.icon)}
+    </button>
+  `).join("");
+  return `
+    <div class="sc-chat-container">
+      <div class="sc-top-bar-container">
+        <input class="sc-chat-name-input" type="text" value="" placeholder="Add name to save this chat">
+        ${top_bar_buttons}
+      </div>
+      <div id="settings" class="smart-chat-overlay" style="display: none;">
+        <div class="smart-chat-overlay-header">
+          <button class="smart-chat-overlay-close">
+            ${this.get_icon_html("x")}
+          </button>
+        </div>
+        <div class="sc-settings"></div>
+      </div>
+      <div class="sc-thread">
+        <!-- Thread messages will be inserted here -->
+      </div>
+    </div>
+    ${obsidian_view.attribution || ""}
+  `;
+}
+async function render18(obsidian_view, opts = {}) {
+  const html = build_html14.call(this, obsidian_view, opts);
+  const frag = this.create_doc_fragment(html);
+  return await post_process16.call(this, obsidian_view, frag, opts);
+}
+async function post_process16(obsidian_view, frag, opts) {
+  const chat_box = frag.querySelector(".sc-thread");
+  const settings_button = frag.querySelector('button[title="Chat Settings"]');
+  const overlay_container = frag.querySelector(".smart-chat-overlay");
+  const settings_container = overlay_container.querySelector(".sc-settings");
+  while (!obsidian_view.env.smart_threads) {
+    await new Promise((resolve) => setTimeout(resolve, 300));
+  }
+  const threads_collection = obsidian_view.env.smart_threads;
+  threads_collection.container = frag.querySelector(".sc-chat-container");
+  let thread;
+  if (opts.thread_key) {
+    thread = threads_collection.get(opts.thread_key);
+  }
+  if (!thread) thread = threads_collection.get_active_thread();
+  if (!thread) {
+    thread = await threads_collection.create_or_update({});
+  }
+  chat_box.setAttribute("data-thread-key", thread.key);
+  await thread.render(chat_box, opts);
+  const chat_input = frag.querySelector(".sc-chat-form textarea");
+  if (chat_input) {
+    chat_input.addEventListener("keydown", obsidian_view.handle_chat_input_keydown.bind(obsidian_view));
+  }
+  const close_button = overlay_container.querySelector(".smart-chat-overlay-close");
+  if (close_button) {
+    close_button.addEventListener("click", () => {
+      overlay_container.style.display = "none";
+    });
+  }
+  settings_button.addEventListener("click", () => {
+    if (overlay_container.style.display === "none") {
+      threads_collection.render_settings(settings_container);
+      overlay_container.style.display = "block";
+    } else {
+      overlay_container.style.display = "none";
+    }
+  });
+  const help_button = frag.querySelector("[title='Help']");
+  help_button.addEventListener("click", () => {
+    window.open("https://docs.smartconnections.app/smart-chat", "_blank");
+  });
+  const new_chat_button = frag.querySelector('button[title="New Chat"]');
+  new_chat_button.addEventListener("click", async () => {
+    this.empty(threads_collection.container);
+    opts.thread_key = null;
+    obsidian_view.render_view();
+  });
+  const chat_history_button = frag.querySelector('button[title="Chat History"]');
+  chat_history_button.addEventListener("click", () => {
+    obsidian_view.open_chat_history();
+  });
+  setup_chat_name_input_handler.call(this, frag, thread);
+  return frag;
+}
+function setup_chat_name_input_handler(frag, thread) {
+  const name_input = frag.querySelector(".sc-chat-name-input");
+  if (!name_input) return;
+  if (!thread.key.startsWith("Untitled")) {
+    name_input.value = thread.key;
+  }
+  name_input.addEventListener("blur", async () => {
+    const new_name = name_input.value.trim();
+    if (new_name && new_name !== thread.key) {
+      try {
+        await thread.rename(new_name);
+        console.log(`Thread renamed to "${new_name}"`);
+      } catch (error) {
+        console.error("Error renaming thread:", error);
+        name_input.value = thread.key;
+      }
+    }
+  });
+  name_input.addEventListener("keydown", async (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      name_input.blur();
+    }
+  });
+}
+
+// node_modules/smart-model/smart_model.js
+var SmartModel2 = class {
+  scope_name = "smart_model";
+  static defaults = {
+    // override in sub-class if needed
+  };
+  /**
+   * Create a SmartModel instance.
+   * @param {Object} opts - Configuration options
+   * @param {Object} opts.adapters - Map of adapter names to adapter classes
+   * @param {Object} opts.settings - Model settings configuration
+   * @param {Object} opts.model_config - Model-specific configuration
+   * @param {string} opts.model_config.adapter - Name of the adapter to use
+   * @param {string} [opts.model_key] - Optional model identifier to override settings
+   * @throws {Error} If required options are missing
+   */
+  constructor(opts = {}) {
+    this.opts = opts;
+    this.validate_opts(opts);
+    this.state = "unloaded";
+    this._adapter = null;
+  }
+  /**
+   * Initialize the model by loading the configured adapter.
+   * @async
+   * @returns {Promise<void>}
+   */
+  async initialize() {
+    this.load_adapter(this.adapter_name);
+    await this.load();
+  }
+  /**
+   * Validate required options.
+   * @param {Object} opts - Configuration options
+   */
+  validate_opts(opts) {
+    if (!opts.adapters) throw new Error("opts.adapters is required");
+    if (!opts.settings) throw new Error("opts.settings is required");
+  }
+  /**
+   * Get the current settings
+   * @returns {Object} Current settings
+   */
+  get settings() {
+    if (!this.opts.settings) this.opts.settings = {
+      ...this.constructor.defaults
+    };
+    return this.opts.settings;
+  }
+  /**
+   * Get the current adapter name
+   * @returns {string} Current adapter name
+   */
+  get adapter_name() {
+    let adapter_key = this.opts.model_config?.adapter || this.opts.adapter || this.settings.adapter || Object.keys(this.adapters)[0];
+    if (!adapter_key || !this.adapters[adapter_key]) {
+      console.warn(`Platform "${adapter_key}" not supported`);
+      adapter_key = Object.keys(this.adapters)[0];
+    }
+    return adapter_key;
+  }
+  /**
+   * Get adapter-specific settings.
+   * @returns {Object} Settings for current adapter
+   */
+  get adapter_settings() {
+    if (!this.settings[this.adapter_name]) this.settings[this.adapter_name] = {};
+    return this.settings[this.adapter_name];
+  }
+  get adapter_config() {
+    const base_config = this.adapters[this.adapter_name]?.defaults || {};
+    return {
+      ...base_config,
+      ...this.adapter_settings,
+      ...this.opts.adapter_config
+    };
+  }
+  /**
+   * Get available models.
+   * @returns {Object} Map of model objects
+   */
+  get models() {
+    return this.adapter.models;
+  }
+  /**
+   * Get default model key.
+   * @returns {string} Default model key
+   */
+  get default_model_key() {
+    return this.adapter.constructor.defaults.default_model;
+  }
+  /**
+   * Get the current model key
+   * @returns {string} Current model key
+   */
+  get model_key() {
+    return this.opts.model_key || this.adapter_config.model_key || this.settings.model_key || this.default_model_key;
+  }
+  /**
+   * Get the current model configuration
+   * @returns {Object} Combined base and custom model configuration
+   */
+  get model_config() {
+    const model_key = this.model_key;
+    const base_model_config = this.models[model_key] || {};
+    return {
+      ...this.adapter_config,
+      ...base_model_config,
+      ...this.opts.model_config
+    };
+  }
+  get model_settings() {
+    if (!this.settings[this.model_key]) this.settings[this.model_key] = {};
+    return this.settings[this.model_key];
+  }
+  /**
+   * Load the current adapter and transition to loaded state.
+   * @async
+   * @returns {Promise<void>}
+   */
+  async load() {
+    this.set_state("loading");
+    try {
+      if (!this.adapter?.is_loaded) {
+        await this.invoke_adapter_method("load");
+      }
+    } catch (err) {
+      this.set_state("unloaded");
+      if (!this.reload_model_timeout) {
+        this.reload_model_timeout = setTimeout(async () => {
+          this.reload_model_timeout = null;
+          await this.load();
+          this.set_state("loaded");
+          this.notices?.show("Loaded model: " + this.model_key);
+        }, 6e4);
+      }
+      throw new Error(`Failed to load model: ${err.message}`);
+    }
+    this.set_state("loaded");
+  }
+  /**
+   * Unload the current adapter and transition to unloaded state.
+   * @async
+   * @returns {Promise<void>}
+   */
+  async unload() {
+    if (this.adapter?.is_loaded) {
+      this.set_state("unloading");
+      await this.invoke_adapter_method("unload");
+      this.set_state("unloaded");
+    }
+  }
+  /**
+   * Set the model's state.
+   * @param {('unloaded'|'loading'|'loaded'|'unloading')} new_state - The new state
+   * @throws {Error} If the state is invalid
+   */
+  set_state(new_state) {
+    const valid_states = ["unloaded", "loading", "loaded", "unloading"];
+    if (!valid_states.includes(new_state)) {
+      throw new Error(`Invalid state: ${new_state}`);
+    }
+    this.state = new_state;
+  }
+  get is_loading() {
+    return this.state === "loading";
+  }
+  get is_loaded() {
+    return this.state === "loaded";
+  }
+  get is_unloading() {
+    return this.state === "unloading";
+  }
+  get is_unloaded() {
+    return this.state === "unloaded";
+  }
+  // ADAPTERS
+  /**
+   * Get the map of available adapters
+   * @returns {Object} Map of adapter names to adapter classes
+   */
+  get adapters() {
+    return this.opts.adapters || {};
+  }
+  /**
+   * Load a specific adapter by name.
+   * @async
+   * @param {string} adapter_name - Name of the adapter to load
+   * @throws {Error} If adapter not found or loading fails
+   * @returns {Promise<void>}
+   */
+  async load_adapter(adapter_name) {
+    this.set_adapter(adapter_name);
+    if (!this._adapter.loaded) {
+      this.set_state("loading");
+      try {
+        await this.invoke_adapter_method("load");
+        this.set_state("loaded");
+      } catch (err) {
+        this.set_state("unloaded");
+        throw new Error(`Failed to load adapter: ${err.message}`);
+      }
+    }
+  }
+  /**
+   * Set an adapter instance by name without loading it.
+   * @param {string} adapter_name - Name of the adapter to set
+   * @throws {Error} If adapter not found
+   */
+  set_adapter(adapter_name) {
+    const AdapterClass = this.adapters[adapter_name];
+    if (!AdapterClass) {
+      throw new Error(`Adapter "${adapter_name}" not found.`);
+    }
+    if (this._adapter?.constructor.name.toLowerCase() === adapter_name.toLowerCase()) {
+      return;
+    }
+    this._adapter = new AdapterClass(this);
+  }
+  /**
+   * Get the current active adapter instance
+   * @returns {Object} The active adapter instance
+   * @throws {Error} If adapter not found
+   */
+  get adapter() {
+    const adapter_name = this.adapter_name;
+    if (!adapter_name) {
+      throw new Error(`Adapter not set for model.`);
+    }
+    if (!this._adapter) {
+      this.load_adapter(adapter_name);
+    }
+    return this._adapter;
+  }
+  /**
+   * Ensure the adapter is ready to execute a method.
+   * @param {string} method - Name of the method to check
+   * @throws {Error} If adapter not loaded or method not implemented
+   */
+  ensure_adapter_ready(method) {
+    if (!this.adapter) {
+      throw new Error("No adapter loaded.");
+    }
+    if (typeof this.adapter[method] !== "function") {
+      throw new Error(`Adapter does not implement method: ${method}`);
+    }
+  }
+  /**
+   * Invoke a method on the current adapter.
+   * @async
+   * @param {string} method - Name of the method to call
+   * @param {...any} args - Arguments to pass to the method
+   * @returns {Promise<any>} Result from the adapter method
+   * @throws {Error} If adapter not ready or method fails
+   */
+  async invoke_adapter_method(method, ...args) {
+    this.ensure_adapter_ready(method);
+    return await this.adapter[method](...args);
+  }
+  /**
+   * Get platforms as dropdown options.
+   * @returns {Array<Object>} Array of {value, name} option objects
+   */
+  get_platforms_as_options() {
+    return Object.entries(this.adapters).map(([key, AdapterClass]) => ({ value: key, name: AdapterClass.defaults.description || key }));
+  }
+  // SETTINGS
+  /**
+   * Get the settings configuration schema
+   * @returns {Object} Settings configuration object
+   */
+  get settings_config() {
+    return this.process_settings_config({
+      adapter: {
+        name: "Model Platform",
+        type: "dropdown",
+        description: "Select a model platform to use with Smart Model.",
+        options_callback: "get_platforms_as_options",
+        is_scope: true,
+        // trigger re-render of settings when changed
+        callback: "adapter_changed",
+        default: "default"
+      }
+    });
+  }
+  /**
+   * Process settings configuration with conditionals and prefixes.
+   * @param {Object} _settings_config - Raw settings configuration
+   * @param {string} [prefix] - Optional prefix for setting keys
+   * @returns {Object} Processed settings configuration
+   */
+  process_settings_config(_settings_config, prefix = null) {
+    return Object.entries(_settings_config).reduce((acc, [key, val]) => {
+      const new_key = (prefix ? prefix + "." : "") + this.process_setting_key(key);
+      acc[new_key] = val;
+      return acc;
+    }, {});
+  }
+  /**
+   * Process an individual setting key.
+   * Example: replace placeholders with actual adapter names.
+   * @param {string} key - The setting key with placeholders.
+   * @returns {string} Processed setting key.
+   */
+  process_setting_key(key) {
+    return key.replace(/\[ADAPTER\]/g, this.adapter_name);
+  }
+  re_render_settings() {
+    if (typeof this.opts.re_render_settings === "function") this.opts.re_render_settings();
+    else console.warn("re_render_settings is not a function (must be passed in model opts)");
+  }
+  /**
+   * Reload model.
+   */
+  reload_model() {
+    if (typeof this.opts.reload_model === "function") this.opts.reload_model();
+    else console.warn("reload_model is not a function (must be passed in model opts)");
+  }
+  adapter_changed() {
+    this.reload_model();
+    this.re_render_settings();
+  }
+  model_changed() {
+    this.reload_model();
+    this.re_render_settings();
+  }
+};
+
+// node_modules/smart-chat-model/smart_chat_model.js
+var SmartChatModel2 = class extends SmartModel2 {
+  scope_name = "smart_chat_model";
+  static defaults = {
+    adapter: "openai"
+  };
+  /**
+   * Create a SmartChatModel instance.
+   * @param {Object} opts - Configuration options
+   * @param {string} opts.adapter - Adapter to use
+   * @param {Object} opts.adapters - Map of adapter names to adapter classes
+   * @param {Object} opts.settings - Model settings configuration
+   */
+  constructor(opts = {}) {
+    super(opts);
+  }
+  /**
+   * Get available models.
+   * @returns {Object} Map of model objects
+   */
+  get models() {
+    return this.adapter.models;
+  }
+  get can_stream() {
+    return this.adapter.constructor.defaults.streaming;
+  }
+  get can_use_tools() {
+    return this.adapter.constructor.defaults.can_use_tools;
+  }
+  /**
+   * Complete a chat request.
+   * @param {Object} req - Request parameters
+   * @returns {Promise<Object>} Completion result
+   */
+  async complete(req) {
+    return await this.invoke_adapter_method("complete", req);
+  }
+  /**
+   * Stream chat responses.
+   * @param {Object} req - Request parameters
+   * @param {Object} handlers - Event handlers for streaming
+   * @param {Function} handlers.chunk - Handler for chunks: receives response object
+   * @param {Function} handlers.error - Handler for errors: receives error object
+   * @param {Function} handlers.done - Handler for completion: receives final response object
+   * @returns {Promise<string>} Complete response text
+   */
+  async stream(req, handlers = {}) {
+    return await this.invoke_adapter_method("stream", req, handlers);
+  }
+  /**
+   * Stop active stream.
+   */
+  stop_stream() {
+    this.invoke_adapter_method("stop_stream");
+  }
+  /**
+   * Count tokens in input text.
+   * @param {string|Object} input - Text to count tokens for
+   * @returns {Promise<number>} Token count
+   */
+  async count_tokens(input) {
+    return await this.invoke_adapter_method("count_tokens", input);
+  }
+  /**
+   * Test if API key is valid.
+   * @returns {Promise<boolean>} True if API key is valid
+   */
+  async test_api_key() {
+    await this.invoke_adapter_method("test_api_key");
+    this.re_render_settings();
+  }
+  /**
+   * Get default model key.
+   * @returns {string} Default model key
+   */
+  get default_model_key() {
+    return this.adapter.constructor.defaults.default_model;
+  }
+  /**
+   * Get current settings.
+   * @returns {Object} Settings object
+   */
+  get settings() {
+    return this.opts.settings;
+  }
+  /**
+   * Get settings configuration.
+   * @returns {Object} Settings configuration object
+   */
+  get settings_config() {
+    const _settings_config = {
+      adapter: {
+        name: "Chat Model Platform",
+        type: "dropdown",
+        description: "Select a platform/provider for chat models.",
+        options_callback: "get_platforms_as_options",
+        is_scope: true,
+        // trigger re-render of settings when changed
+        callback: "adapter_changed"
+      },
+      // Merge adapter-specific settings
+      ...this.adapter.settings_config || {}
+    };
+    return this.process_settings_config(_settings_config);
+  }
+  /**
+   * Process setting key.
+   * @param {string} key - Setting key
+   * @returns {string} Processed key
+   */
+  process_setting_key(key) {
+    return key.replace(/\[CHAT_ADAPTER\]/g, this.adapter_name);
+  }
+  /**
+   * Validate the adapter configuration.
+   * @returns {Object} Validation result with 'valid' and 'message'.
+   */
+  validate_config() {
+    return this.adapter.validate_config();
+  }
+};
+
+// node_modules/smart-http-request/smart_http_request.js
+var SmartHttpRequest2 = class {
+  /**
+   * @param {object} opts - Options for the SmartHttpRequest class
+   * @param {SmartHttpRequestAdapter} opts.adapter - The adapter constructor to use for making HTTP requests
+   * @param {Obsidian.requestUrl} opts.obsidian_request_adapter - For use with Obsidian adapter
+   */
+  constructor(opts = {}) {
+    this.opts = opts;
+    if (!opts.adapter) throw new Error("HttpRequestAdapter is required");
+    this.adapter = new opts.adapter(this);
+  }
+  /**
+   * Returns a well-formed response object
+   * @param {object} request_params - Parameters for the HTTP request
+   * @param {string} request_params.url - The URL to make the request to
+   * @param {string} [request_params.method='GET'] - The HTTP method to use
+   * @param {object} [request_params.headers] - Headers to include in the request
+   * @param {*} [request_params.body] - The body of the request (for POST, PUT, etc.)
+   * @returns {SmartHttpResponseAdapter} instance of the SmartHttpResponseAdapter class
+   * @example
+   * const response = await smart_http_request.request({
+   *   url: 'https://api.example.com/data',
+   *   method: 'GET',
+   *   headers: { 'Content-Type': 'application/json' }
+   * });
+   * console.log(await response.json());
+   */
+  async request(request_params) {
+    return await this.adapter.request(request_params);
+  }
+};
+
+// node_modules/smart-http-request/adapters/_adapter.js
+var SmartHttpRequestAdapter2 = class {
+  constructor(main) {
+    this.main = main;
+  }
+  async request(request_params) {
+    throw new Error("request not implemented");
+  }
+};
+var SmartHttpResponseAdapter2 = class {
+  constructor(response) {
+    this.response = response;
+  }
+  async headers() {
+    throw new Error("headers not implemented");
+  }
+  async json() {
+    throw new Error("json not implemented");
+  }
+  async status() {
+    throw new Error("status not implemented");
+  }
+  async text() {
+    throw new Error("text not implemented");
+  }
+};
+
+// node_modules/smart-http-request/adapters/obsidian.js
+var SmartHttpObsidianRequestAdapter2 = class extends SmartHttpRequestAdapter2 {
+  async request(request_params) {
+    let response;
+    try {
+      if (!this.main.opts.obsidian_request_url) {
+        throw new Error("obsidian_request_url is required in SmartHttp constructor opts");
+      }
+      response = await this.main.opts.obsidian_request_url({ ...request_params, throw: false });
+      if (response.status === 400) throw new Error("Obsidian request failed");
+      return new SmartHttpObsidianResponseAdapter2(response);
+    } catch (error) {
+      console.error("Error in SmartHttpObsidianRequestAdapter.request():");
+      console.error(JSON.stringify(request_params, null, 2));
+      console.error(response);
+      console.error(error);
+      return null;
+    }
+  }
+};
+var SmartHttpObsidianResponseAdapter2 = class extends SmartHttpResponseAdapter2 {
+  async status() {
+    return this.response.status;
+  }
+  async json() {
+    return await this.response.json;
+  }
+  async text() {
+    return await this.response.text;
+  }
+  async headers() {
+    return this.response.headers;
+  }
+};
+
+// node_modules/smart-http-request/adapters/fetch.js
+var SmartHttpRequestFetchAdapter2 = class extends SmartHttpRequestAdapter2 {
+  async request(request_params) {
+    const { url, ...opts } = request_params;
+    const resp = await fetch(url, opts);
+    return new SmartHttpResponseFetchAdapter2(resp);
+  }
+};
+var SmartHttpResponseFetchAdapter2 = class extends SmartHttpResponseAdapter2 {
+  async headers() {
+    return this.response.headers;
+  }
+  async json() {
+    if (!this._json) {
+      this._json = await this.response.json();
+    }
+    return this._json;
+  }
+  async status() {
+    return this.response.status;
+  }
+  async text() {
+    if (!this._text) {
+      this._text = await this.response.text();
+    }
+    return this._text;
+  }
+};
+
+// node_modules/smart-chat-model/streamer.js
+var SmartStreamer2 = class {
+  constructor(url, options = {}) {
+    const {
+      method = "GET",
+      headers = {},
+      body = null,
+      withCredentials = false
+    } = options;
+    this.url = url;
+    this.method = method;
+    this.headers = headers;
+    this.body = body;
+    this.withCredentials = withCredentials;
+    this.listeners = {};
+    this.readyState = this.CONNECTING;
+    this.progress = 0;
+    this.chunk = "";
+    this.last_event_id = "";
+    this.xhr = null;
+    this.FIELD_SEPARATOR = ":";
+    this.INITIALIZING = -1;
+    this.CONNECTING = 0;
+    this.OPEN = 1;
+    this.CLOSED = 2;
+    this.chunk_accumulator = "";
+    this.chunk_splitting_regex = options.chunk_splitting_regex || /(\r\n|\n|\r)/g;
+  }
+  /**
+   * Adds an event listener for the specified event type.
+   *
+   * @param {string} type - The type of the event.
+   * @param {Function} listener - The listener function to be called when the event is triggered.
+   */
+  addEventListener(type, listener) {
+    if (!this.listeners[type]) this.listeners[type] = [];
+    if (!this.listeners[type].includes(listener)) this.listeners[type].push(listener);
+  }
+  /**
+   * Removes an event listener from the SmartStreamer instance.
+   *
+   * @param {string} type - The type of event to remove the listener from.
+   * @param {Function} listener - The listener function to remove.
+   */
+  removeEventListener(type, listener) {
+    if (!this.listeners[type]) return;
+    this.listeners[type] = this.listeners[type].filter((callback) => callback !== listener);
+    if (this.listeners[type].length === 0) delete this.listeners[type];
+  }
+  /**
+   * Dispatches an event to the appropriate event handlers.
+   *
+   * @param {Event} event - The event to be dispatched.
+   * @returns {boolean} - Returns true if the event was successfully dispatched, false otherwise.
+   */
+  dispatchEvent(event) {
+    if (!event) return true;
+    event.source = this;
+    const onHandler = "on" + event.type;
+    if (Object.prototype.hasOwnProperty.call(this, onHandler)) {
+      this[onHandler].call(this, event);
+      if (event.defaultPrevented) return false;
+    }
+    if (this.listeners[event.type]) {
+      this.listeners[event.type].forEach((callback) => {
+        callback(event);
+        return !event.defaultPrevented;
+      });
+    }
+    return true;
+  }
+  /**
+   * Initiates the streaming process.
+   */
+  stream() {
+    this.#setReadyState(this.CONNECTING);
+    this.xhr = new XMLHttpRequest();
+    this.xhr.addEventListener("progress", this.#onStreamProgress.bind(this));
+    this.xhr.addEventListener("load", this.#onStreamLoaded.bind(this));
+    this.xhr.addEventListener("readystatechange", this.#checkStreamClosed.bind(this));
+    this.xhr.addEventListener("error", this.#onStreamFailure.bind(this));
+    this.xhr.addEventListener("abort", this.#onStreamAbort.bind(this));
+    this.xhr.open(this.method, this.url);
+    for (const header in this.headers) {
+      this.xhr.setRequestHeader(header, this.headers[header]);
+    }
+    if (this.last_event_id) this.xhr.setRequestHeader("Last-Event-ID", this.last_event_id);
+    this.xhr.withCredentials = this.withCredentials;
+    this.xhr.send(this.body);
+  }
+  /**
+   * Ends the streamer connection.
+   * Aborts the current XHR request and sets the ready state to CLOSED.
+   */
+  end() {
+    if (this.readyState === this.CLOSED) return;
+    this.xhr.abort();
+    this.xhr = null;
+    this.#setReadyState(this.CLOSED);
+  }
+  // private methods
+  #setReadyState(state) {
+    const event = new CustomEvent("readyStateChange");
+    event.readyState = state;
+    this.readyState = state;
+    this.dispatchEvent(event);
+  }
+  #onStreamFailure(e) {
+    const event = new CustomEvent("error");
+    event.data = e.currentTarget.response;
+    this.dispatchEvent(event);
+    this.end();
+  }
+  #onStreamAbort(e) {
+    const event = new CustomEvent("abort");
+    this.end();
+  }
+  #onStreamProgress(e) {
+    if (!this.xhr) return;
+    if (this.xhr.status !== 200) {
+      this.#onStreamFailure(e);
+      return;
+    }
+    if (this.readyState === this.CONNECTING) {
+      this.dispatchEvent(new CustomEvent("open"));
+      this.#setReadyState(this.OPEN);
+    }
+    const data = this.xhr.responseText.substring(this.progress);
+    this.progress += data.length;
+    const parts = data.split(this.chunk_splitting_regex);
+    parts.forEach((part, index) => {
+      if (part.trim().length === 0) {
+        if (this.chunk) {
+          this.dispatchEvent(this.#parseEventChunk(this.chunk.trim()));
+          this.chunk = "";
+        }
+      } else {
+        this.chunk += part;
+        if (index === parts.length - 1 && this.xhr.readyState === XMLHttpRequest.DONE) {
+          this.dispatchEvent(this.#parseEventChunk(this.chunk.trim()));
+          this.chunk = "";
+        }
+      }
+    });
+  }
+  #onStreamLoaded(e) {
+    this.#onStreamProgress(e);
+    this.dispatchEvent(this.#parseEventChunk(this.chunk));
+    this.chunk = "";
+  }
+  #parseEventChunk(chunk) {
+    if (!chunk) return console.log("no chunk");
+    const event = new CustomEvent("message");
+    event.data = chunk;
+    event.last_event_id = this.last_event_id;
+    return event;
+  }
+  #checkStreamClosed() {
+    if (!this.xhr) return;
+    if (this.xhr.readyState === XMLHttpRequest.DONE) this.#setReadyState(this.CLOSED);
+  }
+};
+
+// node_modules/smart-model/adapters/_adapter.js
+var SmartModelAdapter2 = class {
+  /**
+   * Create a SmartModelAdapter instance.
+   * @param {SmartModel} model - The parent SmartModel instance
+   */
+  constructor(model) {
+    this.model = model;
+    this.state = "unloaded";
+  }
+  /**
+   * Load the adapter.
+   * @async
+   * @returns {Promise<void>}
+   */
+  async load() {
+    this.set_state("loaded");
+  }
+  /**
+   * Unload the adapter.
+   * @returns {void}
+   */
+  unload() {
+    this.set_state("unloaded");
+  }
+  /**
+   * Get all settings.
+   * @returns {Object} All settings
+   */
+  get settings() {
+    return this.model.settings;
+  }
+  /**
+   * Get the current model key.
+   * @returns {string} Current model identifier
+   */
+  get model_key() {
+    return this.model.model_key;
+  }
+  /**
+   * Get the current model configuration.
+   * @returns {Object} Model configuration
+   */
+  get model_config() {
+    return this.model.model_config;
+  }
+  /**
+   * Get model-specific settings.
+   * @returns {Object} Settings for current model
+   */
+  get model_settings() {
+    return this.model.model_settings;
+  }
+  /**
+   * Get adapter-specific configuration.
+   * @returns {Object} Adapter configuration
+   */
+  get adapter_config() {
+    return this.model.adapter_config;
+  }
+  /**
+   * Get adapter-specific settings.
+   * @returns {Object} Adapter settings
+   */
+  get adapter_settings() {
+    return this.model.adapter_settings;
+  }
+  /**
+   * Get the models.
+   * @returns {Object} Map of model objects
+   */
+  get models() {
+    if (typeof this.adapter_config.models === "object" && Object.keys(this.adapter_config.models || {}).length > 0) return this.adapter_config.models;
+    else {
+      return {};
+    }
+  }
+  /**
+   * Get available models from the API.
+   * @abstract
+   * @param {boolean} [refresh=false] - Whether to refresh cached models
+   * @returns {Promise<Object>} Map of model objects
+   */
+  async get_models(refresh = false) {
+    throw new Error("get_models not implemented");
+  }
+  /**
+   * Validate the parameters for get_models.
+   * @returns {boolean|Array<Object>} True if parameters are valid, otherwise an array of error objects
+   */
+  validate_get_models_params() {
+    return true;
+  }
+  /**
+   * Get available models as dropdown options synchronously.
+   * @returns {Array<Object>} Array of model options.
+   */
+  get_models_as_options() {
+    const models = this.models;
+    const params_valid = this.validate_get_models_params();
+    if (params_valid !== true) return params_valid;
+    if (!Object.keys(models || {}).length) {
+      this.get_models(true);
+      return [{ value: "", name: "No models currently available" }];
+    }
+    return Object.entries(models).map(([id, model]) => ({ value: id, name: model.name || id })).sort((a, b) => a.name.localeCompare(b.name));
+  }
+  /**
+   * Set the adapter's state.
+   * @deprecated should be handled in SmartModel (only handle once)
+   * @param {('unloaded'|'loading'|'loaded'|'unloading')} new_state - The new state
+   * @throws {Error} If the state is invalid
+   */
+  set_state(new_state) {
+    const valid_states = ["unloaded", "loading", "loaded", "unloading"];
+    if (!valid_states.includes(new_state)) {
+      throw new Error(`Invalid state: ${new_state}`);
+    }
+    this.state = new_state;
+  }
+  // Replace individual state getters/setters with a unified state management
+  get is_loading() {
+    return this.state === "loading";
+  }
+  get is_loaded() {
+    return this.state === "loaded";
+  }
+  get is_unloading() {
+    return this.state === "unloading";
+  }
+  get is_unloaded() {
+    return this.state === "unloaded";
+  }
+};
+
+// node_modules/smart-chat-model/adapters/_adapter.js
+var SmartChatModelAdapter2 = class extends SmartModelAdapter2 {
+  /**
+   * @override in sub-class with adapter-specific default configurations
+   * @property {string} id - The adapter identifier
+   * @property {string} description - Human-readable description
+   * @property {string} type - Adapter type ("API")
+   * @property {string} endpoint - API endpoint
+   * @property {boolean} streaming - Whether streaming is supported
+   * @property {string} adapter - Adapter identifier
+   * @property {string} models_endpoint - Endpoint for retrieving models
+   * @property {string} default_model - Default model to use
+   * @property {string} signup_url - URL for API key signup
+   */
+  static defaults = {};
+  /**
+   * Create a SmartChatModelAdapter instance.
+   * @param {SmartChatModel} model - The parent SmartChatModel instance
+   */
+  constructor(model) {
+    super(model);
+    this.smart_chat = model;
+    this.main = model;
+  }
+  /**
+   * Complete a chat request.
+   * @abstract
+   * @param {Object} req - Request parameters
+   * @returns {Promise<Object>} Completion result
+   */
+  async complete(req) {
+    throw new Error("complete not implemented");
+  }
+  /**
+   * Count tokens in input text.
+   * @abstract
+   * @param {string|Object} input - Text to count tokens for
+   * @returns {Promise<number>} Token count
+   */
+  async count_tokens(input) {
+    throw new Error("count_tokens not implemented");
+  }
+  /**
+   * Stream chat responses.
+   * @abstract
+   * @param {Object} req - Request parameters
+   * @param {Object} handlers - Event handlers for streaming
+   * @returns {Promise<string>} Complete response text
+   */
+  async stream(req, handlers = {}) {
+    throw new Error("stream not implemented");
+  }
+  /**
+   * Test if API key is valid.
+   * @abstract
+   * @returns {Promise<boolean>} True if API key is valid
+   */
+  async test_api_key() {
+    throw new Error("test_api_key not implemented");
+  }
+  /**
+   * Refresh available models.
+   */
+  refresh_models() {
+    console.log("refresh_models");
+    this.get_models(true);
+  }
+  /**
+   * Get settings configuration.
+   * @returns {Object} Settings configuration object
+   */
+  get settings_config() {
+    return {
+      "[CHAT_ADAPTER].model_key": {
+        name: "Chat Model",
+        type: "dropdown",
+        description: "Select a chat model.",
+        options_callback: "adapter.get_models_as_options",
+        callback: "reload_model",
+        default: this.constructor.defaults.default_model
+      },
+      "[CHAT_ADAPTER].refresh_models": {
+        name: "Refresh Models",
+        type: "button",
+        description: "Refresh the list of available models.",
+        callback: "adapter.refresh_models"
+      }
+    };
+  }
+  /**
+   * Validate the adapter configuration.
+   * @abstract
+   * @returns {Object} { valid: boolean, message: string }
+   */
+  validate_config() {
+    throw new Error("validate_config not implemented");
+  }
+  get can_use_tools() {
+    return this.model_config?.can_use_tools || false;
+  }
+};
+
+// node_modules/smart-chat-model/adapters/_api.js
+var SmartChatModelApiAdapter2 = class extends SmartChatModelAdapter2 {
+  /**
+   * Get the request adapter class.
+   * @returns {SmartChatModelRequestAdapter} The request adapter class
+   */
+  get req_adapter() {
+    return SmartChatModelRequestAdapter2;
+  }
+  /**
+   * Get the response adapter class.
+   * @returns {SmartChatModelResponseAdapter} The response adapter class
+   */
+  get res_adapter() {
+    return SmartChatModelResponseAdapter2;
+  }
+  /**
+   * Get or initialize the HTTP adapter.
+   * @returns {SmartHttpRequest} The HTTP adapter instance
+   */
+  get http_adapter() {
+    if (!this._http_adapter) {
+      if (this.model.opts.http_adapter) this._http_adapter = this.model.opts.http_adapter;
+      else this._http_adapter = new SmartHttpRequest2({ adapter: SmartHttpRequestFetchAdapter2 });
+    }
+    return this._http_adapter;
+  }
+  /**
+   * Get the settings configuration for the API adapter.
+   * @returns {Object} Settings configuration object with API key and other settings
+   */
+  get settings_config() {
+    return {
+      ...super.settings_config,
+      "[CHAT_ADAPTER].api_key": {
+        name: "API Key",
+        type: "password",
+        description: "Enter your API key for the chat model platform.",
+        callback: "test_api_key",
+        is_scope: true
+        // trigger re-render of settings when changed (reload models dropdown)
+      }
+    };
+  }
+  /**
+   * Count tokens in the input text.
+   * @abstract
+   * @param {string|Object} input - Text or message object to count tokens for
+   * @returns {Promise<number>} Number of tokens in the input
+   */
+  async count_tokens(input) {
+    throw new Error("count_tokens not implemented");
+  }
+  /**
+   * Get the parameters for requesting available models.
+   * @returns {Object} Request parameters for models endpoint
+   */
+  get models_request_params() {
+    return {
+      url: this.models_endpoint,
+      method: this.models_endpoint_method,
+      headers: {
+        "Authorization": `Bearer ${this.api_key}`
+      }
+    };
+  }
+  /**
+   * Validate parameters required for getting models.
+   * @returns {true|Array<Object>} True if valid, array of error objects if invalid
+   */
+  validate_get_models_params() {
+    if (!this.adapter_config.models_endpoint) {
+      const err_msg = `${this.model.adapter_name} models endpoint required to retrieve models`;
+      console.warn(err_msg);
+      return [{ value: "", name: err_msg }];
+    }
+    if (!this.api_key) {
+      const err_msg = `${this.model.adapter_name} API key required to retrieve models`;
+      console.warn(err_msg);
+      return [{ value: "", name: err_msg }];
+    }
+    return true;
+  }
+  /**
+   * Get available models from the API.
+   * @param {boolean} [refresh=false] - Whether to refresh cached models
+   * @returns {Promise<Object>} Map of model objects
+   */
+  async get_models(refresh = false) {
+    if (!refresh && this.adapter_config?.models && typeof this.adapter_config.models === "object" && Object.keys(this.adapter_config.models).length > 0) return this.adapter_config.models;
+    try {
+      const response = await this.http_adapter.request(this.models_request_params);
+      const model_data = this.parse_model_data(await response.json());
+      this.adapter_settings.models = model_data;
+      this.model.re_render_settings();
+      return model_data;
+    } catch (error) {
+      console.error("Failed to fetch model data:", error);
+      return { "_": { id: `Failed to fetch models from ${this.model.adapter_name}` } };
+    }
+  }
+  /**
+   * Parses the raw model data from OpenAI API and transforms it into a more usable format.
+   * @param {Object} model_data - The raw model data received from OpenAI API.
+   * @returns {Array<Object>} An array of parsed model objects with the following properties:
+   *   @property {string} model_name - The name/ID of the model as returned by the API.
+   *   @property {string} id - The id used to identify the model (usually same as model_name).
+   *   @property {boolean} multimodal - Indicates if the model supports multimodal inputs.
+   *   @property {number} [max_input_tokens] - The maximum number of input tokens the model can process.
+   *   @property {string} [description] - A description of the model's context and output capabilities.
+   */
+  parse_model_data(model_data) {
+    throw new Error("parse_model_data not implemented");
+  }
+  /**
+   * Complete a chat request.
+   * @param {Object} req - Request parameters
+   * @returns {Promise<Object>} Completion response in OpenAI format
+   */
+  async complete(req) {
+    const _req = new this.req_adapter(this, {
+      ...req,
+      stream: false
+    });
+    const request_params = _req.to_platform();
+    const http_resp = await this.http_adapter.request(request_params);
+    if (!http_resp) return null;
+    const _res = new this.res_adapter(this, await http_resp.json());
+    try {
+      return _res.to_openai();
+    } catch (error) {
+      console.error("Error in SmartChatModelApiAdapter.complete():", error);
+      console.error(http_resp);
+      return null;
+    }
+  }
+  // STREAMING
+  /**
+  * Stream chat responses.
+  * @param {Object} req - Request parameters
+  * @param {Object} handlers - Event handlers for streaming
+  * @param {Function} handlers.chunk - Handler for response objects
+  * @param {Function} handlers.error - Handler for errors
+  * @param {Function} handlers.done - Handler for completion
+  * @returns {Promise<Object>} Complete response object
+  */
+  async stream(req, handlers = {}) {
+    const _req = new this.req_adapter(this, req);
+    const request_params = _req.to_platform(true);
+    if (this.streaming_chunk_splitting_regex) request_params.chunk_splitting_regex = this.streaming_chunk_splitting_regex;
+    return await new Promise((resolve, reject) => {
+      try {
+        this.active_stream = new SmartStreamer2(this.endpoint_streaming, request_params);
+        const resp_adapter = new this.res_adapter(this);
+        this.active_stream.addEventListener("message", async (e) => {
+          if (this.is_end_of_stream(e)) {
+            await resp_adapter.handle_chunk(e.data);
+            this.stop_stream();
+            const final_resp = resp_adapter.to_openai();
+            handlers.done && await handlers.done(final_resp);
+            resolve(final_resp);
+            return;
+          }
+          try {
+            resp_adapter.handle_chunk(e.data);
+            handlers.chunk && await handlers.chunk(resp_adapter.to_openai());
+          } catch (error) {
+            console.error("Error processing stream chunk:", error);
+            handlers.error && handlers.error(e.data);
+            this.stop_stream();
+            reject(error);
+          }
+        });
+        this.active_stream.addEventListener("error", (e) => {
+          console.error("Stream error:", e);
+          handlers.error && handlers.error("*API Error. See console logs for details.*");
+          this.stop_stream();
+          reject(e);
+        });
+        this.active_stream.stream();
+      } catch (err) {
+        console.error("Failed to start stream:", err);
+        handlers.error && handlers.error("*API Error. See console logs for details.*");
+        this.stop_stream();
+        reject(err);
+      }
+    });
+  }
+  /**
+   * Check if a stream event indicates end of stream.
+   * @param {Event} event - Stream event
+   * @returns {boolean} True if end of stream
+   */
+  is_end_of_stream(event) {
+    return event.data === "data: [DONE]";
+  }
+  /**
+   * Stop active stream.
+   */
+  stop_stream() {
+    if (this.active_stream) {
+      this.active_stream.end();
+      this.active_stream = null;
+    }
+  }
+  /**
+   * Validate Anthropic adapter configuration.
+   * @returns {Object} { valid: boolean, message: string }
+   */
+  validate_config() {
+    if (!this.adapter_config.model_key || this.adapter_config.model_key === "undefined") return { valid: false, message: "No model selected." };
+    if (!this.api_key) {
+      return { valid: false, message: "API key is missing." };
+    }
+    if (!this.can_use_tools) {
+      return { valid: false, message: "Selected model does not support tools." };
+    }
+    return { valid: true, message: "Configuration is valid." };
+  }
+  /**
+   * Get the API key.
+   * @returns {string} The API key.
+   */
+  get api_key() {
+    return this.main.opts.api_key || this.adapter_config?.api_key;
+  }
+  /**
+  
+     * Get the number of choices.
+     * @returns {number} The number of choices.
+     */
+  get choices() {
+    return this.adapter_config.choices;
+  }
+  get models_endpoint() {
+    return this.adapter_config.models_endpoint;
+  }
+  get models_endpoint_method() {
+    return "POST";
+  }
+  /**
+   * Get the endpoint URL.
+   * @returns {string} The endpoint URL.
+   */
+  get endpoint() {
+    return this.adapter_config.endpoint;
+  }
+  /**
+   * Get the streaming endpoint URL.
+   * @returns {string} The streaming endpoint URL.
+   */
+  get endpoint_streaming() {
+    return this.adapter_config.endpoint_streaming || this.endpoint;
+  }
+  /**
+   * Get the maximum output tokens.
+   * @returns {number} The maximum output tokens.
+   */
+  get max_output_tokens() {
+    return this.adapter_config.max_output_tokens || 3e3;
+  }
+  /**
+   * Get the temperature.
+   * @returns {number} The temperature.
+   */
+  get temperature() {
+    return this.adapter_config.temperature;
+  }
+};
+var SmartChatModelRequestAdapter2 = class {
+  /**
+   * @constructor
+   * @param {SmartChatModelAdapter} adapter - The SmartChatModelAdapter instance
+   * @param {Object} req - The incoming request object
+   */
+  constructor(adapter, req = {}) {
+    this.adapter = adapter;
+    this._req = req;
+  }
+  /**
+   * Get the messages array from the request
+   * @returns {Array<Object>} Array of message objects
+   */
+  get messages() {
+    return this._req.messages || [];
+  }
+  /**
+   * Get the model identifier
+   * @returns {string} Model ID
+   */
+  get model() {
+    return this._req.model || this.adapter.model_config.id;
+  }
+  /**
+   * Get the temperature setting
+   * @returns {number} Temperature value
+   */
+  get temperature() {
+    return this._req.temperature;
+  }
+  /**
+   * Get the maximum tokens setting
+   * @returns {number} Max tokens value
+   */
+  get max_tokens() {
+    return this._req.max_tokens || this.adapter.model_config.max_output_tokens;
+  }
+  /**
+   * Get the streaming flag
+   * @returns {boolean} Whether to stream responses
+   */
+  get stream() {
+    return this._req.stream;
+  }
+  /**
+   * Get the tools array
+   * @returns {Array<Object>|null} Array of tool objects or null
+   */
+  get tools() {
+    return this._req.tools || null;
+  }
+  /**
+   * Get the tool choice setting
+   * @returns {string|Object|null} Tool choice configuration
+   */
+  get tool_choice() {
+    return this._req.tool_choice || null;
+  }
+  get frequency_penalty() {
+    return this._req.frequency_penalty;
+  }
+  get presence_penalty() {
+    return this._req.presence_penalty;
+  }
+  get top_p() {
+    return this._req.top_p;
+  }
+  /**
+   * Get request headers
+   * @returns {Object} Headers object
+   */
+  get_headers() {
+    const headers = {
+      "Content-Type": "application/json",
+      ...this.adapter.adapter_config.headers || {}
+    };
+    if (this.adapter.adapter_config.api_key_header !== "none") {
+      if (this.adapter.adapter_config.api_key_header) {
+        headers[this.adapter.adapter_config.api_key_header] = this.adapter.api_key;
+      } else if (this.adapter.api_key) {
+        headers["Authorization"] = `Bearer ${this.adapter.api_key}`;
+      }
+    }
+    return headers;
+  }
+  /**
+   * Convert request to platform-specific format
+   * @returns {Object} Platform-specific request parameters
+   */
+  to_platform(streaming = false) {
+    return this.to_openai(streaming);
+  }
+  /**
+   * Convert request to OpenAI format
+   * @returns {Object} Request parameters in OpenAI format
+   */
+  to_openai(streaming = false) {
+    const body = {
+      messages: this._transform_messages_to_openai(),
+      model: this.model,
+      max_tokens: this.max_tokens,
+      temperature: this.temperature,
+      stream: streaming,
+      ...this.tools && { tools: this._transform_tools_to_openai() }
+    };
+    if (body.tools?.length > 0 && this.tool_choice && this.tool_choice !== "none") {
+      body.tool_choice = this.tool_choice;
+    }
+    if (this.model?.startsWith("o1-")) {
+      body.messages = body.messages.filter((m) => m.role !== "system");
+      delete body.temperature;
+    }
+    if (typeof this._req.top_p === "number") body.top_p = this._req.top_p;
+    if (typeof this._req.presence_penalty === "number") body.presence_penalty = this._req.presence_penalty;
+    if (typeof this._req.frequency_penalty === "number") body.frequency_penalty = this._req.frequency_penalty;
+    return {
+      url: this.adapter.endpoint,
+      method: "POST",
+      headers: this.get_headers(),
+      body: JSON.stringify(body)
+    };
+  }
+  /**
+   * Transform messages to OpenAI format
+   * @returns {Array<Object>} Transformed messages array
+   * @private
+   */
+  _transform_messages_to_openai() {
+    return this.messages.map((message) => this._transform_single_message_to_openai(message));
+  }
+  /**
+   * Transform a single message to OpenAI format
+   * @param {Object} message - Message object to transform
+   * @returns {Object} Transformed message object
+   * @private
+   */
+  _transform_single_message_to_openai(message) {
+    const transformed = {
+      role: this._get_openai_role(message.role),
+      content: this._get_openai_content(message)
+    };
+    if (message.name) transformed.name = message.name;
+    if (message.tool_calls) transformed.tool_calls = this._transform_tool_calls_to_openai(message.tool_calls);
+    if (message.image_url) transformed.image_url = message.image_url;
+    if (message.tool_call_id) transformed.tool_call_id = message.tool_call_id;
+    return transformed;
+  }
+  /**
+   * Get the OpenAI role for a given role.
+   * @param {string} role - The role to transform.
+   * @returns {string} The transformed role.
+   * @private
+   */
+  _get_openai_role(role) {
+    return role;
+  }
+  /**
+   * Get the OpenAI content for a given content.
+   * @param {string} content - The content to transform.
+   * @returns {string} The transformed content.
+   * @private
+   */
+  _get_openai_content(message) {
+    return message.content;
+  }
+  /**
+   * Transform tool calls to OpenAI format.
+   * @param {Array} tool_calls - Array of tool call objects.
+   * @returns {Array} Transformed tool calls array.
+   * @private
+   */
+  _transform_tool_calls_to_openai(tool_calls) {
+    return tool_calls.map((tool_call) => ({
+      id: tool_call.id,
+      type: tool_call.type,
+      function: {
+        name: tool_call.function.name,
+        arguments: tool_call.function.arguments
+      }
+    }));
+  }
+  /**
+   * Transform tools to OpenAI format.
+   * @returns {Array} Transformed tools array.
+   * @private
+   */
+  _transform_tools_to_openai() {
+    return this.tools.map((tool2) => ({
+      type: tool2.type,
+      function: {
+        name: tool2.function.name,
+        description: tool2.function.description,
+        parameters: tool2.function.parameters
+      }
+    }));
+  }
+};
+var SmartChatModelResponseAdapter2 = class {
+  // must be getter to prevent erroneous assignment
+  static get platform_res() {
+    return {
+      id: "",
+      object: "chat.completion",
+      created: 0,
+      model: "",
+      choices: [],
+      usage: {}
+    };
+  }
+  /**
+   * @constructor
+   * @param {SmartChatModelAdapter} adapter - The SmartChatModelAdapter instance
+   * @param {Object} res - The response object
+   */
+  constructor(adapter, res) {
+    this.adapter = adapter;
+    this._res = res || this.constructor.platform_res;
+  }
+  /**
+   * Get response ID
+   * @returns {string|null} Response ID
+   */
+  get id() {
+    return this._res.id || null;
+  }
+  /**
+   * Get response object type
+   * @returns {string|null} Object type
+   */
+  get object() {
+    return this._res.object || null;
+  }
+  /**
+   * Get creation timestamp
+   * @returns {number|null} Creation timestamp
+   */
+  get created() {
+    return this._res.created || null;
+  }
+  /**
+   * Get response choices
+   * @returns {Array<Object>} Array of choice objects
+   */
+  get choices() {
+    return this._res.choices || [];
+  }
+  /**
+   * Get first tool call if present
+   * @returns {Object|null} Tool call object
+   */
+  get tool_call() {
+    return this.message.tool_calls?.[0] || null;
+  }
+  /**
+   * Get tool name from first tool call
+   * @returns {string|null} Tool name
+   */
+  get tool_name() {
+    return this.tool_call?.tool_name || null;
+  }
+  /**
+   * Get tool call parameters
+   * @returns {Object|null} Tool parameters
+   */
+  get tool_call_content() {
+    return this.tool_call?.parameters || null;
+  }
+  /**
+   * Get token usage statistics
+   * @returns {Object|null} Usage statistics
+   */
+  get usage() {
+    return this._res.usage || null;
+  }
+  get error() {
+    return this._res.error || null;
+  }
+  /**
+   * Convert response to OpenAI format
+   * @returns {Object} Response in OpenAI format
+   */
+  to_openai() {
+    const res = {
+      id: this.id,
+      object: this.object,
+      created: this.created,
+      choices: this._transform_choices_to_openai(),
+      usage: this._transform_usage_to_openai(),
+      raw: this._res
+    };
+    if (this.error) res.error = this.error;
+    return res;
+  }
+  /**
+   * Parse chunk adds delta to content as expected output format
+   */
+  handle_chunk(chunk) {
+    if (chunk === "data: [DONE]") return;
+    chunk = JSON.parse(chunk.split("data: ")[1] || "{}");
+    if (Object.keys(chunk).length === 0) return;
+    if (!this._res.choices[0]) {
+      this._res.choices.push({
+        message: {
+          index: 0,
+          role: "assistant",
+          content: ""
+        }
+      });
+    }
+    if (!this._res.id) {
+      this._res.id = chunk.id;
+    }
+    if (chunk.choices?.[0]?.delta?.content) {
+      this._res.choices[0].message.content += chunk.choices[0].delta.content;
+    }
+    if (chunk.choices?.[0]?.delta?.tool_calls) {
+      if (!this._res.choices[0].message.tool_calls) {
+        this._res.choices[0].message.tool_calls = [{
+          id: "",
+          type: "function",
+          function: {
+            name: "",
+            arguments: ""
+          }
+        }];
+      }
+      if (chunk.choices[0].delta.tool_calls[0].id) {
+        this._res.choices[0].message.tool_calls[0].id += chunk.choices[0].delta.tool_calls[0].id;
+      }
+      if (chunk.choices[0].delta.tool_calls[0].function.name) {
+        this._res.choices[0].message.tool_calls[0].function.name += chunk.choices[0].delta.tool_calls[0].function.name;
+      }
+      if (chunk.choices[0].delta.tool_calls[0].function.arguments) {
+        this._res.choices[0].message.tool_calls[0].function.arguments += chunk.choices[0].delta.tool_calls[0].function.arguments;
+      }
+    }
+  }
+  /**
+   * Transform choices to OpenAI format.
+   * @returns {Array} Transformed choices array.
+   * @private
+   */
+  _transform_choices_to_openai() {
+    return this.choices.map((choice) => ({
+      index: choice.index,
+      message: this._transform_message_to_openai(choice.message),
+      finish_reason: this._get_openai_finish_reason(choice.finish_reason)
+    }));
+  }
+  /**
+   * Transform a single message to OpenAI format.
+   * @param {Object} message - The message object to transform.
+   * @returns {Object} Transformed message object.
+   * @private
+   */
+  _transform_message_to_openai(message = {}) {
+    const transformed = {
+      role: this._get_openai_role(message.role),
+      content: this._get_openai_content(message)
+    };
+    if (message.name) transformed.name = message.name;
+    if (message.tool_calls) transformed.tool_calls = this._transform_tool_calls_to_openai(message.tool_calls);
+    if (message.image_url) transformed.image_url = message.image_url;
+    return transformed;
+  }
+  /**
+   * Get the OpenAI role for a given role.
+   * @param {string} role - The role to transform.
+   * @returns {string} The transformed role.
+   * @private
+   */
+  _get_openai_role(role) {
+    return role;
+  }
+  /**
+   * Get the OpenAI content for a given content.
+   * @param {string} content - The content to transform.
+   * @returns {string} The transformed content.
+   * @private
+   */
+  _get_openai_content(message) {
+    return message.content;
+  }
+  /**
+   * Get the OpenAI finish reason for a given finish reason.
+   * @param {string} finish_reason - The finish reason to transform.
+   * @returns {string} The transformed finish reason.
+   * @private
+   */
+  _get_openai_finish_reason(finish_reason) {
+    return finish_reason;
+  }
+  /**
+   * Transform usage to OpenAI format.
+   * @returns {Object} Transformed usage object.
+   * @private
+   */
+  _transform_usage_to_openai() {
+    return this.usage;
+  }
+  /**
+   * Transform tool calls to OpenAI format.
+   * @param {Array} tool_calls - Array of tool call objects.
+   * @returns {Array} Transformed tool calls array.
+   * @private
+   */
+  _transform_tool_calls_to_openai(tool_calls) {
+    return tool_calls.map((tool_call) => ({
+      id: tool_call.id,
+      type: tool_call.type,
+      function: {
+        name: tool_call.function.name,
+        arguments: tool_call.function.arguments
+      }
+    }));
+  }
+};
+
+// node_modules/smart-chat-model/adapters/anthropic.js
+var SmartChatModelAnthropicAdapter2 = class extends SmartChatModelApiAdapter2 {
+  static key = "anthropic";
+  static defaults = {
+    description: "Anthropic Claude",
+    type: "API",
+    endpoint: "https://api.anthropic.com/v1/messages",
+    // streaming: false,
+    streaming: true,
+    api_key_header: "x-api-key",
+    headers: {
+      "anthropic-version": "2023-06-01",
+      "anthropic-beta": "tools-2024-04-04",
+      "anthropic-dangerous-direct-browser-access": true
+    },
+    adapter: "Anthropic",
+    models_endpoint: false,
+    default_model: "claude-3-5-sonnet-latest",
+    signup_url: "https://console.anthropic.com/login?returnTo=%2Fsettings%2Fkeys",
+    can_use_tools: true
+  };
+  /**
+   * Get request adapter class
+   * @returns {typeof SmartChatModelAnthropicRequestAdapter} Request adapter class
+   */
+  get req_adapter() {
+    return SmartChatModelAnthropicRequestAdapter2;
+  }
+  /**
+   * Get response adapter class
+   * @returns {typeof SmartChatModelAnthropicResponseAdapter} Response adapter class
+   */
+  res_adapter = SmartChatModelAnthropicResponseAdapter2;
+  /**
+   * Validate parameters for getting models
+   * @returns {boolean} Always true since models are hardcoded
+   */
+  validate_get_models_params() {
+    return true;
+  }
+  /**
+   * Get available models (hardcoded list)
+   * @returns {Promise<Object>} Map of model objects
+   */
+  get_models() {
+    return Promise.resolve(this.models);
+  }
+  is_end_of_stream(event) {
+    return event.data.includes("message_stop");
+  }
+  /**
+   * Get hardcoded list of available models
+   * @returns {Object} Map of model objects with capabilities and limits
+   */
+  get models() {
+    return {
+      // ── Claude 4 family ──────────────────────────────────────────────────────
+      "claude-opus-4-20250514": {
+        name: "Claude Opus 4 (2025-05-14)",
+        id: "claude-opus-4-20250514",
+        model_name: "claude-opus-4-20250514",
+        description: "Anthropic's Claude Opus 4 (2025-05-14)",
+        max_input_tokens: 2e5,
+        max_output_tokens: 4e3,
+        multimodal: true
+      },
+      "claude-sonnet-4-20250514": {
+        name: "Claude Sonnet 4 (2025-05-14)",
+        id: "claude-sonnet-4-20250514",
+        model_name: "claude-sonnet-4-20250514",
+        description: "Anthropic's Claude Sonnet 4 (2025-05-14)",
+        max_input_tokens: 2e5,
+        max_output_tokens: 4e3,
+        multimodal: true
+      },
+      // ── Claude 3.7 family ───────────────────────────────────────────────────
+      "claude-3-7-sonnet-latest": {
+        name: "Claude 3.7 Sonnet (Latest)",
+        id: "claude-3-7-sonnet-latest",
+        model_name: "claude-3-7-sonnet-latest",
+        description: "Anthropic's Claude Sonnet 3.7 (Latest)",
+        max_input_tokens: 2e5,
+        max_output_tokens: 4e3,
+        multimodal: true
+      },
+      "claude-3-7-sonnet-20250219": {
+        name: "Claude 3.7 Sonnet (2025-02-19)",
+        id: "claude-3-7-sonnet-20250219",
+        model_name: "claude-3-7-sonnet-20250219",
+        description: "Anthropic's Claude Sonnet 3.7 (2025-02-19)",
+        max_input_tokens: 2e5,
+        max_output_tokens: 4e3,
+        multimodal: true
+      },
+      // ── Claude 3.5 family ───────────────────────────────────────────────────
+      "claude-3-5-sonnet-latest": {
+        name: "Claude 3.5 Sonnet (Latest)",
+        id: "claude-3-5-sonnet-latest",
+        model_name: "claude-3.5-sonnet-latest",
+        description: "Anthropic's Claude Sonnet 3.5 (Latest)",
+        max_input_tokens: 2e5,
+        max_output_tokens: 4e3,
+        multimodal: true
+      },
+      "claude-3-5-sonnet-20241022": {
+        name: "Claude 3.5 Sonnet (2024-10-22)",
+        id: "claude-3-5-sonnet-20241022",
+        model_name: "claude-3-5-sonnet-20241022",
+        description: "Anthropic's Claude Sonnet 3.5 (2024-10-22)",
+        max_input_tokens: 2e5,
+        max_output_tokens: 4e3,
+        multimodal: true
+      },
+      "claude-3.5-sonnet-20240620": {
+        // kept original id typo for backward compatibility
+        name: "Claude 3.5 Sonnet (2024-06-20)",
+        id: "claude-3.5-sonnet-20240620",
+        model_name: "claude-3.5-sonnet-20240620",
+        description: "Anthropic's Claude Sonnet 3.5 (2024-06-20)",
+        max_input_tokens: 2e5,
+        max_output_tokens: 4e3,
+        multimodal: true
+      },
+      "claude-3-5-haiku-latest": {
+        name: "Claude 3.5 Haiku (Latest)",
+        id: "claude-3-5-haiku-latest",
+        model_name: "claude-3.5-haiku-latest",
+        description: "Anthropic's Claude Haiku 3.5 (Latest)",
+        max_input_tokens: 2e5,
+        max_output_tokens: 4e3
+      },
+      "claude-3-5-haiku-20241022": {
+        name: "Claude 3.5 Haiku (2024-10-22)",
+        id: "claude-3-5-haiku-20241022",
+        model_name: "claude-3-5-haiku-20241022",
+        description: "Anthropic's Claude Haiku 3.5 (2024-10-22)",
+        max_input_tokens: 2e5,
+        max_output_tokens: 4e3
+      },
+      // ── Claude 3 family ─────────────────────────────────────────────────────
+      "claude-3-opus-latest": {
+        name: "Claude 3 Opus (Latest)",
+        id: "claude-3-opus-latest",
+        model_name: "claude-3-opus-latest",
+        description: "Anthropic's Claude Opus 3 (Latest)",
+        max_input_tokens: 2e5,
+        max_output_tokens: 4e3,
+        multimodal: true
+      },
+      "claude-3-opus-20240229": {
+        name: "Claude 3 Opus (2024-02-29)",
+        id: "claude-3-opus-20240229",
+        model_name: "claude-3-opus-20240229",
+        description: "Anthropic's Claude Opus 3 (2024-02-29)",
+        max_input_tokens: 2e5,
+        max_output_tokens: 4e3,
+        multimodal: true
+      },
+      "claude-3-sonnet-20240229": {
+        name: "Claude 3 Sonnet (2024-02-29)",
+        id: "claude-3-sonnet-20240229",
+        model_name: "claude-3-sonnet-20240229",
+        description: "Anthropic's Claude Sonnet 3 (2024-02-29)",
+        max_input_tokens: 2e5,
+        max_output_tokens: 4e3,
+        multimodal: true
+      },
+      "claude-3-haiku-20240307": {
+        name: "Claude 3 Haiku (2024-03-07)",
+        id: "claude-3-haiku-20240307",
+        model_name: "claude-3-haiku-20240307",
+        description: "Anthropic's Claude Haiku 3 (2024-03-07)",
+        max_input_tokens: 2e5,
+        max_output_tokens: 4e3,
+        multimodal: true
+      }
+    };
+  }
+};
+var SmartChatModelAnthropicRequestAdapter2 = class extends SmartChatModelRequestAdapter2 {
+  /**
+   * Convert request to Anthropic format
+   * @returns {Object} Request parameters in Anthropic format
+   */
+  to_platform(streaming = false) {
+    return this.to_anthropic(streaming);
+  }
+  /**
+   * Convert request to Anthropic format
+   * @returns {Object} Request parameters in Anthropic format
+   */
+  to_anthropic(streaming = false) {
+    this.anthropic_body = {
+      model: this.model,
+      max_tokens: this.max_tokens,
+      temperature: this.temperature,
+      stream: streaming
+    };
+    this.anthropic_body.messages = this._transform_messages_to_anthropic();
+    if (this.tools) {
+      this.anthropic_body.tools = this._transform_tools_to_anthropic();
+    }
+    if (this.tool_choice) {
+      if (this.tool_choice === "auto") {
+        this.anthropic_body.tool_choice = { type: "auto" };
+      } else if (typeof this.tool_choice === "object" && this.tool_choice.function) {
+        this.anthropic_body.tool_choice = { type: "tool", name: this.tool_choice.function.name };
+      }
+    }
+    return {
+      url: this.adapter.endpoint,
+      method: "POST",
+      headers: this.get_headers(),
+      body: JSON.stringify(this.anthropic_body)
+    };
+  }
+  /**
+   * Transform messages to Anthropic format
+   * @returns {Array<Object>} Messages in Anthropic format
+   * @private
+   */
+  _transform_messages_to_anthropic() {
+    let anthropic_messages = [];
+    for (const message of this.messages) {
+      if (message.role === "system") {
+        if (!this.anthropic_body.system) this.anthropic_body.system = "";
+        else this.anthropic_body.system += "\n\n";
+        this.anthropic_body.system += Array.isArray(message.content) ? message.content.map((part) => part.text).join("\n") : message.content;
+      } else if (message.role === "tool") {
+        const msg = {
+          role: "user",
+          content: [
+            {
+              type: "tool_result",
+              tool_use_id: message.tool_call_id,
+              content: message.content
+            }
+          ]
+        };
+        anthropic_messages.push(msg);
+      } else {
+        const msg = {
+          role: this._get_anthropic_role(message.role),
+          content: this._get_anthropic_content(message.content)
+        };
+        if (message.tool_calls?.length > 0) msg.content = this._transform_tool_calls_to_content(message.tool_calls);
+        anthropic_messages.push(msg);
+      }
+    }
+    return anthropic_messages;
+  }
+  /**
+   * Transform tool calls to Anthropic format
+   * @param {Array<Object>} tool_calls - Tool calls
+   * @returns {Array<Object>} Tool calls in Anthropic format
+   * @private
+   */
+  _transform_tool_calls_to_content(tool_calls) {
+    return tool_calls.map((tool_call) => ({
+      type: "tool_use",
+      id: tool_call.id,
+      name: tool_call.function.name,
+      input: JSON.parse(tool_call.function.arguments)
+    }));
+  }
+  /**
+   * Transform role to Anthropic format
+   * @param {string} role - Original role
+   * @returns {string} Role in Anthropic format
+   * @private
+   */
+  _get_anthropic_role(role) {
+    const role_map = {
+      function: "assistant",
+      // Anthropic doesn't have a function role, so we'll treat it as assistant
+      tool: "user"
+    };
+    return role_map[role] || role;
+  }
+  /**
+   * Transform content to Anthropic format
+   * @param {string|Array} content - Original content
+   * @returns {string|Array} Content in Anthropic format
+   * @private
+   */
+  _get_anthropic_content(content) {
+    if (Array.isArray(content)) {
+      return content.map((item) => {
+        if (item.type === "text") return { type: "text", text: item.text };
+        if (item.type === "image_url") {
+          return {
+            type: "image",
+            source: {
+              type: "base64",
+              media_type: item.image_url.url.split(";")[0].split(":")[1],
+              data: item.image_url.url.split(",")[1]
+            }
+          };
+        }
+        if (item.type === "file" && item.file?.filename?.toLowerCase().endsWith(".pdf")) {
+          if (item.file?.file_data) {
+            return {
+              type: "document",
+              source: {
+                type: "base64",
+                media_type: "application/pdf",
+                data: item.file.file_data.split(",")[1]
+              }
+            };
+          }
+        }
+        return item;
+      });
+    }
+    return content;
+  }
+  /**
+   * Transform tools to Anthropic format
+   * @returns {Array<Object>} Tools in Anthropic format
+   * @private
+   */
+  _transform_tools_to_anthropic() {
+    if (!this.tools) return void 0;
+    return this.tools.map((tool2) => ({
+      name: tool2.function.name,
+      description: tool2.function.description,
+      input_schema: tool2.function.parameters
+    }));
+  }
+};
+var SmartChatModelAnthropicResponseAdapter2 = class extends SmartChatModelResponseAdapter2 {
+  static get platform_res() {
+    return {
+      content: [],
+      id: "",
+      model: "",
+      role: "assistant",
+      stop_reason: null,
+      stop_sequence: null,
+      type: "message",
+      usage: {
+        input_tokens: 0,
+        output_tokens: 0
+      }
+    };
+  }
+  /**
+   * Convert response to OpenAI format
+   * @returns {Object} Response in OpenAI format
+   */
+  to_openai() {
+    return {
+      id: this._res.id,
+      object: "chat.completion",
+      created: Date.now(),
+      choices: [
+        {
+          index: 0,
+          message: this._transform_message_to_openai(),
+          finish_reason: this._get_openai_finish_reason(this._res.stop_reason)
+        }
+      ],
+      usage: this._transform_usage_to_openai()
+    };
+  }
+  /**
+   * Transform message to OpenAI format
+   * @returns {Object} Message in OpenAI format
+   * @private
+   */
+  _transform_message_to_openai() {
+    const message = {
+      role: "assistant",
+      content: "",
+      tool_calls: []
+    };
+    if (Array.isArray(this._res.content)) {
+      for (const content of this._res.content) {
+        if (content.type === "text") {
+          message.content += (message.content ? "\n\n" : "") + content.text;
+        } else if (content.type === "tool_use") {
+          message.tool_calls.push({
+            id: content.id,
+            type: "function",
+            function: {
+              name: content.name,
+              arguments: JSON.stringify(content.input)
+            }
+          });
+        }
+      }
+    } else {
+      message.content = this._res.content;
+    }
+    if (message.tool_calls.length === 0) {
+      delete message.tool_calls;
+    }
+    return message;
+  }
+  /**
+   * Transform finish reason to OpenAI format
+   * @param {string} stop_reason - Original finish reason
+   * @returns {string} Finish reason in OpenAI format
+   * @private
+   */
+  _get_openai_finish_reason(stop_reason) {
+    const reason_map = {
+      "end_turn": "stop",
+      "max_tokens": "length",
+      "tool_use": "function_call"
+    };
+    return reason_map[stop_reason] || stop_reason;
+  }
+  /**
+   * Transform usage statistics to OpenAI format
+   * @returns {Object} Usage statistics in OpenAI format
+   * @private
+   */
+  _transform_usage_to_openai() {
+    if (!this._res.usage) {
+      return {
+        prompt_tokens: 0,
+        completion_tokens: 0,
+        total_tokens: 0
+      };
+    }
+    return {
+      prompt_tokens: this._res.usage.input_tokens || 0,
+      completion_tokens: this._res.usage.output_tokens || 0,
+      total_tokens: (this._res.usage.input_tokens || 0) + (this._res.usage.output_tokens || 0)
+    };
+  }
+  handle_chunk(chunk) {
+    if (!chunk.startsWith("data: ")) return;
+    chunk = JSON.parse(chunk.slice(6));
+    if (!this._res.content.length) {
+      this._res.content = [
+        {
+          type: "text",
+          text: ""
+        }
+      ];
+    }
+    if (chunk.message?.id) {
+      this._res.id = chunk.message.id;
+    }
+    if (chunk.message?.model) {
+      this._res.model = chunk.message.model;
+    }
+    if (chunk.message?.role) {
+      this._res.role = chunk.message.role;
+    }
+    if (chunk.delta?.type === "text_delta") {
+      this._res.content[0].text += chunk.delta.text;
+    }
+    if (chunk.delta?.stop_reason) {
+      this._res.stop_reason = chunk.delta.stop_reason;
+    }
+    if (chunk.usage) {
+      this._res.usage = {
+        ...this._res.usage,
+        ...chunk.usage
+      };
+    }
+  }
+};
+
+// node_modules/smart-chat-model/adapters/openai.js
+var EXCLUDED_PREFIXES2 = [
+  "text-",
+  "davinci",
+  "babbage",
+  "ada",
+  "curie",
+  "dall-e",
+  "whisper",
+  "omni",
+  "tts",
+  "gpt-4o-mini-tts",
+  "computer-use",
+  "codex",
+  "gpt-4o-transcribe",
+  "gpt-4o-mini-transcribe",
+  "gpt-4o-mini-realtime",
+  "gpt-4o-realtime",
+  "o4-mini-deep-research",
+  "o3-deep-research",
+  "gpt-image"
+];
+var SmartChatModelOpenaiAdapter2 = class extends SmartChatModelApiAdapter2 {
+  static key = "openai";
+  static defaults = {
+    description: "OpenAI",
+    type: "API",
+    endpoint: "https://api.openai.com/v1/chat/completions",
+    streaming: true,
+    models_endpoint: "https://api.openai.com/v1/models",
+    default_model: "gpt-4.1-mini",
+    signup_url: "https://platform.openai.com/api-keys",
+    can_use_tools: true
+  };
+  res_adapter = SmartChatModelOpenaiResponseAdapter2;
+  /**
+   * Parse model data from OpenAI API response.
+   * Filters for GPT models and adds context window information.
+   * @param {Object} model_data - Raw model data from OpenAI
+   * @returns {Object} Map of model objects with capabilities and limits
+   */
+  parse_model_data(model_data) {
+    return model_data.data.filter((model) => !EXCLUDED_PREFIXES2.some((m) => model.id.startsWith(m)) && !model.id.includes("-instruct")).reduce((acc, model) => {
+      const out = {
+        model_name: model.id,
+        id: model.id,
+        multimodal: true,
+        can_use_tools: true,
+        max_input_tokens: get_max_input_tokens2(model.id)
+      };
+      acc[model.id] = out;
+      return acc;
+    }, {});
+  }
+  /**
+   * Override the HTTP method for fetching models.
+   */
+  models_endpoint_method = "GET";
+  /**
+   * Test the API key by attempting to fetch models.
+   * @returns {Promise<boolean>} True if API key is valid
+   */
+  async test_api_key() {
+    const models = await this.get_models();
+    return models.length > 0;
+  }
+  /**
+   * Get settings configuration for OpenAI adapter.
+   * Adds image resolution setting for multimodal models.
+   * @returns {Object} Settings configuration object
+   */
+  get settings_config() {
+    const config = super.settings_config;
+    if (this.adapter?.model_config?.multimodal) {
+      config["[CHAT_ADAPTER].image_resolution"] = {
+        name: "Image Resolution",
+        type: "dropdown",
+        description: "Select the image resolution for the chat model.",
+        option_1: "low",
+        option_2: "high",
+        default: "low"
+      };
+    }
+    config["[CHAT_ADAPTER].open_ai_note"] = {
+      name: "Note about using OpenAI",
+      type: "html",
+      value: "<b>OpenAI models:</b> Some models require extra verification steps in your OpenAI account for them to appear in the model list."
+    };
+    return config;
+  }
+};
+function get_max_input_tokens2(model_id) {
+  if (model_id.startsWith("gpt-4.1")) {
+    return 1e6;
+  }
+  if (model_id.startsWith("o")) {
+    return 2e5;
+  }
+  if (model_id.startsWith("gpt-4o") || model_id.startsWith("gpt-4.5") || model_id.startsWith("gpt-4-turbo")) {
+    return 128e3;
+  }
+  if (model_id.startsWith("gpt-4")) {
+    return 8192;
+  }
+  if (model_id.startsWith("gpt-3")) {
+    return 16385;
+  }
+  return 8e3;
+}
+var SmartChatModelOpenaiResponseAdapter2 = class extends SmartChatModelResponseAdapter2 {
+};
+
+// node_modules/smart-chat-model/adapters/azure.js
+var SmartChatModelAzureAdapter2 = class extends SmartChatModelOpenaiAdapter2 {
+  static key = "azure";
+  static defaults = {
+    description: "Azure OpenAI",
+    type: "API",
+    adapter: "AzureOpenAI",
+    streaming: true,
+    api_key_header: "api-key",
+    azure_resource_name: "",
+    azure_deployment_name: "",
+    azure_api_version: "2024-10-01-preview",
+    default_model: "gpt-35-turbo",
+    signup_url: "https://learn.microsoft.com/azure/cognitive-services/openai/quickstart?tabs=command-line",
+    models_endpoint: "https://{azure_resource_name}.openai.azure.com/openai/deployments?api-version={azure_api_version}",
+    can_use_tools: true
+  };
+  /**
+   * Override the settings configuration to include Azure-specific fields.
+   */
+  get settings_config() {
+    return {
+      ...super.settings_config,
+      "[CHAT_ADAPTER].azure_resource_name": {
+        name: "Azure Resource Name",
+        type: "text",
+        description: "The name of your Azure OpenAI resource (e.g. 'my-azure-openai').",
+        default: ""
+      },
+      "[CHAT_ADAPTER].azure_deployment_name": {
+        name: "Azure Deployment Name",
+        type: "text",
+        description: "The name of your specific model deployment (e.g. 'gpt35-deployment').",
+        default: ""
+      },
+      "[CHAT_ADAPTER].azure_api_version": {
+        name: "Azure API Version",
+        type: "text",
+        description: "The API version for Azure OpenAI (e.g. '2024-10-01-preview').",
+        default: "2024-10-01-preview"
+      }
+    };
+  }
+  /**
+   * Build the endpoint dynamically based on Azure settings.
+   * Example:
+   *  https://<RESOURCE>.openai.azure.com/openai/deployments/<DEPLOYMENT>/chat/completions?api-version=2023-05-15
+   */
+  get endpoint() {
+    const { azure_resource_name, azure_deployment_name, azure_api_version } = this.adapter_config;
+    return `https://${azure_resource_name}.openai.azure.com/openai/deployments/${azure_deployment_name}/chat/completions?api-version=${azure_api_version}`;
+  }
+  /**
+   * For streaming, we can reuse the same endpoint. 
+   * The request body includes `stream: true` which the base class uses.
+   */
+  get endpoint_streaming() {
+    return this.endpoint;
+  }
+  /**
+   * The models endpoint for retrieving a list of your deployments.
+   * E.g.:
+   *   https://<RESOURCE>.openai.azure.com/openai/deployments?api-version=2023-05-15
+   */
+  get models_endpoint() {
+    const { azure_resource_name, azure_api_version } = this.adapter_config;
+    return `https://${azure_resource_name}.openai.azure.com/openai/deployments?api-version=${azure_api_version}`;
+  }
+  /**
+   * Azure returns a list of deployments in the shape:
+   * {
+   *   "object": "list",
+   *   "data": [
+   *     {
+   *       "id": "mydeployment",
+   *       "model": "gpt-35-turbo",
+   *       "status": "succeeded",
+   *       "createdAt": ...
+   *       "updatedAt": ...
+   *       ...
+   *     },
+   *     ...
+   *   ]
+   * }
+   * We'll parse them into a dictionary keyed by deployment ID.
+   */
+  parse_model_data(model_data) {
+    if (model_data.object !== "list" || !Array.isArray(model_data.data)) {
+      return { "_": { id: "No deployments found." } };
+    }
+    const parsed = {};
+    for (const d of model_data.data) {
+      parsed[d.id] = {
+        model_name: d.id,
+        id: d.id,
+        raw: d,
+        // You can add more details if you want:
+        description: `Model: ${d.model}, Status: ${d.status}`,
+        // Hard to guess tokens; omit or guess:
+        max_input_tokens: 4e3
+      };
+    }
+    return parsed;
+  }
+  /**
+   * Validate the Azure configuration fields.
+   */
+  validate_config() {
+    const { azure_resource_name, azure_deployment_name, azure_api_version } = this.adapter_config;
+    if (!azure_resource_name) {
+      return { valid: false, message: "Azure resource name is missing." };
+    }
+    if (!azure_deployment_name) {
+      return { valid: false, message: "Azure deployment name is missing." };
+    }
+    if (!azure_api_version) {
+      return { valid: false, message: "Azure API version is missing." };
+    }
+    if (!this.api_key) {
+      return { valid: false, message: "Azure OpenAI API key is missing." };
+    }
+    return { valid: true, message: "Configuration is valid." };
+  }
+};
+
+// node_modules/smart-chat-model/adapters/google.js
+var SmartChatModelGeminiAdapter2 = class extends SmartChatModelApiAdapter2 {
+  static key = "gemini";
+  static defaults = {
+    description: "Google Gemini",
+    type: "API",
+    api_key_header: "none",
+    endpoint: "https://generativelanguage.googleapis.com/v1beta/models/MODEL_NAME:generateContent",
+    endpoint_streaming: "https://generativelanguage.googleapis.com/v1beta/models/MODEL_NAME:streamGenerateContent",
+    streaming: true,
+    adapter: "Gemini",
+    models_endpoint: "https://generativelanguage.googleapis.com/v1beta/models",
+    default_model: "gemini-1.5-pro",
+    signup_url: "https://ai.google.dev/",
+    can_use_tools: true
+  };
+  streaming_chunk_splitting_regex = /(\r\n|\n|\r){2}/g;
+  // handle Google's BS (split on double newlines only)
+  /**
+   * Get request adapter class
+   */
+  req_adapter = SmartChatModelGeminiRequestAdapter2;
+  /**
+   * Get response adapter class
+   */
+  res_adapter = SmartChatModelGeminiResponseAdapter2;
+  /**
+   * Uses Gemini's dedicated token counting endpoint
+   */
+  async count_tokens(input) {
+    const req = {
+      url: `https://generativelanguage.googleapis.com/v1beta/models/${this.model_key}:countTokens?key=${this.api_key}`,
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(this.prepare_token_count_body(input))
+    };
+    const resp = await this.http_adapter.request(req);
+    return resp.json.totalTokens;
+  }
+  /**
+   * Formats input for token counting based on type
+   * @private
+   */
+  prepare_token_count_body(input) {
+    if (typeof input === "string") {
+      return { contents: [{ parts: [{ text: input }] }] };
+    } else if (Array.isArray(input)) {
+      return { contents: input.map((msg) => this.transform_message_for_token_count(msg)) };
+    } else if (typeof input === "object") {
+      return { contents: [this.transform_message_for_token_count(input)] };
+    }
+    throw new Error("Invalid input for count_tokens");
+  }
+  /**
+   * Transforms message for token counting, handling text and images
+   * @private
+   */
+  transform_message_for_token_count(message) {
+    return {
+      role: message.role === "assistant" ? "model" : message.role,
+      parts: Array.isArray(message.content) ? message.content.map((part) => {
+        if (part.type === "text") return { text: part.text };
+        if (part.type === "image_url") return {
+          inline_data: {
+            mime_type: part.image_url.url.split(";")[0].split(":")[1],
+            data: part.image_url.url.split(",")[1]
+          }
+        };
+        return part;
+      }) : [{ text: message.content }]
+    };
+  }
+  /**
+   * Builds endpoint URLs with model and API key
+   */
+  get endpoint() {
+    return `https://generativelanguage.googleapis.com/v1beta/models/${this.model_key}:generateContent?key=${this.api_key}`;
+  }
+  get endpoint_streaming() {
+    return `https://generativelanguage.googleapis.com/v1beta/models/${this.model_key}:streamGenerateContent?key=${this.api_key}`;
+  }
+  // /**
+  //  * Extracts text from Gemini's streaming format
+  //  */
+  // get_text_chunk_from_stream(event) {
+  //   const data = JSON.parse(event.data);
+  //   return data.candidates[0]?.content?.parts[0]?.text || '';
+  // }
+  /**
+   * Get models endpoint URL with API key
+   * @returns {string} Complete models endpoint URL
+   */
+  get models_endpoint() {
+    return `${this.constructor.defaults.models_endpoint}?key=${this.api_key}`;
+  }
+  /**
+   * Get HTTP method for models endpoint
+   * @returns {string} HTTP method ("GET")
+   */
+  get models_endpoint_method() {
+    return "GET";
+  }
+  get models_request_params() {
+    return {
+      url: this.models_endpoint,
+      method: this.models_endpoint_method
+    };
+  }
+  /**
+   * Parse model data from Gemini API response
+   * @param {Object} model_data - Raw model data from API
+   * @returns {Object} Map of model objects with capabilities and limits
+   */
+  parse_model_data(model_data) {
+    return model_data.models.filter((model) => model.name.startsWith("models/gemini")).reduce((acc, model) => {
+      const out = {
+        model_name: model.name.split("/").pop(),
+        id: model.name.split("/").pop(),
+        max_input_tokens: model.inputTokenLimit,
+        max_output_tokens: model.maxOutputTokens,
+        description: model.description,
+        multimodal: model.name.includes("vision") || model.description.includes("multimodal"),
+        raw: model
+      };
+      acc[model.name.split("/").pop()] = out;
+      return acc;
+    }, {});
+  }
+  is_end_of_stream(event) {
+    return event.data.includes('"finishReason"');
+    return false;
+  }
+};
+var SmartChatModelGeminiRequestAdapter2 = class extends SmartChatModelRequestAdapter2 {
+  to_platform(streaming = false) {
+    return this.to_gemini(streaming);
+  }
+  to_gemini(streaming = false) {
+    const gemini_body = {
+      contents: this._transform_messages_to_gemini(),
+      generationConfig: {
+        temperature: this.temperature,
+        maxOutputTokens: this.max_tokens,
+        topK: this._req.topK || 1,
+        topP: this._req.topP || 1,
+        stopSequences: this._req.stop || []
+      },
+      safetySettings: [
+        {
+          category: "HARM_CATEGORY_HARASSMENT",
+          threshold: "BLOCK_NONE"
+        },
+        {
+          category: "HARM_CATEGORY_HATE_SPEECH",
+          threshold: "BLOCK_NONE"
+        },
+        {
+          category: "HARM_CATEGORY_SEXUALLY_EXPLICIT",
+          threshold: "BLOCK_NONE"
+        },
+        {
+          category: "HARM_CATEGORY_DANGEROUS_CONTENT",
+          threshold: "BLOCK_NONE"
+        }
+      ]
+    };
+    if (this.tools) gemini_body.tools = this._transform_tools_to_gemini();
+    if (gemini_body.tools && this.tool_choice !== "none") gemini_body.tool_config = this._transform_tool_choice_to_gemini();
+    return {
+      url: streaming ? this.adapter.endpoint_streaming : this.adapter.endpoint,
+      method: "POST",
+      headers: this.get_headers(),
+      body: JSON.stringify(gemini_body)
+    };
+  }
+  _transform_messages_to_gemini() {
+    let gemini_messages = [];
+    let system_message = "";
+    for (const message of this.messages) {
+      if (message.role === "system") {
+        system_message += message.content + "\n";
+      } else {
+        gemini_messages.push({
+          role: this._get_gemini_role(message.role),
+          parts: this._transform_content_to_gemini(message.content)
+        });
+      }
+    }
+    if (system_message) {
+      gemini_messages.unshift({
+        role: "user",
+        parts: [{ text: system_message.trim() }]
+      });
+    }
+    return gemini_messages;
+  }
+  _get_gemini_role(role) {
+    const role_map = {
+      user: "user",
+      assistant: "model",
+      function: "model"
+      // Gemini doesn't have a function role, so we'll treat it as model
+    };
+    return role_map[role] || role;
+  }
+  _transform_content_to_gemini(content) {
+    if (Array.isArray(content)) {
+      return content.map((part) => {
+        if (part.type === "text") return { text: part.text };
+        if (part.type === "image_url") {
+          return {
+            inline_data: {
+              mime_type: part.image_url.url.split(";")[0].split(":")[1],
+              data: part.image_url.url.split(",")[1]
+            }
+          };
+        }
+        if (part.type === "file" && part.file?.filename?.toLowerCase().endsWith(".pdf")) {
+          if (part.file?.file_data) {
+            return {
+              inline_data: {
+                mime_type: "application/pdf",
+                data: part.file.file_data.split(",")[1]
+              }
+            };
+          }
+        }
+        return part;
+      });
+    }
+    return [{ text: content }];
+  }
+  _transform_tools_to_gemini() {
+    return [{
+      function_declarations: this.tools.map((tool2) => ({
+        name: tool2.function.name,
+        description: tool2.function.description,
+        parameters: tool2.function.parameters
+      }))
+    }];
+  }
+  _transform_tool_choice_to_gemini() {
+    return {
+      function_calling_config: {
+        mode: "ANY",
+        allowed_function_names: this.tools.map((tool2) => tool2.function.name)
+      }
+    };
+  }
+};
+var SmartChatModelGeminiResponseAdapter2 = class extends SmartChatModelResponseAdapter2 {
+  static get platform_res() {
+    return {
+      candidates: [{
+        content: {
+          parts: [
+            {
+              text: ""
+            }
+          ],
+          role: ""
+        },
+        finishReason: ""
+      }],
+      promptFeedback: {},
+      usageMetadata: {}
+    };
+  }
+  to_openai() {
+    const first_candidate = this._res.candidates[0];
+    if (!this._res.id) this._res.id = "gemini-" + Date.now().toString();
+    return {
+      id: this._res.id,
+      object: "chat.completion",
+      created: Date.now(),
+      model: this.adapter.model_key,
+      choices: [{
+        index: 0,
+        message: first_candidate?.content ? this._transform_message_to_openai(first_candidate.content) : "",
+        finish_reason: this._get_openai_finish_reason(first_candidate.finishReason)
+      }],
+      usage: this._transform_usage_to_openai()
+    };
+  }
+  _transform_message_to_openai(content) {
+    const message = {
+      role: "assistant",
+      content: content.parts.filter((part) => part.text).map((part) => part.text).join("")
+    };
+    const function_call = content.parts.find((part) => part.functionCall);
+    if (function_call) {
+      message.tool_calls = [{
+        type: "function",
+        function: {
+          name: function_call.functionCall.name,
+          arguments: JSON.stringify(function_call.functionCall.args)
+        }
+      }];
+    }
+    return message;
+  }
+  _get_openai_finish_reason(finish_reason) {
+    const reason_map = {
+      "STOP": "stop",
+      "MAX_TOKENS": "length",
+      "SAFETY": "content_filter",
+      "RECITATION": "content_filter",
+      "OTHER": "null"
+    };
+    return reason_map[finish_reason] || finish_reason.toLowerCase();
+  }
+  _transform_usage_to_openai() {
+    if (!this._res.usageMetadata) {
+      return {
+        prompt_tokens: null,
+        completion_tokens: null,
+        total_tokens: null
+      };
+    }
+    return {
+      prompt_tokens: this._res.usageMetadata.promptTokenCount || null,
+      completion_tokens: this._res.usageMetadata.candidatesTokenCount || null,
+      total_tokens: this._res.usageMetadata.totalTokenCount || null
+    };
+  }
+  handle_chunk(chunk) {
+    let chunk_trimmed = chunk.trim();
+    if (["[", ","].includes(chunk_trimmed[0])) chunk_trimmed = chunk_trimmed.slice(1);
+    if (["]", ","].includes(chunk_trimmed[chunk_trimmed.length - 1])) chunk_trimmed = chunk_trimmed.slice(0, -1);
+    const data = JSON.parse(chunk_trimmed);
+    if (data.candidates?.[0]?.content?.parts?.[0]?.text?.length) {
+      this._res.candidates[0].content.parts[0].text += data.candidates[0].content.parts[0].text;
+    }
+    if (data.candidates?.[0]?.content?.role?.length) {
+      this._res.candidates[0].content.role = data.candidates[0].content.role;
+    }
+    if (data.candidates?.[0]?.finishReason?.length) {
+      this._res.candidates[0].finishReason += data.candidates[0].finishReason;
+    }
+    if (data.promptFeedback) {
+      this._res.promptFeedback = {
+        ...this._res.promptFeedback || {},
+        ...data.promptFeedback
+      };
+    }
+    if (data.usageMetadata) {
+      this._res.usageMetadata = {
+        ...this._res.usageMetadata || {},
+        ...data.usageMetadata
+      };
+    }
+    if (data.candidates?.[0]?.content?.parts?.[0]?.functionCall) {
+      if (!this._res.candidates[0].content.parts[0].functionCall) {
+        this._res.candidates[0].content.parts[0].functionCall = {
+          name: "",
+          args: {}
+        };
+      }
+      this._res.candidates[0].content.parts[0].functionCall.name += data.candidates[0].content.parts[0].functionCall.name;
+      if (data.candidates[0].content.parts[0].functionCall.args) {
+        Object.entries(data.candidates[0].content.parts[0].functionCall.args).forEach(([key, value]) => {
+          if (!this._res.candidates[0].content.parts[0].functionCall.args[key]) {
+            this._res.candidates[0].content.parts[0].functionCall.args[key] = "";
+          }
+          this._res.candidates[0].content.parts[0].functionCall.args[key] += value;
+        });
+      }
+    }
+  }
+};
+
+// node_modules/smart-chat-model/adapters/open_router.js
+var SmartChatModelOpenRouterAdapter2 = class extends SmartChatModelApiAdapter2 {
+  static key = "open_router";
+  static defaults = {
+    description: "Open Router",
+    type: "API",
+    endpoint: "https://openrouter.ai/api/v1/chat/completions",
+    streaming: true,
+    adapter: "OpenRouter",
+    models_endpoint: "https://openrouter.ai/api/v1/models",
+    default_model: "mistralai/mistral-7b-instruct:free",
+    signup_url: "https://accounts.openrouter.ai/sign-up?redirect_url=https%3A%2F%2Fopenrouter.ai%2Fkeys",
+    can_use_tools: true
+  };
+  /**
+   * Get request adapter class
+   * @returns {typeof SmartChatModelOpenRouterRequestAdapter} Request adapter class
+   */
+  get req_adapter() {
+    return SmartChatModelOpenRouterRequestAdapter2;
+  }
+  /**
+   * Get response adapter class
+   * @returns {typeof SmartChatModelOpenRouterResponseAdapter} Response adapter class
+   */
+  get res_adapter() {
+    return SmartChatModelOpenRouterResponseAdapter2;
+  }
+  /**
+   * Get API key from various sources
+   * @returns {string|undefined} API key if available
+   */
+  get api_key() {
+    return this.main.opts.api_key || this.adapter_settings?.api_key || "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";
+  }
+  /**
+   * Count tokens in input text (rough estimate)
+   * @param {string|Object} input - Text to count tokens for
+   * @returns {Promise<number>} Estimated token count
+   */
+  async count_tokens(input) {
+    const text = typeof input === "string" ? input : JSON.stringify(input);
+    return Math.ceil(text.length / 4);
+  }
+  get models_request_params() {
+    return {
+      url: this.models_endpoint,
+      method: "GET"
+    };
+  }
+  /**
+   * Parse model data from OpenRouter API response
+   * @param {Object} model_data - Raw model data
+   * @returns {Object} Map of model objects with capabilities and limits
+   */
+  parse_model_data(model_data) {
+    if (model_data.data) {
+      model_data = model_data.data;
+    }
+    if (model_data.error) throw new Error(model_data.error);
+    return model_data.reduce((acc, model) => {
+      acc[model.id] = {
+        model_name: model.id,
+        id: model.id,
+        max_input_tokens: model.context_length,
+        description: model.name,
+        can_use_tools: model.description.includes("tool use") || model.description.includes("function call"),
+        multimodal: model.architecture.modality === "multimodal",
+        raw: model
+      };
+      return acc;
+    }, {});
+  }
+};
+var SmartChatModelOpenRouterRequestAdapter2 = class extends SmartChatModelRequestAdapter2 {
+  to_platform(stream = false) {
+    const req = this.to_openai(stream);
+    return req;
+  }
+  _get_openai_content(message) {
+    if (message.role === "user") {
+      if (Array.isArray(message.content) && message.content.every((part) => part.type === "text")) {
+        return message.content.map((part) => part.text).join("\n");
+      }
+    }
+    return message.content;
+  }
+};
+var SmartChatModelOpenRouterResponseAdapter2 = class extends SmartChatModelResponseAdapter2 {
+  static get platform_res() {
+    return {
+      id: "",
+      object: "chat.completion",
+      created: 0,
+      model: "",
+      choices: [],
+      usage: {}
+    };
+  }
+  to_platform() {
+    return this.to_openai();
+  }
+  get object() {
+    return "chat.completion";
+  }
+  get error() {
+    if (!this._res.error) return null;
+    const error = this._res.error;
+    if (!error.message) error.message = "";
+    if (this._res.error.metadata?.raw) {
+      if (typeof this._res.error.metadata.raw === "string") {
+        error.message += `
+
+${this._res.error.metadata.raw}`;
+      } else {
+        error.message += `
+
+${JSON.stringify(this._res.error.metadata.raw, null, 2)}`;
+      }
+    }
+    return error;
+  }
+};
+
+// node_modules/smart-chat-model/adapters/lm_studio.js
+var SmartChatModelLmStudioAdapter2 = class extends SmartChatModelApiAdapter2 {
+  static key = "lm_studio";
+  /** @type {import('./_adapter.js').SmartChatModelAdapter['constructor']['defaults']} */
+  static defaults = {
+    description: "LM Studio (OpenAI\u2011compatible)",
+    type: "API",
+    endpoint: "http://localhost:1234/v1/chat/completions",
+    streaming: true,
+    adapter: "LM_Studio_OpenAI_Compat",
+    models_endpoint: "http://localhost:1234/v1/models",
+    default_model: "",
+    signup_url: "https://lmstudio.ai/docs/api/openai-api",
+    can_use_tools: true,
+    api_key: "no api key required"
+  };
+  /* ------------------------------------------------------------------ *
+   *  Request / Response classes
+   * ------------------------------------------------------------------ */
+  get req_adapter() {
+    return SmartChatModelLmStudioRequestAdapter2;
+  }
+  get res_adapter() {
+    return SmartChatModelLmStudioResponseAdapter2;
+  }
+  /* ------------------------------------------------------------------ *
+   *  Settings
+   * ------------------------------------------------------------------ */
+  /**
+   * Extend the base settings with a read‑only HTML block that reminds the
+   * user to enable CORS inside LM Studio. The Smart View renderer treats
+   * `type: "html"` as a static fragment, so no extra runtime logic is needed.
+   */
+  get settings_config() {
+    const config = super.settings_config;
+    delete config["[CHAT_ADAPTER].api_key"];
+    return {
+      ...config,
+      "[CHAT_ADAPTER].cors_instructions": {
+        /* visible only when this adapter is selected */
+        name: "CORS required",
+        type: "html",
+        value: "<p>Before sending requests from the browser you must enable CORS inside LM Studio:</p><p>Open the LM Studio application, choose <strong>Settings > OpenAI API Compatible</strong> and enable <strong>Allow Cross\u2011Origin Requests (CORS)</strong>. Restart the server afterwards.</p><p>With CORS enabled the local endpoint <code>http://localhost:1234</code> becomes reachable from web contexts.</p>"
+      }
+    };
+  }
+  /* ------------------------------------------------------------------ *
+   *  Model list helpers
+   * ------------------------------------------------------------------ */
+  /**
+   * LM Studio returns an OpenAI‑style list; normalise to the project shape.
+   */
+  parse_model_data(model_data) {
+    if (model_data.object !== "list" || !Array.isArray(model_data.data)) {
+      return { _: { id: "No models found." } };
+    }
+    const out = {};
+    for (const m of model_data.data) {
+      out[m.id] = {
+        id: m.id,
+        model_name: m.id,
+        description: `LM Studio model: ${m.id}`,
+        multimodal: false
+      };
+    }
+    return out;
+  }
+  get models_endpoint_method() {
+    return "get";
+  }
+  /**
+   * Count tokens in input text (no dedicated endpoint)
+   * Rough estimate: 1 token ~ 4 chars
+   * @param {string|Object} input
+   * @returns {Promise<number>}
+   */
+  async count_tokens(input) {
+    const text = typeof input === "string" ? input : JSON.stringify(input);
+    return Math.ceil(text.length / 4);
+  }
+  /**
+   * Test API key - LM Studio doesn't require API key. Always true.
+   * @returns {Promise<boolean>}
+   */
+  async test_api_key() {
+    return true;
+  }
+  get api_key() {
+    return "no api key required";
+  }
+  /**
+   * Validate configuration
+   */
+  validate_config() {
+    if (!this.adapter_config.model_key) {
+      return { valid: false, message: "No model selected." };
+    }
+    return { valid: true, message: "Configuration is valid." };
+  }
+};
+var SmartChatModelLmStudioRequestAdapter2 = class extends SmartChatModelRequestAdapter2 {
+  to_platform(streaming = false) {
+    const req = this.to_openai(streaming);
+    const body = JSON.parse(req.body);
+    if (this.tool_choice?.function?.name) {
+      const last_msg = body.messages[body.messages.length - 1];
+      if (typeof last_msg.content === "string") {
+        last_msg.content = [
+          { type: "text", text: last_msg.content }
+        ];
+      }
+      last_msg.content.push({
+        type: "text",
+        text: `Use the "${this.tool_choice.function.name}" tool.`
+      });
+      body.tool_choice = "required";
+    } else if (body.tool_choice && typeof body.tool_choice === "object") {
+      body.tool_choice = "auto";
+    }
+    req.body = JSON.stringify(body);
+    return req;
+  }
+};
+var SmartChatModelLmStudioResponseAdapter2 = class extends SmartChatModelResponseAdapter2 {
+};
+
+// node_modules/smart-chat-model/adapters/ollama.js
+var SmartChatModelOllamaAdapter2 = class extends SmartChatModelApiAdapter2 {
+  static key = "ollama";
+  static defaults = {
+    description: "Ollama (Local)",
+    type: "API",
+    models_endpoint: "http://localhost:11434/api/tags",
+    endpoint: "http://localhost:11434/api/chat",
+    api_key: "na",
+    // streaming: false, // TODO: Implement streaming
+    streaming: true
+  };
+  req_adapter = SmartChatModelOllamaRequestAdapter2;
+  res_adapter = SmartChatModelOllamaResponseAdapter2;
+  /**
+   * Get parameters for models request - no auth needed for local instance
+   * @returns {Object} Request parameters
+   */
+  get models_request_params() {
+    return {
+      url: this.adapter_config.models_endpoint
+    };
+  }
+  /**
+   * Get available models from local Ollama instance
+   * @param {boolean} [refresh=false] - Whether to refresh cached models
+   * @returns {Promise<Object>} Map of model objects
+   */
+  async get_models(refresh = false) {
+    if (!refresh && this.adapter_config?.models && typeof this.adapter_config.models === "object" && Object.keys(this.adapter_config.models).length > 0) return this.adapter_config.models;
+    try {
+      const list_resp = await this.http_adapter.request(this.models_request_params);
+      const list_data = await list_resp.json();
+      const models_raw_data = [];
+      for (const model of list_data.models) {
+        const model_details_resp = await this.http_adapter.request({
+          url: `http://localhost:11434/api/show`,
+          method: "POST",
+          body: JSON.stringify({ model: model.name })
+        });
+        const model_details_data = await model_details_resp.json();
+        models_raw_data.push({ ...model_details_data, name: model.name });
+      }
+      const model_data = this.parse_model_data(models_raw_data);
+      this.adapter_settings.models = model_data;
+      this.model.re_render_settings();
+      return model_data;
+    } catch (error) {
+      console.error("Failed to fetch model data:", error);
+      return { "_": { id: `Failed to fetch models from ${this.model.adapter_name}` } };
+    }
+  }
+  /**
+   * Parse model data from Ollama API response
+   * @param {Object[]} model_data - Raw model data from Ollama
+   * @returns {Object} Map of model objects with capabilities and limits
+   */
+  parse_model_data(model_data) {
+    if (!Array.isArray(model_data)) {
+      this.model_data = {};
+      console.error("Invalid model data format from Ollama:", model_data);
+      return {};
+    }
+    if (model_data.length === 0) {
+      this.model_data = { "no_models_available": {
+        id: "no_models_available",
+        name: "No models currently available"
+      } };
+      return this.model_data;
+    }
+    return model_data.reduce((acc, model) => {
+      const out = {
+        model_name: model.name,
+        id: model.name,
+        multimodal: false,
+        max_input_tokens: Object.entries(model.model_info).find((m) => m[0].includes(".context_length"))[1],
+        can_use_tools: true
+        // TODO: CHECK MODELFILE FOR TOOLS SUPPORT
+      };
+      acc[model.name] = out;
+      return acc;
+    }, {});
+  }
+  /**
+   * Override settings config to remove API key setting since not needed for local instance
+   * @returns {Object} Settings configuration object
+   */
+  get settings_config() {
+    const config = super.settings_config;
+    delete config["[CHAT_ADAPTER].api_key"];
+    return config;
+  }
+  is_end_of_stream(event) {
+    return event.data.includes('"done_reason"');
+  }
+};
+var SmartChatModelOllamaRequestAdapter2 = class extends SmartChatModelRequestAdapter2 {
+  /**
+   * Convert request to Ollama format
+   * @returns {Object} Request parameters in Ollama format
+   */
+  to_platform(streaming = false) {
+    const ollama_body = {
+      model: this.model,
+      messages: this._transform_messages_to_ollama(),
+      options: this._transform_parameters_to_ollama(),
+      stream: streaming || this.stream
+      // format: 'json', // only used for tool calls since returns JSON in content body
+    };
+    if (this.tools) {
+      ollama_body.tools = this._transform_functions_to_tools();
+      if (this.tool_choice?.function?.name) {
+        ollama_body.messages[ollama_body.messages.length - 1].content += `
+
+Use the "${this.tool_choice.function.name}" tool.`;
+        ollama_body.format = "json";
+      }
+    }
+    return {
+      url: this.adapter.endpoint,
+      method: "POST",
+      body: JSON.stringify(ollama_body)
+    };
+  }
+  /**
+   * Transform messages to Ollama format
+   * @returns {Array} Messages in Ollama format
+   * @private
+   */
+  _transform_messages_to_ollama() {
+    return this.messages.map((message) => {
+      const ollama_message = {
+        role: message.role,
+        content: this._transform_content_to_ollama(message.content)
+      };
+      const images = this._extract_images_from_content(message.content);
+      if (images.length > 0) {
+        ollama_message.images = images.map((img) => img.replace(/^data:image\/[^;]+;base64,/, ""));
+      }
+      return ollama_message;
+    });
+  }
+  /**
+   * Transform content to Ollama format
+   * @param {string|Array} content - Message content
+   * @returns {string} Content in Ollama format
+   * @private
+   */
+  _transform_content_to_ollama(content) {
+    if (Array.isArray(content)) {
+      return content.filter((item) => item.type === "text").map((item) => item.text).join("\n");
+    }
+    return content;
+  }
+  /**
+   * Extract images from content
+   * @param {string|Array} content - Message content
+   * @returns {Array} Array of image URLs
+   * @private
+   */
+  _extract_images_from_content(content) {
+    if (!Array.isArray(content)) return [];
+    return content.filter((item) => item.type === "image_url").map((item) => item.image_url.url);
+  }
+  /**
+   * Transform functions to tools format
+   * @returns {Array} Tools array in Ollama format
+   * @private
+   */
+  _transform_functions_to_tools() {
+    return this.tools;
+  }
+  /**
+   * Transform parameters to Ollama options format
+   * @returns {Object} Options in Ollama format
+   * @private
+   */
+  _transform_parameters_to_ollama() {
+    const options = {};
+    if (this.max_tokens) options.num_predict = this.max_tokens;
+    if (this.temperature) options.temperature = this.temperature;
+    if (this.top_p) options.top_p = this.top_p;
+    if (this.frequency_penalty) options.frequency_penalty = this.frequency_penalty;
+    if (this.presence_penalty) options.presence_penalty = this.presence_penalty;
+    return options;
+  }
+};
+var SmartChatModelOllamaResponseAdapter2 = class extends SmartChatModelResponseAdapter2 {
+  static get platform_res() {
+    return {
+      model: "",
+      created_at: null,
+      message: {
+        role: "",
+        content: ""
+      },
+      total_duration: 0,
+      load_duration: 0,
+      prompt_eval_count: 0,
+      prompt_eval_duration: 0,
+      eval_count: 0,
+      eval_duration: 0
+    };
+  }
+  /**
+   * Convert response to OpenAI format
+   * @returns {Object} Response in OpenAI format
+   */
+  to_openai() {
+    return {
+      id: this._res.created_at,
+      object: "chat.completion",
+      created: Date.now(),
+      model: this._res.model,
+      choices: [
+        {
+          index: 0,
+          message: this._transform_message_to_openai(),
+          finish_reason: this._res.done_reason
+        }
+      ],
+      usage: this._transform_usage_to_openai()
+    };
+  }
+  /**
+   * Transform message to OpenAI format
+   * @returns {Object} Message in OpenAI format
+   * @private
+   */
+  _transform_message_to_openai() {
+    return {
+      role: this._res.message.role,
+      content: this._res.message.content,
+      tool_calls: this._res.message.tool_calls
+    };
+  }
+  /**
+   * Transform usage statistics to OpenAI format
+   * @returns {Object} Usage statistics in OpenAI format
+   * @private
+   */
+  _transform_usage_to_openai() {
+    return {
+      prompt_tokens: this._res.prompt_eval_count || 0,
+      completion_tokens: this._res.eval_count || 0,
+      total_tokens: (this._res.prompt_eval_count || 0) + (this._res.eval_count || 0)
+    };
+  }
+  /**
+   * Parse chunk adds delta to content as expected output format
+   */
+  handle_chunk(chunk) {
+    chunk = JSON.parse(chunk || "{}");
+    if (chunk.created_at && !this._res.created_at) {
+      this._res.created_at = chunk.created_at;
+    }
+    if (chunk.message?.content) {
+      this._res.message.content += chunk.message.content;
+    }
+    if (chunk.message?.role) {
+      this._res.message.role = chunk.message.role;
+    }
+    if (chunk.model) {
+      this._res.model = chunk.model;
+    }
+    if (chunk.message?.tool_calls) {
+      if (!this._res.message.tool_calls) {
+        this._res.message.tool_calls = [{
+          id: "",
+          type: "function",
+          function: {
+            name: "",
+            arguments: ""
+          }
+        }];
+      }
+      if (chunk.message.tool_calls[0].id) {
+        this._res.message.tool_calls[0].id += chunk.message.tool_calls[0].id;
+      }
+      if (chunk.message.tool_calls[0].function.name) {
+        this._res.message.tool_calls[0].function.name += chunk.message.tool_calls[0].function.name;
+      }
+      if (chunk.message.tool_calls[0].function.arguments) {
+        if (typeof chunk.message.tool_calls[0].function.arguments === "string") {
+          this._res.message.tool_calls[0].function.arguments += chunk.message.tool_calls[0].function.arguments;
+        } else {
+          this._res.message.tool_calls[0].function.arguments = chunk.message.tool_calls[0].function.arguments;
+        }
+      }
+    }
+  }
+};
+
+// node_modules/smart-chat-model/adapters/_custom.js
+var adapters_map2 = {
+  "openai": {
+    req: SmartChatModelRequestAdapter2,
+    res: SmartChatModelResponseAdapter2
+  },
+  "anthropic": {
+    req: SmartChatModelAnthropicRequestAdapter2,
+    res: SmartChatModelAnthropicResponseAdapter2
+  },
+  "gemini": {
+    req: SmartChatModelGeminiRequestAdapter2,
+    res: SmartChatModelGeminiResponseAdapter2
+  },
+  "lm_studio": {
+    req: SmartChatModelLmStudioRequestAdapter2,
+    res: SmartChatModelLmStudioResponseAdapter2
+  },
+  "ollama": {
+    req: SmartChatModelOllamaRequestAdapter2,
+    res: SmartChatModelOllamaResponseAdapter2
+  }
+};
+var SmartChatModelCustomAdapter2 = class extends SmartChatModelApiAdapter2 {
+  static key = "custom";
+  static defaults = {
+    description: "Custom API (Local or Remote, OpenAI format)",
+    type: "API",
+    /**
+     * new default property: 'api_adapter' indicates which
+     * request/response adapter set to use internally
+     */
+    api_adapter: "openai"
+  };
+  /**
+   * Provide dynamic request/response classes
+   * based on current adapter_config.api_adapter setting
+   * ----------------------------------------------------
+   */
+  /**
+   * @override
+   * @returns {typeof SmartChatModelRequestAdapter}
+   */
+  get req_adapter() {
+    const adapter_name = this.adapter_config.api_adapter || "openai";
+    const map_entry = adapters_map2[adapter_name];
+    return map_entry && map_entry.req ? map_entry.req : SmartChatModelRequestAdapter2;
+  }
+  /**
+   * @override
+   * @returns {typeof SmartChatModelResponseAdapter}
+   */
+  get res_adapter() {
+    const adapter_name = this.adapter_config.api_adapter || "openai";
+    const map_entry = adapters_map2[adapter_name];
+    return map_entry && map_entry.res ? map_entry.res : SmartChatModelResponseAdapter2;
+  }
+  /**
+   * Synthesize a custom endpoint from the config fields.
+   * All fields are optional; fallback to a minimal default.
+   * @returns {string}
+   */
+  get endpoint() {
+    const protocol = this.adapter_config.protocol || "http";
+    const hostname = this.adapter_config.hostname || "localhost";
+    const port = this.adapter_config.port ? `:${this.adapter_config.port}` : "";
+    let path = this.adapter_config.path || "";
+    if (path && !path.startsWith("/")) path = `/${path}`;
+    return `${protocol}://${hostname}${port}${path}`;
+  }
+  get_adapters_as_options() {
+    return Object.keys(adapters_map2).map((adapter_name) => ({ value: adapter_name, name: adapter_name }));
+  }
+  /**
+   * Provide custom settings for configuring
+   * the user-defined fields plus the new 'api_adapter'.
+   * @override
+   * @returns {Object} settings configuration
+   */
+  get settings_config() {
+    return {
+      /**
+       * Select which specialized request/response adapter
+       * you'd like to use for your custom endpoint.
+       */
+      "[CHAT_ADAPTER].api_adapter": {
+        name: "API Adapter",
+        type: "dropdown",
+        description: "Pick a built-in or external adapter to parse request/response data.",
+        // Provide a short selection set, or dynamically gather from keys of adapters_map
+        options_callback: "adapter.get_adapters_as_options",
+        default: "openai"
+      },
+      "[CHAT_ADAPTER].id": {
+        name: "Model Name",
+        type: "text",
+        description: "Enter the model name for your endpoint if needed."
+      },
+      "[CHAT_ADAPTER].protocol": {
+        name: "Protocol",
+        type: "text",
+        description: "e.g. http or https"
+      },
+      "[CHAT_ADAPTER].hostname": {
+        name: "Hostname",
+        type: "text",
+        description: "e.g. localhost or some.remote.host"
+      },
+      "[CHAT_ADAPTER].port": {
+        name: "Port",
+        type: "number",
+        description: "Port number or leave blank"
+      },
+      "[CHAT_ADAPTER].path": {
+        name: "Path",
+        type: "text",
+        description: "Path portion of the URL (leading slash optional)"
+      },
+      "[CHAT_ADAPTER].streaming": {
+        name: "Streaming",
+        type: "toggle",
+        description: "Enable streaming if your API supports it."
+      },
+      "[CHAT_ADAPTER].max_input_tokens": {
+        name: "Max Input Tokens",
+        type: "number",
+        description: "Max number of tokens your model can handle in the prompt."
+      },
+      "[CHAT_ADAPTER].api_key": {
+        name: "API Key",
+        type: "password",
+        description: "If your service requires an API key, add it here."
+      }
+    };
+  }
+  /**
+   * Return 'true' for get_models params since user might
+   * not rely on auto-populating. 
+   * @override
+   * @returns {true}
+   */
+  validate_get_models_params() {
+    return true;
+  }
+  /**
+   * Unlike most API-based adapters, we do NOT force the user to have model_key set.
+   * So we override validate_config() to skip the "No model selected" error.
+   * Since this is a custom adapter, the onus is on the user to configure it correctly.
+   * @override
+   * @returns {Object} { valid: boolean, message: string }
+   */
+  validate_config() {
+    return { valid: true, message: "Configuration is valid." };
+  }
+};
+
+// node_modules/smart-chat-model/adapters/groq.js
+var SmartChatModelGroqAdapter2 = class extends SmartChatModelApiAdapter2 {
+  static key = "groq";
+  static defaults = {
+    description: "Groq",
+    type: "API",
+    endpoint: "https://api.groq.com/openai/v1/chat/completions",
+    streaming: true,
+    adapter: "Groq",
+    models_endpoint: "https://api.groq.com/openai/v1/models",
+    default_model: "llama3-8b-8192",
+    signup_url: "https://groq.com",
+    can_use_tools: true
+  };
+  /**
+   * Request adapter class
+   * @returns {typeof SmartChatModelGroqRequestAdapter}
+   */
+  get req_adapter() {
+    return SmartChatModelGroqRequestAdapter2;
+  }
+  /**
+   * Response adapter class
+   * @returns {typeof SmartChatModelGroqResponseAdapter}
+   */
+  get res_adapter() {
+    return SmartChatModelGroqResponseAdapter2;
+  }
+  /**
+   * Retrieve the list of models from Groq's API.
+   * @returns {Promise<Object>} A dictionary of models keyed by their id
+   */
+  async get_models(refresh = false) {
+    if (!refresh && this.adapter_config?.models && Object.keys(this.adapter_config.models).length > 0) {
+      return this.adapter_config.models;
+    }
+    const request_params = {
+      url: this.models_endpoint,
+      method: "GET",
+      headers: {
+        "Authorization": `Bearer ${this.api_key}`
+      }
+    };
+    try {
+      const resp = await this.http_adapter.request(request_params);
+      const data = await resp.json();
+      const model_data = this.parse_model_data(data);
+      this.adapter_settings.models = model_data;
+      this.model.re_render_settings();
+      return model_data;
+    } catch (error) {
+      console.error("Failed to fetch Groq model data:", error);
+      return { "_": { id: "Failed to fetch models from Groq" } };
+    }
+  }
+  /**
+   * Parse model data from Groq API format to a dictionary keyed by model ID.
+   * The API returns a list of model objects like:
+   * {
+   *   "object": "list",
+   *   "data": [ { "id": "...", "object": "model", ... }, ... ]
+   * }
+   * 
+   * We'll convert each model to:
+   * {
+   *   model_name: model.id,
+   *   id: model.id,
+   *   max_input_tokens: model.context_window,
+   *   description: `Owned by: ${model.owned_by}, context: ${model.context_window}`,
+   *   multimodal: Check if model name or description suggests multimodality
+   * }
+   */
+  parse_model_data(model_data) {
+    if (model_data.object !== "list" || !Array.isArray(model_data.data)) {
+      return { "_": { id: "No models found." } };
+    }
+    const parsed = {};
+    for (const m of model_data.data) {
+      parsed[m.id] = {
+        model_name: m.id,
+        id: m.id,
+        max_input_tokens: m.context_window || 8192,
+        description: `Owned by: ${m.owned_by}, context: ${m.context_window}`,
+        // A basic heuristic for multimodal: if 'vision' or 'tool' is in model id
+        // Adjust as needed based on known capabilities
+        multimodal: m.id.includes("vision")
+      };
+    }
+    return parsed;
+  }
+  /**
+   * Validate configuration for Groq
+   * @returns {Object} { valid: boolean, message: string }
+   */
+  validate_config() {
+    if (!this.adapter_config.model_key) return { valid: false, message: "No model selected." };
+    if (!this.api_key) {
+      return { valid: false, message: "API key is missing." };
+    }
+    return { valid: true, message: "Configuration is valid." };
+  }
+};
+var SmartChatModelGroqRequestAdapter2 = class extends SmartChatModelRequestAdapter2 {
+  _get_openai_content(message) {
+    if (["assistant", "tool"].includes(message.role)) {
+      if (Array.isArray(message.content)) {
+        return message.content.map((part) => {
+          if (typeof part === "string") return part;
+          if (part?.text) return part.text;
+          return "";
+        }).join("\n");
+      }
+    }
+    return message.content;
+  }
+};
+var SmartChatModelGroqResponseAdapter2 = class extends SmartChatModelResponseAdapter2 {
+};
+
+// src/smart_env.config.js
+var import_obsidian26 = require("obsidian");
 
 // node_modules/smart-collections/utils/collection_instance_name_from.js
 function collection_instance_name_from2(class_name) {
@@ -17035,6 +22268,9 @@ var CollectionItem2 = class _CollectionItem {
    * @param {string} [filter_opts.exclude_key_starts_with] - Exclude keys starting with this string.
    * @param {string[]} [filter_opts.exclude_key_starts_with_any] - Exclude keys starting with any of these strings.
    * @param {string} [filter_opts.exclude_key_includes] - Exclude keys that include this string.
+   * @param {string[]} [filter_opts.exclude_key_includes_any] - Exclude keys that include any of these strings.
+   * @param {string} [filter_opts.exclude_key_ends_with] - Exclude keys ending with this string.
+   * @param {string[]} [filter_opts.exclude_key_ends_with_any] - Exclude keys ending with any of these strings.
    * @param {string} [filter_opts.key_ends_with] - Include only keys ending with this string.
    * @param {string} [filter_opts.key_starts_with] - Include only keys starting with this string.
    * @param {string[]} [filter_opts.key_starts_with_any] - Include only keys starting with any of these strings.
@@ -17050,6 +22286,7 @@ var CollectionItem2 = class _CollectionItem {
       exclude_key_includes,
       exclude_key_includes_any,
       exclude_key_ends_with,
+      exclude_key_ends_with_any,
       key_ends_with,
       key_starts_with,
       key_starts_with_any,
@@ -17062,6 +22299,7 @@ var CollectionItem2 = class _CollectionItem {
     if (exclude_key_includes && this.key.includes(exclude_key_includes)) return false;
     if (exclude_key_includes_any && exclude_key_includes_any.some((include) => this.key.includes(include))) return false;
     if (exclude_key_ends_with && this.key.endsWith(exclude_key_ends_with)) return false;
+    if (exclude_key_ends_with_any && exclude_key_ends_with_any.some((suffix) => this.key.endsWith(suffix))) return false;
     if (key_ends_with && !this.key.endsWith(key_ends_with)) return false;
     if (key_starts_with && !this.key.startsWith(key_starts_with)) return false;
     if (key_starts_with_any && !key_starts_with_any.some((prefix) => this.key.startsWith(prefix))) return false;
@@ -18295,12 +23533,12 @@ var SmartEntity2 = class extends CollectionItem2 {
     return this.collection.embed_model;
   }
   /**
-   * Determines if the entity should be embedded.
+   * Determines if the entity should be embedded if unembedded. NOT the same as is_unembedded.
    * @readonly
    * @returns {boolean} True if no vector is set, false otherwise.
    */
   get should_embed() {
-    return !this.vec && this.size > (this.settings?.min_chars || 300);
+    return this.size > (this.settings?.min_chars || 300);
   }
   /**
    * Sets the error for the embedding model.
@@ -18564,13 +23802,23 @@ var SmartEntities2 = class extends Collection2 {
       opts.exclude_key_starts_with_any.push(entity.source_key || entity.key);
       if (exclude_filter) {
         if (!Array.isArray(opts.exclude_key_includes_any)) opts.exclude_key_includes_any = [];
-        if (typeof exclude_filter === "string") opts.exclude_key_includes_any.push(exclude_filter);
-        else if (exclude_filter.includes(",")) opts.exclude_key_includes_any.push(...exclude_filter.split(","));
+        if (typeof exclude_filter === "string") {
+          if (exclude_filter.includes(",")) {
+            opts.exclude_key_includes_any.push(...exclude_filter.split(","));
+          } else {
+            opts.exclude_key_includes_any.push(exclude_filter);
+          }
+        }
       }
       if (include_filter) {
         if (!Array.isArray(opts.key_includes_any)) opts.key_includes_any = [];
-        if (typeof include_filter === "string") opts.key_includes_any.push(include_filter);
-        else if (include_filter.includes(",")) opts.key_includes_any.push(...include_filter.split(","));
+        if (typeof include_filter === "string") {
+          if (include_filter.includes(",")) {
+            opts.key_includes_any.push(...include_filter.split(","));
+          } else {
+            opts.key_includes_any.push(include_filter);
+          }
+        }
       }
       if (exclude_inlinks && entity?.inlinks?.length) {
         if (!Array.isArray(opts.exclude_key_starts_with_any)) opts.exclude_key_starts_with_any = [];
@@ -18656,7 +23904,11 @@ var SmartEntities2 = class extends Collection2 {
    * @returns {Array<Object>} The embed queue.
    */
   get embed_queue() {
-    if (!this._embed_queue?.length) this._embed_queue = Object.values(this.items).filter((item) => item._queue_embed && item.should_embed);
+    if (!this._embed_queue?.length) {
+      console.time(`Building embed queue`);
+      this._embed_queue = Object.values(this.items).filter((item) => item._queue_embed || item.is_unembedded && item.should_embed);
+      console.timeEnd(`Building embed queue`);
+    }
     return this._embed_queue;
   }
   /**
@@ -18695,43 +23947,49 @@ var connections_filter_config2 = {
   "smart_view_filter.show_full_path": {
     "name": "Show full path",
     "type": "toggle",
-    "description": "Show full path in view."
+    "description": "Turning on will include the folder path in the connections results."
   },
   "smart_view_filter.render_markdown": {
     "name": "Render markdown",
     "type": "toggle",
-    "description": "Render markdown in results."
+    "description": "Turn off to prevent rendering markdown and display connection results as plain text."
   },
   "smart_view_filter.results_limit": {
     "name": "Results limit",
     "type": "number",
-    "description": "Limit the number of results.",
+    "description": "Adjust the number of connections displayed in the connections view (default 20).",
     "default": 20
   },
   "smart_view_filter.exclude_inlinks": {
     "name": "Exclude inlinks (backlinks)",
     "type": "toggle",
-    "description": "Exclude notes that link to the current note."
+    "description": "Exclude notes that already link to the current note from the connections results."
   },
   "smart_view_filter.exclude_outlinks": {
     "name": "Exclude outlinks",
     "type": "toggle",
-    "description": "Exclude links already in the current document."
+    "description": "Exclude notes that are already linked from within the current note from appearing in the connections results."
   },
   "smart_view_filter.include_filter": {
     "name": "Include filter",
     "type": "text",
-    "description": "Require that result file path matches this value."
+    "description": "Notes must match this value in their file/folder path. Matching notes will be included in the connections results. Separate multiple values with commas."
   },
   "smart_view_filter.exclude_filter": {
     "name": "Exclude filter",
     "type": "text",
-    "description": "Exclude results with file path that matches this value."
+    "description": "Notes must *not* match this value in their file/folder path. Matching notes will be *excluded* from the connections results. Separate multiple values with commas."
+  },
+  // should be better scoped at source-level (leaving here for now since connections_filter_config needs larger refactor)
+  "smart_view_filter.exclude_blocks_from_source_connections": {
+    "name": "Hide blocks in results",
+    "type": "toggle",
+    "description": "Show only sources in the connections results (no blocks)."
   }
 };
 
 // node_modules/smart-sources/components/source.js
-async function render15(entity, opts = {}) {
+async function render19(entity, opts = {}) {
   let markdown;
   if (should_render_embed2(entity)) markdown = `${entity.embed_link}
 
@@ -18740,14 +23998,14 @@ ${await entity.read()}`;
   let frag;
   if (source.env.settings.smart_view_filter.render_markdown) frag = await this.render_markdown(markdown, source);
   else frag = this.create_doc_fragment(`<span>${markdown}</span>`);
-  return await post_process13.call(this, source, frag, opts);
+  return await post_process17.call(this, source, frag, opts);
 }
 function process_for_rendering2(content) {
   if (content.includes("```dataview")) content = content.replace(/```dataview/g, "```\\dataview");
   if (content.includes("![[")) content = content.replace(/\!\[\[/g, "! [[");
   return content;
 }
-async function post_process13(scope, frag, opts = {}) {
+async function post_process17(scope, frag, opts = {}) {
   return frag;
 }
 function should_render_embed2(entity) {
@@ -18759,7 +24017,7 @@ function should_render_embed2(entity) {
 // node_modules/smart-sources/actions/find_connections.js
 async function find_connections4(params = {}) {
   let connections;
-  if (this.block_collection.settings.embed_blocks && params.exclude_source_connections) connections = [];
+  if (this.block_collection.settings.embed_blocks && !params.exclude_blocks_from_source_connections) connections = [];
   else connections = await find_connections3.call(this, params);
   const filter_opts = this.prepare_find_connections_filter_opts(params);
   const limit = params.filter?.limit || params.limit || this.env.settings.smart_view_filter?.results_limit || 20;
@@ -18825,7 +24083,7 @@ var SmartSource2 = class extends SmartEntity2 {
   async import() {
     this._queue_import = false;
     try {
-      await this.source_adapter.import();
+      await this.source_adapter?.import();
     } catch (err) {
       if (err.code === "ENOENT") {
         console.log(`Smart Connections: Deleting ${this.path} data because it no longer exists on disk`);
@@ -18836,6 +24094,9 @@ var SmartSource2 = class extends SmartEntity2 {
       }
     }
   }
+  /**
+   * @deprecated likely extraneous
+   */
   async parse_content(content = null) {
     const parse_fns = this.env?.opts?.collections?.smart_sources?.content_parsers || [];
     for (const fn of parse_fns) {
@@ -18849,7 +24110,6 @@ var SmartSource2 = class extends SmartEntity2 {
    * Finds connections relevant to this SmartSource based on provided parameters.
    * @async
    * @param {Object} [params={}] - Parameters for finding connections.
-   * @param {boolean} [params.exclude_source_connections=false] - Whether to exclude source connections.
    * @param {boolean} [params.exclude_blocks_from_source_connections=false] - Whether to exclude block connections from source connections.
    * @returns {Array<SmartSource>} An array of relevant SmartSource entities.
    */
@@ -18864,6 +24124,10 @@ var SmartSource2 = class extends SmartEntity2 {
   async get_embed_input(content = null) {
     if (typeof this._embed_input === "string" && this._embed_input.length) return this._embed_input;
     if (!content) content = await this.read();
+    if (!content) {
+      console.warn("SmartSource.get_embed_input: No content available for embedding: " + this.path);
+      return "";
+    }
     if (this.excluded_lines.length) {
       const content_lines = content.split("\n");
       this.excluded_lines.forEach((lines) => {
@@ -19150,7 +24414,7 @@ ${content}`.substring(0, max_chars);
    * @returns {number} The size.
    */
   get size() {
-    return this.file?.stat?.size || 0;
+    return this.source_adapter?.size || 0;
   }
   /**
    * Retrieves the last import stat of the SmartSource.
@@ -19235,9 +24499,6 @@ ${content}`.substring(0, max_chars);
   get path() {
     return this.data.path || this.data.key;
   }
-  get should_embed() {
-    return !this.vec || !this.embed_hash || this.embed_hash !== this.read_hash;
-  }
   get source_adapters() {
     return this.collection.source_adapters;
   }
@@ -19245,7 +24506,6 @@ ${content}`.substring(0, max_chars);
     if (this._source_adapter) return this._source_adapter;
     if (this.source_adapters[this.file_type]) this._source_adapter = new this.source_adapters[this.file_type](this);
     else {
-      console.log("No source adapter found for " + this.file_type);
     }
     return this._source_adapter;
   }
@@ -19257,7 +24517,7 @@ ${content}`.substring(0, max_chars);
    * @returns {Function} The render function for the source component.
    */
   get component() {
-    return render15;
+    return render19;
   }
   // Currently unused, but useful for later
   /**
@@ -19372,6 +24632,13 @@ var SmartSources2 = class extends SmartEntities2 {
     if (!ext) {
       return;
     }
+    if (this.fs.is_excluded(file_path)) {
+      console.warn(`File ${file_path} is excluded from processing.`);
+      return;
+    }
+    if (!this.fs.files[file_path]) {
+      this.fs.include_file(file_path);
+    }
     if (this.items[file_path]) return this.items[file_path];
     const item = new this.item_type(this.env, { path: file_path });
     this.items[file_path] = item;
@@ -19391,14 +24658,16 @@ var SmartSources2 = class extends SmartEntities2 {
     if (!file_path) return void 0;
     const pcs = file_path.split(".");
     if (pcs.length < 2) return void 0;
+    let last_ext;
     pcs.shift();
     while (pcs.length) {
-      const test_ext = pcs.join(".").toLowerCase();
-      if (this.source_adapters[test_ext]) {
-        return test_ext;
+      const supported_ext = pcs.join(".").toLowerCase();
+      if (this.source_adapters[supported_ext]) {
+        return supported_ext;
       }
-      pcs.shift();
+      last_ext = pcs.shift();
     }
+    return last_ext;
     return void 0;
   }
   /**
@@ -19484,12 +24753,25 @@ var SmartSources2 = class extends SmartEntities2 {
   async lookup(params = {}) {
     const limit = params.filter?.limit || params.k || this.env.settings.lookup_k || 10;
     if (params.filter?.limit) delete params.filter.limit;
+    if (params.collection) {
+      const collection = this.env[params.collection];
+      if (collection && collection.lookup) {
+        delete params.collection;
+        params.skip_blocks = true;
+        const results2 = await collection.lookup(params);
+        if (results2.error) {
+          console.warn(results2.error);
+          return [];
+        }
+        return results2.slice(0, limit);
+      }
+    }
     let results = await super.lookup(params);
     if (results.error) {
       console.warn(results.error);
       return [];
     }
-    if (this.block_collection?.settings?.embed_blocks) {
+    if (this.block_collection?.settings?.embed_block && !params.skip_blocks) {
       results = [
         ...results,
         ...await this.block_collection.lookup(params)
@@ -19703,6 +24985,10 @@ var SmartSources2 = class extends SmartEntities2 {
       if (!item.vec) return false;
       if (item.is_gone) {
         item.reason = "is_gone";
+        return true;
+      }
+      if (!item.should_embed) {
+        item.reason = "should not embed";
         return true;
       }
       return false;
@@ -20172,7 +25458,7 @@ var SmartThreads = class extends SmartSources2 {
 };
 
 // smart-chat-v0/components/thread.js
-function build_html11(thread, opts = {}) {
+function build_html15(thread, opts = {}) {
   return `
     <div class="sc-thread" data-thread-key="${thread.key}">
       <div class="sc-message-container">
@@ -20207,14 +25493,14 @@ function build_html11(thread, opts = {}) {
     </div>
   `;
 }
-async function render17(thread, opts = {}) {
-  const html = build_html11.call(this, thread, {
+async function render21(thread, opts = {}) {
+  const html = build_html15.call(this, thread, {
     show_welcome: opts.show_welcome !== false
   });
   const frag = this.create_doc_fragment(html);
-  return await post_process14.call(this, thread, frag, opts);
+  return await post_process18.call(this, thread, frag, opts);
 }
-async function post_process14(thread, frag, opts) {
+async function post_process18(thread, frag, opts) {
   const container = frag.querySelector(".sc-message-container");
   if (thread.messages.length) {
     thread.messages.forEach((msg) => {
@@ -20351,7 +25637,7 @@ function extract_internal_embedded_links(user_input) {
 }
 
 // smart-chat-v0/components/error.js
-function build_html12(error, opts = {}) {
+function build_html16(error, opts = {}) {
   const error_message = error?.error?.message || error?.message || "An unknown error occurred";
   const error_code = error?.error?.code || error?.code;
   const error_type = error?.error?.type || error?.type || "Error";
@@ -20384,12 +25670,12 @@ function build_html12(error, opts = {}) {
     </div>
   `;
 }
-async function render18(error, opts = {}) {
-  const html = build_html12.call(this, error, opts);
+async function render22(error, opts = {}) {
+  const html = build_html16.call(this, error, opts);
   const frag = this.create_doc_fragment(html);
-  return await post_process15.call(this, error, frag, opts);
+  return await post_process19.call(this, error, frag, opts);
 }
-async function post_process15(error, frag, opts) {
+async function post_process19(error, frag, opts) {
   const close_button = frag.querySelector(".sc-error-close");
   if (close_button) {
     close_button.addEventListener("click", () => {
@@ -20420,7 +25706,7 @@ async function post_process15(error, frag, opts) {
         await opts.retry();
         container.remove();
       } catch (retry_error) {
-        const new_error_frag = await render18.call(this, retry_error, opts);
+        const new_error_frag = await render22.call(this, retry_error, opts);
         container.replaceWith(new_error_frag);
       }
     });
@@ -20704,7 +25990,7 @@ var SmartThread = class extends SmartSource2 {
    * @returns {Promise<DocumentFragment>}
    */
   async render_error(response, container = this.messages_container) {
-    const frag = await render18.call(this.smart_view, response);
+    const frag = await render22.call(this.smart_view, response);
     if (container) container.appendChild(frag);
     return frag;
   }
@@ -21147,7 +26433,7 @@ var SmartBlock2 = class extends SmartEntity2 {
   get excluded() {
     const block_headings = this.path.split("#").slice(1);
     if (this.source_collection.excluded_headings.some((heading) => block_headings.includes(heading))) return true;
-    return this.source.excluded;
+    return this.source?.excluded;
   }
   /**
    * Retrieves the file path of the SmartSource associated with the block.
@@ -21562,7 +26848,7 @@ var SmartMessages = class extends SmartBlocks2 {
 };
 
 // smart-chat-v0/components/message.js
-function build_html13(message, opts = {}) {
+function build_html17(message, opts = {}) {
   const content = Array.isArray(message.content) ? message.content.map((part) => {
     if (part.type === "image_url") {
       return " ![[" + part.input.image_path + "]] ";
@@ -21600,12 +26886,12 @@ function build_html13(message, opts = {}) {
   }
   return html;
 }
-async function render19(message, opts = {}) {
-  const html = build_html13.call(this, message, opts);
+async function render23(message, opts = {}) {
+  const html = build_html17.call(this, message, opts);
   const frag = this.create_doc_fragment(html);
-  return await post_process16.call(this, message, frag, opts);
+  return await post_process20.call(this, message, frag, opts);
 }
-async function post_process16(message, frag, opts) {
+async function post_process20(message, frag, opts) {
   const copy_button = frag.querySelector(".sc-msg-button:not(.regenerate)");
   if (copy_button) {
     copy_button.addEventListener("click", () => {
@@ -21688,7 +26974,7 @@ async function post_process16(message, frag, opts) {
 }
 
 // smart-chat-v0/components/context.js
-function build_html14(message, opts = {}) {
+function build_html18(message, opts = {}) {
   const lookup_results = message.tool_call_output || [];
   if (lookup_results.length === 0) {
     return "";
@@ -21717,13 +27003,13 @@ function build_html14(message, opts = {}) {
     </div>
   `;
 }
-async function render20(message, opts = {}) {
-  const html = build_html14.call(this, message, opts);
+async function render24(message, opts = {}) {
+  const html = build_html18.call(this, message, opts);
   if (!html) return document.createDocumentFragment();
   const frag = this.create_doc_fragment(html);
-  return await post_process17.call(this, message, frag, opts);
+  return await post_process21.call(this, message, frag, opts);
 }
-async function post_process17(message, frag, opts) {
+async function post_process21(message, frag, opts) {
   const header = frag.querySelector(".sc-context-header");
   const list = frag.querySelector(".sc-context-list");
   const toggle_icon = frag.querySelector(".sc-context-toggle-icon");
@@ -21770,7 +27056,7 @@ async function post_process17(message, frag, opts) {
 }
 
 // smart-chat-v0/components/tool_calls.js
-function build_html15(message, opts = {}) {
+function build_html19(message, opts = {}) {
   const tool_calls = message.tool_calls || [];
   if (tool_calls.length === 0) {
     return "";
@@ -21791,13 +27077,13 @@ function build_html15(message, opts = {}) {
     </div>
   `;
 }
-async function render21(message, opts = {}) {
-  const html = build_html15.call(this, message, opts);
+async function render25(message, opts = {}) {
+  const html = build_html19.call(this, message, opts);
   if (!html) return document.createDocumentFragment();
   const frag = this.create_doc_fragment(html);
-  return await post_process18.call(this, message, frag, opts);
+  return await post_process22.call(this, message, frag, opts);
 }
-async function post_process18(message, frag, opts) {
+async function post_process22(message, frag, opts) {
   const tool_call_headers = frag.querySelectorAll(".sc-tool-call-header");
   tool_call_headers.forEach((header) => {
     const content = header.nextElementSibling;
@@ -21823,7 +27109,7 @@ async function post_process18(message, frag, opts) {
 }
 
 // smart-chat-v0/components/system_message.js
-function build_html16(message, opts = {}) {
+function build_html20(message, opts = {}) {
   return `
     <div class="sc-system-message-container" id="${message.data.id}">
       <div class="sc-system-message-header" tabindex="0" role="button" aria-expanded="false" aria-controls="${message.data.id}-content">
@@ -21841,12 +27127,12 @@ function build_html16(message, opts = {}) {
     </div>
   `;
 }
-async function render22(message, opts = {}) {
-  const html = build_html16.call(this, message, opts);
+async function render26(message, opts = {}) {
+  const html = build_html20.call(this, message, opts);
   const frag = this.create_doc_fragment(html);
-  return await post_process19.call(this, message, frag, opts);
+  return await post_process23.call(this, message, frag, opts);
 }
-async function post_process19(message, frag, opts) {
+async function post_process23(message, frag, opts) {
   const header = frag.querySelector(".sc-system-message-header");
   const content = frag.querySelector(".sc-system-message-content");
   const toggle_icon = frag.querySelector(".sc-system-message-toggle-icon");
@@ -21967,13 +27253,13 @@ var SmartMessage = class extends SmartBlock2 {
   async render(container = this.thread.messages_container) {
     let frag;
     if (this.role === "system") {
-      frag = await render22.call(this.smart_view, this);
+      frag = await render26.call(this.smart_view, this);
     } else if (this.tool_calls?.length > 0) {
-      frag = await render21.call(this.smart_view, this);
+      frag = await render25.call(this.smart_view, this);
     } else if (this.role === "tool") {
       frag = await this.context_template.call(this.smart_view, this);
     } else {
-      frag = await render19.call(this.smart_view, this);
+      frag = await render23.call(this.smart_view, this);
     }
     if (container) {
       this.elm = container.querySelector(`#${this.data.id}`);
@@ -21987,7 +27273,7 @@ var SmartMessage = class extends SmartBlock2 {
     return frag;
   }
   get context_template() {
-    return this.env.opts.components.lookup_context || render20;
+    return this.env.opts.components.lookup_context || render24;
   }
   /**
    * Converts the message into a request payload that can be sent to the AI model.
@@ -22069,20 +27355,20 @@ ${lookup_content[index].content}
   async fetch_content(paths) {
     try {
       const image_extensions = ["png", "jpg", "jpeg", "gif", "svg", "webp", "heic", "heif", "ico"];
-      const contents = await Promise.all(paths.map(async (path2) => {
-        if (path2) {
+      const contents = await Promise.all(paths.map(async (path) => {
+        if (path) {
           try {
-            const item = this.env.smart_blocks.get(path2) || this.env.smart_sources.get(path2);
-            const file_extension = path2.split(".").pop().toLowerCase();
+            const item = this.env.smart_blocks.get(path) || this.env.smart_sources.get(path);
+            const file_extension = path.split(".").pop().toLowerCase();
             if (image_extensions.includes(file_extension)) {
-              const image_data = await this.env.smart_sources.fs.read(path2, "base64");
+              const image_data = await this.env.smart_sources.fs.read(path, "base64");
               const base64_image = `data:image/${file_extension};base64,${image_data}`;
               return { type: "image", image_url: base64_image };
             } else {
               return { type: "text", content: await item.read() };
             }
           } catch (e) {
-            console.warn(`Error fetching content for ${path2}:`, e);
+            console.warn(`Error fetching content for ${path}:`, e);
             return { type: "error", content: "Failed to fetch content" };
           }
         }
@@ -22559,80 +27845,6 @@ var EnvJsonThreadSourceAdapter = class extends ThreadSourceAdapter {
   }
 };
 
-// src/components/source_inspector.css
-var css_sheet2 = new CSSStyleSheet();
-css_sheet2.replaceSync(`.source-inspector {
-  background-color: var(--background-secondary-alt);
-  margin: var(--size-4-3) 0;
-  padding: var(--size-4-3);
-  border-radius: var(--radius-m);
-}
-
-.source-inspector-blocks-container {
-  margin-top: var(--size-4-2);
-  display: flex;
-  flex-direction: column;
-  gap: var(--size-4-3);
-}
-
-.source-inspector-blocks-container blockquote {
-  margin-left: var(--size-4-3);
-  padding-left: var(--size-4-3);
-  border-left: 2px solid var(--text-faint);
-}
-`);
-var source_inspector_default = css_sheet2;
-
-// src/components/source_inspector.js
-function build_html17(source2, opts = {}) {
-  return `
-    <div class="smart-chat-message source-inspector">
-      <h2>Blocks</h2>
-      <div class="source-inspector-blocks-container"></div>
-    </div>
-  `;
-}
-async function render23(source2, opts = {}) {
-  const html = build_html17(source2, opts);
-  const frag = this.create_doc_fragment(html);
-  this.apply_style_sheet(source_inspector_default);
-  await post_process20.call(this, source2, frag, opts);
-  return frag;
-}
-async function post_process20(source2, frag, opts = {}) {
-  const container = frag.querySelector(".source-inspector .source-inspector-blocks-container");
-  if (!container) return frag;
-  if (!source2 || !source2.blocks || source2.blocks.length === 0) {
-    this.safe_inner_html(container, `<p>No blocks</p>`);
-    return frag;
-  }
-  const sortedBlocks = source2.blocks.sort((a, b) => a.line_start - b.line_start);
-  for (const block of sortedBlocks) {
-    const subKeyDisplay = block.sub_key.split("#").join(" > ");
-    const blockInfo = `${subKeyDisplay} (${block.size} chars; lines: ${block.line_start}-${block.line_end})`;
-    const should_embed = block.should_embed ? `<span style="color: green;">should embed</span>` : `<span style="color: orange;">embedding skipped</span>`;
-    const embed_status = block.vec ? `<span style="color: green;">vectorized</span>` : `<span style="color: orange;">not vectorized</span>`;
-    let blockContent = "";
-    try {
-      const raw = await block.read();
-      blockContent = raw.replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\n/g, "<br>").replace(/\t/g, "&nbsp;&nbsp;");
-    } catch (err) {
-      console.error("[source_inspector] Error reading block:", err);
-      blockContent = `<em style="color:red;">Error reading block content</em>`;
-    }
-    const blockFrag = this.create_doc_fragment(`
-      <p>
-        ${blockInfo}<br>
-        ${should_embed} | ${embed_status}
-      </p>
-      <blockquote>${blockContent}</blockquote>
-      <hr>
-    `);
-    container.appendChild(blockFrag);
-  }
-  return frag;
-}
-
 // src/smart_env.config.js
 var smart_env_config3 = {
   env_path: "",
@@ -22668,23 +27880,23 @@ var smart_env_config3 = {
   },
   modules: {
     smart_chat_model: {
-      class: SmartChatModel,
+      class: SmartChatModel2,
       // DEPRECATED FORMAT: will be changed (requires SmartModel adapters getters update)
       adapters: {
-        anthropic: SmartChatModelAnthropicAdapter,
-        azure: SmartChatModelAzureAdapter,
+        anthropic: SmartChatModelAnthropicAdapter2,
+        azure: SmartChatModelAzureAdapter2,
         // cohere: SmartChatModelCohereAdapter,
-        custom: SmartChatModelCustomAdapter,
-        gemini: SmartChatModelGeminiAdapter,
-        groq: SmartChatModelGroqAdapter,
-        lm_studio: SmartChatModelLmStudioAdapter,
-        ollama: SmartChatModelOllamaAdapter,
-        open_router: SmartChatModelOpenRouterAdapter,
-        openai: SmartChatModelOpenaiAdapter
+        custom: SmartChatModelCustomAdapter2,
+        gemini: SmartChatModelGeminiAdapter2,
+        groq: SmartChatModelGroqAdapter2,
+        lm_studio: SmartChatModelLmStudioAdapter2,
+        ollama: SmartChatModelOllamaAdapter2,
+        open_router: SmartChatModelOpenRouterAdapter2,
+        openai: SmartChatModelOpenaiAdapter2
       },
       http_adapter: new SmartHttpRequest2({
         adapter: SmartHttpObsidianRequestAdapter2,
-        obsidian_request_url: import_obsidian18.requestUrl
+        obsidian_request_url: import_obsidian26.requestUrl
       })
     },
     smart_fs: {
@@ -22697,24 +27909,24 @@ var smart_env_config3 = {
     }
   },
   components: {
-    lookup: render12,
-    connections_results: render13,
-    smart_chat: render14,
-    connections: render11,
-    source_inspector: render23,
+    lookup: render16,
+    connections_results: render17,
+    smart_chat: render18,
+    connections: render15,
+    source_inspector: render10,
     smart_sources: {
       // settings: source_settings_component,
-      connections: render11
+      connections: render15
     },
     smart_blocks: {
-      connections: render11
+      connections: render15
     },
     smart_threads: {
-      settings: render9,
-      thread: render17
+      settings: render13,
+      thread: render21
     },
     smart_chat_model: {
-      settings: render10
+      settings: render14
     }
   },
   default_settings: {
@@ -22738,23 +27950,24 @@ var smart_env_config3 = {
     folder_exclusions: "",
     smart_view_filter: {
       render_markdown: true,
-      show_full_path: false
+      show_full_path: false,
+      exclude_blocks_from_source_connections: false
     }
   }
 };
 
 // src/components/connections_result.js
-var import_obsidian20 = require("obsidian");
+var import_obsidian28 = require("obsidian");
 
 // node_modules/obsidian-smart-env/utils/register_block_hover_popover.js
-var import_obsidian19 = require("obsidian");
+var import_obsidian27 = require("obsidian");
 function register_block_hover_popover(parent, target, env, block_key, plugin) {
   target.addEventListener("mouseover", async (ev) => {
-    if (import_obsidian19.Keymap.isModEvent(ev)) {
+    if (import_obsidian27.Keymap.isModEvent(ev)) {
       const block = env.smart_blocks.get(block_key);
       const markdown = await block?.read();
       if (markdown) {
-        const popover = new import_obsidian19.HoverPopover(parent, target);
+        const popover = new import_obsidian27.HoverPopover(parent, target);
         const frag = env.smart_view.create_doc_fragment(`<div class="markdown-embed is-loaded">
                 <div class="markdown-embed-content node-insert-event">
                   <div class="markdown-preview-view markdown-rendered node-insert-event show-indentation-guide allow-fold-headings allow-fold-lists">
@@ -22766,14 +27979,14 @@ function register_block_hover_popover(parent, target, env, block_key, plugin) {
         popover.hoverEl.classList.add("smart-block-popover");
         popover.hoverEl.appendChild(frag);
         const sizer = popover.hoverEl.querySelector(".markdown-preview-sizer");
-        import_obsidian19.MarkdownRenderer.render(plugin.app, markdown, sizer, "/", popover);
+        import_obsidian27.MarkdownRenderer.render(plugin.app, markdown, sizer, "/", popover);
       }
     }
   });
 }
 
 // src/components/connections_result.js
-async function build_html18(result, opts = {}) {
+async function build_html21(result, opts = {}) {
   const item = result.item;
   const score = result.score;
   return `<div class="temp-container">
@@ -22783,6 +27996,7 @@ async function build_html18(result, opts = {}) {
       data-link="${item.link?.replace(/"/g, "&quot;") || ""}"
       data-collection="${item.collection_key}"
       data-score="${score}"
+      data-key="${item.key}"
       draggable="true"
     >
       <span class="header">
@@ -22797,16 +28011,16 @@ async function build_html18(result, opts = {}) {
     </div>
   </div>`;
 }
-async function render24(result_scope, opts = {}) {
-  let html = await build_html18.call(this, result_scope, opts);
+async function render27(result_scope, opts = {}) {
+  let html = await build_html21.call(this, result_scope, opts);
   const frag = this.create_doc_fragment(html);
-  return await post_process21.call(this, result_scope, frag, opts);
+  return await post_process24.call(this, result_scope, frag, opts);
 }
-async function post_process21(result_scope, frag, opts = {}) {
-  const { item, score } = result_scope;
+async function post_process24(result_scope, frag, opts = {}) {
+  const { item } = result_scope;
   const env = item.env;
   const plugin = env.smart_connections_plugin;
-  const app = plugin.app;
+  const app2 = plugin.app;
   const filter_settings = env.settings.smart_view_filter;
   const result_elm = frag.querySelector(".sc-result");
   if (!filter_settings.render_markdown) result_elm.classList.add("sc-result-plaintext");
@@ -22839,7 +28053,7 @@ ${await entity.read()}`;
     }
     const link = _result_elm.dataset.link || _result_elm.dataset.path;
     if (_result_elm.classList.contains("sc-collapsed")) {
-      if (import_obsidian20.Keymap.isModEvent(event)) {
+      if (import_obsidian28.Keymap.isModEvent(event)) {
         plugin.open_note(link, event);
       } else {
         toggle_result(_result_elm);
@@ -22849,18 +28063,18 @@ ${await entity.read()}`;
     }
   };
   result_elm.addEventListener("click", handle_result_click.bind(plugin));
-  const path2 = result_elm.querySelector("li").dataset.key;
+  const path = result_elm.querySelector("li").dataset.key;
   result_elm.addEventListener("dragstart", (event) => {
-    const drag_manager = app.dragManager;
-    const file_path = path2.split("#")[0];
-    const file = app.metadataCache.getFirstLinkpathDest(file_path, "");
+    const drag_manager = app2.dragManager;
+    const file_path = path.split("#")[0];
+    const file = app2.metadataCache.getFirstLinkpathDest(file_path, "");
     const drag_data = drag_manager.dragFile(event, file);
     drag_manager.onDragStart(event, drag_data);
   });
-  if (path2.indexOf("{") === -1) {
+  if (path.indexOf("{") === -1) {
     result_elm.addEventListener("mouseover", (event) => {
-      const linktext_path = path2.replace(/#$/, "");
-      app.workspace.trigger("hover-link", {
+      const linktext_path = path.replace(/#$/, "");
+      app2.workspace.trigger("hover-link", {
         event,
         source: "smart-connections-view",
         hoverParent: result_elm.parentElement,
@@ -22869,7 +28083,7 @@ ${await entity.read()}`;
       });
     });
   } else {
-    register_block_hover_popover(result_elm.parentElement, result_elm, env, path2, plugin);
+    register_block_hover_popover(result_elm.parentElement, result_elm, env, path, plugin);
   }
   const observer = new MutationObserver((mutations) => {
     const has_expansion_change = mutations.some((mutation) => {
@@ -22884,7 +28098,48 @@ ${await entity.read()}`;
     attributes: true,
     attributeOldValue: true,
     attributeFilter: ["class"]
-    // Only observe class changes
+  });
+  plugin.registerDomEvent(result_elm, "contextmenu", (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    const curr_key = result_elm.closest(".sc-list")?.dataset.key;
+    if (!curr_key) {
+      return;
+    }
+    const curr_collection = curr_key.includes("#") ? env.smart_blocks : env.smart_sources;
+    const curr_item = curr_collection.get(curr_key);
+    if (!curr_item) return;
+    const menu = new import_obsidian28.Menu(app2);
+    menu.addItem((menu_item) => {
+      menu_item.setTitle(`Hide ${item.name}`).setIcon("eye-off").onClick(() => {
+        try {
+          if (!curr_item.data.hidden_connections) curr_item.data.hidden_connections = {};
+          curr_item.data.hidden_connections[result_elm.dataset.key] = Date.now();
+          curr_item.queue_save();
+          result_elm.style.display = "none";
+          curr_item.collection.save();
+        } catch (err) {
+          new import_obsidian28.Notice("Hide failed \u2013 check console");
+          console.error(err);
+        }
+      });
+    });
+    menu.addSeparator();
+    menu.addItem((menu_item) => {
+      menu_item.setTitle(`Unhide All (${Object.keys(curr_item.data.hidden_connections || {}).length})`).setIcon("eye").onClick(() => {
+        try {
+          if (!curr_item.data.hidden_connections) return;
+          delete curr_item.data.hidden_connections;
+          curr_item.queue_save();
+          result_elm.closest(".sc-connections-view")?.querySelector('[title="Refresh"]')?.click();
+          curr_item.collection.save();
+        } catch (err) {
+          new import_obsidian28.Notice("Unhide failed \u2013 check console");
+          console.error(err);
+        }
+      });
+    });
+    menu.showAtMouseEvent(event);
   });
   const expanded_view = env.settings.smart_view_filter.expanded_view ?? env.settings.expanded_view;
   if (!expanded_view) return result_elm;
@@ -22904,149 +28159,193 @@ function process_for_rendering3(content) {
   return content;
 }
 
+// src/components/connections_v1.js
+function build_top_bar_buttons2(view) {
+  const expanded_view = view.env.settings.smart_view_filter.expanded_view ?? view.env.settings.expanded_view;
+  const buttons = [
+    { title: "Refresh", icon: "refresh-cw" },
+    { title: "Fold all toggle", icon: expanded_view ? "fold-vertical" : "unfold-vertical" },
+    { title: "Lookup", icon: "search" },
+    { title: "Settings", icon: "settings" },
+    { title: "Help", icon: "help-circle" }
+  ];
+  return buttons.map((btn) => `
+    <button
+      title="${btn.title}"
+      aria-label="${btn.title} button"
+    >
+      ${this.get_icon_html(btn.icon)}
+    </button>
+  `).join("");
+}
+async function build_html22(view, opts = {}) {
+  const top_bar_buttons = build_top_bar_buttons2.call(this, view);
+  const html = `<div class="sc-connections-view">
+    <div class="sc-top-bar">
+      <p class="sc-context" data-key="">
+        Loading...
+      </p>
+      ${top_bar_buttons}
+    </div>
+    <div class="sc-list">
+    </div>
+    <div class="sc-bottom-bar">
+      <span class="sc-context" data-key="" title="Loading context...">
+        Loading context...
+      </span>
+      ${opts.attribution || ""}
+    </div>
+  </div>`;
+  return html;
+}
+async function render28(view, opts = {}) {
+  const html = await build_html22.call(this, view, opts);
+  const frag = this.create_doc_fragment(html);
+  return await post_process25.call(this, view, frag, opts);
+}
+async function post_process25(view, frag, opts = {}) {
+  const container = frag.querySelector(".sc-list");
+  const toggle_button = frag.querySelector("[title='Fold all toggle']");
+  toggle_button.addEventListener("click", () => {
+    const expanded = view.env.settings.smart_view_filter.expanded_view ?? view.env.settings.expanded_view;
+    if (!view.env.settings.smart_view_filter) view.env.settings.smart_view_filter = {};
+    view.env.settings.smart_view_filter.expanded_view = !expanded;
+    container.querySelectorAll(".sc-result").forEach(async (elm) => {
+      if (expanded) {
+        elm.classList.add("sc-collapsed");
+      } else {
+        elm.classList.remove("sc-collapsed");
+      }
+    });
+    const updated_expanded_view = view.env.settings.smart_view_filter.expanded_view;
+    this.safe_inner_html(toggle_button, this.get_icon_html(updated_expanded_view ? "fold-vertical" : "unfold-vertical"));
+    toggle_button.setAttribute("aria-label", updated_expanded_view ? "Fold all" : "Unfold all");
+  });
+  const refresh_button = frag.querySelector("[title='Refresh']");
+  refresh_button.addEventListener("click", () => {
+    view.refresh();
+  });
+  const lookup_button = frag.querySelector("[title='Lookup']");
+  lookup_button?.addEventListener("click", () => {
+    view.plugin.open_lookup_view();
+  });
+  const help_button = frag.querySelector("[title='Help']");
+  help_button?.addEventListener("click", () => {
+    StoryModal.open(view.plugin, {
+      title: "Getting Started With Smart Connections",
+      url: "https://smartconnections.app/story/smart-connections-getting-started/?utm_source=connections-view-help"
+    });
+  });
+  const settings_button = frag.querySelector("[title='Settings']");
+  settings_button?.addEventListener("click", () => {
+    view.open_settings();
+  });
+  if (typeof opts.post_process === "function") {
+    await opts.post_process(view, frag, opts);
+  }
+  return frag;
+}
+
 // src/components/main_settings.js
-async function build_html19(scope_plugin) {
-  const html = `
+async function build_html23(scope_plugin) {
+  return `
     <div id="smart-connections-settings">
-      ${render_header_callout()}
+      <div data-user-agreement></div>
+
       <div id="smart-connections-getting-started-container">
         <button class="sc-getting-started-button">Getting started guide</button>
+        <button class="sc-report-bug-button">Report a bug</button>
+        <button class="sc-request-feature-button">Request a feature</button>
+        <button class="sc-share-workflow-button">Share workflow \u2B50</button>
       </div>
+
       <div data-connections-settings-container>
         <h2>Connections view</h2>
       </div>
+
       <div data-smart-settings="env"></div>
-      <div data-smart-notices></div>
-      ${render_sign_in_or_open_smart_plugins(scope_plugin)}
     </div>
   `;
-  return html;
 }
-async function render25(scope_plugin) {
+async function render29(scope_plugin) {
   if (!scope_plugin.env) {
     const load_frag = this.create_doc_fragment(`
       <div><button>Load Smart Environment</button></div>
     `);
     load_frag.querySelector("button").addEventListener("click", (e) => {
       scope_plugin.env.load(true);
-      e.target.replaceWith(this.create_doc_fragment("<span>Reload settings after Smart Environment loads...</span>"));
+      e.target.replaceWith(
+        this.create_doc_fragment("<span>Reload settings after Smart Environment loads\u2026</span>")
+      );
     });
     return load_frag;
   }
-  const html = await build_html19.call(this, scope_plugin);
+  const html = await build_html23.call(this, scope_plugin);
   const frag = this.create_doc_fragment(html);
-  return await post_process22.call(this, scope_plugin, frag);
+  return await post_process26.call(this, scope_plugin, frag);
 }
-async function post_process22(scope_plugin, frag) {
-  const muted_notices_frag = await scope_plugin.env.render_component("muted_notices", scope_plugin.env);
-  frag.querySelector("[data-smart-notices]").appendChild(muted_notices_frag);
-  await this.render_setting_components(frag, { scope: scope_plugin });
+async function post_process26(scope_plugin, frag) {
+  const user_agreement_container = frag.querySelector("[data-user-agreement]");
+  if (user_agreement_container) {
+    const user_agreement = await scope_plugin.env.render_component(
+      "user_agreement_callout",
+      scope_plugin
+    );
+    user_agreement_container.appendChild(user_agreement);
+  }
   const env_settings_container = frag.querySelector('[data-smart-settings="env"]');
   if (env_settings_container) {
-    const env_settings_frag = await scope_plugin.env.render_component("env_settings", scope_plugin.env);
+    const env_settings_frag = await scope_plugin.env.render_component(
+      "env_settings",
+      scope_plugin.env
+    );
     env_settings_container.appendChild(env_settings_frag);
   }
   const connections_settings = frag.querySelector("[data-connections-settings-container]");
   if (connections_settings) {
-    const connections_settings_frag = await this.render_settings(scope_plugin.env.smart_sources.connections_filter_config, {
-      scope: {
-        settings: scope_plugin.env.settings
-        // re_render: scope_plugin.re_render.bind(scope_plugin),
-        // re_render_settings: render_connections_settings.bind(this),
-      }
-    });
+    const connections_settings_frag = await this.render_settings(
+      scope_plugin.env.smart_sources.connections_filter_config,
+      { scope: { settings: scope_plugin.env.settings } }
+    );
     connections_settings.appendChild(connections_settings_frag);
   }
-  const header_btn = frag.querySelector("#header-callout a");
-  if (header_btn) {
-    header_btn.addEventListener("click", (e) => {
+  const header_link = frag.querySelector("#header-callout a");
+  if (header_link) {
+    header_link.addEventListener("click", (e) => {
       e.preventDefault();
-      open_url_externally(scope_plugin, header_btn.href);
+      open_url_externally(scope_plugin, header_link.href);
     });
   }
-  const supporter_callout = await scope_plugin.env.render_component("supporter_callout", scope_plugin);
+  const supporter_callout = await scope_plugin.env.render_component(
+    "supporter_callout",
+    scope_plugin
+  );
   frag.appendChild(supporter_callout);
-  const getting_started_button = frag.querySelector(".sc-getting-started-button");
-  if (getting_started_button) {
-    getting_started_button.addEventListener("click", (e) => {
-      StoryModal.open(scope_plugin, {
-        title: "Getting Started With Smart Connections",
-        url: "https://smartconnections.app/story/smart-connections-getting-started/?utm_source=sc-op-settings"
-      });
-    });
-  }
-  return frag;
-}
-function render_header_callout() {
-  return `
-    <div id="header-callout" data-callout-metadata="" data-callout-fold="" data-callout="info" class="callout" style="mix-blend-mode: unset;">
-      <div class="callout-title">
-        <div class="callout-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-          viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-          stroke-linecap="round" stroke-linejoin="round" class="svg-icon lucide-info">
-            <circle cx="12" cy="12" r="10"></circle>
-            <path d="M12 16v-4"></path>
-            <path d="M12 8h.01"></path>
-          </svg></div>
-        <div class="callout-title-inner">
-          <p><strong>User Agreement:</strong> By using Smart Connections you agree to share how it helps you with at least one other person \u{1F60A}\u{1F334}</p>
-          <hr>
-          <i>Join the next <a href="https://lu.ma/calendar/cal-ZJtdnzAdURyouM7">Lean Coffee session</a> to discuss future features & improvements.</i>
-        </div>
-      </div>
-    </div>
-  `;
-}
-function render_sign_in_or_open_smart_plugins(scope_plugin) {
-  const oauth_storage_prefix = scope_plugin.app.vault.getName().toLowerCase().replace(/[^a-z0-9]/g, "_") + "_smart_plugins_oauth_";
-  const isLoggedIn = !!localStorage.getItem(oauth_storage_prefix + "token");
-  const buttonLabel = isLoggedIn ? "Open Smart Plugins" : "Sign in";
-  const buttonCallback = isLoggedIn ? "open_smart_plugins_settings" : "initiate_smart_plugins_oauth";
-  return `
-    <div class="setting-component"
-      data-name="Smart Plugins - Early Access"
-      data-type="button"
-      data-btn-text="${buttonLabel}"
-      data-description="Supporters can sign in to access early-release Smart Plugins"
-      data-callback="${buttonCallback}"
-    ></div>
-  `;
-}
-
-// src/components/muted_notices.js
-async function build_html20(env, opts = {}) {
-  let html = `<div class="muted-notice-container" style="display: flex; flex-direction: column; gap: 10px;">
-    <h2>Muted notices</h2>
-  `;
-  if (Object.keys(env.notices.settings?.muted || {}).length) {
-    for (const notice in env.notices.settings?.muted) {
-      html += `<div class="muted-notice" data-notice="${notice}" style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
-        <span>${notice}</span>
-        <button class="unmute-button">Remove</button>
-      </div>`;
-    }
-  } else {
-    html += `<p>No muted notices.</p>`;
-  }
-  html += `</div>`;
-  return html;
-}
-async function render26(env, opts = {}) {
-  let html = await build_html20.call(this, env, opts);
-  const frag = this.create_doc_fragment(html);
-  post_process23.call(this, env, frag, opts);
-  return frag;
-}
-async function post_process23(env, frag, opts = {}) {
-  const unmute_buttons = frag.querySelectorAll(".unmute-button");
-  unmute_buttons.forEach((button) => {
-    button.addEventListener("click", () => {
-      const notice = button.parentElement.dataset.notice;
-      env.notices.settings.muted[notice] = false;
-      delete env.notices.settings.muted[notice];
-      button.parentElement.remove();
+  frag.querySelector(".sc-getting-started-button")?.addEventListener("click", () => {
+    StoryModal.open(scope_plugin, {
+      title: "Getting Started With Smart Connections",
+      url: "https://smartconnections.app/story/smart-connections-getting-started/?utm_source=sc-op-settings"
     });
   });
+  frag.querySelector(".sc-report-bug-button")?.addEventListener("click", () => {
+    open_url_externally(
+      scope_plugin,
+      "https://github.com/brianpetro/obsidian-smart-connections/issues/new?template=bug_report.yml"
+    );
+  });
+  frag.querySelector(".sc-request-feature-button")?.addEventListener("click", () => {
+    open_url_externally(
+      scope_plugin,
+      "https://github.com/brianpetro/obsidian-smart-connections/issues/new?template=feature_request.yml"
+    );
+  });
+  frag.querySelector(".sc-share-workflow-button")?.addEventListener("click", () => {
+    open_url_externally(
+      scope_plugin,
+      "https://github.com/brianpetro/obsidian-smart-connections/discussions/new?category=showcase"
+    );
+  });
+  return frag;
 }
 
 // smart_env.config.js
@@ -23054,27 +28353,26 @@ var smart_env_config4 = {
   collections: {},
   item_types: {},
   components: {
-    connections: render11,
-    connections_result: render24,
-    connections_results: render13,
-    lookup: render12,
-    main_settings: render25,
-    muted_notices: render26,
-    source_inspector: render23
+    connections: render15,
+    connections_result: render27,
+    connections_results: render17,
+    connections_v1: render28,
+    lookup: render16,
+    main_settings: render29
   }
 };
 
 // src/views/smart_view.obsidian.js
-var import_obsidian22 = require("obsidian");
+var import_obsidian30 = require("obsidian");
 
 // node_modules/obsidian-smart-env/utils/wait_for_env_to_load.js
-var import_obsidian21 = require("obsidian");
+var import_obsidian29 = require("obsidian");
 async function wait_for_env_to_load(scope, opts = {}) {
   const { wait_for_states = ["loaded"] } = opts;
   const container = scope.container || scope.containerEl;
   if (!wait_for_states.includes(scope.env?.state)) {
     let clicked_load_env = false;
-    while (scope.env.state === "init" && import_obsidian21.Platform.isMobile && !clicked_load_env) {
+    while (scope.env.state === "init" && import_obsidian29.Platform.isMobile && !clicked_load_env) {
       if (container) {
         container.empty();
         scope.env.smart_view.safe_inner_html(container, "<button>Load Smart Environment</button>");
@@ -23089,7 +28387,7 @@ async function wait_for_env_to_load(scope, opts = {}) {
     }
     while (!wait_for_states.includes(scope.env.state)) {
       if (container) {
-        const loading_msg = scope.env?.smart_connections_plugin?.obsidian_is_syncing ? "Waiting for Obsidian Sync to finish..." : "Loading Obsidian Smart Environment...";
+        const loading_msg = scope.env?.obsidian_is_syncing ? "Waiting for Obsidian Sync to finish..." : "Loading Obsidian Smart Environment...";
         container.empty();
         scope.env.smart_view.safe_inner_html(container, loading_msg);
       } else {
@@ -23101,7 +28399,7 @@ async function wait_for_env_to_load(scope, opts = {}) {
 }
 
 // src/views/smart_view.obsidian.js
-var SmartObsidianView = class extends import_obsidian22.ItemView {
+var SmartObsidianView = class extends import_obsidian30.ItemView {
   /**
    * Creates an instance of SmartObsidianView.
    * @param {any} leaf
@@ -23236,10 +28534,9 @@ var SmartObsidianView = class extends import_obsidian22.ItemView {
   }
 };
 
-// src/views/sc_connections.obsidian.js
-var import_obsidian23 = require("obsidian");
-var import_obsidian24 = require("obsidian");
-var ScConnectionsView = class extends SmartObsidianView {
+// src/views/connections_view.js
+var import_obsidian31 = require("obsidian");
+var ConnectionsView = class extends SmartObsidianView {
   static get view_type() {
     return "smart-connections-view";
   }
@@ -23249,170 +28546,105 @@ var ScConnectionsView = class extends SmartObsidianView {
   static get icon_name() {
     return "smart-connections";
   }
-  main_component_key = "connections";
   register_plugin_events() {
-    this.plugin.registerEvent(this.app.workspace.on("file-open", (file) => {
-      if (!file) return;
-      this.render_view(file?.path);
-    }));
+    this.plugin.registerEvent(
+      this.app.workspace.on("file-open", (file) => file && this.render_view(file.path))
+    );
     this.plugin.registerEvent(this.app.workspace.on("active-leaf-change", (leaf) => {
       if (leaf.view instanceof this.constructor) {
         if (!this.container) return console.log("Connections view event: active-leaf-change: no container, skipping");
         if (typeof this.container.checkVisibility === "function" && this.container.checkVisibility() === false) {
           return console.log("Connections view event: active-leaf-change: not visible, skipping");
         }
-        if (import_obsidian23.Platform.isMobile && this.plugin.app.workspace.activeLeaf.view.constructor.view_type === this.constructor.view_type) {
+        if (import_obsidian31.Platform.isMobile && this.plugin.app.workspace.activeLeaf.view.constructor.view_type === this.constructor.view_type) {
           this.render_view();
           return;
         }
       }
     }));
   }
-  async render_results(entity, opts = {}) {
-    if (!this.results_container) return;
-    this.entities_count_elm = this.header_container.querySelector(".sc-context");
-    this.entities_count_elm.innerText = `${this.env.smart_sources.keys.length} (${this.env.smart_blocks.keys.length})`;
-    this.status_elm = this.footer_container.querySelector(".sc-context");
-    this.status_elm.innerText = "Loading...";
-    this.entities_count_elm.dataset.key = entity.key;
-    this.status_elm.dataset.key = entity.key;
-    const results = await entity.find_connections({
-      ...opts,
-      exclude_source_connections: entity.env.smart_blocks.settings.embed_blocks,
-      exclude_key_ends_with: "---frontmatter---"
-    });
-    const results_frag = await entity.env.render_component("connections_results", results, opts);
-    this.env.smart_view.empty(this.results_container);
-    Array.from(results_frag.children).forEach((elm) => {
-      this.results_container.appendChild(elm);
-    });
-    this.results_container.dataset.key = entity.key;
-    const context_name = entity.path.split("/").pop();
-    this.status_elm.innerText = context_name;
-    return results;
-  }
-  main_components_opts = {
-    attribution: this.attribution,
-    post_process: async (scope, frag, opts = {}) => {
-      return post_process_note_inspect_opener(scope, frag, opts);
-    }
-  };
-  async render_view(entity = null, container = this.container) {
-    if (container.checkVisibility() === false) return console.log("render_view: View inactive, skipping render nearest");
-    if (!container.querySelector(".sc-list")) {
-      await this.render_main_component(container);
-    }
-    let current_file;
-    if (!entity) {
-      current_file = this.app.workspace.getActiveFile();
-      if (current_file) entity = current_file?.path;
-    }
-    let key = null;
-    if (typeof entity === "string") {
-      const collection = entity.includes("#") ? this.env.smart_blocks : this.env.smart_sources;
-      key = entity;
-      entity = collection.get(key);
-    }
-    if (!entity && current_file) {
-      console.log("Creating entity for current file " + current_file.path);
-      this.env.smart_sources.fs.include_file(current_file.path);
-      entity = this.env.smart_sources.init_file_path(current_file.path);
-      if (!entity) return this.plugin.notices.show("unable_to_init_source", { key: current_file.path });
-      await entity.import();
-      await entity.collection.process_embed_queue();
-    }
-    if (!entity) {
-      const list_container = container.querySelector(".sc-list");
-      if (list_container) {
-        list_container.empty();
-        list_container.createEl("p", { text: "No entity found for the current note: " + key });
-        list_container.createEl("em", { text: "Click the refresh button to create entity for the note." });
-      }
+  /* ------------------------------------------------------------------ */
+  async render_view(target = null, container = this.container) {
+    if (container.checkVisibility?.() === false) return;
+    if (!target) target = this.app.workspace.getActiveFile()?.path;
+    if (!target) {
+      container.empty();
+      container.createEl("p", { text: "No active file to render connections." });
       return;
     }
-    if (entity.excluded) return this.plugin.notices.show("item_excluded", { entity_key: entity.key });
-    if (!entity.vec && entity.should_embed) {
-      entity.queue_embed();
-      await entity.collection.process_embed_queue();
+    const target_key = typeof target === "string" ? target : target.key ?? target.path;
+    if (!target_key) {
+      container.empty();
+      let msg = "No valid target key provided.";
+      if (target && typeof target === "object") {
+        msg += ` Received target object: ${JSON.stringify(target)}`;
+      }
+      container.createEl("p", { text: msg });
+      return;
     }
-    if (!this.results_container || this.current_context !== entity?.key) {
-      this.current_context = entity?.key;
-      await this.render_main_component(container);
-      await this.render_results(entity, this.main_components_opts);
+    let entity;
+    const is_block = target_key.includes("#");
+    if (is_block) {
+      entity = this.env.smart_blocks.get(target_key);
+      if (!entity) {
+        console.warn("ConnectionsView: No entity found for block: " + target_key);
+        const source_key = target_key.split("#")[0];
+        const source2 = this.env.smart_sources.get(source_key);
+        if (source2) {
+          return this.render_view(source2, container);
+        } else {
+          container.empty();
+          container.createEl("p", { text: 'No block or source found for "' + target_key + '".' });
+          return;
+        }
+      }
     } else {
-      await this.render_results(entity, this.main_components_opts);
+      entity = this.env.smart_sources.get(target_key);
+      if (!entity) {
+        console.warn("ConnectionsView: No entity found for source: " + target_key);
+        const source2 = this.env.smart_sources.init_file_path(target_key);
+        if (source2) {
+          this.env.queue_source_re_import(source2);
+          container.empty();
+          container.createEl("p", { text: "Source not found, but initialized. Requires embedding." });
+          container.createEl("button", {
+            text: "Embed now"
+          }).addEventListener("click", async () => {
+            await this.env.run_re_import();
+            this.render_view(source2, container);
+          });
+          return;
+        } else {
+          container.empty();
+          container.createEl("p", { text: 'No source found for "' + target_key + '". Unable to import. Check Smart Environment exclusion settings.' });
+          return;
+        }
+      }
     }
-  }
-  async render_main_component(container) {
-    const frag = await this.env.render_component(this.main_component_key, this, this.main_components_opts);
+    if (!entity) {
+      container.empty();
+      container.createEl("p", { text: "No entity found for the current note." });
+      return;
+    }
+    const frag = await this.env.render_component("connections", entity, {
+      attribution: this.attribution,
+      view: this
+      /* hand back reference for heavy refresh */
+    });
     container.empty();
     container.appendChild(frag);
   }
-  get results_container() {
-    return this.container.querySelector(".sc-list");
-  }
-  get header_container() {
-    return this.container.querySelector(".sc-top-bar");
-  }
-  get footer_container() {
-    return this.container.querySelector(".sc-bottom-bar");
-  }
+  /* ------------------------------------------------------------------ */
   async refresh() {
-    this.results_container.empty();
-    this.results_container.createEl("p", { text: "Refreshing..." });
-    const key = this.results_container.dataset.key;
+    const key = this.container.querySelector(".sc-list")?.dataset.key;
+    if (!key) return;
     const entity = this.env.smart_sources.get(key);
-    if (entity) {
-      await entity.read();
-      entity.queue_import();
-      await entity.collection.process_source_import_queue();
-    }
-    this.re_render();
+    if (!entity) return;
+    await entity.read();
+    entity.queue_import();
+    await entity.collection.process_source_import_queue();
+    this.render_view(entity.key);
   }
-  re_render() {
-    console.log("re_render");
-    this.env.connections_cache = {};
-    this.current_context = null;
-    this.render_view();
-  }
-  async open_settings() {
-    await this.app.setting.open();
-    await this.app.setting.openTabById("smart-connections");
-  }
-};
-function post_process_note_inspect_opener(view, frag, opts = {}) {
-  frag.querySelectorAll(".sc-context").forEach((el) => {
-    el.addEventListener("click", (event) => {
-      const entity = view.env.smart_sources.get(event.currentTarget.dataset.key);
-      if (entity) {
-        new SmartNoteInspectModal(view.plugin, entity).open();
-      }
-    });
-  });
-  return frag;
-}
-var SmartNoteInspectModal = class extends import_obsidian24.Modal {
-  constructor(smart_connections_plugin, entity) {
-    super(smart_connections_plugin.app);
-    this.smart_connections_plugin = smart_connections_plugin;
-    this.entity = entity;
-  }
-  get env() {
-    return this.smart_connections_plugin.env;
-  }
-  onOpen() {
-    this.titleEl.innerText = this.entity.key;
-    this.render();
-  }
-  async render() {
-    this.contentEl.empty();
-    const frag = await this.env.render_component("source_inspector", this.entity);
-    this.contentEl.appendChild(frag);
-  }
-};
-
-// src/views/connections_view.js
-var ConnectionsView = class extends ScConnectionsView {
 };
 
 // src/views/sc_lookup.obsidian.js
@@ -23441,7 +28673,7 @@ var ScLookupView = class extends SmartObsidianView {
 };
 
 // src/views/smart_chat.obsidian.js
-var import_obsidian25 = require("obsidian");
+var import_obsidian32 = require("obsidian");
 var SmartChatsView = class extends SmartObsidianView {
   static get view_type() {
     return "smart-chat-v0";
@@ -23600,10 +28832,10 @@ var SmartChatsView = class extends SmartObsidianView {
     if (this.textarea.value.endsWith("[[")) this.textarea.value = this.textarea.value.slice(0, -2);
   }
 };
-var ScChatHistoryModal = class extends import_obsidian25.FuzzySuggestModal {
-  constructor(app, view) {
-    super(app);
-    this.app = app;
+var ScChatHistoryModal = class extends import_obsidian32.FuzzySuggestModal {
+  constructor(app2, view) {
+    super(app2);
+    this.app = app2;
     this.view = view;
     this.setPlaceholder("Type the name of a chat session...");
   }
@@ -23620,10 +28852,10 @@ var ScChatHistoryModal = class extends import_obsidian25.FuzzySuggestModal {
     this.view.open_thread(thread_name);
   }
 };
-var ScOmniModal = class extends import_obsidian25.FuzzySuggestModal {
-  constructor(app, view) {
-    super(app);
-    this.app = app;
+var ScOmniModal = class extends import_obsidian32.FuzzySuggestModal {
+  constructor(app2, view) {
+    super(app2);
+    this.app = app2;
     this.view = view;
     this.setPlaceholder("Select input type...");
     this.inputEl.addEventListener("keydown", (e) => {
@@ -23652,10 +28884,10 @@ var ScOmniModal = class extends import_obsidian25.FuzzySuggestModal {
     this.view.open_modal(item);
   }
 };
-var ContextSelectModal = class extends import_obsidian25.FuzzySuggestModal {
-  constructor(app, view) {
-    super(app);
-    this.app = app;
+var ContextSelectModal = class extends import_obsidian32.FuzzySuggestModal {
+  constructor(app2, view) {
+    super(app2);
+    this.app = app2;
     this.view = view;
     this.setPlaceholder("Find and select a context...");
     this.inputEl.addEventListener("keydown", (e) => {
@@ -23668,9 +28900,9 @@ var ContextSelectModal = class extends import_obsidian25.FuzzySuggestModal {
   }
 };
 var ScFileSelectModal = class extends ContextSelectModal {
-  constructor(app, view) {
-    super(app, view);
-    const mod_key = import_obsidian25.Platform.isMacOS ? `\u2318` : `ctrl`;
+  constructor(app2, view) {
+    super(app2, view);
+    const mod_key = import_obsidian32.Platform.isMacOS ? `\u2318` : `ctrl`;
     this.setInstructions([
       {
         command: `\u2190`,
@@ -23698,7 +28930,7 @@ var ScFileSelectModal = class extends ContextSelectModal {
     return item.basename;
   }
   selectSuggestion(item, evt) {
-    if (import_obsidian25.Keymap.isModEvent(evt)) this.view.insert_system_prompt(item.item);
+    if (import_obsidian32.Keymap.isModEvent(evt)) this.view.insert_system_prompt(item.item);
     else {
       const link = `[[${item.item.path}]] `;
       if (evt.shiftKey) this.view.insert_selection("!" + link);
@@ -23713,8 +28945,8 @@ var ScNotesSelectModal = class extends ScFileSelectModal {
   }
 };
 var ScFolderSelectModal = class extends ContextSelectModal {
-  constructor(app, view, folders) {
-    super(app, view);
+  constructor(app2, view, folders) {
+    super(app2, view);
     this.folders = folders;
     this.setPlaceholder("Type the name of a folder...");
     this.inputEl.addEventListener("keydown", (e) => {
@@ -23735,8 +28967,8 @@ var ScFolderSelectModal = class extends ContextSelectModal {
   }
 };
 var ScImageSelectModal = class extends ScFileSelectModal {
-  constructor(app, view) {
-    super(app, view);
+  constructor(app2, view) {
+    super(app2, view);
     this.setPlaceholder("Type the name of an image...");
   }
   get image_extensions() {
@@ -23831,8 +29063,8 @@ var SmartChatGPTView = class extends SmartObsidianView {
 };
 
 // src/views/sc_private_chat.obsidian.js
-var import_obsidian26 = require("obsidian");
-var SmartPrivateChatView = class extends import_obsidian26.ItemView {
+var import_obsidian33 = require("obsidian");
+var SmartPrivateChatView = class extends import_obsidian33.ItemView {
   static get view_type() {
     return "smart-private-chat";
   }
@@ -23886,16 +29118,16 @@ var SmartPrivateChatView = class extends import_obsidian26.ItemView {
 };
 
 // node_modules/smart-chat-obsidian/src/smart_chat.obsidian.js
-var import_obsidian28 = require("obsidian");
+var import_obsidian35 = require("obsidian");
 
 // node_modules/smart-chat-obsidian/node_modules/obsidian-smart-env/utils/wait_for_env_to_load.js
-var import_obsidian27 = require("obsidian");
+var import_obsidian34 = require("obsidian");
 async function wait_for_env_to_load2(scope, opts = {}) {
   const { wait_for_states = ["loaded"] } = opts;
   const container = scope.container || scope.containerEl;
   if (!wait_for_states.includes(scope.env?.state)) {
     let clicked_load_env = false;
-    while (scope.env.state === "init" && import_obsidian27.Platform.isMobile && !clicked_load_env) {
+    while (scope.env.state === "init" && import_obsidian34.Platform.isMobile && !clicked_load_env) {
       if (container) {
         container.empty();
         scope.env.smart_view.safe_inner_html(container, "<button>Load Smart Environment</button>");
@@ -23910,7 +29142,7 @@ async function wait_for_env_to_load2(scope, opts = {}) {
     }
     while (!wait_for_states.includes(scope.env.state)) {
       if (container) {
-        const loading_msg = scope.env?.smart_connections_plugin?.obsidian_is_syncing ? "Waiting for Obsidian Sync to finish..." : "Loading Obsidian Smart Environment...";
+        const loading_msg = scope.env?.obsidian_is_syncing ? "Waiting for Obsidian Sync to finish..." : "Loading Obsidian Smart Environment...";
         container.empty();
         scope.env.smart_view.safe_inner_html(container, loading_msg);
       } else {
@@ -23922,7 +29154,7 @@ async function wait_for_env_to_load2(scope, opts = {}) {
 }
 
 // node_modules/smart-chat-obsidian/src/smart_chat.obsidian.js
-var SmartChatView = class extends import_obsidian28.ItemView {
+var SmartChatView = class extends import_obsidian35.ItemView {
   /**
    * @param {WorkspaceLeaf} leaf
    * @param {Plugin} plugin
@@ -23972,23 +29204,18 @@ var SmartChatView = class extends import_obsidian28.ItemView {
   async render() {
     await wait_for_env_to_load2(this);
     this.containerEl.empty();
-    const frag = await this.env.render_component("chat", this.env.smart_chat_threads, {});
-    this.containerEl.appendChild(frag);
+    const container = await this.env.render_component("chat", this.env.smart_chat_threads, {});
+    this.containerEl.appendChild(container);
   }
-  /**
-   * Opens the Smart Chat view in the workspace.
-   * @param {import('obsidian').Plugin} plugin - Obsidian plugin instance.
-   */
   static open(plugin = this.last_plugin) {
-    const leaf = plugin.app.workspace.getLeavesOfType(this.view_type)[0];
-    if (leaf) {
-      leaf.setViewState({ type: this.view_type, active: true });
-      leaf.view?.render();
+    const existing = plugin.app.workspace.getLeavesOfType(this.view_type)[0];
+    if (existing) {
+      existing.setViewState({ type: this.view_type, active: true });
+      existing.view?.render();
       return;
     }
-    const active_leaf = plugin.app.workspace.activeLeaf;
-    const new_leaf = plugin.app.workspace.createLeafBySplit(active_leaf, "vertical");
-    new_leaf.setViewState({ type: this.view_type, active: true });
+    const root_leaf = plugin.app.workspace.getLeaf(true);
+    root_leaf.setViewState({ type: this.view_type, active: true });
   }
   /**
    * Registers the Smart Chat view with the plugin.
@@ -24234,6 +29461,9 @@ var CollectionItem3 = class _CollectionItem {
    * @param {string} [filter_opts.exclude_key_starts_with] - Exclude keys starting with this string.
    * @param {string[]} [filter_opts.exclude_key_starts_with_any] - Exclude keys starting with any of these strings.
    * @param {string} [filter_opts.exclude_key_includes] - Exclude keys that include this string.
+   * @param {string[]} [filter_opts.exclude_key_includes_any] - Exclude keys that include any of these strings.
+   * @param {string} [filter_opts.exclude_key_ends_with] - Exclude keys ending with this string.
+   * @param {string[]} [filter_opts.exclude_key_ends_with_any] - Exclude keys ending with any of these strings.
    * @param {string} [filter_opts.key_ends_with] - Include only keys ending with this string.
    * @param {string} [filter_opts.key_starts_with] - Include only keys starting with this string.
    * @param {string[]} [filter_opts.key_starts_with_any] - Include only keys starting with any of these strings.
@@ -24249,6 +29479,7 @@ var CollectionItem3 = class _CollectionItem {
       exclude_key_includes,
       exclude_key_includes_any,
       exclude_key_ends_with,
+      exclude_key_ends_with_any,
       key_ends_with,
       key_starts_with,
       key_starts_with_any,
@@ -24261,6 +29492,7 @@ var CollectionItem3 = class _CollectionItem {
     if (exclude_key_includes && this.key.includes(exclude_key_includes)) return false;
     if (exclude_key_includes_any && exclude_key_includes_any.some((include) => this.key.includes(include))) return false;
     if (exclude_key_ends_with && this.key.endsWith(exclude_key_ends_with)) return false;
+    if (exclude_key_ends_with_any && exclude_key_ends_with_any.some((suffix) => this.key.endsWith(suffix))) return false;
     if (key_ends_with && !this.key.endsWith(key_ends_with)) return false;
     if (key_starts_with && !this.key.startsWith(key_starts_with)) return false;
     if (key_starts_with_any && !key_starts_with_any.some((prefix) => this.key.startsWith(prefix))) return false;
@@ -24805,31 +30037,27 @@ var SmartAction = class extends CollectionItem3 {
   static collection_key = "smart_actions";
   collection_key = "smart_actions";
   async init() {
+    if (!this.action_adapter) {
+      delete this.collection.items[this.key];
+      return;
+    }
     await this.action_adapter.load();
   }
   async run_action(params = {}) {
     params = await this.pre_process(params);
-    if (this.active === false && !this.opts.official) return { message: "This action is disabled by the user" };
-    if (params.group?.settings?.actions?.[this.key]?.active === false) return { message: "This action is disabled by the group" };
     let result = await this.action_adapter.run(params);
     result = await this.post_process(params, result);
     return result;
   }
   async pre_process(params) {
-    for (const pre_process of this.default_pre_processes) {
-      params = await pre_process.call(this, params);
-    }
     for (const pre_process of this.action_pre_processes) {
       params = await pre_process.call(this, params);
     }
     return params;
   }
   async post_process(params, result) {
-    for (const post_process37 of this.action_post_processes) {
-      result = await post_process37.call(this, params, result);
-    }
-    for (const post_process37 of this.default_post_processes) {
-      result = await post_process37.call(this, params, result);
+    for (const post_process40 of this.action_post_processes) {
+      result = await post_process40.call(this, params, result);
     }
     return result;
   }
@@ -24845,22 +30073,16 @@ var SmartAction = class extends CollectionItem3 {
     return this._action_adapter;
   }
   get action_post_processes() {
-    return Object.values(this.module.post_processes || {});
+    return Object.values(this.module?.post_processes || {});
   }
   get action_pre_processes() {
-    return Object.values(this.module.pre_processes || {});
+    return Object.values(this.module?.pre_processes || {});
   }
   get active() {
     return this.data.active !== false;
   }
   set active(val) {
     this.data.active = !!val;
-  }
-  get default_post_processes() {
-    return this.collection.default_post_processes;
-  }
-  get default_pre_processes() {
-    return this.collection.default_pre_processes;
   }
   get endpoint() {
     return Object.keys(this.module.openapi?.paths || {})[0] || `/${this.key}`;
@@ -24882,64 +30104,13 @@ var SmartAction = class extends CollectionItem3 {
   get source_type() {
     return this.data.source_type;
   }
-};
-
-// node_modules/smart-chat-obsidian/node_modules/smart-actions/smart_actions.js
-var SmartActions = class extends Collection3 {
-  collection_key = "smart_actions";
-  static collection_key = "smart_actions";
-  data_dir = "smart_actions";
-  async init() {
-    Object.entries(this.opts.default_actions).forEach(async ([action_key, module2]) => {
-      await this.register_included_module(action_key, module2);
-    });
-  }
-  async register_included_module(action_key, module2) {
-    const action = await this.create_or_update({
-      key: action_key,
-      source_type: "included"
-    });
-    action.module = module2;
-    return action;
-  }
-  async register_mjs_action(file_path) {
-    if (typeof file_path !== "string") return;
-    const action_key = path.basename(file_path, ".mjs");
-    const source_type = "mjs";
-    return await this.create_or_update({
-      key: action_key,
-      source_type,
-      file_path
-    });
-  }
-  async register_cjs_action(file_path) {
-    const action_key = path.basename(file_path, ".js");
-    const source_type = "cjs";
-    return this.create_or_update({
-      key: action_key,
-      source_type,
-      file_path
-    });
-  }
-  get default_pre_processes() {
-    return Object.values(this.opts.default_pre_processes || {});
-  }
-  get default_post_processes() {
-    return Object.values(this.opts.default_post_processes || {});
-  }
-  // v1 backwards compatibility
-  get custom_actions() {
-    return Object.values(this.items).filter((a) => a.data.file_path);
-  }
-  get action_groups_official() {
-    return Object.values(this.env.smart_action_groups.items || {}).filter((g) => g.key !== "test").filter((g) => g.official === true);
-  }
-  get action_groups_custom() {
-    return Object.values(this.env.smart_action_groups.items || {}).filter((g) => g.key !== "test").filter((g) => g.official !== true).sort((a, b) => {
-      if (a.key === "default") return -1;
-      if (b.key === "default") return 1;
-      return a.key.localeCompare(b.key);
-    });
+  /**
+   * OpenAI tool definition for this action.
+   * Delegates to the action adapter.
+   * @returns {object|null}
+   */
+  get as_tool() {
+    return this.action_adapter.as_tool;
   }
 };
 
@@ -25129,7 +30300,7 @@ var FileItemDataAdapter3 = class extends ItemDataAdapter3 {
 };
 
 // node_modules/smart-chat-obsidian/node_modules/smart-collections/adapters/ajson_multi_file.js
-var class_to_collection_key3 = {
+var class_to_collection_key4 = {
   "SmartSource": "smart_sources",
   "SmartNote": "smart_sources",
   // DEPRECATED
@@ -25350,8 +30521,8 @@ var AjsonMultiFileItemDataAdapter3 = class extends FileItemDataAdapter3 {
   _parse_ajson_key(ajson_key) {
     let changed;
     let [collection_key, ...item_key] = ajson_key.split(":");
-    if (class_to_collection_key3[collection_key]) {
-      collection_key = class_to_collection_key3[collection_key];
+    if (class_to_collection_key4[collection_key]) {
+      collection_key = class_to_collection_key4[collection_key];
       changed = true;
     }
     return {
@@ -25392,7 +30563,7 @@ var AjsonMultiFileItemDataAdapter3 = class extends FileItemDataAdapter3 {
 };
 
 // node_modules/smart-chat-obsidian/node_modules/smart-collections/utils/ajson_merge.js
-function ajson_merge(existing, new_obj) {
+function ajson_merge2(existing, new_obj) {
   if (new_obj === null) return null;
   if (new_obj === void 0) return existing;
   if (typeof new_obj !== "object") return new_obj;
@@ -25405,31 +30576,31 @@ function ajson_merge(existing, new_obj) {
     const existing_val = existing[key];
     if (Array.isArray(new_val)) {
       existing[key] = new_val.slice();
-    } else if (is_object(new_val)) {
-      existing[key] = ajson_merge(is_object(existing_val) ? existing_val : {}, new_val);
+    } else if (is_object2(new_val)) {
+      existing[key] = ajson_merge2(is_object2(existing_val) ? existing_val : {}, new_val);
     } else if (new_val !== void 0) {
       existing[key] = new_val;
     }
   }
   return existing;
 }
-function is_object(obj) {
+function is_object2(obj) {
   return obj !== null && typeof obj === "object" && !Array.isArray(obj);
 }
 
 // node_modules/smart-chat-obsidian/node_modules/smart-collections/adapters/ajson_single_file.js
-var class_to_collection_key4 = {
+var class_to_collection_key5 = {
   "SmartSource": "smart_sources",
   "SmartNote": "smart_sources",
   // DEPRECATED
   "SmartBlock": "smart_blocks",
   "SmartDirectory": "smart_directories"
 };
-function _parse_ajson_key(ajson_key) {
+function _parse_ajson_key2(ajson_key) {
   let changed = false;
   let [collection_key, ...item_key] = ajson_key.split(":");
-  if (class_to_collection_key4[collection_key]) {
-    collection_key = class_to_collection_key4[collection_key];
+  if (class_to_collection_key5[collection_key]) {
+    collection_key = class_to_collection_key5[collection_key];
     changed = true;
   }
   return {
@@ -25438,7 +30609,7 @@ function _parse_ajson_key(ajson_key) {
     changed
   };
 }
-var AjsonSingleFileCollectionDataAdapter = class extends AjsonMultiFileCollectionDataAdapter3 {
+var AjsonSingleFileCollectionDataAdapter2 = class extends AjsonMultiFileCollectionDataAdapter3 {
   /**
    * Returns the single shared `.ajson` file path for this collection.
    * @param {string} [key] - (unused) Item key, ignored in single-file mode.
@@ -25462,8 +30633,8 @@ var AjsonSingleFileCollectionDataAdapter = class extends AjsonMultiFileCollectio
     if (!await this.fs.exists(this.collection.data_dir)) {
       await this.fs.mkdir(this.collection.data_dir);
     }
-    const path2 = this.get_item_data_path();
-    if (!await this.fs.exists(path2)) {
+    const path = this.get_item_data_path();
+    if (!await this.fs.exists(path)) {
       for (const item of Object.values(this.collection.items)) {
         if (item._queue_load) {
           item.queue_import?.();
@@ -25472,7 +30643,7 @@ var AjsonSingleFileCollectionDataAdapter = class extends AjsonMultiFileCollectio
       this.collection.clear_process_notice("loading_collection");
       return;
     }
-    const raw_data = await this.fs.read(path2, "utf-8", { no_cache: true });
+    const raw_data = await this.fs.read(path, "utf-8", { no_cache: true });
     if (!raw_data) {
       for (const item of Object.values(this.collection.items)) {
         if (item._queue_load) {
@@ -25485,9 +30656,9 @@ var AjsonSingleFileCollectionDataAdapter = class extends AjsonMultiFileCollectio
     const { rewrite, file_data } = this.parse_single_file_ajson(raw_data);
     if (rewrite) {
       if (file_data.length) {
-        await this.fs.write(path2, file_data);
+        await this.fs.write(path, file_data);
       } else {
-        await this.fs.remove(path2);
+        await this.fs.remove(path);
       }
     }
     for (const item of Object.values(this.collection.items)) {
@@ -25517,7 +30688,7 @@ var AjsonSingleFileCollectionDataAdapter = class extends AjsonMultiFileCollectio
       try {
         const obj = JSON.parse(combined);
         const [fullKey, value] = Object.entries(obj)[0];
-        let { collection_key, item_key, changed } = _parse_ajson_key(fullKey);
+        let { collection_key, item_key, changed } = _parse_ajson_key2(fullKey);
         const newKey = `${collection_key}:${item_key}`;
         if (!value) {
           delete data_map[newKey];
@@ -25549,7 +30720,7 @@ var AjsonSingleFileCollectionDataAdapter = class extends AjsonMultiFileCollectio
         item = new ItemClass(this.env, val);
         collection.set(item);
       } else {
-        item.data = ajson_merge(item.data, val);
+        item.data = ajson_merge2(item.data, val);
       }
       item.loaded_at = Date.now();
       item._queue_load = false;
@@ -25614,13 +30785,13 @@ var AjsonSingleFileItemDataAdapter = class extends AjsonMultiFileItemDataAdapter
    * if used individually.
    */
   async load() {
-    const path2 = this.data_path;
-    if (!await this.fs.exists(path2)) {
+    const path = this.data_path;
+    if (!await this.fs.exists(path)) {
       this.item.queue_import?.();
       return;
     }
     try {
-      const raw_data = await this.fs.read(path2, "utf-8", { no_cache: true });
+      const raw_data = await this.fs.read(path, "utf-8", { no_cache: true });
       if (!raw_data) {
         this.item.queue_import?.();
         return;
@@ -25633,14 +30804,119 @@ var AjsonSingleFileItemDataAdapter = class extends AjsonMultiFileItemDataAdapter
   }
 };
 var ajson_single_file_default = {
-  collection: AjsonSingleFileCollectionDataAdapter,
+  collection: AjsonSingleFileCollectionDataAdapter2,
   item: AjsonSingleFileItemDataAdapter
+};
+
+// node_modules/smart-chat-obsidian/node_modules/smart-actions/adapters/_adapter.js
+var SmartActionAdapter = class {
+  constructor(item) {
+    this.item = item;
+    this.module = null;
+  }
+  async load() {
+  }
+  /**
+   * Run the loaded module’s default (or named) function with given params.
+   * @param {Object} params
+   * @returns {Promise<any>}
+   */
+  async run(params) {
+    if (!this.module) {
+      await this.load();
+    }
+    const fn = this.module.default || this.module[this.item.key];
+    if (typeof fn !== "function") {
+      throw new Error(`${this.constructor.name}: No callable export found for action ${this.item.key}`);
+    }
+    return await fn.call(this.item, params);
+  }
+  /**
+   * Generate an OpenAI-style tool definition for this action.
+   * By default it checks `module.tool` or converts `module.openapi`.
+   * @returns {object|null}
+   */
+  get as_tool() {
+    if (!this.module) return null;
+    if (this.module.tool) return this.module.tool;
+    if (this.module.openapi) {
+      return convert_openapi_to_tools2(this.module.openapi)[0] || null;
+    }
+    return null;
+  }
+};
+function convert_openapi_to_tools2(openapi_spec) {
+  const tools = [];
+  for (const path in openapi_spec.paths || {}) {
+    const methods = openapi_spec.paths[path];
+    for (const method in methods) {
+      const endpoint = methods[method];
+      const parameters = endpoint.parameters || [];
+      const requestBody = endpoint.requestBody;
+      const properties = {};
+      const required = [];
+      parameters.forEach((param) => {
+        properties[param.name] = {
+          type: param.schema.type,
+          description: param.description || ""
+        };
+        if (param.required) required.push(param.name);
+      });
+      if (requestBody) {
+        const schema = requestBody.content["application/json"].schema;
+        Object.assign(properties, schema.properties);
+        if (schema.required) required.push(...schema.required);
+      }
+      tools.push({
+        type: "function",
+        function: {
+          name: endpoint.operationId || `${method}_${path.replace(/\//g, "_").replace(/[{}]/g, "")}`,
+          description: endpoint.summary || endpoint.description || "",
+          parameters: {
+            type: "object",
+            properties,
+            required
+          }
+        }
+      });
+    }
+  }
+  return tools;
+}
+
+// node_modules/smart-chat-obsidian/node_modules/smart-actions/smart_actions.js
+var SmartActions = class extends Collection3 {
+  collection_key = "smart_actions";
+  static collection_key = "smart_actions";
+  data_dir = "smart_actions";
+  async init() {
+    Object.entries(this.opts.default_actions).forEach(async ([action_key, module2]) => {
+      await this.register_included_module(action_key, module2);
+    });
+  }
+  async register_included_module(action_key, module2) {
+    const action = await this.create_or_update({
+      key: action_key,
+      source_type: "included"
+    });
+    action.module = module2;
+    return action;
+  }
+};
+var smart_actions_default = {
+  class: SmartActions,
+  item_type: SmartAction,
+  data_adapter: ajson_single_file_default,
+  action_adapters: {
+    default: SmartActionAdapter
+  }
 };
 
 // node_modules/smart-chat-obsidian/src/actions/lookup_context.js
 var lookup_context_exports = {};
 __export(lookup_context_exports, {
   lookup_context: () => lookup_context,
+  render_output: () => render_output,
   tool: () => tool
 });
 async function lookup_context(params = {}) {
@@ -25677,9 +30953,13 @@ async function lookup_context(params = {}) {
   }
   if (!other_params.filter) other_params.filter = {};
   if (in_folder && in_folder !== "/") {
-    if (!other_params.filter.key_starts_with) {
-      const folder_prefix = in_folder.endsWith("/") ? in_folder : `${in_folder}/`;
-      other_params.filter.key_starts_with = folder_prefix;
+    if (env.smart_sources.fs.folders[in_folder]) {
+      if (!other_params.filter.key_starts_with) {
+        const folder_prefix = in_folder.endsWith("/") ? in_folder : `${in_folder}/`;
+        other_params.filter.key_starts_with = folder_prefix;
+      }
+    } else {
+      console.warn(`Folder "${in_folder}" does not exist in the vault. Skipping folder scoping.`);
     }
   }
   if (existing_item_keys.length) {
@@ -25726,7 +31006,7 @@ var tool = {
         },
         in_folder: {
           type: "string",
-          description: "Use only if absolutely required. Prefer excluding this parameter. Limits the lookup to items in this folder."
+          description: "Use only if absolutely required. Exclude unles asked for a specific folder. Limits the lookup to items in this folder."
         }
         // EXCLUDED because used internally and the model currently isn't aware of the current context key
         // context_key: {
@@ -25739,73 +31019,19 @@ var tool = {
     }
   }
 };
-
-// node_modules/smart-chat-obsidian/node_modules/smart-actions/adapters/_adapter.js
-var SmartActionAdapter = class {
-  constructor(item) {
-    this.item = item;
-    this.module = null;
+async function render_output(env, output, params) {
+  const context = env.smart_contexts.get(output);
+  if (!context) {
+    return `No context found for key: ${output}`;
   }
-  async load() {
-  }
-  /**
-   * Run the loaded module’s default (or named) function with given params.
-   * @param {Object} params
-   * @returns {Promise<any>}
-   */
-  async run(params) {
-    if (!this.module) {
-      await this.load();
-    }
-    const fn = this.module.default || this.module[this.item.key];
-    if (typeof fn !== "function") {
-      throw new Error(`${this.constructor.name}: No callable export found for action ${this.item.key}`);
-    }
-    return await fn.call(this.item, params);
-  }
-};
-
-// node_modules/smart-chat-obsidian/src/items/smart_action.js
-var SmartAction2 = class extends SmartAction {
-  get adapters() {
-    return {
-      default: SmartActionAdapter
-    };
-  }
-  async init() {
-    if (!this.action_adapter) {
-      delete this.collection.items[this.key];
-      return;
-    }
-    await this.action_adapter.load();
-  }
-  async run_action(params = {}) {
-    params = await this.pre_process(params);
-    let result = await this.action_adapter.run(params);
-    result = await this.post_process(params, result);
-    return result;
-  }
-};
+  return await env.render_component("context_builder", context);
+}
 
 // node_modules/smart-chat-obsidian/src/collections/smart_actions.js
-var SmartActions2 = class extends SmartActions {
-  async init() {
-    Object.entries(this.opts.default_actions).forEach(async ([action_key, module2]) => {
-      await this.register_included_module(action_key, module2);
-    });
-  }
+smart_actions_default.default_actions = {
+  lookup_context: lookup_context_exports
 };
-var smart_actions_default = {
-  class: SmartActions2,
-  item_type: SmartAction2,
-  data_adapter: ajson_single_file_default,
-  action_adapters: {
-    default: SmartActionAdapter
-  },
-  default_actions: {
-    lookup_context: lookup_context_exports
-  }
-};
+var smart_actions_default2 = smart_actions_default;
 
 // node_modules/smart-chat-obsidian/src/utils/add_thread_item.js
 function add_thread_item(thread, new_key) {
@@ -25851,13 +31077,13 @@ function get_initial_message2(language) {
   return language_settings.initial_message;
 }
 
-// node_modules/smart-chat-obsidian/node_modules/smart-utils/file_tree.js
+// node_modules/smart-chat-obsidian/node_modules/smart-context-obsidian/node_modules/smart-utils/file_tree.js
 function build_file_tree_string(paths = []) {
   if (!Array.isArray(paths) || paths.length === 0) return "";
   const root = {};
-  for (const path2 of paths) {
-    const isFolder = is_folder_path(path2);
-    const parts = path2.split("/").filter(Boolean);
+  for (const path of paths) {
+    const isFolder = is_folder_path(path);
+    const parts = path.split("/").filter(Boolean);
     let node = root;
     for (let i = 0; i < parts.length; i++) {
       const part = parts[i];
@@ -25876,8 +31102,8 @@ function build_file_tree_string(paths = []) {
   compress_single_child_dirs(root);
   return build_tree_string(root).trimEnd();
 }
-function is_folder_path(path2) {
-  return typeof path2 === "string" && path2.endsWith("/");
+function is_folder_path(path) {
+  return typeof path === "string" && path.endsWith("/");
 }
 function compress_single_child_dirs(node) {
   if (!node || typeof node !== "object") return;
@@ -25925,78 +31151,78 @@ function build_tree_string(node, prefix = "") {
   return output;
 }
 
+// node_modules/smart-chat-obsidian/node_modules/smart-context-obsidian/src/utils/replace_folder_tree_var.js
+function replace_folder_tree_var(prompt) {
+  let paths = smart_env.smart_sources?.fs?.folder_paths ?? [];
+  paths = paths.map((p) => p.endsWith("/") ? p : p + "/");
+  const tree = build_file_tree_string([...new Set(paths)]);
+  prompt = prompt.replace(/{{\s*folder_tree\s*}}/gi, tree);
+  return prompt;
+}
+
 // node_modules/smart-chat-obsidian/src/items/smart_chat_thread.js
 var SmartChatThread = class extends CollectionItem3 {
   static get defaults() {
     return {
       data: {
+        name: "",
         system_prompt: "",
         items: {}
       }
     };
   }
   get_key() {
-    return this.data.key || (this.data.key = Date.now().toString());
+    if (!this.data.key) {
+      const now = /* @__PURE__ */ new Date();
+      const pad = (n) => n.toString().padStart(2, "0");
+      const formatted = `Untitled Chat ${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())} ${pad(now.getHours())}-${pad(now.getMinutes())}-${pad(now.getSeconds())}`;
+      this.data.key = formatted;
+    }
+    return this.data.key;
+  }
+  /**
+   * @property {string} name - Friendly thread name; falls back to key if empty.
+   */
+  get name() {
+    return this.data.name || this.data.key;
+  }
+  set name(val) {
+    this.data.name = val;
   }
   get chat_model() {
     return this.collection.chat_model;
   }
-  new_completion(opts = {}) {
-    const completion_opts = {
+  init_completion(data = {}) {
+    const completion_data = {
       key: `${this.key}-${Date.now()}`,
       thread_key: this.key,
       stream: this.collection.settings.stream,
-      ...opts
+      ...data
     };
     if (this.has_default_system_prompt && !this.completions[0]?.data?.system_message) {
-      completion_opts.system_message = this.get_system_prompt(completion_opts);
+      completion_data.system_message = this.get_system_prompt(completion_data);
     }
-    const completion = new this.env.smart_completions.item_type(this.env, completion_opts);
+    if (!completion_data.context_key) {
+      const last_context_key = this.last_completion?.data?.context_key;
+      completion_data.context_key = last_context_key || this.env.smart_contexts.new_context().key;
+    }
+    const completion = new this.env.smart_completions.item_type(this.env, completion_data);
     this.env.smart_completions.set(completion);
     completion.chat_model = this.chat_model;
+    this._current_completion = completion;
     add_thread_item(this, completion.key);
-    this.current_completion = completion;
-    if (this.message_container) {
-      completion.env.render_component("completion", completion).then((frag) => {
-        this.message_container.appendChild(frag);
-      });
-    }
-    this.queue_save();
-    this.collection.process_save_queue();
     return completion;
   }
   /**
-   * Updates (or clears) the context for the current completion.
-   * Passing `null` or an empty-item context removes the context_key,
-   * preventing empty contexts from being sent to the model.
+   * Updates the context for the current completion.
    * @param {object|null} context
    */
-  async update_current_context(context, opts = {}) {
-    if (!this.current_completion) {
-      this.new_completion();
-    }
-    const comp = this.current_completion;
-    if (!context || !context.has_context_items) {
-      delete comp.data.context_key;
-    } else {
-      comp.data.context_key = context.key;
-    }
-    if (comp.context_elm) {
-      comp.context_elm.remove();
-      comp.context_elm = null;
-    }
-    await comp.env.render_component("completion", comp, {
-      ...opts
-    });
-  }
-  async update_current_completion(data = {}) {
-    if (!this.current_completion) return;
-    this.current_completion.data = { ...this.current_completion.data, ...data };
-    await this.current_completion.env.render_component("completion", this.current_completion);
+  update_current_context(context, opts = {}) {
+    this.current_completion.data.context_key = context?.key || null;
   }
   get current_completion() {
-    if (this._current_completion && this._current_completion.data.completion.responses.length !== 0) {
-      this._current_completion = null;
+    if (!this._current_completion || this._current_completion && this._current_completion.data.completion.responses.length !== 0) {
+      this._current_completion = this.init_completion();
     }
     return this._current_completion;
   }
@@ -26004,7 +31230,7 @@ var SmartChatThread = class extends CollectionItem3 {
     this._current_completion = completion;
   }
   get last_completion() {
-    return this.completions[this.completions.length - 2];
+    return this.completions.findLast((completion) => completion.response);
   }
   get completion_keys() {
     return list_thread_items(this);
@@ -26028,10 +31254,7 @@ var SmartChatThread = class extends CollectionItem3 {
 ${opts.system_message}` : opts.system_message;
     }
     if (prompt.includes("{{folder_tree}}")) {
-      let paths = this.env.smart_sources?.fs?.folder_paths ?? [];
-      paths = paths.map((p) => p.endsWith("/") ? p : p + "/");
-      const tree = build_file_tree_string([...new Set(paths)]);
-      prompt = prompt.replace(/{{\s*folder_tree\s*}}/gi, tree);
+      prompt = replace_folder_tree_var(prompt);
     }
     return prompt;
   }
@@ -26083,7 +31306,7 @@ var SmartChatThreads = class extends Collection3 {
     return thread;
   }
   set active_thread(thread) {
-    if (!thread) {
+    if (!thread?.key) {
       this.settings.active_thread_key = "";
       return;
     }
@@ -26166,12 +31389,12 @@ var SmartChatThreads = class extends Collection3 {
 var smart_chat_threads_default = {
   class: SmartChatThreads,
   collection_key: "smart_chat_threads",
-  data_adapter: AjsonSingleFileCollectionDataAdapter,
+  data_adapter: AjsonSingleFileCollectionDataAdapter2,
   item_type: SmartChatThread
 };
 
 // node_modules/smart-chat-obsidian/node_modules/smart-completions/smart_completions.js
-var SmartCompletions = class extends Collection3 {
+var SmartCompletions2 = class extends Collection3 {
   /**
    * Lazily instantiates and returns a chat_model. Similar to how
    * SmartEntities implements embed_model. You can adapt this
@@ -26286,7 +31509,7 @@ function fmix_322(h) {
 }
 
 // node_modules/smart-chat-obsidian/node_modules/smart-utils/coerce_primitives.js
-function coerce_primitives(value) {
+function coerce_primitives2(value) {
   if (typeof value !== "string") {
     return value;
   }
@@ -26312,7 +31535,7 @@ function coerce_primitives(value) {
 }
 
 // node_modules/smart-chat-obsidian/node_modules/smart-utils/parse_xml_fragments.js
-function parse_xml_fragments(xml_input) {
+function parse_xml_fragments2(xml_input) {
   if (typeof xml_input !== "string" || xml_input.trim() === "") {
     return null;
   }
@@ -26325,7 +31548,7 @@ function parse_xml_fragments(xml_input) {
     let m;
     while ((m = attr_re.exec(str)) !== null) {
       const [, key, raw_val] = m;
-      attrs[key] = coerce_primitives(raw_val);
+      attrs[key] = coerce_primitives2(raw_val);
     }
     return attrs;
   };
@@ -26342,7 +31565,7 @@ function parse_xml_fragments(xml_input) {
     if (Object.keys(ctx.children_map).length) {
       ctx.node.contents = ctx.children_map;
     } else if (text_raw !== "") {
-      ctx.node.contents = ctx.verbatim ? text_raw : coerce_primitives(text_raw);
+      ctx.node.contents = ctx.verbatim ? text_raw : coerce_primitives2(text_raw);
     } else {
       ctx.node.contents = null;
     }
@@ -26425,7 +31648,7 @@ function parse_xml_fragments(xml_input) {
 }
 
 // node_modules/smart-chat-obsidian/node_modules/smart-completions/smart_completion.js
-var SmartCompletion = class extends CollectionItem3 {
+var SmartCompletion2 = class extends CollectionItem3 {
   constructor(env, data = null) {
     super(env, data);
     this.run_adapter_item_constructors();
@@ -26616,7 +31839,7 @@ var SmartCompletion = class extends CollectionItem3 {
       }
     }
     if (!this.response_text) return null;
-    const parsed = parse_xml_fragments(this.response_text);
+    const parsed = parse_xml_fragments2(this.response_text);
     if (!parsed) return null;
     return parsed;
   }
@@ -26653,7 +31876,7 @@ var SmartCompletion = class extends CollectionItem3 {
 };
 
 // node_modules/smart-chat-obsidian/node_modules/smart-completions/utils/insert_user_message.js
-function insert_user_message(request, user_message, opts = {}) {
+function insert_user_message2(request, user_message, opts = {}) {
   if (!user_message) return;
   const { position = "end", new_user_message = false } = opts;
   if (!request.messages) {
@@ -26691,7 +31914,7 @@ function insert_user_message(request, user_message, opts = {}) {
 }
 
 // node_modules/smart-chat-obsidian/node_modules/smart-completions/adapters/_adapter.js
-var SmartCompletionAdapter = class {
+var SmartCompletionAdapter2 = class {
   constructor(item) {
     this.item = item;
   }
@@ -26711,7 +31934,7 @@ var SmartCompletionAdapter = class {
     return this.item.response;
   }
   insert_user_message(user_message, opts = {}) {
-    insert_user_message(this.request, user_message, opts);
+    insert_user_message2(this.request, user_message, opts);
   }
   // Override these methods in subclasses
   static get property_name() {
@@ -26729,59 +31952,9 @@ var SmartCompletionAdapter = class {
   }
 };
 
-// node_modules/smart-chat-obsidian/node_modules/smart-completions/adapters/template.js
-var SmartCompletionTemplateAdapter = class extends SmartCompletionAdapter {
-  /**
-   * @returns {string}
-   */
-  static get property_name() {
-    return "template_key";
-  }
-  /**
-   * to_request: Locates the template item, injects relevant fields into request.
-   * @returns {Promise<void>}
-   */
-  async to_request() {
-    const template_key = this.data.template_key;
-    if (!template_key) return;
-    const template_collection = this.item.env.smart_templates;
-    if (!template_collection) {
-      console.warn("No 'smart_templates' collection found; skipping template adapter.");
-      return;
-    }
-    const template_item = template_collection.get(template_key);
-    if (!template_item) {
-      console.warn(`Template item not found for key '${template_key}'`);
-      return;
-    }
-    const template_content = await template_item.get_template();
-    const template_templates = this.data.template_templates;
-    const system_prompt = compile_template_instructions(template_content, template_templates);
-    this.insert_user_message(system_prompt);
-  }
-  /**
-   * from_response: No post-processing needed for this template usage.
-   * @returns {Promise<void>}
-   */
-  async from_response() {
-  }
-};
-function compile_template_instructions(template_text, template_templates = {}) {
-  if (!template_templates.before) template_templates.before = `Important: use the following template to format your response:
-- should output exact headings
-- should interpret non-heading template text as instructions
-  - each non-heading template text should be considered specific to the respective heading
-  
----BEGIN TEMPLATE---`;
-  if (!template_templates.after) template_templates.after = `---END TEMPLATE---`;
-  return `${template_templates.before}
-${template_text}
-${template_templates.after}`;
-}
-
 // node_modules/smart-chat-obsidian/node_modules/smart-completions/utils/insert_image.js
-async function insert_image(request, image_path, fs) {
-  const base64_image = await convert_image_to_base64(fs, image_path);
+async function insert_image2(request, image_path, fs) {
+  const base64_image = await convert_image_to_base642(fs, image_path);
   if (!base64_image) return;
   const last_user_index = request.messages.findLastIndex((x) => x.role === "user");
   const image_content = {
@@ -26798,7 +31971,7 @@ async function insert_image(request, image_path, fs) {
   }
   last_user_message.content.push(image_content.content[0]);
 }
-async function convert_image_to_base64(fs, image_path) {
+async function convert_image_to_base642(fs, image_path) {
   if (!image_path) return;
   const image_exts = ["png", "jpg", "jpeg", "gif", "webp", "svg", "bmp", "ico"];
   const ext = image_path.split(".").pop().toLowerCase();
@@ -26813,8 +31986,8 @@ async function convert_image_to_base64(fs, image_path) {
 }
 
 // node_modules/smart-chat-obsidian/node_modules/smart-completions/utils/insert_pdf.js
-async function insert_pdf(request, pdf_path, fs) {
-  const base64_pdf = await convert_pdf_to_base64(fs, pdf_path);
+async function insert_pdf2(request, pdf_path, fs) {
+  const base64_pdf = await convert_pdf_to_base642(fs, pdf_path);
   if (!base64_pdf) return;
   const last_user_index = request.messages.findLastIndex((x) => x.role === "user");
   const pdf_content = {
@@ -26839,7 +32012,7 @@ async function insert_pdf(request, pdf_path, fs) {
   }
   last_user_message.content.push(pdf_content.content[0]);
 }
-async function convert_pdf_to_base64(fs, pdf_path) {
+async function convert_pdf_to_base642(fs, pdf_path) {
   if (!pdf_path) return;
   const ext = pdf_path.split(".").pop().toLowerCase();
   if (ext !== "pdf") return;
@@ -26852,7 +32025,7 @@ async function convert_pdf_to_base64(fs, pdf_path) {
 }
 
 // node_modules/smart-chat-obsidian/node_modules/smart-completions/adapters/context.js
-var SmartCompletionContextAdapter = class extends SmartCompletionAdapter {
+var SmartCompletionContextAdapter2 = class extends SmartCompletionAdapter2 {
   static order = 10;
   static get property_name() {
     return "context_key";
@@ -26899,13 +32072,13 @@ var SmartCompletionContextAdapter = class extends SmartCompletionAdapter {
   async insert_images(image_paths) {
     if (!Array.isArray(image_paths) || !image_paths.length) return;
     for (const img_path of image_paths) {
-      await insert_image(this.request, img_path, this.item.env.fs);
+      await insert_image2(this.request, img_path, this.item.env.fs);
     }
   }
   async insert_pdfs(pdf_paths) {
     if (!Array.isArray(pdf_paths) || !pdf_paths.length) return;
     for (const pdf_path of pdf_paths) {
-      await insert_pdf(this.request, pdf_path, this.item.env.fs);
+      await insert_pdf2(this.request, pdf_path, this.item.env.fs);
     }
   }
   /**
@@ -26916,7 +32089,7 @@ var SmartCompletionContextAdapter = class extends SmartCompletionAdapter {
 };
 
 // node_modules/smart-chat-obsidian/node_modules/smart-completions/adapters/user.js
-var SmartCompletionUserAdapter = class extends SmartCompletionAdapter {
+var SmartCompletionUserAdapter2 = class extends SmartCompletionAdapter2 {
   static order = 1;
   /**
    * @returns {string}
@@ -26949,7 +32122,7 @@ var SmartCompletionUserAdapter = class extends SmartCompletionAdapter {
 };
 
 // node_modules/smart-chat-obsidian/node_modules/smart-completions/adapters/action.js
-var ActionCompletionAdapter = class extends SmartCompletionAdapter {
+var ActionCompletionAdapter2 = class extends SmartCompletionAdapter2 {
   static get property_name() {
     return "action_key";
   }
@@ -26960,7 +32133,7 @@ var ActionCompletionAdapter = class extends SmartCompletionAdapter {
     const action_key = this.data.action_key;
     if (!action_key) return;
     const thread = this.item.thread;
-    if (thread.current_completion !== this.item) return console.log("ActionCompletionAdapter: skipping tools, not the current completion");
+    if (thread && thread.current_completion !== this.item) return console.log("ActionCompletionAdapter: skipping tools, not the current completion");
     const action_opts = this.data.action_opts;
     const action_collection = this.item.env.smart_actions;
     if (!action_collection) {
@@ -26974,13 +32147,13 @@ var ActionCompletionAdapter = class extends SmartCompletionAdapter {
     }
     let tools;
     try {
-      const action_module = action_item.module;
-      tools = action_module.tool ? [action_module.tool] : convert_openapi_to_tools(action_module.openapi);
+      const tool2 = action_item.as_tool;
+      tools = tool2 ? [tool2] : [];
     } catch (err) {
-      console.warn("Error compiling ephemeral action", err);
+      console.warn("Error generating action tool", err);
       return;
     }
-    if (!tools) return;
+    if (!tools.length) return;
     if (!this.data.actions) this.data.actions = {};
     this.data.actions[action_key] = true;
     this.insert_tools(tools, { force: true });
@@ -27049,47 +32222,9 @@ var ActionCompletionAdapter = class extends SmartCompletionAdapter {
     }
   }
 };
-function convert_openapi_to_tools(openapi_spec) {
-  const tools = [];
-  for (const path2 in openapi_spec.paths) {
-    const methods = openapi_spec.paths[path2];
-    for (const method in methods) {
-      const endpoint = methods[method];
-      const parameters = endpoint.parameters || [];
-      const requestBody = endpoint.requestBody;
-      const properties = {};
-      const required = [];
-      parameters.forEach((param) => {
-        properties[param.name] = {
-          type: param.schema.type,
-          description: param.description || ""
-        };
-        if (param.required) required.push(param.name);
-      });
-      if (requestBody) {
-        const schema = requestBody.content["application/json"].schema;
-        Object.assign(properties, schema.properties);
-        if (schema.required) required.push(...schema.required);
-      }
-      tools.push({
-        type: "function",
-        function: {
-          name: endpoint.operationId || `${method}_${path2.replace(/\//g, "_").replace(/[{}]/g, "")}`,
-          description: endpoint.summary || endpoint.description || "",
-          parameters: {
-            type: "object",
-            properties,
-            required
-          }
-        }
-      });
-    }
-  }
-  return tools;
-}
 
 // node_modules/smart-chat-obsidian/node_modules/smart-completions/adapters/action_xml.js
-function scaffold_xml(root_tag, root_desc, params) {
+function scaffold_xml2(root_tag, root_desc, params) {
   return [
     `<${root_tag} instructions="${root_desc}">`,
     ...Object.entries(params).map(
@@ -27098,10 +32233,10 @@ function scaffold_xml(root_tag, root_desc, params) {
     `</${root_tag}>`
   ].join("\n");
 }
-function strip_instruction_attrs(xml) {
+function strip_instruction_attrs2(xml) {
   return xml.replace(/\s+instructions="[^"]*"/g, "");
 }
-var ActionXmlCompletionAdapter = class extends ActionCompletionAdapter {
+var ActionXmlCompletionAdapter2 = class extends ActionCompletionAdapter2 {
   static get property_name() {
     return "action_xml_key";
   }
@@ -27119,12 +32254,12 @@ var ActionXmlCompletionAdapter = class extends ActionCompletionAdapter {
     }
     let tools;
     try {
-      const mod = action_item.module;
-      tools = mod.tool ? [mod.tool] : convert_openapi_to_tools(mod.openapi);
+      const tool2 = action_item.as_tool;
+      tools = tool2 ? [tool2] : [];
     } catch (err) {
       return console.warn("Unable to compile OpenAPI \u2192 tools", err);
     }
-    if (!tools?.length) return;
+    if (!tools.length) return;
     const func_def = tools[0].function;
     const param_props = func_def.parameters?.properties || {};
     const required_params = func_def.parameters?.required || [];
@@ -27144,8 +32279,8 @@ var ActionXmlCompletionAdapter = class extends ActionCompletionAdapter {
         ([p, v]) => `- ${p}: ${v.description || ""}`
       )
     ].join("\n");
-    const xml_scaffold = scaffold_xml(func_def.name, func_def.description, param_props);
-    const xml_template = strip_instruction_attrs(xml_scaffold);
+    const xml_scaffold = scaffold_xml2(func_def.name, func_def.description, param_props);
+    const xml_template = strip_instruction_attrs2(xml_scaffold);
     const action_instruction_msg = [
       action_instruction,
       `You are ready to invoke the action '${func_def.name}'.`
@@ -27209,7 +32344,7 @@ var ActionXmlCompletionAdapter = class extends ActionCompletionAdapter {
 };
 
 // node_modules/smart-chat-obsidian/node_modules/smart-completions/adapters/system.js
-var SmartCompletionSystemAdapter = class extends SmartCompletionAdapter {
+var SmartCompletionSystemAdapter2 = class extends SmartCompletionAdapter2 {
   /**
    * Identifies the data property that triggers this adapter.
    * @returns {string}
@@ -27241,22 +32376,22 @@ var SmartCompletionSystemAdapter = class extends SmartCompletionAdapter {
 };
 
 // node_modules/smart-chat-obsidian/node_modules/smart-completions/index.js
-var smart_completions_default_config = {
-  class: SmartCompletions,
-  data_adapter: AjsonSingleFileCollectionDataAdapter,
-  item_type: SmartCompletion,
+var smart_completions_default_config2 = {
+  class: SmartCompletions2,
+  data_adapter: AjsonSingleFileCollectionDataAdapter2,
+  item_type: SmartCompletion2,
   completion_adapters: {
-    SmartCompletionTemplateAdapter,
-    SmartCompletionContextAdapter,
-    SmartCompletionUserAdapter,
-    ActionCompletionAdapter,
-    ActionXmlCompletionAdapter,
-    SmartCompletionSystemAdapter
+    // SmartCompletionTemplateAdapter,
+    SmartCompletionContextAdapter: SmartCompletionContextAdapter2,
+    SmartCompletionUserAdapter: SmartCompletionUserAdapter2,
+    ActionCompletionAdapter: ActionCompletionAdapter2,
+    ActionXmlCompletionAdapter: ActionXmlCompletionAdapter2,
+    SmartCompletionSystemAdapter: SmartCompletionSystemAdapter2
   }
 };
 
 // node_modules/smart-chat-obsidian/src/adapters/smart-completions/thread.js
-var ThreadCompletionAdapter = class extends SmartCompletionAdapter {
+var ThreadCompletionAdapter = class extends SmartCompletionAdapter2 {
   static order = -1;
   /**
    * @returns {string}
@@ -27324,8 +32459,8 @@ var ThreadCompletionAdapter = class extends SmartCompletionAdapter {
 };
 
 // node_modules/smart-chat-obsidian/src/collections/smart_completions.js
-smart_completions_default_config.completion_adapters["ThreadCompletionAdapter"] = ThreadCompletionAdapter;
-var smart_completions_default = smart_completions_default_config;
+smart_completions_default_config2.completion_adapters["ThreadCompletionAdapter"] = ThreadCompletionAdapter;
+var smart_completions_default = smart_completions_default_config2;
 
 // node_modules/smart-chat-obsidian/node_modules/smart-contexts/smart_contexts.js
 var SmartContexts = class extends Collection3 {
@@ -27341,6 +32476,7 @@ var SmartContexts = class extends Collection3 {
     const item = new this.item_type(this.env, data);
     if (Array.isArray(opts.add_items)) item.add_items(opts.add_items);
     this.set(item);
+    item.queue_save();
     return item;
   }
   /**
@@ -27500,6 +32636,72 @@ var SmartContexts = class extends Collection3 {
     return collection.get(key);
   }
 };
+
+// node_modules/smart-chat-obsidian/node_modules/smart-contexts/utils/get_snapshot.js
+async function get_snapshot(ctx, opts = {}) {
+  const snapshot = {
+    items: {},
+    // depth ⇒ { path ⇒ item }
+    truncated_items: [],
+    skipped_items: [],
+    missing_items: [],
+    images: [],
+    char_count: opts.items ? Object.values(opts.items).reduce((p, i) => p + i.char_count, 0) : 0
+  };
+  const seen = new Set(Object.keys(opts.items || {}));
+  const keys_at_depth = { 0: ctx.get_item_keys_by_depth(0) };
+  const max_depth = opts.link_depth ?? 0;
+  for (let depth = 0; depth <= max_depth; depth++) {
+    const depth_keys = keys_at_depth[depth] || [];
+    if (!depth_keys.length) continue;
+    const ctx_items = ctx.get_context_items(depth_keys);
+    const curr_depth = snapshot.items[depth] = {};
+    for (const item of ctx_items) {
+      await item.add_to_snapshot(snapshot, { ...opts, depth });
+      seen.add(item.path);
+    }
+    if (depth !== max_depth) {
+      const accumulate = new Set(keys_at_depth[depth + 1] || []);
+      for (const context_item of Object.values(curr_depth)) {
+        if (!context_item) continue;
+        if (opts.inlinks) {
+          const inlinks = context_item.inlinks ?? context_item.ref?.inlinks ?? [];
+          inlinks.forEach((p) => {
+            if (!seen.has(p)) accumulate.add(p);
+          });
+        }
+        const outlinks = context_item.outlinks ?? context_item.ref?.outlinks ?? [];
+        outlinks.forEach((p) => {
+          if (!seen.has(p)) accumulate.add(p);
+        });
+      }
+      keys_at_depth[depth + 1] = Array.from(accumulate);
+    }
+  }
+  if (opts.items) {
+    snapshot.items[0] = { ...snapshot.items[0], ...opts.items };
+  }
+  return snapshot;
+}
+
+// node_modules/smart-chat-obsidian/node_modules/smart-contexts/utils/merge_context_opts.js
+function merge_context_opts(context_item, input_opts = {}) {
+  const cset = context_item.collection.settings || {};
+  const local_opts = context_item.data.context_opts || {};
+  const merged_templates = {
+    ...cset.templates ? JSON.parse(JSON.stringify(cset.templates)) : {},
+    ...local_opts.templates && typeof local_opts.templates === "object" ? local_opts.templates : {},
+    ...input_opts.templates && typeof input_opts.templates === "object" ? input_opts.templates : {}
+  };
+  return {
+    ...input_opts,
+    link_depth: input_opts.link_depth ?? local_opts.link_depth ?? cset.link_depth ?? 0,
+    inlinks: input_opts.inlinks ?? local_opts.inlinks ?? Boolean(cset.inlinks),
+    excluded_headings: input_opts.excluded_headings ?? local_opts.excluded_headings ?? (Array.isArray(cset.excluded_headings) ? [...cset.excluded_headings] : []),
+    max_len: input_opts.max_len ?? local_opts.max_len ?? cset.max_len ?? 0,
+    templates: merged_templates
+  };
+}
 
 // node_modules/smart-chat-obsidian/node_modules/smart-blocks/parsers/markdown.js
 function parse_markdown_blocks3(markdown, opts = {}) {
@@ -27935,141 +33137,121 @@ function get_markdown_links3(content) {
   );
 }
 
-// node_modules/smart-chat-obsidian/node_modules/smart-contexts/utils/get_snapshot.js
-async function get_snapshot(ctx, opts) {
-  const snapshot = {
-    items: {},
-    truncated_items: [],
-    skipped_items: [],
-    missing_items: [],
-    images: [],
-    char_count: opts.items ? Object.values(opts.items).reduce((acc, i) => acc + i.char_count, 0) : 0
-  };
-  const keys_at_depth = {};
-  keys_at_depth[0] = ctx.get_item_keys_by_depth(0);
-  const max_depth = opts.link_depth ?? 0;
-  for (let depth = 0; depth <= max_depth; depth++) {
-    const curr_depth = await process_depth(
-      snapshot,
-      keys_at_depth[depth],
-      ctx,
-      opts
-    );
-    snapshot.items[depth] = curr_depth;
-    if (depth !== max_depth) {
-      keys_at_depth[depth + 1] = Object.keys(Object.values(curr_depth).reduce((acc, i) => {
-        if (opts.inlinks) {
-          i.ref.inlinks.forEach((inlink) => {
-            if (!is_already_in_snapshot(inlink.path, snapshot)) {
-              acc[inlink] = true;
-            }
-          });
-        }
-        i.ref.outlinks.forEach((outlink) => {
-          if (!is_already_in_snapshot(outlink.path, snapshot)) {
-            acc[outlink] = true;
-          }
-        });
-        return acc;
-      }, {}));
+// node_modules/smart-chat-obsidian/node_modules/smart-contexts/context_item.js
+var BaseContextItem = class {
+  constructor(ctx, key) {
+    ctx.env.create_env_getter(this);
+    this.ctx = ctx;
+    this.key = key;
+    const ctx_data = ctx.data?.context_items?.[key];
+    if (ctx_data && typeof ctx_data === "object" && "content" in ctx_data) {
+      this.content = String(ctx_data.content ?? "");
     }
   }
-  if (opts.items) {
-    snapshot.items[0] = {
-      ...snapshot.items[0],
-      ...opts.items
-    };
+  get name() {
+    return this.path.split("/").pop();
   }
-  return snapshot;
-}
-async function process_depth(snapshot, curr_depth_keys, ctx, opts) {
-  const ctx_items = (curr_depth_keys ?? []).map((key) => ctx.get_ref(key)).filter(Boolean);
-  const non_source_keys = curr_depth_keys.filter((key) => !ctx.get_ref(key));
-  for (const key of non_source_keys) {
-    const smart_fs = ctx.env.smart_sources.fs;
-    const files = await smart_fs.adapter.list_files_recursive(key);
-    if (!files.length) {
-      snapshot.missing_items.push(key);
-      continue;
-    }
-    for (const file of files) {
-      if (is_already_in_snapshot(file.path, snapshot)) {
-        continue;
-      }
-      const item = ctx.get_ref(file.path);
-      if (item) {
-        ctx_items.push(item);
-      } else {
-        const image_exts = ["png", "jpg", "jpeg", "gif", "webp", "svg", "bmp", "ico"];
-        if (image_exts.some((ext) => file.path.endsWith(`.${ext}`))) {
-          snapshot.images.push(file.path);
-        } else if (file.path.endsWith(".pdf")) {
-          if (!snapshot.pdfs) snapshot.pdfs = [];
-          snapshot.pdfs.push(file.path);
-        } else {
-          snapshot.missing_items.push(file.path);
-        }
-      }
-    }
+  get path() {
+    return this.key;
   }
-  const curr_depth = {};
-  const batch = [];
-  for (const context_item of ctx_items) {
-    if (is_already_in_snapshot(context_item.key, snapshot)) {
-      continue;
-    }
-    batch.push(process_item(context_item));
+  /* fallback empty link arrays so link‑depth traversal works */
+  get inlinks() {
+    return this._inlinks ?? [];
   }
-  await Promise.all(batch);
-  return curr_depth;
-  async function process_item(context_item) {
-    let content = await context_item.read();
-    if (!opts.calculating && content.split("\n").some((line) => line.startsWith("```dataview"))) {
-      content = await context_item.read({ render_output: true });
-      context_item.data.outlinks = get_markdown_links3(content);
-    }
-    const excluded_headings = opts.excluded_headings || [];
-    const [new_content, exclusions, removed_char_count] = strip_excluded_headings(content, excluded_headings);
-    if (!ctx.settings.follow_links_in_excluded) {
-      context_item.data.outlinks = get_markdown_links3(new_content);
-    }
-    snapshot.char_count += new_content.length;
-    curr_depth[context_item.path] = {
-      ref: context_item,
-      path: context_item.path,
-      content: new_content,
-      mtime: context_item.mtime,
-      char_count: new_content.length,
+  get outlinks() {
+    return this._outlinks ?? [];
+  }
+  set inlinks(links) {
+    this._inlinks = Array.isArray(links) ? links : [];
+  }
+  set outlinks(links) {
+    links = links.map((link) => {
+      const link_ref = link?.target || link;
+      if (link_ref.startsWith("http")) return null;
+      const link_path = this.env.smart_sources.fs.get_link_target_path(link_ref, this.key);
+      return link_path;
+    }).filter((link_path) => link_path);
+    this._outlinks = Array.isArray(links) ? links : [];
+  }
+  async add_to_snapshot(snapshot, opts = {}) {
+    if (typeof this.content !== "string") return;
+    this.outlinks = get_markdown_links3(this.content);
+    const [clean, exclusions, excluded_char_count] = strip_excluded_headings(this.content, opts.excluded_headings ?? []);
+    const depth = opts.depth || 0;
+    if (!snapshot.items[depth]) snapshot.items[depth] = {};
+    snapshot.items[depth][this.key] = {
+      path: this.key,
+      content: clean,
+      char_count: clean.length,
+      mtime: Date.now(),
+      // inline items have no mtime
       exclusions,
-      excluded_char_count: removed_char_count
+      excluded_char_count,
+      inlinks: this.inlinks,
+      outlinks: this.outlinks
     };
+    snapshot.char_count += clean.length;
   }
-}
-function is_already_in_snapshot(item_path, snapshot) {
-  return Object.values(snapshot.items).some((depthObj) => depthObj?.[item_path]);
-}
+  async find_connections(opts = {}) {
+    return await this.env.smart_sources.lookup({ hypotheticals: [
+      this.data.content
+    ] });
+  }
+};
+var SourceContextItem = class extends BaseContextItem {
+  constructor(context, ref) {
+    super(context, ref.key);
+    this.ref = ref;
+  }
+  get inlinks() {
+    return this.ref.inlinks || [];
+  }
+  get outlinks() {
+    return this.ref.outlinks || [];
+  }
+  async add_to_snapshot(snapshot, opts) {
+    let raw = await this.ref.read();
+    if (!opts.calculating && raw.split("\n").some((line) => line.startsWith("```dataview"))) {
+      raw = await this.ref.read({ render_output: true });
+      this.ref.data.outlinks = get_markdown_links3(raw);
+    }
+    const [content, exclusions, excluded_char_count] = strip_excluded_headings(raw, opts.excluded_headings ?? []);
+    if (!snapshot.items) snapshot.items = [];
+    if (!snapshot.items[0]) snapshot.items[0] = {};
+    snapshot.items[0][this.path] = {
+      ref: this.ref,
+      path: this.path,
+      mtime: this.ref.mtime,
+      content,
+      char_count: content.length,
+      exclusions,
+      excluded_char_count
+    };
+    snapshot.char_count += content.length;
+  }
+  async find_connections(opts = {}) {
+    return await this.ref.find_connections(opts);
+  }
+};
+var ImageContextItem = class extends BaseContextItem {
+  async add_to_snapshot(snapshot) {
+    if (!snapshot.images) snapshot.images = [];
+    snapshot.images.push(this.path);
+  }
+};
+var PdfContextItem = class extends BaseContextItem {
+  async add_to_snapshot(snapshot) {
+    if (!snapshot.pdfs) snapshot.pdfs = [];
+    snapshot.pdfs.push(this.path);
+  }
+};
 
-// node_modules/smart-chat-obsidian/node_modules/smart-contexts/utils/merge_context_opts.js
-function merge_context_opts(context_item, input_opts = {}) {
-  const cset = context_item.collection.settings || {};
-  const local_opts = context_item.data.context_opts || {};
-  const merged_templates = {
-    ...cset.templates ? JSON.parse(JSON.stringify(cset.templates)) : {},
-    ...local_opts.templates && typeof local_opts.templates === "object" ? local_opts.templates : {},
-    ...input_opts.templates && typeof input_opts.templates === "object" ? input_opts.templates : {}
-  };
-  return {
-    ...input_opts,
-    link_depth: input_opts.link_depth ?? local_opts.link_depth ?? cset.link_depth ?? 0,
-    inlinks: input_opts.inlinks ?? local_opts.inlinks ?? Boolean(cset.inlinks),
-    excluded_headings: input_opts.excluded_headings ?? local_opts.excluded_headings ?? (Array.isArray(cset.excluded_headings) ? [...cset.excluded_headings] : []),
-    max_len: input_opts.max_len ?? local_opts.max_len ?? cset.max_len ?? 0,
-    templates: merged_templates
-  };
-}
+// node_modules/smart-chat-obsidian/node_modules/smart-contexts/utils/image_extension_regex.js
+var image_extension_regex = /\.(png|jpe?g|gif|bmp|webp|svg|ico|mp4)$/i;
 
 // node_modules/smart-chat-obsidian/node_modules/smart-contexts/smart_context.js
 var SmartContext = class extends CollectionItem3 {
+  static version = 1;
   static get defaults() {
     return {
       data: {
@@ -28109,6 +33291,24 @@ var SmartContext = class extends CollectionItem3 {
     items.forEach((item) => this.add_item(item));
   }
   /**
+   * Return *ContextItem* instances (any depth) for a given key array.
+   * @param {string[]} keys
+   */
+  get_context_items(keys = this.context_item_keys) {
+    return keys.map((k) => this.get_context_item(k)).filter(Boolean);
+  }
+  /** Map any key to ContextItem subclass */
+  get_context_item(key) {
+    const ctx_item = this.data?.context_items?.[key];
+    if (ctx_item && typeof ctx_item === "object" && "content" in ctx_item) {
+      return new BaseContextItem(this, key);
+    }
+    if (image_extension_regex.test(key)) return new ImageContextItem(this, key);
+    if (key.endsWith(".pdf")) return new PdfContextItem(this, key);
+    const src = this.env.smart_sources.get(key) || this.env.smart_blocks.get(key);
+    return src ? new SourceContextItem(this, src) : null;
+  }
+  /**
    * get_snapshot
    * Gathers items at depth=0..link_depth, respects exclusions, and tracks truncated/skipped items.
    * @async
@@ -28138,19 +33338,22 @@ var SmartContext = class extends CollectionItem3 {
   }
   /**
    * @method get_ref
+   * @deprecated moving to using ContextItem instances
    * Looks up a reference in the environment. Distinguishes block vs source by '#' presence.
    */
   get_ref(key) {
     return this.collection.get_ref(key);
   }
   get_item_keys_by_depth(depth) {
-    this.convert_data_context_items_bool_to_object();
     return Object.keys(this.data.context_items).filter((k) => {
       const item_depth = this.data.context_items[k].d;
       if (item_depth === depth) return true;
       if (typeof item_depth === "undefined" && depth === 0) return true;
       return false;
     });
+  }
+  get context_item_keys() {
+    return Object.keys(this.data?.context_items || {});
   }
   /**
    * If no user-provided key, fallback to a stable hash of the context_items.
@@ -28163,18 +33366,6 @@ var SmartContext = class extends CollectionItem3 {
   }
   get has_context_items() {
     return Object.keys(this.data.context_items || {}).length > 0;
-  }
-  /**
-   * Backwards compatibility (remove in v2)
-   * Converts context_items from boolean to object with depth d=0
-   */
-  convert_data_context_items_bool_to_object() {
-    if (Object.values(this.data.context_items).every((v) => v === true)) {
-      Object.keys(this.data.context_items).forEach((k) => {
-        this.data.context_items[k] = { d: 0 };
-      });
-      this.queue_save();
-    }
   }
 };
 
@@ -28213,10 +33404,10 @@ async function compile_snapshot(context_snapshot, merged_opts) {
   for (const depth of depths) {
     const items = context_snapshot.items[depth] || {};
     const { before_raw, after_raw } = get_templates_for_depth(depth, merged_opts);
-    for (const [path2, item] of Object.entries(items)) {
-      const placeholders = build_item_placeholders(path2, depth, item.mtime);
+    for (const [path, item] of Object.entries(items)) {
+      const placeholders = build_item_placeholders(path, depth, item.mtime);
       chunks.push({
-        path: path2,
+        path,
         mtime: item.mtime,
         before_tpl: replace_vars(before_raw, placeholders),
         item_text: item.content,
@@ -28294,12 +33485,12 @@ function get_templates_for_depth(depth, merged_opts) {
   }
   return { before_raw, after_raw };
 }
-function build_item_placeholders(path2, depth, mtime) {
-  const name = path2.substring(path2.lastIndexOf("/") + 1);
+function build_item_placeholders(path, depth, mtime) {
+  const name = path.substring(path.lastIndexOf("/") + 1);
   const dot_pos = name.lastIndexOf(".");
   const ext = dot_pos > 0 ? name.slice(dot_pos + 1) : "";
   return {
-    ITEM_PATH: path2.replace("external:", ""),
+    ITEM_PATH: path.replace("external:", ""),
     ITEM_NAME: name,
     ITEM_EXT: ext,
     ITEM_DEPTH: depth,
@@ -28421,7 +33612,7 @@ var DefaultContextCompileAdapter = class extends ContextCompileAdapter {
 // node_modules/smart-chat-obsidian/node_modules/smart-contexts/index.js
 var smart_contexts_default_config = {
   class: SmartContexts,
-  data_adapter: AjsonSingleFileCollectionDataAdapter,
+  data_adapter: AjsonSingleFileCollectionDataAdapter2,
   compile_adapters: {
     DefaultContextCompileAdapter
   },
@@ -28432,8 +33623,8 @@ var smart_contexts_default_config = {
 var smart_contexts_default = smart_contexts_default_config;
 
 // node_modules/smart-chat-obsidian/src/components/chat.css
-var css_sheet3 = new CSSStyleSheet();
-css_sheet3.replaceSync(`/**
+var css_sheet4 = new CSSStyleSheet();
+css_sheet4.replaceSync(`/**
  * chat.css
  *
  * Styles for top-level chat container, top bar, brand area, etc.
@@ -28548,12 +33739,18 @@ css_sheet3.replaceSync(`/**
   animation: save_confirmation 1s ease-out;
   background-color: rgba(46, 204, 113, 0.1);
   transition: background-color 1s ease;
+}
+
+.sc-tree-item .sc-tree-score {
+  font-size: 0.8rem;
+  cursor: pointer;
+  font-weight: 500;
 }`);
-var chat_default = css_sheet3;
+var chat_default = css_sheet4;
 
 // node_modules/smart-chat-obsidian/src/chat_history_modal.js
-var import_obsidian29 = require("obsidian");
-var ChatHistoryModal = class extends import_obsidian29.FuzzySuggestModal {
+var import_obsidian36 = require("obsidian");
+var ChatHistoryModal = class extends import_obsidian36.FuzzySuggestModal {
   /**
    * @param {Object} plugin - Main plugin instance with `app` and `env`.
    */
@@ -28581,7 +33778,7 @@ var ChatHistoryModal = class extends import_obsidian29.FuzzySuggestModal {
    */
   getItems() {
     return Object.values(this.env.smart_chat_threads.items).filter(
-      (thread) => thread.completions.length
+      (thread) => thread.completions.length > 1 || thread.completions.length === 1 && thread.completions[0].response
     );
   }
   /**
@@ -28590,7 +33787,7 @@ var ChatHistoryModal = class extends import_obsidian29.FuzzySuggestModal {
    * @returns {string}
    */
   getItemText(thread) {
-    return thread.key;
+    return thread.name;
   }
   /**
    * Invoked when the user picks a suggestion.
@@ -28607,9 +33804,63 @@ var ChatHistoryModal = class extends import_obsidian29.FuzzySuggestModal {
   }
 };
 
+// node_modules/smart-chat-obsidian/node_modules/obsidian-smart-env/modals/story.js
+var import_obsidian37 = require("obsidian");
+
+// node_modules/smart-chat-obsidian/node_modules/obsidian-smart-env/utils/open_url_externally.js
+function open_url_externally2(plugin, url) {
+  const webviewer = plugin.app.internalPlugins?.plugins?.webviewer?.instance;
+  window.open(url, webviewer ? "_external" : "_blank");
+}
+
+// node_modules/smart-chat-obsidian/node_modules/obsidian-smart-env/modals/story.js
+var StoryModal2 = class _StoryModal extends import_obsidian37.Modal {
+  constructor(plugin, { title, url }) {
+    super(plugin.app);
+    this.plugin = plugin;
+    this.title = title;
+    this.url = url;
+  }
+  static open(plugin, story_url) {
+    const modal = new _StoryModal(plugin, story_url);
+    modal.open();
+  }
+  onOpen() {
+    this.titleEl.setText(this.title);
+    this.modalEl.addClass("sc-story-modal");
+    const container = this.contentEl.createEl("div", {
+      cls: "sc-story-container"
+    });
+    if (import_obsidian37.Platform.isMobile) {
+      const btn = container.createEl("button", { text: "Open in browser" });
+      btn.addEventListener("click", () => {
+        open_url_externally2(this.plugin, this.url);
+        this.close();
+      });
+      return;
+    } else {
+      const webview = container.createEl("webview", {
+        attr: { src: this.url, allowpopups: "" }
+      });
+      webview.style.width = "100%";
+      webview.style.height = "100%";
+      webview.addEventListener("did-navigate", (event) => {
+        const new_url = event.url || webview.getAttribute("src");
+        if (new_url && new_url !== this.url) {
+          open_url_externally2(this.plugin, new_url);
+          this.close();
+        }
+      });
+    }
+  }
+  onClose() {
+    this.contentEl.empty();
+  }
+};
+
 // node_modules/smart-chat-obsidian/src/components/chat.js
-function build_html21(chat_threads_collection, opts = {}) {
-  return `
+function build_html24(chat_threads_collection, opts = {}) {
+  return `<div>
     <div class="smart-chat-chat-container">
       <div class="smart-chat-top-bar-container">
         <input
@@ -28627,6 +33878,9 @@ function build_html21(chat_threads_collection, opts = {}) {
         <button title="Chat Settings" id="smart-chat-chat-settings-button">
           ${this.get_icon_html("settings")}
         </button>
+        <button title="Chat Help" id="smart-chat-help-button">
+          ${this.get_icon_html("help-circle")}
+        </button>
       </div>
       <div class="smart-chat-threads-container"></div>
       <div class="smart-chat-brand">
@@ -28638,44 +33892,45 @@ function build_html21(chat_threads_collection, opts = {}) {
         </p>
       </div>
     </div>
-  `;
+  </div>`;
 }
-async function render27(chat_threads_collection, opts = {}) {
-  const html = await build_html21.call(this, chat_threads_collection, opts);
+async function render30(chat_threads_collection, opts = {}) {
+  const html = await build_html24.call(this, chat_threads_collection, opts);
   const frag = this.create_doc_fragment(html);
   chat_threads_collection.container = frag.querySelector(".smart-chat-chat-container");
   this.apply_style_sheet(chat_default);
-  post_process24.call(this, chat_threads_collection, frag, opts);
-  return frag;
+  post_process27.call(this, chat_threads_collection, chat_threads_collection.container, opts);
+  return chat_threads_collection.container;
 }
-async function post_process24(chat_threads_collection, frag, opts = {}) {
+async function post_process27(chat_threads_collection, container, opts = {}) {
   const env = chat_threads_collection.env;
   const threads_container = chat_threads_collection.container.querySelector(".smart-chat-threads-container");
   let active_thread = chat_threads_collection.active_thread;
   const plugin = env.smart_chat_plugin || env.smart_connections_plugin;
   if (!active_thread) {
-    active_thread = await chat_threads_collection.create_or_update({
-      key: "Untitled Chat " + Date.now()
-    });
-    chat_threads_collection.active_thread = active_thread;
+    const all_threads = Object.values(chat_threads_collection.items).filter(
+      (thread) => !thread.deleted
+    );
+    if (all_threads.length === 0) {
+      console.log("No threads exist, creating a new thread...");
+      active_thread = await chat_threads_collection.create_or_update();
+      chat_threads_collection.active_thread = active_thread;
+    } else {
+      active_thread = all_threads[0];
+      chat_threads_collection.active_thread = active_thread;
+    }
   }
   if (threads_container && active_thread) {
+    this.empty(threads_container);
     const thread_frag = await env.render_component("thread", active_thread, opts);
     threads_container.appendChild(thread_frag);
   }
-  const thread_name_input = frag.querySelector(".smart-chat-chat-name-input");
+  const thread_name_input = container.querySelector(".smart-chat-chat-name-input");
   if (thread_name_input) {
-    if (!active_thread.key || /^Untitled Chat \d+$/.test(active_thread.key)) {
-      const ts = Date.now();
-      active_thread.data.key = `Untitled Chat ${ts}`;
-      chat_threads_collection.set(active_thread);
-      thread_name_input.value = active_thread.key;
-    } else {
-      thread_name_input.value = active_thread.key;
-    }
+    thread_name_input.value = active_thread.name;
     const renameHandler = (current_thread) => {
       const new_val = thread_name_input.value.trim();
-      if (!new_val || new_val === current_thread.key) {
+      if (!new_val || new_val === current_thread.name) {
         return;
       }
       rename_thread(chat_threads_collection, current_thread, new_val);
@@ -28685,8 +33940,8 @@ async function post_process24(chat_threads_collection, frag, opts = {}) {
       }, 1e3);
     };
     const get_current_thread_from_event = (e) => {
-      const container = e.target.closest(".smart-chat-chat-container");
-      const thread_key = container.querySelector("[data-thread-key]").dataset.threadKey;
+      const chat_container = e.target.closest(".smart-chat-chat-container");
+      const thread_key = chat_container.querySelector("[data-thread-key]").dataset.threadKey;
       return chat_threads_collection.get(thread_key);
     };
     thread_name_input.addEventListener("blur", (e) => {
@@ -28705,9 +33960,7 @@ async function post_process24(chat_threads_collection, frag, opts = {}) {
   if (new_chat_button) {
     new_chat_button.addEventListener("click", async (e) => {
       e.preventDefault();
-      const new_thread = await chat_threads_collection.create_or_update({
-        key: "Untitled Chat " + Date.now()
-      });
+      const new_thread = await chat_threads_collection.create_or_update();
       chat_threads_collection.active_thread = new_thread;
       if (threads_container) {
         this.empty(threads_container);
@@ -28715,7 +33968,7 @@ async function post_process24(chat_threads_collection, frag, opts = {}) {
       const thread_frag = await env.render_component("thread", new_thread, opts);
       threads_container.appendChild(thread_frag);
       if (thread_name_input) {
-        thread_name_input.value = new_thread.key;
+        thread_name_input.value = new_thread.name;
       }
     });
   }
@@ -28734,37 +33987,33 @@ async function post_process24(chat_threads_collection, frag, opts = {}) {
       chat_history_modal.open();
     });
   }
-  return frag;
+  container.querySelector("#smart-chat-help-button")?.addEventListener(
+    "click",
+    () => StoryModal2.open(plugin, {
+      title: "Getting Started With Smart Chat",
+      url: "https://smartconnections.app/story/smart-connections-getting-started/?utm_source=smart-chat-help#page=chat-interface-1"
+    })
+  );
+  return container;
 }
-async function open_plugin_settings(app) {
-  await app.setting.open();
-  await app.setting.openTabById("smart-chat");
+async function open_plugin_settings(app2) {
+  await app2.setting.open();
+  await app2.setting.openTabById("smart-chat");
 }
-function rename_thread(collection, thread, new_key) {
-  const old_key = thread.key;
-  delete collection.items[old_key];
-  thread.data.key = new_key;
-  collection.set(thread);
-  if (collection.settings.active_thread_key === old_key) {
-    collection.settings.active_thread_key = new_key;
-  }
+function rename_thread(collection, thread, new_name) {
+  thread.data.name = new_name;
   thread.queue_save();
   collection.process_save_queue();
 }
 
 // node_modules/smart-chat-obsidian/src/utils/chat_context_utils.js
-function is_last_completion(thread, completion) {
-  if (!thread || !completion) return false;
-  const last = thread?.completions?.[thread.completions.length - 1];
-  return last?.key === completion.key;
-}
 function thread_has_user_message(thread) {
   const last_two = thread?.completions?.slice(-2) || [];
   return last_two.some((c) => c?.data?.user_message);
 }
 
 // node_modules/smart-chat-obsidian/node_modules/smart-context-obsidian/src/views/context_selector_modal.js
-var import_obsidian30 = require("obsidian");
+var import_obsidian38 = require("obsidian");
 
 // node_modules/smart-chat-obsidian/node_modules/smart-context-obsidian/node_modules/smart-file-system/utils/ignore.js
 var TEXT_FILE_EXTENSIONS = [
@@ -28868,7 +34117,7 @@ function is_text_file(file_path) {
 }
 
 // node_modules/smart-chat-obsidian/node_modules/smart-context-obsidian/src/utils/get_all_leaves.js
-function get_all_leaves(app) {
+function get_all_leaves(app2) {
   const leaves = [];
   const recurse = (container) => {
     if (container.children) {
@@ -28880,13 +34129,13 @@ function get_all_leaves(app) {
       leaves.push(container);
     }
   };
-  recurse(app.workspace.rootSplit);
+  recurse(app2.workspace.rootSplit);
   return leaves;
 }
 
 // node_modules/smart-chat-obsidian/node_modules/smart-context-obsidian/src/utils/get_all_open_file_paths.js
-function get_all_open_file_paths(app) {
-  const leaves = get_all_leaves(app);
+function get_all_open_file_paths(app2) {
+  const leaves = get_all_leaves(app2);
   const files_set = [];
   for (const leaf of leaves) {
     const file_path = leaf.view?.state?.file ?? leaf.view?.file?.path;
@@ -28910,8 +34159,8 @@ function is_leaf_visible(leaf) {
 }
 
 // node_modules/smart-chat-obsidian/node_modules/smart-context-obsidian/src/utils/get_visible_open_files.js
-function get_visible_open_files(app) {
-  const leaves = get_all_leaves(app);
+function get_visible_open_files(app2) {
+  const leaves = get_all_leaves(app2);
   const visible_files = /* @__PURE__ */ new Set();
   for (const leaf of leaves) {
     if (!is_leaf_visible(leaf)) continue;
@@ -28923,12 +34172,23 @@ function get_visible_open_files(app) {
   return [...visible_files].map((file) => file.path);
 }
 
+// node_modules/smart-chat-obsidian/node_modules/smart-context-obsidian/src/utils/send_context_changed_event.js
+function send_context_changed_event(container, next_ctx) {
+  container.dispatchEvent(new CustomEvent("smart-env:context-changed", {
+    detail: { context: next_ctx },
+    bubbles: true,
+    composed: true
+  }));
+}
+
 // node_modules/smart-chat-obsidian/node_modules/smart-context-obsidian/src/views/context_selector_modal.js
-var ContextSelectorModal = class extends import_obsidian30.FuzzySuggestModal {
+var ContextSelectorModal = class extends import_obsidian38.FuzzySuggestModal {
   static open(env, opts) {
-    const plugin = env.smart_contexts_plugin || env.smart_chat_plugin || env.smart_connections_plugin;
+    const plugin = env.smart_context_plugin || env.smart_chat_plugin || env.smart_connections_plugin || env.plugin;
     if (!env.context_selector_modal) {
-      env.context_selector_modal = new this(plugin, opts);
+      if (env.smart_context_plugin?.ContextSelectorModal) {
+        env.context_selector_modal = new env.smart_context_plugin.ContextSelectorModal(plugin, opts);
+      } else env.context_selector_modal = new this(plugin, opts);
     }
     env.context_selector_modal.open(opts);
     return env.context_selector_modal;
@@ -28955,20 +34215,22 @@ var ContextSelectorModal = class extends import_obsidian30.FuzzySuggestModal {
     ]);
     this.plugin.env.create_env_getter(this);
     this.mod_key_was_held = false;
-    this.modalEl.addEventListener("keydown", (e) => {
-      this.mod_key_was_held = import_obsidian30.Keymap.isModifier(e, "Mod");
-      if (e.key === "Enter") this.selectActiveSuggestion(e);
+    this.containerEl.addEventListener("keydown", (e) => {
       if (e.key === "Escape") this.close(true);
     });
+    this.modalEl.addEventListener("keydown", (e) => {
+      this.mod_key_was_held = import_obsidian38.Keymap.isModifier(e, "Mod");
+      if (e.key === "Enter") this.selectActiveSuggestion(e);
+    });
     this.resultContainerEl.addEventListener("click", (e) => {
-      this.mod_key_was_held = import_obsidian30.Keymap.isModifier(e, "Mod");
+      this.mod_key_was_held = import_obsidian38.Keymap.isModifier(e, "Mod");
     });
   }
   /* ───────────────────────────────────────────────────────────── */
   /**
    * Sort an array of context entries according to:
    *   – priority 0 → item has in/out‑links with the current active note
-   *   – priority 1 → item modified within the last 24 h
+   *   – priority 1 → item modified within the last 24 h
    *   – priority 2 → all remaining items
    * Within each priority group items are ordered alphabetically.
    *
@@ -29013,9 +34275,11 @@ var ContextSelectorModal = class extends import_obsidian30.FuzzySuggestModal {
   }
   async open(opts = this.opts) {
     if (opts.ctx) this.ctx = opts.ctx;
+    if (opts.opener_container) this.add_opener_container(opts.opener_container);
     this.opts = opts;
     await this.render();
     super.open();
+    this.focus_input();
   }
   async render() {
     this.modalEl.style.display = "flex";
@@ -29032,13 +34296,16 @@ var ContextSelectorModal = class extends import_obsidian30.FuzzySuggestModal {
       "context_builder",
       ctx,
       {
-        update_callback: (_ctx) => {
-          this.updateSuggestions();
-          this.opts.update_callback?.(_ctx);
-        },
         ...this.opts
       }
     );
+    builder_container.addEventListener("smart-env:context-changed", (e) => {
+      const updated_ctx = e.detail.context;
+      this.ctx = updated_ctx;
+      this.opts.ctx = updated_ctx;
+      this.updateSuggestions();
+      this.render();
+    });
     builder_container.classList.add("modal");
     const actions_el = builder_container.querySelector(".sc-context-actions");
     if (ctx.has_context_items) {
@@ -29058,7 +34325,7 @@ var ContextSelectorModal = class extends import_obsidian30.FuzzySuggestModal {
       );
       actions_el.appendChild(copy_btn);
     }
-    if (this.opts.update_callback && !actions_el.querySelector('button[data-done="true"]')) {
+    if (!actions_el.querySelector('button[data-done="true"]')) {
       const done_btn = document.createElement("button");
       done_btn.dataset.done = "true";
       done_btn.textContent = "Done";
@@ -29184,7 +34451,33 @@ var ContextSelectorModal = class extends import_obsidian30.FuzzySuggestModal {
     if (should_close) super.close();
   }
   onClose(should_close = false) {
-    this.opts.update_callback?.(this.ctx);
+    while (this.opener_containers?.length) {
+      const container = this.opener_containers.pop();
+      if (container.isConnected) {
+        send_context_changed_event(container, this.ctx);
+      }
+    }
+  }
+  /**
+   * Add a container to the list of opener containers.
+   * This is used to send context changed events when the modal is closed.
+   * @param {HTMLElement|NodeList|Array<HTMLElement>|function} container - The container to add.
+   * If a function is passed, it will be called to get the container(s).
+   */
+  add_opener_container(container) {
+    if (!this.opener_containers) this.opener_containers = [];
+    if (typeof container === "function") container = container();
+    if (Array.isArray(container) || container instanceof NodeList) {
+      container.forEach((c) => this.add_opener_container(c));
+      return;
+    }
+    if (!(container instanceof HTMLElement)) {
+      console.warn("ContextSelectorModal: opener_container must be an HTMLElement, received:", container);
+      return;
+    }
+    if (!this.opener_containers.includes(container)) {
+      this.opener_containers.push(container);
+    }
   }
   load_suggestions(suggestions) {
     this.suggestions = suggestions;
@@ -29194,8 +34487,8 @@ var ContextSelectorModal = class extends import_obsidian30.FuzzySuggestModal {
 };
 
 // node_modules/smart-chat-obsidian/node_modules/smart-context-obsidian/src/components/context_builder.css
-var css_sheet4 = new CSSStyleSheet();
-css_sheet4.replaceSync(`.sc-context-builder {
+var css_sheet5 = new CSSStyleSheet();
+css_sheet5.replaceSync(`.sc-context-builder {
   padding: 6px 8px;
   display: flex;
   flex: 0 1 auto;
@@ -29264,10 +34557,10 @@ css_sheet4.replaceSync(`.sc-context-builder {
 .sc-context-tree .sc-tree-links:hover {
   opacity: 1;
 }`);
-var context_builder_default = css_sheet4;
+var context_builder_default = css_sheet5;
 
 // node_modules/smart-chat-obsidian/src/components/chat_context_builder.js
-function build_html22(ctx, opts = {}) {
+function build_html25(ctx, opts = {}) {
   return `<div>
     <div class="sc-context-builder sc-chat-context-builder" data-context-key="${ctx.data.key}">
       <div class="sc-context-header"></div>
@@ -29281,37 +34574,58 @@ function build_html22(ctx, opts = {}) {
     </div>
   </div>`;
 }
-async function render28(ctx, opts = {}) {
-  const html = build_html22.call(this, ctx, opts);
+async function render31(ctx, opts = {}) {
+  const html = build_html25.call(this, ctx, opts);
   const frag = this.create_doc_fragment(html);
   const ctx_container = frag.querySelector(".sc-context-builder");
   this.apply_style_sheet(context_builder_default);
-  await post_process25.call(this, ctx, ctx_container, opts);
+  await post_process28.call(this, ctx, ctx_container, opts);
   return ctx_container;
 }
-async function post_process25(ctx, container, opts = {}) {
+async function post_process28(ctx, container, opts = {}) {
   const env = ctx?.env;
   const completion = opts.completion;
-  if (!completion) return container;
   const thread = completion.thread;
-  const update_callback = (_ctx) => thread.update_current_context(_ctx);
   const actions_el = container.querySelector(".sc-context-actions");
   this.empty(actions_el);
-  if (is_last_completion(thread, completion)) {
+  completion.thread.container?.querySelector(".smart-chat-add-context-button")?.remove();
+  if (Object.keys(ctx.data.context_items || {}).length === 0) {
+    const btn = document.createElement("button");
+    btn.className = "smart-chat-add-context-button";
+    btn.textContent = "Add context";
+    btn.addEventListener("click", () => {
+      ContextSelectorModal.open(completion.env, {
+        ctx: null,
+        opener_container: container
+      });
+    });
+    const wrap = document.createElement("div");
+    wrap.className = "smart-chat-add-context-container";
+    wrap.appendChild(btn);
+    container.appendChild(wrap);
+    return container;
+  }
+  if (completion === thread.current_completion) {
     const edit_btn = document.createElement("button");
     edit_btn.textContent = "Edit context";
     edit_btn.addEventListener(
       "click",
-      () => ContextSelectorModal.open(env, { ctx, update_callback })
+      () => ContextSelectorModal.open(env, {
+        ctx,
+        opener_container: container
+      })
     );
     actions_el.appendChild(edit_btn);
+  } else {
+    console.log("Not current completion, skipping edit button");
+    container.classList.add("sc-context-done");
   }
   if (thread_has_user_message(thread)) {
     const retrieve_btn = document.createElement("button");
     retrieve_btn.textContent = "Retrieve more";
     retrieve_btn.addEventListener("click", () => {
       const action_property = thread.collection.settings.use_tool_calls ? "action_key" : "action_xml_key";
-      thread.new_completion({
+      const next_completion = thread.init_completion({
         [action_property]: "lookup_context",
         // Preserve the last user question so the model knows *why*
         user_message: thread.last_completion.data.user_message ?? "",
@@ -29319,6 +34633,10 @@ async function post_process25(ctx, container, opts = {}) {
           context_key: ctx.key
         }
       });
+      env.render_component("completion", next_completion).then((next_container) => {
+        thread.message_container.appendChild(next_container);
+      });
+      container.classList.add("sc-context-done");
     });
     actions_el.appendChild(retrieve_btn);
   }
@@ -29336,10 +34654,23 @@ async function post_process25(ctx, container, opts = {}) {
     actions_el.appendChild(send_btn);
   }
   const tree_el = container.querySelector(".sc-context-tree");
-  const stats_el = container.querySelector(".sc-context-stats");
+  const context_tree_container = await ctx.env.render_component("context_tree", ctx, {
+    ...opts
+  });
+  const context_items_with_score = Object.entries(ctx.data.context_items).filter(([key, value]) => {
+    return value?.score !== void 0 && value?.score !== null;
+  }).forEach(([key, value]) => {
+    const label = context_tree_container.querySelector(`.sc-tree-item[data-path="${key}"]`);
+    if (label) {
+      const score_span = this.create_doc_fragment(`<span class="sc-tree-score" title="Relevance score">${value.score.toFixed(2)}</span>`);
+      label.insertAfter(score_span, label.querySelector(".sc-tree-remove"));
+    }
+  });
+  ;
   tree_el.replaceWith(
-    await ctx.env.render_component("context_tree", ctx, { ...opts, update_callback })
+    context_tree_container
   );
+  const stats_el = container.querySelector(".sc-context-stats");
   stats_el.replaceWith(
     await ctx.env.render_component("context_stats", ctx, { ...opts })
   );
@@ -29347,7 +34678,7 @@ async function post_process25(ctx, container, opts = {}) {
 }
 
 // node_modules/smart-chat-obsidian/src/components/chat_model_settings.js
-async function render29(env, opts = {}) {
+async function render32(env, opts = {}) {
   const smart_chat_model_settings_config = env.smart_chat_threads?.chat_model?.settings_config;
   return await this.render_settings(smart_chat_model_settings_config, {
     scope: env.smart_chat_threads?.chat_model
@@ -29355,15 +34686,15 @@ async function render29(env, opts = {}) {
 }
 
 // node_modules/smart-chat-obsidian/src/components/chat_thread_settings.js
-async function render30(env, opts = {}) {
+async function render33(env, opts = {}) {
   return await this.render_settings(env.smart_chat_threads.settings_config, {
     scope: env.smart_chat_threads
   });
 }
 
 // node_modules/smart-chat-obsidian/src/components/completion.css
-var css_sheet5 = new CSSStyleSheet();
-css_sheet5.replaceSync(`/**
+var css_sheet6 = new CSSStyleSheet();
+css_sheet6.replaceSync(`/**
  * completion.css
  * 
  * Styles for the container that holds a single "completion" sequence (user + context + assistant).
@@ -29527,7 +34858,9 @@ css_sheet5.replaceSync(`/**
   max-width: 95%;
 }
 
-.smart-chat-completion-sequence:has(.smart-chat-message.assistant), .smart-chat-completion-sequence:has(.smart-chat-message.user) {
+/* .smart-chat-completion-sequence:has(.smart-chat-message.user), */
+.smart-chat-completion-sequence:has(.sc-context-done),
+.smart-chat-completion-sequence:has(.smart-chat-message.assistant){
   .sc-tree-remove,
   .sc-tree-connections,
   .sc-tree-links,
@@ -29535,31 +34868,26 @@ css_sheet5.replaceSync(`/**
     display: none;
   }
 }`);
-var completion_default = css_sheet5;
+var completion_default = css_sheet6;
 
 // node_modules/smart-chat-obsidian/src/components/completion.js
-function build_html23(completion, opts = {}) {
-  return `
+function build_html26(completion, opts = {}) {
+  return `<div>
     <div class="smart-chat-completion-sequence" data-completion-key="${completion.key}">
     </div>
-  `;
+  </div>`;
 }
-async function render31(completion, opts = {}) {
+async function render34(completion, opts = {}) {
   if (!completion.container) {
-    const html = await build_html23.call(this, completion, opts);
+    const html = await build_html26.call(this, completion, opts);
     const frag = this.create_doc_fragment(html);
-    this.apply_style_sheet(completion_default);
-    post_process26.call(this, completion, frag, opts);
-    return frag;
-  } else {
-    post_process26.call(this, completion, completion.container, opts);
-    return completion.container;
-  }
-}
-async function post_process26(completion, frag, opts = {}) {
-  if (!completion.container) {
     completion.container = frag.querySelector(".smart-chat-completion-sequence");
+    this.apply_style_sheet(completion_default);
   }
+  post_process29.call(this, completion, completion.container, opts);
+  return completion.container;
+}
+async function post_process29(completion, sequence_container, opts = {}) {
   if (!completion.system_elm && completion.data.system_message) {
     completion.system_elm = true;
     completion.system_elm = await completion.env.render_component("message_system", completion);
@@ -29634,45 +34962,18 @@ async function post_process26(completion, frag, opts = {}) {
         }
       }
     });
+    completion.thread.queue_save();
+    completion.queue_save();
+    completion.thread.collection.process_save_queue();
   }
-  if (completion.thread.current_completion === completion && !completion.thread.data.context_key) {
-    if (!completion.add_context_elm) {
-      const btn = document.createElement("button");
-      btn.className = "smart-chat-add-context-button";
-      btn.textContent = "Add context";
-      btn.addEventListener("click", () => {
-        ContextSelectorModal.open(completion.env, {
-          ctx: null,
-          update_callback: (ctx) => completion.thread.update_current_context(ctx)
-        });
-      });
-      const wrap = document.createElement("div");
-      wrap.className = "smart-chat-add-context-container";
-      wrap.appendChild(btn);
-      completion.add_context_elm = wrap;
-      completion.container.appendChild(wrap);
-      if (completion.thread?.add_context_elm) completion.thread.add_context_elm.remove();
-    }
-  } else if (completion.add_context_elm) {
-    completion.add_context_elm.remove();
-    completion.add_context_elm = null;
+  if (!completion.data.context_key) {
+    const last_context_key = completion.thread.last_completion?.data?.context_key;
+    const context = last_context_key ? completion.env.smart_contexts.get(last_context_key) : completion.env.smart_contexts.new_context();
+    completion.data.context_key = context.key;
   }
-  if (!completion.context_elm && completion.data.context_key) {
-    if (completion.add_context_elm) {
-      completion.add_context_elm.remove();
-      completion.add_context_elm = null;
-    }
-    const context = completion.env.smart_contexts.get(completion.data.context_key);
-    if (context) {
-      const context_container = await completion.env.render_component(
-        "chat_context_builder",
-        context,
-        { completion }
-      );
-      completion.context_elm = context_container;
-      completion.container.querySelector(".sc-context-builder")?.remove();
-      completion.container.appendChild(completion.context_elm);
-    }
+  const is_tool_call_only = Boolean(completion.data.action_key);
+  if (!is_tool_call_only && !completion.context_elm) {
+    await render_context_container();
   }
   if (!completion.response_elm && completion.response_text) {
     completion.response_elm = await completion.env.render_component("message_assistant", completion);
@@ -29683,10 +34984,28 @@ async function post_process26(completion, frag, opts = {}) {
   if (completion.data.actions?.lookup_context) {
     const typing_indicator = completion.container.closest(".smart-chat-thread")?.querySelector(".smart-chat-typing-indicator");
     if (typing_indicator) typing_indicator.style.display = "none";
-    const last_completion_key = completion.thread.completion_keys[completion.thread.completion_keys.length - 1];
-    if (last_completion_key === completion.key) {
-      completion.thread.new_completion({
-        context_key: completion.data.actions.lookup_context
+  }
+  if (completion.thread?.last_completion?.key === completion.key) {
+    const next_completion = completion.thread.init_completion();
+    completion.env.render_component("completion", next_completion).then((next_container) => {
+      completion.thread.message_container.appendChild(next_container);
+    });
+  }
+  async function render_context_container() {
+    const context = completion.env.smart_contexts.get(completion.data.context_key);
+    if (context) {
+      const context_container = await completion.env.render_component(
+        "chat_context_builder",
+        context,
+        { completion }
+      );
+      completion.context_elm = context_container;
+      completion.container.querySelector(".sc-context-builder")?.remove();
+      completion.container.appendChild(completion.context_elm);
+      context_container.addEventListener("smart-env:context-changed", (e) => {
+        const updated_ctx = e.detail.context;
+        completion.thread.update_current_context(updated_ctx);
+        render_context_container();
       });
     }
   }
@@ -29695,9 +35014,9 @@ async function post_process26(completion, frag, opts = {}) {
     if (message_container) {
       message_container.scrollTop = message_container.scrollHeight;
     }
-    return frag;
+    return sequence_container;
   }
-  return frag;
+  return sequence_container;
 }
 async function update_action_message(completion) {
   if (completion.action_elm && completion.action_call) {
@@ -29710,7 +35029,7 @@ async function update_action_message(completion) {
 }
 
 // node_modules/smart-chat-obsidian/src/components/confirm_delete.js
-function build_html24(chat_thread, opts = {}) {
+function build_html27(chat_thread, opts = {}) {
   return `
     <div class="smart-chat-confirm-delete-overlay" style="
       position: absolute;
@@ -29743,13 +35062,13 @@ function build_html24(chat_thread, opts = {}) {
     </div>
   `;
 }
-async function render32(chat_thread, opts = {}) {
-  const html = build_html24(chat_thread, opts);
+async function render35(chat_thread, opts = {}) {
+  const html = build_html27(chat_thread, opts);
   const frag = this.create_doc_fragment(html);
-  post_process27.call(this, chat_thread, frag, opts);
+  post_process30.call(this, chat_thread, frag, opts);
   return frag;
 }
-function post_process27(chat_thread, frag, opts = {}) {
+function post_process30(chat_thread, frag, opts = {}) {
   const confirmOverlay = frag.querySelector(".smart-chat-confirm-delete-overlay");
   if (!confirmOverlay) return frag;
   const confirmBtn = confirmOverlay.querySelector(".smart-chat-confirm-delete-confirm");
@@ -29769,7 +35088,7 @@ function post_process27(chat_thread, frag, opts = {}) {
 }
 
 // node_modules/smart-chat-obsidian/src/components/message_action.js
-function build_html25(completion, opts = {}) {
+function build_html28(completion, opts = {}) {
   const action = completion.data.action_key;
   let action_data = completion.action_call;
   if (typeof action_data === "string") {
@@ -29818,24 +35137,70 @@ function build_html25(completion, opts = {}) {
     </div>
   </div>`;
 }
-async function render33(completion, opts = {}) {
-  const html = build_html25(completion, opts);
+async function render36(completion, opts = {}) {
+  const html = build_html28(completion, opts);
   const frag = this.create_doc_fragment(html);
   if (opts.await_post_process) {
-    await post_process28.call(this, completion, frag, opts);
+    await post_process31.call(this, completion, frag, opts);
   } else {
-    post_process28.call(this, completion, frag, opts);
+    post_process31.call(this, completion, frag, opts);
   }
   return frag;
 }
-function post_process28(completion, frag, opts = {}) {
+function post_process31(completion, frag, opts = {}) {
   return frag;
 }
 
 // node_modules/smart-chat-obsidian/src/components/message_assistant.js
-var import_obsidian31 = require("obsidian");
-async function build_html26(completion, opts = {}) {
-  const text = completion.response_text || "";
+var import_obsidian40 = require("obsidian");
+
+// node_modules/smart-chat-obsidian/node_modules/obsidian-smart-env/utils/open_note.js
+var import_obsidian39 = require("obsidian");
+async function open_note(plugin, target_path, event = null, opts = {}) {
+  const { new_tab = false } = opts;
+  const env = plugin.env;
+  if (target_path.includes(".pdf#page=")) {
+    return plugin.app.workspace.openLinkText(target_path, "/");
+  }
+  if (target_path.endsWith("#")) target_path = target_path.slice(0, -1);
+  let target_file;
+  let block = null;
+  if (target_path.includes("#")) {
+    const [file_path] = target_path.split("#");
+    target_file = plugin.app.metadataCache.getFirstLinkpathDest(file_path, "");
+    block = env.smart_blocks.get(target_path);
+  } else {
+    target_file = plugin.app.metadataCache.getFirstLinkpathDest(target_path, "");
+  }
+  if (!target_file) {
+    console.warn(`[open_note] Unable to resolve file for ${target_path}`);
+    return;
+  }
+  let leaf;
+  if (event) {
+    const is_mod = import_obsidian39.Keymap.isModEvent(event);
+    const is_alt = import_obsidian39.Keymap.isModifier(event, "Alt");
+    if (is_mod && is_alt) {
+      leaf = plugin.app.workspace.splitActiveLeaf("vertical");
+    } else if (is_mod || new_tab) {
+      leaf = plugin.app.workspace.getLeaf(true);
+    } else {
+      leaf = plugin.app.workspace.getMostRecentLeaf();
+    }
+  } else {
+    leaf = plugin.app.workspace.getMostRecentLeaf();
+  }
+  await leaf.openFile(target_file);
+  if (typeof block?.line_start === "number") {
+    const { editor } = leaf.view;
+    const pos = { line: block.line_start, ch: 0 };
+    editor.setCursor(pos);
+    editor.scrollIntoView({ to: pos, from: pos }, true);
+  }
+}
+
+// node_modules/smart-chat-obsidian/src/components/message_assistant.js
+async function build_html29(completion, opts = {}) {
   return `
     <div class="smart-chat-message assistant">
       <div class="smart-chat-message-content"></div>
@@ -29857,42 +35222,78 @@ async function build_html26(completion, opts = {}) {
     </div>
   `;
 }
-async function render34(completion, opts = {}) {
-  const html = await build_html26.call(this, completion, opts);
+async function render37(completion, opts = {}) {
+  const html = await build_html29.call(this, completion, opts);
   const frag = this.create_doc_fragment(html);
-  if (opts.await_post_process) await post_process29.call(this, completion, frag, opts);
-  else post_process29.call(this, completion, frag, opts);
+  if (opts.await_post_process) return await post_process32.call(this, completion, frag, opts);
+  else post_process32.call(this, completion, frag, opts);
   return frag;
 }
-async function post_process29(completion, frag, opts = {}) {
-  const content = frag.querySelector(".smart-chat-message-content");
-  const copyButton = frag.querySelector(".smart-chat-message-copy-button");
-  this.empty(content);
+async function post_process32(completion, frag, opts = {}) {
+  const container = frag.querySelector(".smart-chat-message-content");
+  const copy_button = frag.querySelector(".smart-chat-message-copy-button");
+  this.empty(container);
   const plugin = completion.env.smart_chat_plugin || completion.env.smart_connections_plugin;
-  await import_obsidian31.MarkdownRenderer.render(
+  await import_obsidian40.MarkdownRenderer.render(
     plugin.app,
     completion.response_text,
-    content,
+    container,
     "",
-    new import_obsidian31.Component()
+    new import_obsidian40.Component()
   );
-  copyButton?.addEventListener("click", async () => {
+  copy_button?.addEventListener("click", async () => {
     try {
       if (!navigator?.clipboard?.writeText) {
         console.warn("Clipboard API not available.");
         return;
       }
       await navigator.clipboard.writeText(completion.response_text || "");
-      new import_obsidian31.Notice("Copied to clipboard");
+      new import_obsidian40.Notice("Copied to clipboard");
     } catch (err) {
       console.error("Failed to copy raw markdown:", err);
+    }
+  });
+  container.querySelectorAll("a[href]").forEach((a) => {
+    const href = a.getAttribute("href");
+    if (!href) return;
+    a.addEventListener("click", (e) => {
+      e.preventDefault();
+      if (/^(https?:|obsidian:)/i.test(href)) {
+        if (href.startsWith("http")) {
+          window.open(href, "external");
+        } else {
+          plugin.app.workspace.openLinkText(href, "/");
+        }
+        return;
+      }
+      open_note(plugin, href, e);
+    });
+    if (!href.includes("://")) {
+      let file_path = a.getAttribute("href");
+      if (!file_path.endsWith(".md")) file_path += ".md";
+      const file = plugin?.app?.metadataCache?.getFirstLinkpathDest(file_path, "");
+      if (!file) return;
+      a.addEventListener("dragstart", (e) => {
+        const drag_data = plugin?.app?.dragManager?.dragFile(e, file);
+        plugin?.app?.dragManager?.onDragStart(e, drag_data);
+      });
+      a.addEventListener("mouseover", (e) => {
+        const parent = a.parentElement;
+        plugin.app.workspace.trigger("hover-link", {
+          event: e,
+          source: "smart-chat-view",
+          hoverParent: parent,
+          targetEl: a,
+          linktext: file.path
+        });
+      });
     }
   });
   return frag;
 }
 
 // node_modules/smart-chat-obsidian/src/components/message_model_info.js
-function build_html27(completion, opts = {}) {
+function build_html30(completion, opts = {}) {
   const model_key = completion.data.completion?.chat_model?.model_key ?? completion.chat_model?.model_key;
   const platform_key = completion.data.completion?.chat_model?.adapter_name ?? completion.data.completion?.chat_model?.platform_key ?? completion.chat_model?.adapter_name;
   return (
@@ -29906,9 +35307,9 @@ function build_html27(completion, opts = {}) {
   </div>`
   );
 }
-async function render35(completion, opts = {}) {
+async function render38(completion, opts = {}) {
   if (!should_show_model_info(completion)) return null;
-  const html = build_html27(completion, opts);
+  const html = build_html30(completion, opts);
   const frag = this.create_doc_fragment(html);
   const container = frag.querySelector(".model-info");
   return container;
@@ -29930,8 +35331,8 @@ function should_show_model_info(completion) {
 }
 
 // node_modules/smart-chat-obsidian/src/components/message_system.css
-var css_sheet6 = new CSSStyleSheet();
-css_sheet6.replaceSync(`.expandable-system-message {
+var css_sheet7 = new CSSStyleSheet();
+css_sheet7.replaceSync(`.expandable-system-message {
   transition: max-height 0.2s cubic-bezier(.4,0,.2,1), background 0.15s;
 }
 .expandable-system-message.collapsed {
@@ -29984,10 +35385,10 @@ css_sheet6.replaceSync(`.expandable-system-message {
   color: var(--text-normal, #333);
 }
 `);
-var message_system_default = css_sheet6;
+var message_system_default = css_sheet7;
 
 // node_modules/smart-chat-obsidian/src/components/message_system.js
-function build_html28(completion, opts = {}) {
+function build_html31(completion, opts = {}) {
   const text = (completion.data.system_message || "(No system prompt set)").trim();
   const line_count = (text.match(/\n/g) || []).length + 1;
   const needs_collapse = line_count > 10;
@@ -30026,15 +35427,15 @@ function set_collapsed(pre, indicator_bar, collapsed) {
     if (indicator_bar) indicator_bar.style.display = "none";
   }
 }
-async function render36(completion, opts = {}) {
-  const html = build_html28(completion, opts);
+async function render39(completion, opts = {}) {
+  const html = build_html31(completion, opts);
   this.apply_style_sheet(message_system_default);
   const frag = this.create_doc_fragment(html);
   const container = frag.querySelector(".smart-chat-message.system");
-  post_process30.call(this, completion, container, opts);
+  post_process33.call(this, completion, container, opts);
   return container;
 }
-function post_process30(completion, frag, opts = {}) {
+function post_process33(completion, frag, opts = {}) {
   const pre = frag.querySelector(".expandable-system-message");
   const indicator_bar = frag.querySelector(".expand-indicator-bar");
   if (pre && indicator_bar) {
@@ -30055,8 +35456,8 @@ function post_process30(completion, frag, opts = {}) {
 }
 
 // node_modules/smart-chat-obsidian/src/components/message_user.js
-var import_obsidian32 = require("obsidian");
-function build_html29(completion, opts = {}) {
+var import_obsidian41 = require("obsidian");
+function build_html32(completion, opts = {}) {
   const text = completion.data.user_message || "";
   return `
     <div class="smart-chat-message user">
@@ -30066,28 +35467,28 @@ function build_html29(completion, opts = {}) {
     </div>
   `;
 }
-async function render37(completion, opts = {}) {
-  const html = await build_html29.call(this, completion, opts);
+async function render40(completion, opts = {}) {
+  const html = await build_html32.call(this, completion, opts);
   const frag = this.create_doc_fragment(html);
-  post_process31.call(this, completion, frag, opts);
+  post_process34.call(this, completion, frag, opts);
   return frag;
 }
-async function post_process31(completion, frag, opts = {}) {
+async function post_process34(completion, frag, opts = {}) {
   const content = frag.querySelector(".smart-chat-message-content");
   this.empty(content);
   const plugin = completion.env.smart_chat_plugin || completion.env.smart_connections_plugin;
-  await import_obsidian32.MarkdownRenderer.render(
+  await import_obsidian41.MarkdownRenderer.render(
     plugin.app,
     completion.data.user_message,
     content,
     "",
-    new import_obsidian32.Component()
+    new import_obsidian41.Component()
   );
   return frag;
 }
 
 // node_modules/smart-chat-obsidian/src/components/overlay_requires_settings.js
-function build_html30(opts = {}) {
+function build_html33(opts = {}) {
   return `
     <div class="smart-chat-confirm-missing-config-overlay" style="
       position: absolute;
@@ -30117,13 +35518,13 @@ function build_html30(opts = {}) {
     </div>
   `;
 }
-async function render38(chat_thread, opts = {}) {
-  const html = build_html30.call(this, opts);
+async function render41(chat_thread, opts = {}) {
+  const html = build_html33.call(this, opts);
   const frag = this.create_doc_fragment(html);
-  post_process32.call(this, chat_thread, frag, opts);
+  post_process35.call(this, chat_thread, frag, opts);
   return frag;
 }
-function post_process32(chat_thread, frag, opts = {}) {
+function post_process35(chat_thread, frag, opts = {}) {
   const overlayEl = frag.querySelector(".smart-chat-confirm-missing-config-overlay");
   if (!overlayEl) return frag;
   const openSettingsBtn = overlayEl.querySelector(".smart-chat-open-settings");
@@ -30138,8 +35539,8 @@ function post_process32(chat_thread, frag, opts = {}) {
 }
 
 // node_modules/smart-chat-obsidian/src/components/thread.css
-var css_sheet7 = new CSSStyleSheet();
-css_sheet7.replaceSync(`.smart-chat-thread {
+var css_sheet8 = new CSSStyleSheet();
+css_sheet8.replaceSync(`.smart-chat-thread {
   display: flex;
   flex-direction: column;
   flex-grow: 1;
@@ -30355,10 +35756,10 @@ css_sheet7.replaceSync(`.smart-chat-thread {
     transform: scale(1);
   }
 }`);
-var thread_default = css_sheet7;
+var thread_default = css_sheet8;
 
 // node_modules/smart-chat-obsidian/src/components/thread.js
-var import_obsidian33 = require("obsidian");
+var import_obsidian42 = require("obsidian");
 
 // node_modules/smart-chat-obsidian/src/utils/insert_text_in_chunks.js
 function split_into_chunks(text, size = 1024) {
@@ -30406,7 +35807,13 @@ function text_to_nodes(txt) {
 async function add_items_to_current_context(thread, paths = []) {
   const env = thread.env;
   if (!paths.length) return null;
-  if (!thread.current_completion) thread.new_completion();
+  if (!thread.current_completion) {
+    if (typeof thread.init_completion === "function") {
+      thread.current_completion = thread.init_completion();
+    } else if (typeof thread.new_completion === "function") {
+      thread.new_completion();
+    }
+  }
   const completion = thread.current_completion;
   const ctx_key = completion.data.context_key;
   const ctx = ctx_key ? env.smart_contexts.get(ctx_key) : null;
@@ -30486,10 +35893,10 @@ function parse_dropped_data(dt) {
 
 // node_modules/smart-chat-obsidian/src/components/thread.js
 function should_send_message(e, requiredModifier) {
-  const pressed_shift = import_obsidian33.Keymap.isModifier(e, "Shift");
-  const pressed_mod = import_obsidian33.Keymap.isModifier(e, "Mod");
-  const pressed_alt = import_obsidian33.Keymap.isModifier(e, "Alt");
-  const pressed_meta = import_obsidian33.Keymap.isModifier(e, "Meta");
+  const pressed_shift = import_obsidian42.Keymap.isModifier(e, "Shift");
+  const pressed_mod = import_obsidian42.Keymap.isModifier(e, "Mod");
+  const pressed_alt = import_obsidian42.Keymap.isModifier(e, "Alt");
+  const pressed_meta = import_obsidian42.Keymap.isModifier(e, "Meta");
   if (requiredModifier === "none") {
     return !pressed_shift && !pressed_mod && !pressed_alt && !pressed_meta;
   }
@@ -30499,8 +35906,8 @@ function should_send_message(e, requiredModifier) {
   if (requiredModifier === "meta") return pressed_meta;
   return false;
 }
-function build_html31(chat_thread, opts = {}) {
-  return `
+function build_html34(chat_thread, opts = {}) {
+  return `<div>
     <div class="smart-chat-thread" data-thread-key="${chat_thread.key}">
       <div class="smart-chat-message-container"></div>
       <div class="smart-chat-typing-indicator">
@@ -30540,17 +35947,19 @@ function build_html31(chat_thread, opts = {}) {
         </div>
       </div>
     </div>
-  `;
+  </div>`;
 }
-async function render39(chat_thread, opts = {}) {
-  const html = build_html31.call(this, chat_thread, opts);
-  const frag = this.create_doc_fragment(html);
-  this.apply_style_sheet(thread_default);
-  chat_thread.container = frag.querySelector(".smart-chat-thread");
-  post_process33.call(this, chat_thread, frag, opts);
-  return frag;
+async function render42(chat_thread, opts = {}) {
+  if (!chat_thread.container) {
+    const html = build_html34.call(this, chat_thread, opts);
+    const frag = this.create_doc_fragment(html);
+    this.apply_style_sheet(thread_default);
+    chat_thread.container = frag.querySelector(".smart-chat-thread");
+  }
+  post_process36.call(this, chat_thread, chat_thread.container, opts);
+  return chat_thread.container;
 }
-async function post_process33(chat_thread, frag, opts = {}) {
+async function post_process36(chat_thread, thread_container, opts = {}) {
   const env = chat_thread.env;
   const plugin = env.smart_chat_plugin || env.smart_connections_plugin;
   const message_container = chat_thread.container.querySelector(".smart-chat-message-container");
@@ -30560,26 +35969,15 @@ async function post_process33(chat_thread, frag, opts = {}) {
       const completion_frag = await completion_item.env.render_component("completion", completion_item, {});
       message_container.appendChild(completion_frag);
     }
-    if (chat_thread.add_context_elm) chat_thread.add_context_elm.remove();
   } else {
     const initial_message = get_initial_message2(chat_thread.settings.language);
     this.safe_inner_html(message_container, `
       <div class="smart-chat-default-message">${initial_message}</div>
     `);
-    const btn = document.createElement("button");
-    btn.className = "smart-chat-add-context-button";
-    btn.textContent = "Add context";
-    btn.addEventListener("click", () => {
-      ContextSelectorModal.open(chat_thread.env, {
-        ctx: null,
-        update_callback: (ctx) => chat_thread.update_current_context(ctx)
-      });
-    });
-    const wrap = document.createElement("div");
-    wrap.className = "smart-chat-add-context-container";
-    wrap.appendChild(btn);
-    chat_thread.add_context_elm = wrap;
-    message_container.appendChild(wrap);
+    if (!chat_thread.current_completion.container) {
+      const completion_container = await env.render_component("completion", chat_thread.current_completion);
+      message_container.appendChild(completion_container);
+    }
   }
   const send_button = chat_thread.container.querySelector("#smart-chat-send-button");
   const input_el = chat_thread.container.querySelector(".smart-chat-chat-input");
@@ -30598,14 +35996,18 @@ async function post_process33(chat_thread, frag, opts = {}) {
     const data = { user_message: user_text, new_user_message: true };
     if (sys_msg) data.system_message = chat_thread.get_system_prompt({ system_message: sys_msg });
     if (chat_thread.has_self_referential_pronoun(user_text)) {
-      const action_property = chat_thread.collection.settings.use_tool_calls ? "action_key" : "action_xml_key";
-      data[action_property] = "lookup_context";
+      const ctx_key = chat_thread.current_completion.data.context_key;
+      const existing_ctx = env.smart_contexts.get(ctx_key);
+      const has_manual_context = existing_ctx && Object.keys(existing_ctx.data?.context_items ?? {}).length > 0;
+      if (!has_manual_context) {
+        const action_property = chat_thread.collection.settings.use_tool_calls ? "action_key" : "action_xml_key";
+        data[action_property] = "lookup_context";
+        data.action_opts = { context_key: ctx_key };
+      }
+      console.log({ data });
     }
-    if (!chat_thread.current_completion) {
-      chat_thread.new_completion(data);
-    } else {
-      chat_thread.update_current_completion(data);
-    }
+    chat_thread.current_completion.data = { ...chat_thread.current_completion.data, ...data };
+    env.render_component("completion", chat_thread.current_completion);
     this.safe_inner_html(input_el, "<br>");
     input_el.dataset.hasContent = false;
     system_editor.textContent = "";
@@ -30625,9 +36027,7 @@ async function post_process33(chat_thread, frag, opts = {}) {
           ctx: chat_thread.current_completion ? env.smart_contexts.get(
             chat_thread.current_completion.data.context_key
           ) : null,
-          update_callback: (ctx) => {
-            chat_thread.update_current_context(ctx);
-          }
+          opener_container: () => chat_thread.current_completion?.context_elm
         }
       );
       return;
@@ -30660,12 +36060,13 @@ async function post_process33(chat_thread, frag, opts = {}) {
       ev.preventDefault();
       const paths = [...parse_dropped_data(ev.dataTransfer)];
       if (!paths.length) return;
-      await add_items_to_current_context(chat_thread, paths);
-      chat_thread.current_completion && chat_thread.update_current_context(
-        chat_thread.env.smart_contexts.get(
-          chat_thread.current_completion.data.context_key
-        )
-      );
+      const updated_ctx = await add_items_to_current_context(chat_thread, paths);
+      const target_elm = chat_thread.current_completion?.context_elm;
+      if (target_elm) {
+        send_context_changed_event(target_elm, updated_ctx);
+      } else {
+        console.warn("[smart-chat-obsidian] No current completion context element found for context update");
+      }
     });
   }
   if (chat_thread.confirm_deletion) {
@@ -30683,41 +36084,41 @@ async function post_process33(chat_thread, frag, opts = {}) {
     const overlay_frag = await env.render_component("overlay_requires_settings", chat_thread, missing_opts);
     chat_thread.container.appendChild(overlay_frag);
   }
-  return frag;
+  return thread_container;
 }
 
 // node_modules/smart-chat-obsidian/smart_env.config.js
 var smart_env_config5 = {
   collections: {
-    smart_actions: smart_actions_default,
+    smart_actions: smart_actions_default2,
     smart_chat_threads: smart_chat_threads_default,
     smart_completions: smart_completions_default,
     smart_contexts: smart_contexts_default
   },
   item_types: {
-    SmartAction: SmartAction2,
+    SmartAction,
     SmartChatThread
   },
   components: {
-    chat: render27,
-    chat_context_builder: render28,
-    chat_model_settings: render29,
-    chat_thread_settings: render30,
-    completion: render31,
-    confirm_delete: render32,
-    message_action: render33,
-    message_assistant: render34,
-    message_model_info: render35,
-    message_system: render36,
-    message_user: render37,
-    overlay_requires_settings: render38,
-    thread: render39
+    chat: render30,
+    chat_context_builder: render31,
+    chat_model_settings: render32,
+    chat_thread_settings: render33,
+    completion: render34,
+    confirm_delete: render35,
+    message_action: render36,
+    message_assistant: render37,
+    message_model_info: render38,
+    message_system: render39,
+    message_user: render40,
+    overlay_requires_settings: render41,
+    thread: render42
   }
 };
 
 // node_modules/smart-context-obsidian/src/components/context_builder.css
-var css_sheet8 = new CSSStyleSheet();
-css_sheet8.replaceSync(`.sc-context-builder {
+var css_sheet9 = new CSSStyleSheet();
+css_sheet9.replaceSync(`.sc-context-builder {
   padding: 6px 8px;
   display: flex;
   flex: 0 1 auto;
@@ -30786,10 +36187,10 @@ css_sheet8.replaceSync(`.sc-context-builder {
 .sc-context-tree .sc-tree-links:hover {
   opacity: 1;
 }`);
-var context_builder_default2 = css_sheet8;
+var context_builder_default2 = css_sheet9;
 
 // node_modules/smart-context-obsidian/src/components/context_builder.js
-function build_html32(ctx, opts = {}) {
+function build_html35(ctx, opts = {}) {
   return `<div>
     <div class="sc-context-builder" data-context-key="${ctx.data.key}">
       <div class="sc-context-header">
@@ -30803,33 +36204,30 @@ function build_html32(ctx, opts = {}) {
     </div>
   </div>`;
 }
-async function render40(ctx, opts = {}) {
-  const html = build_html32.call(this, ctx, opts);
+async function render43(ctx, opts = {}) {
+  const html = build_html35.call(this, ctx, opts);
   const frag = this.create_doc_fragment(html);
   const ctx_container = frag.querySelector(".sc-context-builder");
   this.apply_style_sheet(context_builder_default2);
-  await post_process34.call(this, ctx, ctx_container, opts);
+  await post_process37.call(this, ctx, ctx_container, opts);
   return ctx_container;
 }
-async function post_process34(ctx, container, opts = {}) {
+async function post_process37(ctx, container, opts = {}) {
   const env = ctx.env;
   const body = container.querySelector(".sc-context-body");
   const footer = container.querySelector(".sc-context-footer");
-  const update_callback = async (_ctx) => {
-    const new_tree = await env.render_component("context_tree", _ctx, {
-      ...opts,
-      update_callback
+  container.addEventListener("smart-env:context-updated", async (e) => {
+    const new_tree = await env.render_component("context_tree", ctx, {
+      ...opts
     });
     this.empty(body);
     body.appendChild(new_tree);
-    const new_stats = await env.render_component("context_stats", _ctx, opts);
+    const new_stats = await env.render_component("context_stats", ctx, opts);
     this.empty(footer);
     footer.appendChild(new_stats);
-    opts.update_callback?.(_ctx);
-  };
+  });
   const tree_container = await env.render_component("context_tree", ctx, {
-    ...opts,
-    update_callback
+    ...opts
   });
   this.empty(body);
   body.appendChild(tree_container);
@@ -30843,19 +36241,19 @@ function estimate_tokens(char_count) {
   return Math.ceil(char_count / 4);
 }
 var get_selected_items = (ctx) => Object.keys(ctx?.data?.context_items || {}).map((k) => ({ path: k }));
-function build_html33(ctx) {
+function build_html36(ctx) {
   return `<div>
     <div class="sc-stats" aria-live="polite"></div>
   </div>`;
 }
-async function render41(ctx, opts = {}) {
-  const html = build_html33(ctx);
+async function render44(ctx, opts = {}) {
+  const html = build_html36(ctx);
   const frag = this.create_doc_fragment(html);
   const container = frag.querySelector(".sc-stats");
-  post_process35.call(this, ctx, container, opts);
+  post_process38.call(this, ctx, container, opts);
   return container;
 }
-async function post_process35(ctx, container, opts = {}) {
+async function post_process38(ctx, container, opts = {}) {
   const items = get_selected_items(ctx);
   if (!items.length) {
     return;
@@ -30893,7 +36291,28 @@ function build_path_tree(selected_items = []) {
       remainder = remainder.slice(0, key_idx);
       has_block = true;
     }
-    const segments = remainder ? remainder.split("/") : [];
+    const segments = [];
+    if (remainder) {
+      let seg = "";
+      let in_wikilink = false;
+      for (let i = 0; i < remainder.length; i++) {
+        if (!in_wikilink && remainder.slice(i, i + 2) === "[[") {
+          in_wikilink = true;
+          seg += "[[";
+          i++;
+        } else if (in_wikilink && remainder.slice(i, i + 2) === "]]") {
+          in_wikilink = false;
+          seg += "]]";
+          i++;
+        } else if (!in_wikilink && remainder[i] === "/") {
+          segments.push(seg);
+          seg = "";
+        } else {
+          seg += remainder[i];
+        }
+      }
+      if (seg) segments.push(seg);
+    }
     if (block_key_seg) segments.push(block_key_seg);
     if (block_id_seg) segments.push(block_id_seg);
     return { segments, has_block };
@@ -30904,9 +36323,9 @@ function build_path_tree(selected_items = []) {
     const for_ext_check = it.path.includes("##") ? it.path.split("#")[0] : it.path;
     return !for_ext_check.match(/\.[a-zA-Z0-9]+$/u);
   }).map((it) => it.path);
-  for (const { path: path2 } of selected_items) {
-    if (is_redundant(path2, selected_folders.filter((p) => p !== path2))) continue;
-    const { segments, has_block } = split_path_segments(path2);
+  for (const { path } of selected_items) {
+    if (is_redundant(path, selected_folders.filter((p) => p !== path))) continue;
+    const { segments, has_block } = split_path_segments(path);
     let node = root;
     let running = "";
     segments.forEach((seg, idx) => {
@@ -30917,7 +36336,7 @@ function build_path_tree(selected_items = []) {
       if (!node.children[seg]) {
         node.children[seg] = {
           name: seg,
-          path: is_block_leaf ? path2 : running,
+          path: is_block_leaf ? path : running,
           // For blocks we store an empty *array* so AVA can assert `children.length === 0`
           children: is_block_leaf ? [] : {},
           selected: false,
@@ -30959,8 +36378,8 @@ function tree_to_html(node, selected_paths) {
 }
 
 // node_modules/smart-context-obsidian/src/components/context_tree.css
-var css_sheet9 = new CSSStyleSheet();
-css_sheet9.replaceSync(`.sc-context-tree ul {
+var css_sheet10 = new CSSStyleSheet();
+css_sheet10.replaceSync(`.sc-context-tree ul {
   list-style: none;
   margin: 0 0 0 .8em;
   padding: 0;
@@ -31039,7 +36458,7 @@ css_sheet9.replaceSync(`.sc-context-tree ul {
 .smart-block-popover {
   z-index: 999999;
 }`);
-var context_tree_default = css_sheet9;
+var context_tree_default = css_sheet10;
 
 // node_modules/smart-context-obsidian/node_modules/smart-sources/actions/get_links_to_depth.js
 var LINK_DIRECTIONS = (
@@ -31078,8 +36497,8 @@ function get_links_to_depth(target_source, max_depth = 1, {
     if (current.depth >= max_depth) continue;
     const nextDepth = current.depth + 1;
     if (direction === LINK_DIRECTIONS.OUT || direction === LINK_DIRECTIONS.BOTH) {
-      for (const path2 of current.src.outlinks) {
-        enqueue(collection.get(path2), nextDepth);
+      for (const path of current.src.outlinks) {
+        enqueue(collection.get(path), nextDepth);
       }
     }
     if (direction === LINK_DIRECTIONS.IN || direction === LINK_DIRECTIONS.BOTH) {
@@ -31093,8 +36512,8 @@ function get_links_to_depth(target_source, max_depth = 1, {
 }
 
 // node_modules/smart-context-obsidian/node_modules/obsidian-smart-env/utils/open_note.js
-var import_obsidian34 = require("obsidian");
-async function open_note(plugin, target_path, event = null, opts = {}) {
+var import_obsidian43 = require("obsidian");
+async function open_note2(plugin, target_path, event = null, opts = {}) {
   const { new_tab = false } = opts;
   const env = plugin.env;
   if (target_path.includes(".pdf#page=")) {
@@ -31116,8 +36535,8 @@ async function open_note(plugin, target_path, event = null, opts = {}) {
   }
   let leaf;
   if (event) {
-    const is_mod = import_obsidian34.Keymap.isModEvent(event);
-    const is_alt = import_obsidian34.Keymap.isModifier(event, "Alt");
+    const is_mod = import_obsidian43.Keymap.isModEvent(event);
+    const is_alt = import_obsidian43.Keymap.isModifier(event, "Alt");
     if (is_mod && is_alt) {
       leaf = plugin.app.workspace.splitActiveLeaf("vertical");
     } else if (is_mod || new_tab) {
@@ -31138,10 +36557,10 @@ async function open_note(plugin, target_path, event = null, opts = {}) {
 }
 
 // node_modules/smart-context-obsidian/src/components/context_tree.js
-var import_obsidian37 = require("obsidian");
+var import_obsidian46 = require("obsidian");
 
 // node_modules/smart-context-obsidian/src/views/context_selector_modal.js
-var import_obsidian35 = require("obsidian");
+var import_obsidian44 = require("obsidian");
 
 // node_modules/smart-context-obsidian/node_modules/smart-file-system/utils/ignore.js
 var TEXT_FILE_EXTENSIONS2 = [
@@ -31245,7 +36664,7 @@ function is_text_file2(file_path) {
 }
 
 // node_modules/smart-context-obsidian/src/utils/get_all_leaves.js
-function get_all_leaves2(app) {
+function get_all_leaves2(app2) {
   const leaves = [];
   const recurse = (container) => {
     if (container.children) {
@@ -31257,13 +36676,13 @@ function get_all_leaves2(app) {
       leaves.push(container);
     }
   };
-  recurse(app.workspace.rootSplit);
+  recurse(app2.workspace.rootSplit);
   return leaves;
 }
 
 // node_modules/smart-context-obsidian/src/utils/get_all_open_file_paths.js
-function get_all_open_file_paths2(app) {
-  const leaves = get_all_leaves2(app);
+function get_all_open_file_paths2(app2) {
+  const leaves = get_all_leaves2(app2);
   const files_set = [];
   for (const leaf of leaves) {
     const file_path = leaf.view?.state?.file ?? leaf.view?.file?.path;
@@ -31287,8 +36706,8 @@ function is_leaf_visible2(leaf) {
 }
 
 // node_modules/smart-context-obsidian/src/utils/get_visible_open_files.js
-function get_visible_open_files2(app) {
-  const leaves = get_all_leaves2(app);
+function get_visible_open_files2(app2) {
+  const leaves = get_all_leaves2(app2);
   const visible_files = /* @__PURE__ */ new Set();
   for (const leaf of leaves) {
     if (!is_leaf_visible2(leaf)) continue;
@@ -31300,12 +36719,23 @@ function get_visible_open_files2(app) {
   return [...visible_files].map((file) => file.path);
 }
 
+// node_modules/smart-context-obsidian/src/utils/send_context_changed_event.js
+function send_context_changed_event2(container, next_ctx) {
+  container.dispatchEvent(new CustomEvent("smart-env:context-changed", {
+    detail: { context: next_ctx },
+    bubbles: true,
+    composed: true
+  }));
+}
+
 // node_modules/smart-context-obsidian/src/views/context_selector_modal.js
-var ContextSelectorModal2 = class extends import_obsidian35.FuzzySuggestModal {
+var ContextSelectorModal2 = class extends import_obsidian44.FuzzySuggestModal {
   static open(env, opts) {
-    const plugin = env.smart_contexts_plugin || env.smart_chat_plugin || env.smart_connections_plugin;
+    const plugin = env.smart_context_plugin || env.smart_chat_plugin || env.smart_connections_plugin || env.plugin;
     if (!env.context_selector_modal) {
-      env.context_selector_modal = new this(plugin, opts);
+      if (env.smart_context_plugin?.ContextSelectorModal) {
+        env.context_selector_modal = new env.smart_context_plugin.ContextSelectorModal(plugin, opts);
+      } else env.context_selector_modal = new this(plugin, opts);
     }
     env.context_selector_modal.open(opts);
     return env.context_selector_modal;
@@ -31332,20 +36762,22 @@ var ContextSelectorModal2 = class extends import_obsidian35.FuzzySuggestModal {
     ]);
     this.plugin.env.create_env_getter(this);
     this.mod_key_was_held = false;
-    this.modalEl.addEventListener("keydown", (e) => {
-      this.mod_key_was_held = import_obsidian35.Keymap.isModifier(e, "Mod");
-      if (e.key === "Enter") this.selectActiveSuggestion(e);
+    this.containerEl.addEventListener("keydown", (e) => {
       if (e.key === "Escape") this.close(true);
     });
+    this.modalEl.addEventListener("keydown", (e) => {
+      this.mod_key_was_held = import_obsidian44.Keymap.isModifier(e, "Mod");
+      if (e.key === "Enter") this.selectActiveSuggestion(e);
+    });
     this.resultContainerEl.addEventListener("click", (e) => {
-      this.mod_key_was_held = import_obsidian35.Keymap.isModifier(e, "Mod");
+      this.mod_key_was_held = import_obsidian44.Keymap.isModifier(e, "Mod");
     });
   }
   /* ───────────────────────────────────────────────────────────── */
   /**
    * Sort an array of context entries according to:
    *   – priority 0 → item has in/out‑links with the current active note
-   *   – priority 1 → item modified within the last 24 h
+   *   – priority 1 → item modified within the last 24 h
    *   – priority 2 → all remaining items
    * Within each priority group items are ordered alphabetically.
    *
@@ -31390,9 +36822,11 @@ var ContextSelectorModal2 = class extends import_obsidian35.FuzzySuggestModal {
   }
   async open(opts = this.opts) {
     if (opts.ctx) this.ctx = opts.ctx;
+    if (opts.opener_container) this.add_opener_container(opts.opener_container);
     this.opts = opts;
     await this.render();
     super.open();
+    this.focus_input();
   }
   async render() {
     this.modalEl.style.display = "flex";
@@ -31409,13 +36843,16 @@ var ContextSelectorModal2 = class extends import_obsidian35.FuzzySuggestModal {
       "context_builder",
       ctx,
       {
-        update_callback: (_ctx) => {
-          this.updateSuggestions();
-          this.opts.update_callback?.(_ctx);
-        },
         ...this.opts
       }
     );
+    builder_container.addEventListener("smart-env:context-changed", (e) => {
+      const updated_ctx = e.detail.context;
+      this.ctx = updated_ctx;
+      this.opts.ctx = updated_ctx;
+      this.updateSuggestions();
+      this.render();
+    });
     builder_container.classList.add("modal");
     const actions_el = builder_container.querySelector(".sc-context-actions");
     if (ctx.has_context_items) {
@@ -31435,7 +36872,7 @@ var ContextSelectorModal2 = class extends import_obsidian35.FuzzySuggestModal {
       );
       actions_el.appendChild(copy_btn);
     }
-    if (this.opts.update_callback && !actions_el.querySelector('button[data-done="true"]')) {
+    if (!actions_el.querySelector('button[data-done="true"]')) {
       const done_btn = document.createElement("button");
       done_btn.dataset.done = "true";
       done_btn.textContent = "Done";
@@ -31561,7 +36998,33 @@ var ContextSelectorModal2 = class extends import_obsidian35.FuzzySuggestModal {
     if (should_close) super.close();
   }
   onClose(should_close = false) {
-    this.opts.update_callback?.(this.ctx);
+    while (this.opener_containers?.length) {
+      const container = this.opener_containers.pop();
+      if (container.isConnected) {
+        send_context_changed_event2(container, this.ctx);
+      }
+    }
+  }
+  /**
+   * Add a container to the list of opener containers.
+   * This is used to send context changed events when the modal is closed.
+   * @param {HTMLElement|NodeList|Array<HTMLElement>|function} container - The container to add.
+   * If a function is passed, it will be called to get the container(s).
+   */
+  add_opener_container(container) {
+    if (!this.opener_containers) this.opener_containers = [];
+    if (typeof container === "function") container = container();
+    if (Array.isArray(container) || container instanceof NodeList) {
+      container.forEach((c) => this.add_opener_container(c));
+      return;
+    }
+    if (!(container instanceof HTMLElement)) {
+      console.warn("ContextSelectorModal: opener_container must be an HTMLElement, received:", container);
+      return;
+    }
+    if (!this.opener_containers.includes(container)) {
+      this.opener_containers.push(container);
+    }
   }
   load_suggestions(suggestions) {
     this.suggestions = suggestions;
@@ -31571,14 +37034,14 @@ var ContextSelectorModal2 = class extends import_obsidian35.FuzzySuggestModal {
 };
 
 // node_modules/smart-context-obsidian/node_modules/obsidian-smart-env/utils/register_block_hover_popover.js
-var import_obsidian36 = require("obsidian");
+var import_obsidian45 = require("obsidian");
 function register_block_hover_popover2(parent, target, env, block_key, plugin) {
   target.addEventListener("mouseover", async (ev) => {
-    if (import_obsidian36.Keymap.isModEvent(ev)) {
+    if (import_obsidian45.Keymap.isModEvent(ev)) {
       const block = env.smart_blocks.get(block_key);
       const markdown = await block?.read();
       if (markdown) {
-        const popover = new import_obsidian36.HoverPopover(parent, target);
+        const popover = new import_obsidian45.HoverPopover(parent, target);
         const frag = env.smart_view.create_doc_fragment(`<div class="markdown-embed is-loaded">
                 <div class="markdown-embed-content node-insert-event">
                   <div class="markdown-preview-view markdown-rendered node-insert-event show-indentation-guide allow-fold-headings allow-fold-lists">
@@ -31590,10 +37053,19 @@ function register_block_hover_popover2(parent, target, env, block_key, plugin) {
         popover.hoverEl.classList.add("smart-block-popover");
         popover.hoverEl.appendChild(frag);
         const sizer = popover.hoverEl.querySelector(".markdown-preview-sizer");
-        import_obsidian36.MarkdownRenderer.render(plugin.app, markdown, sizer, "/", popover);
+        import_obsidian45.MarkdownRenderer.render(plugin.app, markdown, sizer, "/", popover);
       }
     }
   });
+}
+
+// node_modules/smart-context-obsidian/src/utils/send_context_updated_event.js
+function send_context_updated_event(container) {
+  container.dispatchEvent(new CustomEvent("smart-env:context-updated", {
+    detail: { updated: true },
+    bubbles: true,
+    composed: true
+  }));
 }
 
 // node_modules/smart-context-obsidian/src/components/context_tree.js
@@ -31614,25 +37086,25 @@ var setup_collapse_handlers = (container) => {
   });
 };
 var get_selected_items2 = (ctx) => Object.keys(ctx?.data?.context_items || {}).map((k) => ({ path: k }));
-function build_html34(ctx) {
+function build_html37(ctx) {
   const items = get_selected_items2(ctx);
   const tree_list_html = build_context_items_tree_html(items);
   return `<div>
     <div class="sc-context-tree">${tree_list_html || "<em>No items selected\u2026</em>"}</div>
   </div>`;
 }
-async function render42(ctx, opts = {}) {
-  const html = build_html34(ctx);
+async function render45(ctx, opts = {}) {
+  const html = build_html37(ctx);
   const frag = this.create_doc_fragment(html);
   this.apply_style_sheet(context_tree_default);
   const container = frag.querySelector(".sc-context-tree");
-  await post_process36.call(this, ctx, container, opts);
+  await post_process39.call(this, ctx, container, opts);
   return container;
 }
-async function post_process36(ctx, container, opts = {}) {
+async function post_process39(ctx, container, opts = {}) {
   const env = ctx?.env;
-  const plugin = env?.smart_context_plugin || env?.smart_chat_plugin || env?.smart_connections_plugin;
-  const ContextSelectorModalClass = plugin.ContextSelectorModal || ContextSelectorModal2;
+  const plugin = env?.smart_context_plugin || // uses early-release version if available
+  env?.smart_chat_plugin || env?.smart_connections_plugin || env?.plugin;
   const render_tree = () => {
     const items = get_selected_items2(ctx);
     const tree_list_html = build_context_items_tree_html(items);
@@ -31640,6 +37112,9 @@ async function post_process36(ctx, container, opts = {}) {
     attach_item_handlers();
     setup_collapse_handlers(container);
   };
+  container.addEventListener("smart-env:context-updated", (e) => {
+    render_tree();
+  });
   const attach_item_handlers = () => {
     if (!opts.disable_context_changes) {
       container.querySelectorAll(".sc-tree-remove").forEach((btn) => {
@@ -31647,20 +37122,22 @@ async function post_process36(ctx, container, opts = {}) {
         btn.addEventListener("click", (e) => {
           const p = e.currentTarget.dataset.path;
           delete ctx.data.context_items[p];
-          render_tree();
-          opts.update_callback?.(ctx);
+          send_context_updated_event(container);
         });
       });
       container.querySelectorAll(".sc-tree-connections").forEach((btn) => {
-        const icon = (0, import_obsidian37.getIcon)("smart-connections");
+        if (!btn.dataset.path) return;
+        const target = ctx.get_ref(btn.dataset.path);
+        if (!target) return;
+        const icon = (0, import_obsidian46.getIcon)("smart-connections");
         btn.appendChild(icon);
         btn.addEventListener("click", async (e) => {
           const p = e.currentTarget.dataset.path;
-          const target = ctx.get_ref(p);
-          const connections = await target.find_connections();
-          const modal = ContextSelectorModalClass.open(env, {
+          const target2 = ctx.get_ref(p);
+          const connections = await target2.find_connections();
+          const modal = ContextSelectorModal2.open(env, {
             ctx,
-            update_callback: opts.update_callback
+            opener_container: container
           });
           modal.load_suggestions(connections);
         });
@@ -31670,17 +37147,17 @@ async function post_process36(ctx, container, opts = {}) {
         const target = ctx.get_ref(btn.dataset.path);
         if (!target) return;
         const links = get_links_to_depth(target, 3);
-        if (!links.length) return;
-        const icon = (0, import_obsidian37.getIcon)("link");
+        if (!links.length) return btn.style.display = "none";
+        const icon = (0, import_obsidian46.getIcon)("link");
         btn.appendChild(icon);
         btn.addEventListener("click", () => {
           const p = btn.dataset.path;
           const target2 = ctx.get_ref(p);
           if (!target2) return;
           const links2 = get_links_to_depth(target2, 3);
-          const modal = ContextSelectorModalClass.open(env, {
+          const modal = ContextSelectorModal2.open(env, {
             ctx,
-            update_callback: opts.update_callback
+            opener_container: container
           });
           modal.load_suggestions(links2);
         });
@@ -31702,7 +37179,7 @@ async function post_process36(ctx, container, opts = {}) {
           plugin?.app?.workspace.trigger("hover-link", {
             event: ev,
             source: "smart-context-tree",
-            hoverParent: label,
+            hoverParent: label.parentElement,
             targetEl: label,
             linktext: item_path
           });
@@ -31718,7 +37195,7 @@ async function post_process36(ctx, container, opts = {}) {
         label.addEventListener("click", (ev) => {
           if (!li.classList.contains("dir") || ev.metaKey || ev.ctrlKey) {
             ev.preventDefault();
-            open_note(plugin, item_path, ev, { new_tab: true });
+            open_note2(plugin, item_path, ev, { new_tab: true });
           }
         });
       }
@@ -31729,7 +37206,7 @@ async function post_process36(ctx, container, opts = {}) {
 }
 
 // node_modules/smart-context-obsidian/src/utils/show_stats_notice.js
-var import_obsidian38 = require("obsidian");
+var import_obsidian47 = require("obsidian");
 function show_stats_notice(stats, contextMsg) {
   let noticeMsg = `Copied to clipboard! (${contextMsg})`;
   if (stats) {
@@ -31745,33 +37222,33 @@ function show_stats_notice(stats, contextMsg) {
       }
     }
   }
-  new import_obsidian38.Notice(noticeMsg);
+  new import_obsidian47.Notice(noticeMsg);
 }
 
 // node_modules/smart-context-obsidian/src/utils/copy_to_clipboard.js
-var import_obsidian39 = require("obsidian");
+var import_obsidian48 = require("obsidian");
 async function copy_to_clipboard(text) {
   try {
     if (navigator?.clipboard?.writeText) {
       await navigator.clipboard.writeText(text);
-    } else if (!import_obsidian39.Platform.isMobile) {
+    } else if (!import_obsidian48.Platform.isMobile) {
       const { clipboard } = require("electron");
       clipboard.writeText(text);
     } else {
-      new import_obsidian39.Notice("Unable to copy text: no valid method found.");
+      new import_obsidian48.Notice("Unable to copy text: no valid method found.");
     }
   } catch (err) {
     console.error("Failed to copy text:", err);
-    new import_obsidian39.Notice("Failed to copy.");
+    new import_obsidian48.Notice("Failed to copy.");
   }
 }
 
 // node_modules/smart-context-obsidian/src/components/copy_to_clipboard_button.js
-function build_html35() {
+function build_html38() {
   return '<button class="sc-copy-clipboard" type="button">Copy to clipboard</button>';
 }
-async function render43(ctx) {
-  const html = build_html35();
+async function render46(ctx) {
+  const html = build_html38();
   const frag = this.create_doc_fragment(html);
   const btn = frag.querySelector("button");
   btn.addEventListener("click", async () => {
@@ -31787,18 +37264,18 @@ var smart_env_config6 = {
   collections: {},
   item_types: {},
   components: {
-    context_builder: render40,
-    context_stats: render41,
-    context_tree: render42,
-    copy_to_clipboard_button: render43
+    context_builder: render43,
+    context_stats: render44,
+    context_tree: render45,
+    copy_to_clipboard_button: render46
   }
 };
 
 // src/sc_settings_tab.js
-var import_obsidian40 = require("obsidian");
-var ScSettingsTab = class extends import_obsidian40.PluginSettingTab {
-  constructor(app, plugin) {
-    super(app, plugin);
+var import_obsidian49 = require("obsidian");
+var ScSettingsTab = class extends import_obsidian49.PluginSettingTab {
+  constructor(app2, plugin) {
+    super(app2, plugin);
     this.plugin = plugin;
     this.main_settings_container = null;
   }
@@ -31831,8 +37308,8 @@ var ScSettingsTab = class extends import_obsidian40.PluginSettingTab {
 };
 
 // node_modules/obsidian-smart-env/utils/open_note.js
-var import_obsidian41 = require("obsidian");
-async function open_note2(plugin, target_path, event = null, opts = {}) {
+var import_obsidian50 = require("obsidian");
+async function open_note3(plugin, target_path, event = null, opts = {}) {
   const { new_tab = false } = opts;
   const env = plugin.env;
   if (target_path.includes(".pdf#page=")) {
@@ -31854,8 +37331,8 @@ async function open_note2(plugin, target_path, event = null, opts = {}) {
   }
   let leaf;
   if (event) {
-    const is_mod = import_obsidian41.Keymap.isModEvent(event);
-    const is_alt = import_obsidian41.Keymap.isModifier(event, "Alt");
+    const is_mod = import_obsidian50.Keymap.isModEvent(event);
+    const is_alt = import_obsidian50.Keymap.isModifier(event, "Alt");
     if (is_mod && is_alt) {
       leaf = plugin.app.workspace.splitActiveLeaf("vertical");
     } else if (is_mod || new_tab) {
@@ -31875,227 +37352,8 @@ async function open_note2(plugin, target_path, event = null, opts = {}) {
   }
 }
 
-// src/sc_oauth.js
-var import_obsidian43 = require("obsidian");
-
-// ../smart-plugins-obsidian/utils.js
-var import_obsidian42 = require("obsidian");
-function get_smart_server_url() {
-  if (typeof window !== "undefined" && window.SMART_SERVER_URL_OVERRIDE) {
-    return window.SMART_SERVER_URL_OVERRIDE;
-  }
-  return "https://connect.smartconnections.app";
-}
-function try_get_zlib() {
-  if (typeof window?.require === "function") {
-    try {
-      return window.require("zlib");
-    } catch {
-    }
-  }
-  return null;
-}
-function inflate_deflate_data(compressed) {
-  const zlib = try_get_zlib();
-  if (!zlib) {
-    throw new Error("zlib not available (maybe Obsidian mobile?).");
-  }
-  const buf = Buffer.from(compressed);
-  const out = zlib.inflateRawSync(buf);
-  return new Uint8Array(out.buffer, out.byteOffset, out.length);
-}
-async function parse_zip_into_files(zipBuffer) {
-  const dv = new DataView(zipBuffer);
-  let offset = 0;
-  const length = dv.byteLength;
-  const files = [];
-  let pluginManifest = null;
-  while (offset + 4 <= length) {
-    const localSig = dv.getUint32(offset, true);
-    if (localSig === 33639248 || localSig === 134695760) {
-      break;
-    }
-    if (localSig !== 67324752) {
-      break;
-    }
-    offset += 4;
-    const versionNeeded = dv.getUint16(offset, true);
-    const generalPurposeBitFlag = dv.getUint16(offset + 2, true);
-    const compressionMethod = dv.getUint16(offset + 4, true);
-    offset += 6;
-    const lastModTimeDate = dv.getUint32(offset, true);
-    offset += 4;
-    let crc32 = dv.getUint32(offset, true);
-    let compressedSize = dv.getUint32(offset + 4, true);
-    let uncompressedSize = dv.getUint32(offset + 8, true);
-    offset += 12;
-    const fileNameLen = dv.getUint16(offset, true);
-    const extraLen = dv.getUint16(offset + 2, true);
-    offset += 4;
-    const fileNameBytes = new Uint8Array(zipBuffer.slice(offset, offset + fileNameLen));
-    const fileName = new TextDecoder("utf-8").decode(fileNameBytes);
-    offset += fileNameLen;
-    offset += extraLen;
-    const hasDataDescriptor = (generalPurposeBitFlag & 8) !== 0;
-    let compDataStart = offset;
-    let compDataEnd;
-    if (!hasDataDescriptor) {
-      compDataEnd = compDataStart + compressedSize;
-    } else {
-      let scanPos = compDataStart;
-      let foundSig = false;
-      while (scanPos + 4 <= length) {
-        const sig = dv.getUint32(scanPos, true);
-        if (sig === 134695760 || sig === 67324752 || sig === 33639248) {
-          foundSig = true;
-          break;
-        }
-        scanPos++;
-      }
-      compDataEnd = foundSig ? scanPos : length;
-    }
-    if (compDataEnd > length) {
-      break;
-    }
-    const fileDataCompressed = new Uint8Array(zipBuffer.slice(compDataStart, compDataEnd));
-    offset = compDataEnd;
-    if (hasDataDescriptor) {
-      if (offset + 4 <= length) {
-        const ddSig = dv.getUint32(offset, true);
-        if (ddSig === 134695760) {
-          offset += 4;
-        }
-        if (offset + 12 <= length) {
-          crc32 = dv.getUint32(offset, true);
-          compressedSize = dv.getUint32(offset + 4, true);
-          uncompressedSize = dv.getUint32(offset + 8, true);
-          offset += 12;
-        } else {
-          break;
-        }
-      }
-    }
-    let rawData;
-    if (compressionMethod === 0) {
-      rawData = fileDataCompressed;
-    } else if (compressionMethod === 8) {
-      rawData = inflate_deflate_data(fileDataCompressed);
-    } else {
-      continue;
-    }
-    files.push({ fileName, data: rawData });
-    if (fileName.toLowerCase().endsWith("manifest.json") && !fileName.includes("/")) {
-      try {
-        pluginManifest = JSON.parse(new TextDecoder("utf-8").decode(rawData));
-      } catch {
-      }
-    }
-  }
-  return { files, pluginManifest };
-}
-async function write_files_with_adapter(adapter, baseFolder, files) {
-  const hasWriteBinary = typeof adapter.writeBinary === "function";
-  if (!await adapter.exists(baseFolder)) {
-    await adapter.mkdir(baseFolder);
-  }
-  for (const { fileName, data } of files) {
-    const fullPath = baseFolder + "/" + fileName;
-    if (hasWriteBinary) {
-      await adapter.writeBinary(fullPath, data);
-    } else {
-      const base642 = btoa(String.fromCharCode(...data));
-      await adapter.write(fullPath, base642);
-    }
-  }
-}
-async function fetch_plugin_zip(repoName, token) {
-  const resp = await (0, import_obsidian42.requestUrl)({
-    url: `${get_smart_server_url()}/plugin_download`,
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${token}`
-    },
-    body: JSON.stringify({ repo: repoName })
-  });
-  if (resp.status !== 200) {
-    throw new Error(`plugin_download error ${resp.status}: ${resp.text}`);
-  }
-  const ab = resp.arrayBuffer;
-  if (ab.byteLength < 4) {
-    throw new Error("Server returned too few bytes, not a valid ZIP.");
-  }
-  const dv = new DataView(ab);
-  if (dv.getUint32(0, true) !== 67324752) {
-    const txt = new TextDecoder().decode(new Uint8Array(ab));
-    throw new Error(`Server did not return a valid ZIP. Text:
-${txt}`);
-  }
-  return ab;
-}
-async function enable_plugin(app, plugin_id) {
-  await app.plugins.enablePlugin(plugin_id);
-  app.plugins.enabledPlugins.add(plugin_id);
-  app.plugins.requestSaveConfig();
-  app.plugins.loadManifests();
-}
-
-// src/sc_oauth.js
-var CLIENT_ID = "smart-plugins-op";
-var CLIENT_SECRET = "smart-plugins-op-secret";
-function get_local_storage_token(oauth_storage_prefix) {
-  return {
-    token: localStorage.getItem(oauth_storage_prefix + "token") || "",
-    refresh: localStorage.getItem(oauth_storage_prefix + "refresh") || ""
-  };
-}
-function set_local_storage_token({ access_token, refresh_token }, oauth_storage_prefix) {
-  localStorage.setItem(oauth_storage_prefix + "token", access_token);
-  if (refresh_token) {
-    localStorage.setItem(oauth_storage_prefix + "refresh", refresh_token);
-  }
-}
-async function exchange_code_for_tokens(code, plugin) {
-  const oauth_storage_prefix = plugin.app.vault.getName().toLowerCase().replace(/[^a-z0-9]/g, "_") + "_smart_plugins_oauth_";
-  const url = `${get_smart_server_url()}/auth/oauth_exchange2`;
-  const resp = await (0, import_obsidian43.requestUrl)({
-    url,
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      client_id: CLIENT_ID,
-      client_secret: CLIENT_SECRET,
-      code
-    })
-  });
-  if (resp.status !== 200) {
-    throw new Error(`OAuth exchange error ${resp.status} ${resp.text}`);
-  }
-  const { access_token, refresh_token } = resp.json;
-  if (!access_token) {
-    throw new Error("No access_token in response");
-  }
-  set_local_storage_token({ access_token, refresh_token }, oauth_storage_prefix);
-}
-async function install_smart_plugins_plugin(plugin) {
-  const oauth_storage_prefix = plugin.app.vault.getName().toLowerCase().replace(/[^a-z0-9]/g, "_") + "_smart_plugins_oauth_";
-  const { token } = get_local_storage_token(oauth_storage_prefix);
-  if (!token) throw new Error('No token found to install "smart-plugins"');
-  const repo = "brianpetro/smart-plugins-obsidian";
-  const zipData = await fetch_plugin_zip(repo, token);
-  const { files, pluginManifest } = await parse_zip_into_files(zipData);
-  let folder_name = (pluginManifest?.id || "smart-plugins").trim();
-  folder_name = folder_name.replace(/[^\w-]/g, "_");
-  const base_folder = ".obsidian/plugins/" + folder_name;
-  await write_files_with_adapter(plugin.app.vault.adapter, base_folder, files);
-  await plugin.app.plugins.loadManifests();
-  if (plugin.app.plugins.manifests[folder_name]) {
-    await enable_plugin(plugin.app, folder_name);
-  }
-}
-
 // node_modules/smart-notices/smart_notices.js
-var import_obsidian44 = require("obsidian");
+var import_obsidian51 = require("obsidian");
 
 // node_modules/smart-notices/notices.js
 var NOTICES2 = {
@@ -32412,7 +37670,7 @@ var SmartNotices2 = class {
    */
   _add_mute_button(id, container) {
     const btn = document.createElement("button");
-    (0, import_obsidian44.setIcon)(btn, "bell-off");
+    (0, import_obsidian51.setIcon)(btn, "bell-off");
     btn.addEventListener("click", () => {
       if (!this.settings.muted) this.settings.muted = {};
       this.settings.muted[id] = true;
@@ -32440,9 +37698,9 @@ var SmartNotices2 = class {
   }
 };
 
-// src/modals/connections.js
-var import_obsidian45 = require("obsidian");
-var ConnectionsModal = class extends import_obsidian45.FuzzySuggestModal {
+// src/views/connections_modal.js
+var import_obsidian52 = require("obsidian");
+var ConnectionsModal = class extends import_obsidian52.FuzzySuggestModal {
   constructor(plugin) {
     super(plugin.app);
     this.plugin = plugin;
@@ -32464,7 +37722,6 @@ var ConnectionsModal = class extends import_obsidian45.FuzzySuggestModal {
     const env = this.plugin.env;
     let entity = env.smart_sources.get(active.path);
     if (!entity) {
-      env.smart_sources.fs.include_file(active.path);
       entity = env.smart_sources.init_file_path(active.path);
       if (!entity) return;
       await entity.import();
@@ -32491,18 +37748,18 @@ var ConnectionsModal = class extends import_obsidian45.FuzzySuggestModal {
   onChooseItem(connection, evt) {
     const target_path = connection.item.path;
     this.plugin.open_note(target_path, evt);
-    if (import_obsidian45.Keymap.isModifier(evt, "Mod")) {
+    if (import_obsidian52.Keymap.isModifier(evt, "Mod")) {
       this.open();
     }
   }
 };
 
 // node_modules/smart-chat-obsidian/src/settings_tab.js
-var import_obsidian46 = require("obsidian");
+var import_obsidian53 = require("obsidian");
 
 // node_modules/smart-chat-obsidian/src/settings_tab.css
-var css_sheet10 = new CSSStyleSheet();
-css_sheet10.replaceSync(`@media (max-width: 768px) {
+var css_sheet11 = new CSSStyleSheet();
+css_sheet11.replaceSync(`@media (max-width: 768px) {
   .smart-chat-model-settings-container {
     .setting-item{
       flex-direction: column;
@@ -32512,16 +37769,16 @@ css_sheet10.replaceSync(`@media (max-width: 768px) {
 }
 
 `);
-var settings_tab_default = css_sheet10;
+var settings_tab_default = css_sheet11;
 
 // node_modules/smart-chat-obsidian/src/settings_tab.js
-var SmartChatSettingTab = class extends import_obsidian46.PluginSettingTab {
+var SmartChatSettingTab = class extends import_obsidian53.PluginSettingTab {
   /**
    * @param {import('obsidian').App} app - The current Obsidian app instance
    * @param {import('./main.js').default} plugin - The main plugin object
    */
-  constructor(app, plugin) {
-    super(app, plugin);
+  constructor(app2, plugin) {
+    super(app2, plugin);
     this.plugin = plugin;
     this.plugin.env.create_env_getter(this);
     this.name = "Smart Chat";
@@ -32584,17 +37841,16 @@ var SmartChatSettingTab = class extends import_obsidian46.PluginSettingTab {
 };
 
 // src/bases/connections_score_column_modal.js
-var import_obsidian47 = require("obsidian");
+var import_obsidian54 = require("obsidian");
 
 // src/views/release_notes_view.js
-var import_obsidian48 = require("obsidian");
+var import_obsidian55 = require("obsidian");
 
 // releases/3.0.0.md
-var __default = '# Smart Connections `v3`\r\n## New Features\r\n\r\n### Smart Chat v1\r\n- Effectively utilizes the Smart Environment architecture to facilitate deeper integration and new features.\r\n#### Improved Smart Chat UI\r\n- New context builder\r\n	- makes managing conversation context easier\r\n- Drag images and notes into the chat window to add as context\r\n- Separate settings tab specifically for chat features\r\n#### *Improved Smart Chat compatibility with Local Models*\r\n- Note lookup (RAG) now compatible with models that don\'t support tool calling\r\n	- Disable tool calling in the settings\r\n### Ollama embedding adapter\r\n- use Ollama to create embeddings\r\n\r\n## Fixed\r\n- renders content in connections results when all result items are expanded by default\r\n## Housekeeping\r\n- Updated README\r\n	- Improved Getting Started section\r\n	- Removed extraneous details\r\n- Improved version release process\r\n- Smart Chat `v0` (legacy)\r\n	- Smart Chat `v0` will continue to be available for a short time and will be removed in `v3.1` unless unforeseen issues arise in which case it will be removed sooner.\r\n	- Smart Chat `v0` code was moved from `brianpetro/jsbrains` to the Smart Connections repo\r\n\r\n## patch `v3.0.1`\r\n\r\nImproved Mobile UX and cleaned up extraneous code.\r\n\r\n## patch `v3.0.3`\r\n\r\nFixed issue where connections results would not render if expand-all results was toggled on.\r\n\r\n## patch `v3.0.4`\r\n\r\nPrevented frontmatter blocks from being included in connections results. Fixed toggle-fold-all logic.\r\n\r\n## patch `v3.0.5`\r\n\r\nFixes Ollama Embedding model loading issue in the settings.\r\n\r\n## patch `v3.0.6`\r\n\r\nFixed release notes should only show once after update.\r\n\r\n## patch `v3.0.7`\r\n\r\nAdded "current/dynamic" option in bases connection score modal to add score based on current file. Fixed issue causing Ollama to seemingly embed at 0 tokens/sec. Fixed bases integration modal failing on new bases.\r\n\r\n## patch `v3.0.8`\r\n\r\n- Improved bases integration UX\r\n	- prevent throwing error on erroroneous input in `cos_sim` base function\r\n	- gracefully handle when smart_env is not loaded yet\r\n- Reduced max size of markdown file that will be imported from 1MB to 300KB (prevent long initial import)\r\n	- advanced configuration available via `smart_sources.obsidian_markdown_source_content_adapter.max_import_size` in `smart_env.json`\r\n- Removed deprecated Smart Search API registered to window since `smart_env` object is now globally accessible\r\n- Fixed bug causing expanded connections results to render twice\r\n\r\n## patch `v3.0.9`\r\n\r\n- Reworked the context builder UX in Smart Chat to prevent confusion\r\n	- Context is now added to the chat regardless of how the context selector modal is closed\r\n	- Removed "Back" button in favor of "Back" suggestion item\r\n- Fixed using `@` to open context selector in Smart Chat\r\n	- "Done" button now appears in the context selector modal when it is opened from the keyboard\r\n\r\n## patch `v3.0.10`\r\n\r\nFixed Google Gemini integration in the new Smart Chat\r\n\r\n## patch `v3.0.11`\r\n\r\nFixes unexpected scroll issue when dragging file from connections view (issue #1073)\r\n\r\n## patch `v3.0.12`\r\n\r\nFixes pasted text: should paste lines in correct order (no longer reversed)\r\n\r\n## patch `v3.0.13`\r\n\r\n- Prevents trying to process embed queue if embed model is not loaded\r\n	- Particularly for Ollama which may not be turned on when Obsidian starts\r\n	- Re-checks for Ollama server in intervals of a minute\r\n	- Embed queue can be restarted by clicking "Reload sources" in the Smart Environment settings\r\n\r\n## patch `v3.0.14`\r\n\r\n- Improved hover popover for blocks in connections results and context builder\r\n- Refactored `context_builder` component to extract `context_tree` component and prevent passing UI components\r\n  - these components are frequently re-used, the updated architecture should make it easier to maintain and extend\r\n- Fixed: should not embed blocks with size less than `min_chars`\r\n- Fixed: Smart Chat completion requests should have a properly ordered `messages` array\r\n\r\n## patch `v3.0.15`\r\n\r\n- Fixed: some Ollama embedding models triggering re-embedding every restart\r\n\r\n## patch `v3.0.16`\r\n\r\n- Fixed: no models available in Ollama should no longer cause issues in the settings\r\n\r\n## patch `v3.0.17`\r\n\r\n- Improved embedding processing UX\r\n	- show notification immediately to allow pausing sooner\r\n	- show notification every 30 seconds in addition to every 100 embeddings\r\n- Fixed: Smart Environment settings tab should be visible during "loading" state\r\n	- prevents "Loading Obsidian Smart Environment..." message from appearing indefinitely in instances where the environment fails to load from errors related to specific embedding models\r\n\r\n## patch `v3.0.18`\r\n\r\n- Fixed: Smart Connections view rendering on mobile\r\n	- should render when opening the view from the sidebar\r\n	- should update the results to the currently active file\r\n\r\n## patch `v3.0.19`\r\n\r\n- Added: model info to Smart Chat view\r\n	- shows before the first message and anytime the model changes since the last message\r\n- Fixed: ChatGPT sign-in with Google account\r\n	- should now work as expected\r\n	- will require re-signing in to ChatGPT after update\r\n- Fixed: Smart Chat thread adapter should better handle past completions to prevent unexpected behavior\r\n	- prevented `build_request` from outputting certain request content unless the completion is the current completion\r\n		- logic is specific to completion adapters (actions, actions_xml, thread)\r\n\r\n## patch `v3.0.20`\r\n\r\n- Fixed: Smart Environment settings tab should be visible during "loading" and "loaded" states\r\n- Fixed: Open URL externally should use window.open with "_external" if webviewer plugin is installed\r\n\r\n## patch `v3.0.21`\r\n\r\n- Implemented Smart Completions fallback to Smart Chat configuration\r\n	- WHY: enables use via global `smart_env` instance without requiring `chat_model` parameters in every request\r\n\r\n## patch `v3.0.22`\r\n\r\n- Improved connections view event handling\r\n	- prevent throwing error when no view container is present on iOS\r\n\r\n## patch `v3.0.23`\r\n\r\n- Added Getting Started guide\r\n	- opens automatically for new users\r\n	- can be opened manually via command `Show getting started`\r\n	- can be opened from the connections view "Help" icon\r\n	- can be opened from the main settings "Open getting started guide" button\r\n\r\n## patch `v3.0.24`\r\n\r\nFix Lookup tab not displaying.\r\n\r\n## patch `v3.0.25`\r\n\r\nFixed connections view help button failing to open\r\n\r\n## patch `v3.0.26`\r\n\r\nTemp disable bases integration since Obsidian changed how the integration works and there is currently no clear path to updating.\r\n\r\n## patch `v3.0.27`\r\n\r\n- Added: Smart Chat lookup now supports folder-based filtering\r\n	- mention a folder when requesting a lookup using self-referential pronoun (no special folder syntax required)\r\n		- ex. "Summarize my thoughts on this topic based on notes in my Content folder"\r\n- Added: Smart Chat system prompt now allows `{{folder_tree}}` variable\r\n	- this variable will be replaced with the folder tree of the current vault\r\n	- useful for providing context about the vault structure to the model\r\n- Improved: Smart Chat system message UI\r\n	- now collapses when longer than 10 lines\r\n\r\n## patch `v3.0.28`\r\n\r\nFixed: Getting Started slideshow UX on mobile.\r\n\r\n## patch `v3.0.29`\r\n\r\n- Fixed: prevented regex special characters from throwing error when excluded file/folder contains them\r\n- Fixed: Smart Chat should return lookup context results when Smart Blocks are disabled\r\n\r\n## patch `v3.0.30`\r\n\r\n- Added: Drag multiple files into the Smart Chat window to add as context\r\n- Fixed: Smart Connections results remain stable when dragging connection from bottom of the list\r\n\r\n## patch `v3.0.31`\r\n\r\n- Added: Smart Chat: "Retrieve more" button in lookup results\r\n	- allows retrieving more results from the lookup\r\n	- includes retrieved context in subsequent lookup to provide more context to the model\r\n- Improved: Smart Chat: prior message handling in subsequent completions\r\n\r\n## patch `v3.0.32`\r\n\r\n- Added: Anthropic Claude Sonnet 4 & Opus 4 to Smart Chat\r\n- Improved: Smart Chat new note button no longer automatically addes open notes as context \r\n	- Added: "Add visible" and "Add open" notes options to Smart Context selector \r\n	- Added: "Add context" button above chat input on new chat for quick access to context selector\r\n- Fixed: Removing an item in the context selector updates the stats\r\n- Fixed: Smart Chat system message should render no more than once per turn\r\n\r\n## patch `v3.0.33`\r\n\r\n- Improved: Context Tree styles improved by samhiatt (PR #1091)\r\n- Improved: Smart Chat message should be full width if container is less than 600px\r\n- Fixed: Smart Chat model selection should handle when Ollama is available but no models are installed\r\n\r\n## patch `v3.0.34`\r\n\r\n- Added: Multi-modal support (images as context) using Ollama models\r\n	- requires Ollama models that support multi-modal input like `gemma3:4b`\r\n\r\n\r\n## patch `v3.0.37`\r\n\r\n- Fixed: Ollama `max_tokens` parameter should accurately reflect the model\'s max tokens\r\n- Fixed: Getting Started slideshow should only show automatically for new users\r\n\r\n## patch `v3.0.38`\r\n\r\n- Fixed: Smart Chat LM Studio models handling of `tool_choice` parameter\r\n\r\n## patch `v3.0.39`\r\n\r\n- Improved: Release notes user experience to use the same as the native Obsidian release notes\r\n	- Now uses new tab instead of modal to display the release notes\r\n- Fixed: Reduced vector length OpenAI embedding models should be selectable in the settings\r\n\r\n## patch `v3.0.40`\r\n\r\n- Added: Smart Chat: Support for PDFs as context in compatible models\r\n	- Currently works with Anthropic, Google Gemini, and OpenAI models\r\n	- PDFs must be manually added to the chat context. The context lookup action will not surface the PDFs because they are not embedded.\r\n- Improved: Smart Chat: LM Studio settings\r\n	- Added: Instructions for setting up LM Studio (CORS)\r\n	- Removed: Unecessary API key setting\r\n\r\n## patch `v3.0.41`\r\n\r\n- Fix: Bug in outlinks parsing was preventing embedding processing in some cases\r\n\r\n## patch `v3.0.42`\r\n\r\n- Added: `re_import_wait_time` setting to Smart Environment settings\r\n	- allows setting the time to wait before re-importing and embedding a note after it has been modified\r\n	- WHY: improves real-time nature of the connections\r\n- Improved: Connections view: Handling when current note hasn\'t been imported\r\n	- removed notification\r\n	- added refresh instructions to the connections view\r\n- Improved: Connections view when no results are found\r\n - added "No connections found" message\r\n - added instructions for reloading sources from the settings\r\n- Reduced size of bundled plugin from ~6.5MB to ~1MB (>80% reduction)\r\n - removed tokenizer that\'s only used by OpenAI embedding models\r\n - removed sourcemap since it\'s removed by Obsidian anyway\r\n - WHY: make the code easier to read (trust through transparency)\r\n- Fixed: Embeddings should update when file is changed\r\n\r\n## patch `v3.0.43`\n\r\n- Fixed: Smart Chat: Context tree connections icon should show connections in the suggestions when clicked';
+var __default = '# Smart Connections `v3`\n## New Features\n\n### Smart Chat v1\n- Effectively utilizes the Smart Environment architecture to facilitate deeper integration and new features.\n#### Improved Smart Chat UI\n- New context builder\n	- makes managing conversation context easier\n- Drag images and notes into the chat window to add as context\n- Separate settings tab specifically for chat features\n#### *Improved Smart Chat compatibility with Local Models*\n- Note lookup (RAG) now compatible with models that don\'t support tool calling\n	- Disable tool calling in the settings\n### Ollama embedding adapter\n- use Ollama to create embeddings\n\n## Fixed\n- renders content in connections results when all result items are expanded by default\n## Housekeeping\n- Updated README\n	- Improved Getting Started section\n	- Removed extraneous details\n- Improved version release process\n- Smart Chat `v0` (legacy)\n	- Smart Chat `v0` will continue to be available for a short time and will be removed in `v3.1` unless unforeseen issues arise in which case it will be removed sooner.\n	- Smart Chat `v0` code was moved from `brianpetro/jsbrains` to the Smart Connections repo\n\n## patch `v3.0.1`\n\nImproved Mobile UX and cleaned up extraneous code.\n\n## patch `v3.0.3`\n\nFixed issue where connections results would not render if expand-all results was toggled on.\n\n## patch `v3.0.4`\n\nPrevented frontmatter blocks from being included in connections results. Fixed toggle-fold-all logic.\n\n## patch `v3.0.5`\n\nFixes Ollama Embedding model loading issue in the settings.\n\n## patch `v3.0.6`\n\nFixed release notes should only show once after update.\n\n## patch `v3.0.7`\n\nAdded "current/dynamic" option in bases connection score modal to add score based on current file. Fixed issue causing Ollama to seemingly embed at 0 tokens/sec. Fixed bases integration modal failing on new bases.\n\n## patch `v3.0.8`\n\n- Improved bases integration UX\n	- prevent throwing error on erroroneous input in `cos_sim` base function\n	- gracefully handle when smart_env is not loaded yet\n- Reduced max size of markdown file that will be imported from 1MB to 300KB (prevent long initial import)\n	- advanced configuration available via `smart_sources.obsidian_markdown_source_content_adapter.max_import_size` in `smart_env.json`\n- Removed deprecated Smart Search API registered to window since `smart_env` object is now globally accessible\n- Fixed bug causing expanded connections results to render twice\n\n## patch `v3.0.9`\n\n- Reworked the context builder UX in Smart Chat to prevent confusion\n	- Context is now added to the chat regardless of how the context selector modal is closed\n	- Removed "Back" button in favor of "Back" suggestion item\n- Fixed using `@` to open context selector in Smart Chat\n	- "Done" button now appears in the context selector modal when it is opened from the keyboard\n\n## patch `v3.0.10`\n\nFixed Google Gemini integration in the new Smart Chat\n\n## patch `v3.0.11`\n\nFixes unexpected scroll issue when dragging file from connections view (issue #1073)\n\n## patch `v3.0.12`\n\nFixes pasted text: should paste lines in correct order (no longer reversed)\n\n## patch `v3.0.13`\n\n- Prevents trying to process embed queue if embed model is not loaded\n	- Particularly for Ollama which may not be turned on when Obsidian starts\n	- Re-checks for Ollama server in intervals of a minute\n	- Embed queue can be restarted by clicking "Reload sources" in the Smart Environment settings\n\n## patch `v3.0.14`\n\n- Improved hover popover for blocks in connections results and context builder\n- Refactored `context_builder` component to extract `context_tree` component and prevent passing UI components\n  - these components are frequently re-used, the updated architecture should make it easier to maintain and extend\n- Fixed: should not embed blocks with size less than `min_chars`\n- Fixed: Smart Chat completion requests should have a properly ordered `messages` array\n\n## patch `v3.0.15`\n\n- Fixed: some Ollama embedding models triggering re-embedding every restart\n\n## patch `v3.0.16`\n\n- Fixed: no models available in Ollama should no longer cause issues in the settings\n\n## patch `v3.0.17`\n\n- Improved embedding processing UX\n	- show notification immediately to allow pausing sooner\n	- show notification every 30 seconds in addition to every 100 embeddings\n- Fixed: Smart Environment settings tab should be visible during "loading" state\n	- prevents "Loading Obsidian Smart Environment..." message from appearing indefinitely in instances where the environment fails to load from errors related to specific embedding models\n\n## patch `v3.0.18`\n\n- Fixed: Smart Connections view rendering on mobile\n	- should render when opening the view from the sidebar\n	- should update the results to the currently active file\n\n## patch `v3.0.19`\n\n- Added: model info to Smart Chat view\n	- shows before the first message and anytime the model changes since the last message\n- Fixed: ChatGPT sign-in with Google account\n	- should now work as expected\n	- will require re-signing in to ChatGPT after update\n- Fixed: Smart Chat thread adapter should better handle past completions to prevent unexpected behavior\n	- prevented `build_request` from outputting certain request content unless the completion is the current completion\n		- logic is specific to completion adapters (actions, actions_xml, thread)\n\n## patch `v3.0.20`\n\n- Fixed: Smart Environment settings tab should be visible during "loading" and "loaded" states\n- Fixed: Open URL externally should use window.open with "_external" if webviewer plugin is installed\n\n## patch `v3.0.21`\n\n- Implemented Smart Completions fallback to Smart Chat configuration\n	- WHY: enables use via global `smart_env` instance without requiring `chat_model` parameters in every request\n\n## patch `v3.0.22`\n\n- Improved connections view event handling\n	- prevent throwing error when no view container is present on iOS\n\n## patch `v3.0.23`\n\n- Added Getting Started guide\n	- opens automatically for new users\n	- can be opened manually via command `Show getting started`\n	- can be opened from the connections view "Help" icon\n	- can be opened from the main settings "Open getting started guide" button\n\n## patch `v3.0.24`\n\nFix Lookup tab not displaying.\n\n## patch `v3.0.25`\n\nFixed connections view help button failing to open\n\n## patch `v3.0.26`\n\nTemp disable bases integration since Obsidian changed how the integration works and there is currently no clear path to updating.\n\n## patch `v3.0.27`\n\n- Added: Smart Chat lookup now supports folder-based filtering\n	- mention a folder when requesting a lookup using self-referential pronoun (no special folder syntax required)\n		- ex. "Summarize my thoughts on this topic based on notes in my Content folder"\n- Added: Smart Chat system prompt now allows `{{folder_tree}}` variable\n	- this variable will be replaced with the folder tree of the current vault\n	- useful for providing context about the vault structure to the model\n- Improved: Smart Chat system message UI\n	- now collapses when longer than 10 lines\n\n## patch `v3.0.28`\n\nFixed: Getting Started slideshow UX on mobile.\n\n## patch `v3.0.29`\n\n- Fixed: prevented regex special characters from throwing error when excluded file/folder contains them\n- Fixed: Smart Chat should return lookup context results when Smart Blocks are disabled\n\n## patch `v3.0.30`\n\n- Added: Drag multiple files into the Smart Chat window to add as context\n- Fixed: Smart Connections results remain stable when dragging connection from bottom of the list\n\n## patch `v3.0.31`\n\n- Added: Smart Chat: "Retrieve more" button in lookup results\n	- allows retrieving more results from the lookup\n	- includes retrieved context in subsequent lookup to provide more context to the model\n- Improved: Smart Chat: prior message handling in subsequent completions\n\n## patch `v3.0.32`\n\n- Added: Anthropic Claude Sonnet 4 & Opus 4 to Smart Chat\n- Improved: Smart Chat new note button no longer automatically addes open notes as context \n	- Added: "Add visible" and "Add open" notes options to Smart Context selector \n	- Added: "Add context" button above chat input on new chat for quick access to context selector\n- Fixed: Removing an item in the context selector updates the stats\n- Fixed: Smart Chat system message should render no more than once per turn\n\n## patch `v3.0.33`\n\n- Improved: Context Tree styles improved by samhiatt (PR #1091)\n- Improved: Smart Chat message should be full width if container is less than 600px\n- Fixed: Smart Chat model selection should handle when Ollama is available but no models are installed\n\n## patch `v3.0.34`\n\n- Added: Multi-modal support (images as context) using Ollama models\n	- requires Ollama models that support multi-modal input like `gemma3:4b`\n\n\n## patch `v3.0.37`\n\n- Fixed: Ollama `max_tokens` parameter should accurately reflect the model\'s max tokens\n- Fixed: Getting Started slideshow should only show automatically for new users\n\n## patch `v3.0.38`\n\n- Fixed: Smart Chat LM Studio models handling of `tool_choice` parameter\n\n## patch `v3.0.39`\n\n- Improved: Release notes user experience to use the same as the native Obsidian release notes\n	- Now uses new tab instead of modal to display the release notes\n- Fixed: Reduced vector length OpenAI embedding models should be selectable in the settings\n\n## patch `v3.0.40`\n\n- Added: Smart Chat: Support for PDFs as context in compatible models\n	- Currently works with Anthropic, Google Gemini, and OpenAI models\n	- PDFs must be manually added to the chat context. The context lookup action will not surface the PDFs because they are not embedded.\n- Improved: Smart Chat: LM Studio settings\n	- Added: Instructions for setting up LM Studio (CORS)\n	- Removed: Unecessary API key setting\n\n## patch `v3.0.41`\n\n- Fix: Bug in outlinks parsing was preventing embedding processing in some cases\n\n## patch `v3.0.42`\n\n- Added: `re_import_wait_time` setting to Smart Environment settings\n	- allows setting the time to wait before re-importing and embedding a note after it has been modified\n	- WHY: improves real-time nature of the connections\n- Improved: Connections view: Handling when current note hasn\'t been imported\n	- removed notification\n	- added refresh instructions to the connections view\n- Improved: Connections view when no results are found\n - added "No connections found" message\n - added instructions for reloading sources from the settings\n- Reduced size of bundled plugin from ~6.5MB to ~1MB (>80% reduction)\n - removed tokenizer that\'s only used by OpenAI embedding models\n - removed sourcemap since it\'s removed by Obsidian anyway\n - WHY: make the code easier to read (trust through transparency)\n- Fixed: Embeddings should update when file is changed\n\n## patch `v3.0.43`\n\n- Fixed: Smart Chat: Context tree connections icon should show connections in the suggestions when clicked\n\n## patch `v3.0.44`\n\n- Improved: Settings descriptions for the Connections view\n- Changed: Moved "muted notices" settings to the obsidian-smart-env module\n\n## patch `v3.0.45`\n\n- Added: Status element for indicating embedding queue for changed notes\n	- click to begin embedding otherwise waits until `re_import_wait_time` has passed\n- Fixed: Smart Environment: only changed blocks should re-embed when the note is modified\n	- Adds block has check to parse_blocks to prevent `queue_embed` from being called on blocks that haven\'t changed\n- Fixed: Release notes should open in a new tab instead of relpacing the current tab\n- Moved: Smart Plugins access to the obsidian-smart-env module\n\n## patch `v3.0.46`\n\n- Added: Smart Chat: Include relevance score for item in context tree if retrieved from a lookup\n	- allows users to see how relevant the item is to the current chat context\n- Added: Snowflake Arctic Embed models to the built-in embedding adapter (transformers)\n	- Snowflake/snowflake-arctic-embed-xs\n	- Snowflake/snowflake-arctic-embed-s\n	- Snowflake/snowflake-arctic-embed-m\n- Added: Report a bug and Request a feature buttons to the settings\n- Fixed: Smart Context: Tree should not split paths with slashes or hashtags within wikilinks\n	- ex. `[[some/path.md#subpath]]` should not be split into `some/path.md` and `subpath`\n- Improved: Smart Chat: Prevent trying to use folder scope in lookup when the folder provided by the AI does not exist\n\n## patch `v3.0.47`\n\n- Added: Hide connections in connections view\n	- Right-click on a connection result to open the new context menu\n	- Select "Hide" to hide the connection result\n	- Select "Unhide All" to unhide all hidden connections for the current item\n- Updated: Smart Contexts to use new ContextItem architecture\n	- The new architecture allows for more flexibility and better performance\n\n## patch `v3.0.50`\n\n- Added: Smart Chat: Latest OpenAI chat models (removed incompatible models)\n	- o3 and o4 class models now available in the settingsa\n\n## patch `v3.0.51`\n\n- Fixed: Connections view: Include/Exclude filters should allow multiple comma-separated values\n\n## patch `v3.0.52`\n\n- Fixed: Initial import should not embed blocks where `should_embed` is false\n  - see #1077 for details\n	- improves performance and decreases embedding time by reducing total number of blocks\n	- may require "Clear sources data" and "Reload sources" to be run in the settings to take effect\n\n## patch `v3.0.53`\n\n- Improved: Smart Chat: opening logic (prevent splitting sidebar)\n	- now opens in new tab in main workspace by default\n	- tab may still be dragged to the sidebar\n- Fixed: Smart Chat: Context selector should open when Smart Context plugin is not installed\n	- should now open the context selector modal instead of throwing an error\n\n## patch `v3.0.54`\n\n- Fixed: Smart Chat: Context selector: "Done" button should not cause crash\n- Added discussion template for Smart Connections workflows and button to open it\n	- encourages users to share their workflows with the community\n	- button opens the discussion template in a new tab\n	- discussion template includes instructions for sharing workflows\n\n## patch `v3.0.55`\n\n- Fixed: Smart Chat `@` should open context selector modal on subsequent messages\n\n## patch `v3.0.56`\n\n- Added: Smart Chat: Improved message link interactions\n  - hover-preview: hold cmd/ctrl while hovering to preview the link\n	- drag: click and hold the link, dragging it to create a link in the active note, or dragging to the chat window to add as context\n	- click: hold cmd/ctrl while clicking to open the link in a new tab, cmd/ctrl+alt click to open in split view\n- Fixed: Smart Chat: new threads should save after the first message\n\n## patch `v3.0.57`\n\n- Improved: Smart Chat: date format in default thread name\n- Fixed: Smart Chat: message copy button should copy message to the clipboard\n\n## patch `v3.0.58`\n\n- Improved: Smart Connections dynamic codeblock:  filter options passed to connections and lookup components; adjust styles for better layout\n- Fixed: Smart Chat: should always have a `current_completion` instance (prevent failing to send subsequent messages)\n\n## patch `v3.0.59`\n\n- Added: Smart Chat: xAI Grok adapter\n	- allows using xAI Grok models in Smart Chat\n	- requires xAI Grok API key to be set in the settings\n- Added: Excalidraw source adapter\n	- allows Excalidraw files to be used as sources in Smart Connections\n	- supports Excalidraw files with `.excalidraw.md` extension\n- Added: Source inspector: source-level information\n	- shows whether the source should be embedded based on the settings and current content\n	- shows whether the source has been embedded (vectorized)\n	- added button to show the full surce data object\n- Improved: Connections view: improved messaging when connections results cannot be returned\n	- added more detailed error messages for different failure scenarios\n\n## patch `v3.0.60`\n\n- Smart Chat: bug fixes\n	- improve chat thread name handling\n	- prevent errors when chat is open onload\n\n## patch `v3.0.61`\n\n- Added: Status bar: context menu\n	- inspect source and blocks for current note\n	- view Smart Environment stats\n- Added: Connections view setting: to only show sources (notes) in connections results';
 
 // src/views/release_notes_view.js
-var ReleaseNotesView = class _ReleaseNotesView extends import_obsidian48.ItemView {
-  /* ─────────────────────────────── metadata ─────────────────────────────── */
+var ReleaseNotesView = class _ReleaseNotesView extends import_obsidian55.ItemView {
   static get view_type() {
     return "smart-release-notes-view";
   }
@@ -32604,12 +37860,11 @@ var ReleaseNotesView = class _ReleaseNotesView extends import_obsidian48.ItemVie
   static get icon_name() {
     return "file-text";
   }
-  /** Convenience helper – opens (or reveals) the view in a root leaf. */
   static open(workspace, version, active = true) {
-    const leaf = workspace.getLeavesOfType(this.view_type)[0] ?? workspace.getLeaf(false);
+    const leaf = workspace.getLeaf("tab");
     leaf.setViewState({ type: this.view_type, active, state: { version } });
   }
-  /* ───────────────────────────── item‑view API ───────────────────────────── */
+  /* ───────────────────────────── item-view API ───────────────────────────── */
   getViewType() {
     return _ReleaseNotesView.view_type;
   }
@@ -32635,7 +37890,7 @@ var ReleaseNotesView = class _ReleaseNotesView extends import_obsidian48.ItemVie
       await new Promise((resolve) => setTimeout(resolve, 100));
       console.warn("Waiting for containerEl to be ready...", this.container);
     }
-    import_obsidian48.MarkdownRenderer.render(
+    import_obsidian55.MarkdownRenderer.render(
       this.app,
       __default,
       this.container,
@@ -32648,7 +37903,6 @@ var ReleaseNotesView = class _ReleaseNotesView extends import_obsidian48.ItemVie
     const version = this.leaf.viewState?.state?.version ?? this.app.plugins.getPlugin("smart-connections")?.manifest.version ?? "";
     return version;
   }
-  /* ────────────────────────────── utilities ─────────────────────────────── */
   #scroll_to_version(container, version) {
     if (!version) return;
     const safe = version.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -32663,11 +37917,11 @@ var ReleaseNotesView = class _ReleaseNotesView extends import_obsidian48.ItemVie
 
 // src/index.js
 var {
-  Notice: Notice6,
+  Notice: Notice8,
   Plugin,
-  requestUrl: requestUrl4,
-  Platform: Platform8
-} = import_obsidian49.default;
+  requestUrl: requestUrl5,
+  Platform: Platform9
+} = import_obsidian56.default;
 var SmartConnectionsPlugin = class extends Plugin {
   get item_views() {
     return {
@@ -32681,7 +37935,7 @@ var SmartConnectionsPlugin = class extends Plugin {
   }
   // GETTERS
   get obsidian() {
-    return import_obsidian49.default;
+    return import_obsidian56.default;
   }
   get smart_env_config() {
     if (!this._smart_env_config) {
@@ -32701,7 +37955,7 @@ var SmartConnectionsPlugin = class extends Plugin {
         request_adapter: this.obsidian.requestUrl
         // NEEDS BETTER HANDLING
       };
-      if (Platform8.isMobile) {
+      if (Platform9.isMobile) {
         merge_env_config(this._smart_env_config, {
           collections: {
             smart_sources: { prevent_load_on_init: true }
@@ -32735,11 +37989,6 @@ var SmartConnectionsPlugin = class extends Plugin {
   async initialize() {
     await this.load_new_user_state();
     this.smart_connections_view = null;
-    if (!Platform8.isMobile) {
-      this.registerObsidianProtocolHandler("sc-op/callback", async (params) => {
-        await this.handle_sc_op_oauth_callback(params);
-      });
-    }
     console.log("Smart Connections v2 loaded");
     if (this.is_new_user()) {
       setTimeout(() => {
@@ -32769,10 +38018,6 @@ var SmartConnectionsPlugin = class extends Plugin {
     } catch (error) {
       console.warn(`Error registering code block: ${name}`, error);
     }
-  }
-  async ready_to_load_collections() {
-    await new Promise((r) => setTimeout(r, 3e3));
-    await this.wait_for_obsidian_sync();
   }
   get settings() {
     return this.env?.settings || {};
@@ -32817,7 +38062,7 @@ var SmartConnectionsPlugin = class extends Plugin {
   }
   async check_for_update() {
     try {
-      const { json: response } = await requestUrl4({
+      const { json: response } = await requestUrl5({
         url: "https://api.github.com/repos/brianpetro/obsidian-smart-connections/releases/latest",
         method: "GET",
         headers: {
@@ -32875,7 +38120,6 @@ var SmartConnectionsPlugin = class extends Plugin {
           const source_data_path = source2.collection.data_adapter.get_item_data_path(source2.key);
           await this.env.data_fs.remove(source_data_path);
         } else {
-          this.env.smart_sources.fs.include_file(curr_file.path);
           source2 = this.env.smart_sources.init_file_path(curr_file.path);
         }
         if (!source2) return this.notices.show("unable_to_init_source", { key: curr_file.path });
@@ -32937,126 +38181,62 @@ ${message ? "# " + message + "\n" : ""}${ignore}`);
     }
   }
   async open_note(target_path, event = null) {
-    await open_note2(this, target_path, event);
+    await open_note3(this, target_path, event);
   }
   async render_code_block(contents, container, ctx) {
     container.empty();
-    container.createEl("span", { text: "Loading..." });
+    container.createEl("span", { text: "Loading\u2026" });
+    await SmartEnv2.wait_for({ loaded: true });
+    const content_lines = [];
+    const filter = {};
     if (contents.trim().length) {
-      const frag = await this.env.render_component(
+      const lines = contents.split("\n").map((line) => line.trim()).filter((line) => line.length);
+      for (const line of lines) {
+        if (line.startsWith("include:")) {
+          const value = line.replace("include:", "").trim();
+          if (value) filter.key_includes_any = value.split(",").map((v) => v.trim());
+          continue;
+        }
+        if (line.startsWith("does not end with:")) {
+          const value = line.replace("does not end with:", "").trim();
+          if (value) filter.exclude_key_ends_with_any = value.split(",").map((v) => v.trim());
+          continue;
+        }
+        if (line.startsWith("limit:")) {
+          const value = line.replace("limit:", "").trim();
+          if (value) filter.limit = parseInt(value);
+          continue;
+        }
+        content_lines.push(line);
+      }
+    }
+    if (content_lines.length) {
+      contents = content_lines.join("\n");
+      const frag2 = await this.env.render_component(
         "lookup",
         this.env.smart_sources,
-        {
-          // add_result_listeners: this.add_result_listeners.bind(this),
-          attribution: this.attribution,
-          query: contents
-        }
+        { attribution: this.attribution, query: contents, filter }
       );
       container.empty();
-      container.appendChild(frag);
-    } else {
-      const entity = this.env.smart_sources.get(ctx.sourcePath);
-      if (!entity) return container.innerHTML = "Entity not found: " + ctx.sourcePath;
-      const component_opts = {
-        // add_result_listeners: this.add_result_listeners.bind(this),
-        attribution: this.attribution,
-        re_render: () => {
-          this.render_code_block(contents, container, ctx);
-        },
-        open_lookup_view: this.open_lookup_view.bind(this)
-      };
-      const frag = await this.env.render_component("connections", entity, component_opts);
-      container.empty();
-      container.appendChild(frag);
-      const results = await entity.find_connections({
-        exclude_source_connections: entity.env.smart_blocks.settings.embed_blocks
-      });
-      const results_frag = await entity.env.render_component("connections_results", results, component_opts);
-      const results_container = container.querySelector(".sc-list");
-      results_container.innerHTML = "";
-      Array.from(results_frag.children).forEach((elm) => {
-        results_container.appendChild(elm);
-      });
-      const header_status_elm = container.querySelector(".sc-top-bar .sc-context");
-      results_container.dataset.key = entity.key;
-      const context_name = entity.path.split("/").pop();
-      const status_elm = container.querySelector(".sc-bottom-bar .sc-context");
-      status_elm.innerText = context_name;
-      header_status_elm.innerText = context_name;
-      return results;
+      container.appendChild(frag2);
+      return;
     }
+    const entity = this.env.smart_sources.get(ctx.sourcePath) ?? this.env.smart_sources.init_file_path(ctx.sourcePath);
+    if (!entity) {
+      container.empty();
+      container.createEl("p", { text: "Entity not found: " + ctx.sourcePath });
+      return;
+    }
+    const frag = await this.env.render_component(
+      "connections",
+      entity,
+      { attribution: this.attribution, filter }
+    );
+    container.empty();
+    container.appendChild(frag);
   }
   get plugin_is_enabled() {
     return this.app?.plugins?.enabledPlugins?.has("smart-connections");
-  }
-  // WAIT FOR OBSIDIAN SYNC
-  async wait_for_obsidian_sync() {
-    while (this.obsidian_is_syncing) {
-      if (!this.plugin_is_enabled) throw new Error("Smart Connections: plugin disabled while waiting for obsidian sync");
-      console.log("Smart Connections: Waiting for Obsidian Sync to finish");
-      await new Promise((r) => setTimeout(r, 1e3));
-    }
-  }
-  get obsidian_is_syncing() {
-    const obsidian_sync_instance = this.app?.internalPlugins?.plugins?.sync?.instance;
-    if (!obsidian_sync_instance) return false;
-    if (obsidian_sync_instance?.syncStatus.startsWith("Uploading")) return false;
-    if (obsidian_sync_instance?.syncStatus.startsWith("Fully synced")) return false;
-    return obsidian_sync_instance?.syncing;
-  }
-  /**
-   * This is the function that is called by the new "Sign in with Smart Plugins" button.
-   * It replicates the old 'initiate_oauth()' logic from sc_settings_tab.js
-   */
-  initiate_smart_plugins_oauth() {
-    console.log("initiate_smart_plugins_oauth");
-    const state = Math.random().toString(36).slice(2);
-    const redirect_uri = encodeURIComponent("obsidian://sc-op/callback");
-    const url = `${get_smart_server_url()}/oauth?client_id=smart-plugins-op&redirect_uri=${redirect_uri}&state=${state}`;
-    open_url_externally(this, url);
-  }
-  /**
-   * Handles the OAuth callback from the Smart Plugins server.
-   * @param {Object} params - The URL parameters from the OAuth callback.
-   */
-  async handle_sc_op_oauth_callback(params) {
-    const code = params.code;
-    if (!code) {
-      new Notice6("No OAuth code provided in URL. Login failed.");
-      return;
-    }
-    try {
-      await exchange_code_for_tokens(code, this);
-      await install_smart_plugins_plugin(this);
-      new Notice6("Smart Plugins installed / updated successfully!");
-      this.open_smart_plugins_settings();
-    } catch (err) {
-      console.error("OAuth callback error", err);
-      new Notice6(`OAuth callback error: ${err.message}`);
-    }
-  }
-  /**
-   * Opens the Obsidian settings window with the 'Smart Plugins' tab active.
-   * @public
-   */
-  async open_smart_plugins_settings() {
-    if (this.supporters_modal) this.supporters_modal.close();
-    console.log("open_smart_plugins_settings");
-    const spInstalled = this.app.plugins.plugins["smart-plugins"];
-    if (!spInstalled) {
-      await install_smart_plugins_plugin(this);
-      await new Promise((r) => setTimeout(r, 500));
-    }
-    const spEnabled = this.app.plugins.enabledPlugins.has("smart-plugins");
-    if (!spEnabled) {
-      await enable_plugin(this.app, "smart-plugins");
-      await new Promise((r) => setTimeout(r, 500));
-    }
-    this.app.commands.executeCommandById("app:open-settings");
-    const spTab = this.app.setting.pluginTabs.find((t) => t.name === "Smart Plugins");
-    if (spTab) {
-      this.app.setting.openTab(spTab);
-    }
   }
   // DEPRECATED
   /**
@@ -33064,7 +38244,7 @@ ${message ? "# " + message + "\n" : ""}${ignore}`);
    */
   get notices() {
     if (this.env?.notices) return this.env.notices;
-    if (!this._notices) this._notices = new SmartNotices2(this.env, Notice6);
+    if (!this._notices) this._notices = new SmartNotices2(this.env, Notice8);
     return this._notices;
   }
   async load_new_user_state() {

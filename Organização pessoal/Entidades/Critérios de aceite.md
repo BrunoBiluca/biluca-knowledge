@@ -1,21 +1,6 @@
 # Critérios de aceite
 
---- start-multi-column: ExampleRegion1  
-```column-settings  
-number of columns: 2
-Column Size: [59%, 40%]
-Border: disabled
-Shadow: off
-```
-
 Critérios de aceite são **condições que devem ser satisfeitas** a fim de que uma [[🏗️ Execuções|Execução]] seja aceita e dada como concluída. Cada CA deve ser expresso como uma conjunto de declarações que visam descrever o que será entregue como avanço no Valor, sem especificar como isso será alcançado.
-
---- end-column ---
-
-> [!info] Principais referências
-> -
-
---- end-multi-column
 
 É necessário que os CAs sejam bem definidos antes de dar a Execução como refinada para isso ele **devem ser**
 - **concisos** - escrita curta
