@@ -1,73 +1,112 @@
 # DRP 03 - Temas
 
 > [!important] Resumo
-> Visão geral sobre o requisito e por que está será desenvolvido
+> Deve ser possível alterar entre diversos temas previamente registrados pela própria aplicação.
+> Nessa funcionalidade será considerada apenas as cores do tema.
 
 Objetivos:
 
-- __- Objetivo 1 com a realização do projeto -__
-
-Métricas para monitorar:
-
-- __- demais métricas que podem influenciar em outros aspectos do produto, como performance, satisfação do usuários -__
+- Cada usuário pode ter uma estética da aplicação diferente, o que permite maior personalização da aplicação
 
 # Contexto
 
-<Breve descrição dos motivos que levaram a pensar no produto> 
-
 ### Hipóteses
 
-- __Hipótese 1__
+- A partir da implementação de temas é possível abordar vários conceitos de Frontend:
+	- Variáveis globais de estilização
+	- Gerenciamento de estado global
+	- Entrada de configurações por usuário
 
 ### Restrições
 
-- __Restrição 1__
+- Pelo máximo dois temas serão definidos na aplicação
+
 ### Dependências
 
-- __Dependência 1__
+- [[DRP 02 - Notas]] implementado, já que aqui serão definidos todos os principais elementos que serão estilizados
 
 ### Dúvidas
 
-- __Dúvida 1__
+- Nenhuma
 
 ### Fora do escopo
 
-- __Fora do escopo 1__
+- Configurar qualquer aspecto estético além de cores
 
 ### Referências
 
-- __Referências de concorrentes ou inspirações__
+- Temas claro/escuro
+- Temas de IDEs de desenvolvimento
+
+# Usuários
+
+- Usuário: usuário autenticado
 
 # Requisitos
 
-### RF {ID - título}
+### RF 01 - Exibição dos temas preestabelecidos
 
 __Descrição__
+Como usuário quero ver quais são os temas disponíveis para quando quiser escolher qual tema aplicar.
 
-__Impacto__
+#### Critérios de aceite
 
-__Critérios de aceite__
+**Cenário:** Exibição dos temas
+- **Dado** que estou na página de Notas
+- **Então** quero ter a visualização dos temas disponíveis
+- **E** quero ver o tema atualmente aplicado de forma destacada
 
-- __CA 1__
+### RF 02 - Troca de tema
+
+__Descrição__
+Como usuário quero poder escolher um dos temas disponíveis para aplicá-lo.
+
+#### Critérios de aceite
+
+**Cenário:** Troca de tema
+- **Dado** que estou na página de notas
+- **Quando** eu seleciono um tema diferente do que está aplicado
+- **Então** eu vejo a mudança das cores da aplicação (ver seção de performance)
+
+### RF 03 - Manter o último tema escolhido
+
+__Descrição__
+Como usuário quero poder abrir a aplicação e carregar o último tema selecionado.
+
+#### Critérios de aceite
+
+**Cenário:** Primeiro tema escolhido
+- **Dado** que estou na página inicial no meu primeiro acesso
+- **Então** o tema claro será aplicado e é considerado o escolhido
+
+**Cenário:** Último tema escolhido
+- **Dado** que estou em qualquer página da aplicação
+- **Então** o último tema selecionado deve ser aplicado
 
 # Especificação de arquitetura
 
-### Descrição de estratégias e soluções técnicas
+## Modelagem
 
+#### Configuração
 
-### Diagramas arquiteturais, modelagem, relacionamentos...
-
-
-## Requisitos técnicos
-
+- Cada tema deve definir:
+    - Cores primárias (`primary`).
+    - Cores secundárias (`secondary`).
+    - Cores de fundo (`background`).
+    - Cores de texto (`text`).
+    - Cores de bordas (`border`).
 
 ## Requisitos não funcionais
 
+#### Performance
+
+A troca de tema não deve causar **recarregamento da página**.
 
 # Qualidade
 
-- __Definição de Pronto__
-- __Planos de testes__
+#### Acessibilidade
+
+Oferecer um tema **high-contrast** (opcional para acessibilidade).
 
 # Esboços ou protótipos de UX
 

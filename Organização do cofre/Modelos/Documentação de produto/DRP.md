@@ -56,16 +56,13 @@ __Impacto__
 
 # Especificação de arquitetura
 
-### Descrição de estratégias e soluções técnicas
-
-
-### Diagramas arquiteturais, modelagem, relacionamentos...
-
-
-## Requisitos técnicos
+## Modelagem
 
 
 ## Requisitos não funcionais
+
+
+## Descrição de estratégias e soluções técnicas
 
 
 # Qualidade

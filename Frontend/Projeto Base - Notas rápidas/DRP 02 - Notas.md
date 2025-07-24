@@ -228,10 +228,29 @@ Como usuário quero ordenar as notas de forma manual assim posso deixar as notas
 
 # Especificação de arquitetura
 
-#### Carregamento das notas
+## Modelagem
+
+### Composição de uma nota
+
+Uma nota é definida pelos seguintes campos:
+
+```js
+nota = {
+	id: "1",
+	title: "Reunião com cliente",
+	content: "Discutir requisitos do projeto",
+	color: "#FFEE93",
+	isPinned: true,
+	createdAt: "2024-01-20T10:00:00Z",
+	updatedAt: "2024-01-20T10:30:00Z",
+};
+```
+
+## Requisitos não funcionais
+
+### RNF 01 - Carregamento de grande quantidade de Notas
 
 Para grande quantidade de notas (+100) utilizar técnicas de carregamento de Lazy Loading, onde quando chega na base da página são carregadas mais notas.
-
 
 # Esboços ou protótipos de UX
 

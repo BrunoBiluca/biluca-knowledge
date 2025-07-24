@@ -40,8 +40,13 @@ As seguintes funcionalidades foram selecionadas para praticar vários tipos de c
 		- Arrastar e soltar
 
 - [[DRP 03 - Temas]]
+	- Variáveis globais de estilização
+	- Gerenciamento de estado global
+	- Entrada de configurações por usuário
 
 - [[DRP 04 - Categorização de Notas]]
+	- Agrupamentos
+	- Atualização de múltiplos objetos simultaneamente
 
 # Referências visuais
 
@@ -51,10 +56,15 @@ As seguintes funcionalidades foram selecionadas para praticar vários tipos de c
 
 Como mencionado no conceitos abordados, além dos conceitos mais focados em Frontend esse projeto base também permite exercitar várias práticas eficientes do desenvolvimento de software.
 
-- Versionamento
-- Conteinerização
-- Integração contínua
-- Entra contínua
-- Modularização
-- Separação de responsabilidades
-- Coesão
+### Versionamento
+
+
+### Conteinerização
+
+
+### Integração contínua
+
+#### Teste automatizados
+
+
+### Entrega contínua
