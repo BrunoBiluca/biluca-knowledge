@@ -2,7 +2,7 @@
 tags:
   - programação/padrões
 ---
-## Princípio
+# Princípio Inversão de dependências
 
 Durante o desenvolvimento de um sistema de software é muito comum cairmos em uma base de código totalmente conectada onde classes, métodos, módulos estão intimamente dependentes uns dos outros e qualquer alteração pode impactar em vários pontos.  Enquanto desenvolvedores nessas situações ficamos inseguros em alterar qualquer tipo de funcionalidade, já que erros inesperados podem acontecer, o que leva a uma redução brutal da produtividade dos projetos.
 

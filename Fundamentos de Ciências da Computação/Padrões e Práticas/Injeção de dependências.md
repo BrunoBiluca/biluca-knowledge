@@ -2,6 +2,8 @@
 tags:
   - programação/padrões
 ---
+# Injeção de dependências
+
 Injeção de dependência (DI) é um padrão de projeto usado para implementar IoC. Ele permite a criação de objetos dependentes fora de uma classe e fornece esses objetos para uma classe através de diferentes maneiras. Usando DI, movemos a criação e a vinculação dos objetos dependentes para fora da classe que depende deles.
 
 > [!info]- Criação do nome "Injeção de dependências"

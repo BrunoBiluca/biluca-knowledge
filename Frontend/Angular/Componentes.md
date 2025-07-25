@@ -7,7 +7,7 @@ Cada componente consiste em:
 - `@Component` decorator
 - HTML template
 - CSS selector
-- Classe Typescript com o componento definido
+- Classe [[TypeScript]] com o componento definido
 
 Também é possível separar o HTML, CSS da classe Typescript definida.
 
@@ -94,7 +94,11 @@ export class Child {
 ```
 
 
-# Ciclo de vida de componentes
+## Elementos host
+
+[Elementos host](https://angular.dev/guide/components/host-elements)
+
+## Ciclo de vida de componentes
 
 ### Inicialização
 

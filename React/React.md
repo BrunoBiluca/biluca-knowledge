@@ -17,7 +17,7 @@ Principais elementos do React:
 - [[Tratamento de Erros]]
 - [[Gerenciamento de estado]]
 - [[Hooks]]
-- [[Estilização]]
+- [[React/Estilização]]
 - [[Eventos]]
 
 # CLI Options

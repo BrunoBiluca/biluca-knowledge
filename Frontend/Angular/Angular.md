@@ -8,27 +8,26 @@ Ele utiliza [[TypeScript]] como linguagem padrão e segue uma arquitetura basead
 
 Ele já inclui soluções integradas para:
 
-- **Diretivas** – Estendem HTML com comportamentos dinâmicos (ex.: `*ngIf`, `*ngFor`).
+- [[Frontend/Angular/Componentes|Componentes]]
+- [[Serviços]]
+- [[Data bindings]]
+- [[Incremental DOM (Angular Ivy)]]
+- [[Diretivas]] – Estendem HTML com comportamentos dinâmicos (ex.: `*ngIf`, `*ngFor`).
 	- Várias diretivas foram atualizadas a partir da versão 17 para deixarem o código mais fluído
 	- **Deferrable Views** – Carregamento lazy de seções da view (`@defer`).
-- **Pipes** – Transformação de dados diretamente nos templates (ex.: `date`, `currency`).
-- **Roteamento** (`@angular/router`)
+- [[Pipes]] – Transformação de dados diretamente nos templates (ex.: `date`, `currency`).
+- [[Roteamento]] (`@angular/router`)
 - **Gerenciamento de estado** (RxJS, Signals, NGXS, etc.) 
 - **Formulários reativos e template-driven**
 - **Requisições HTTP** (`HttpClient`)
 - **Testes (Karma, Jasmine, Protractor)**
-- **CLI para scaffolding** (`ng generate`)
-
-#### Principais conceitos
-
-- [[Frontend/Angular/Componentes|Componentes]]
 - [[Angular CLI]]
-- [[Incremental DOM (Angular Ivy)]]
-- [[Data bindings]]
-- [[Roteamento]]
-- [[Serviços]]
-- [[Diretivas]]
-- [[Pipes]]
+- [[Frontend/Angular/Estilização|Estilização]]
+
+## Bibliotecas relacionadas
+
+- [Angular Material](https://material.angular.dev/)
+	- Componentes de Material Design aplicada ao Angular
 
 ## Plugins/Ferramentas recomendados
 

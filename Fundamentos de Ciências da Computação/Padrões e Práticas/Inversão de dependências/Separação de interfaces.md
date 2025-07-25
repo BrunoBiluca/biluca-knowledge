@@ -2,6 +2,8 @@
 tags:
   - programação/padrões
 ---
+# Separação de interfaces
+
 > [!info] Onde utilizar?
 > Em geral, você não precisa criar um pacote separado apenas para as interfaces, mas isso dependerá do contexto do seu projeto e dos requisitos de distribuição. 
 > 
