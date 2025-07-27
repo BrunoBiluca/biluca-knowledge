@@ -1,6 +1,6 @@
 # Diretivas
 
-Diretivas são instruções que estendem o comportamento ou a aparência de elementos HTML, componentes ou outras diretivas. Elas permitem manipular o DOM, adicionar lógica personalizada ou modificar estilos dinamicamente. Existem três tipos de diretivas no Angular:
+Diretivas são instruções no [[Angular]] que estendem o comportamento ou a aparência de elementos HTML, componentes ou outras diretivas. Elas permitem manipular o DOM, adicionar lógica personalizada ou modificar estilos dinamicamente. Existem três tipos de diretivas no Angular:
 
 1. [[Frontend/Angular/Componentes|Componentes]]: Diretivas com template (um tipo especializado de diretiva).
     
@@ -10,7 +10,39 @@ Diretivas são instruções que estendem o comportamento ou a aparência de elem
 
 ## Diretivas estruturais
 
-### ng-container
+Diretivas estruturas são aplicadas a qualquer elementos de template.
+
+```html
+<!-- Shorthand syntax: -->
+<p class="data-view" *select="let data from source">The data is: {{data}}</p>
+
+<!-- Long-form syntax: -->
+<ng-template select let-data [selectFrom]="source">
+  <p class="data-view">The data is: {{data}}</p>
+</ng-template>
+```
+
+> [!tip] Só é possível aplicar uma única diretiva estrutural no modelo atalhado por elemento.
+> Múltiplas diretivas precisam de múltiplos elementos `<ng-template>`.
+
+### Diretivas estruturais prontas
+
+#### [ngClass](https://angular.dev/api/common/NgClass)
+
+Adiciona e remove classes CSS no HTML:
+
+```html
+<!-- adiciona as classes 'first second' -->
+<some-element [class]="'first second'">...</some-element>
+<!-- adiciona a classes 'expanded' quando isExpanded é verdade e remove quando é falso -->
+<some-element [class.expanded]="isExpanded">...</some-element>
+<!-- adiciona as classes 'first second' -->
+<some-element [class]="['first', 'second']">...</some-element>
+<!-- adiciona as classes 'first second' por serem verdadeiras -->
+<some-element [class]="{'first': true, 'second': true, 'third': false}">...</some-element>
+```
+
+#### ng-container
 
 `ng_container` é um elemento especial que segura diretivas estruturais sem adicionar nenhum elemento no DOM.
 

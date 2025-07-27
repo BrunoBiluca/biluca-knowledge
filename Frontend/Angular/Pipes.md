@@ -14,7 +14,7 @@ Principais Pipes prontos:
 - TitleCasePipe
 - UpperCasePipe
 
-#### Exemplo: Uso de pipe no filtro de uma lista
+#### Exemplo: Criação de um pipe no filtro de uma lista
 
 ```js
 @Pipe(
