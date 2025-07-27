@@ -135,6 +135,8 @@ expect(method()).toThrow(error?)                  // Espera que method lance uma
 
 # Mocking
 
+> [!warning] A fazer
+
 # Test Coverage
 
 Cobertura de testes visa apresentar em uma visão gráfica informações sobre a relação da bateria de código e o código submetido aos testes.
@@ -156,14 +158,7 @@ Algumas ferramentas de criação de relatório apresentam informações diferent
 
 # Mutation tests
 
-# Exemplos
-
-- No folder **ex_1** apresenta um exemplo de código da utilização de testes automatizados para o desenvolvimento de uma calculadora
-  - Básico da implementação de testes automatizados
-
-- No folder **ex_2** apresenta um exemplo de código da utilização de testes automatizados mais focado na apresentação do usuário
-  - Implementação de testes automatizados para GUI
-  - Implementação de testes para verificar responsividade
+> [!warning] A fazer
 
 # Bibliografia
 

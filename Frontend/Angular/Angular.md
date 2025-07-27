@@ -20,7 +20,7 @@ Ele já inclui soluções integradas para:
 - **Gerenciamento de estado** (RxJS, Signals, NGXS, etc.) 
 - **Formulários reativos e template-driven**
 - **Requisições HTTP** (`HttpClient`)
-- **Testes (Karma, Jasmine, Protractor)**
+- [[Frontend/Angular/Testes automatizados|Testes automatizados]]
 - [[Angular CLI]]
 - [[Frontend/Angular/Estilização|Estilização]]
 
