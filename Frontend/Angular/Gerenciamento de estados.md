@@ -1,9 +1,13 @@
-# Data bindings
+# Gerenciamento de estados
+
+Vínculos de dados suportados pelo [[Angular]]
 
 - [Signals](https://angular.dev/guide/signals) (+v16)
 	- API recomendada para projetos com a versão +16
 	- Melhoria de reatividade, performance e simplicidade de código.
 - Propriedades tradicionais (Two-way data binding)
+
+## Signals
 
 #### Comparação entre Signals e propriedades tradicionais
 
@@ -27,5 +31,6 @@ Signals também facilitam a sincronização de estado entre servidor e cliente, 
 - Hidratação ineficiente
 - Vazamento de memória
 - Dependência do Zone.js (Change Detection Ineficiente)
+	- Remover essa dependência permite utilizar `async/await`
 - Estados Assíncronos Complexos no SSR, a lógica utilizando RxJS pode ser um pouco mais complexa e gerar duplicação
 - Computações Derivadas no Lado do Servidor

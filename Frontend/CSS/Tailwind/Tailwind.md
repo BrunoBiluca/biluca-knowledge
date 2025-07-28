@@ -1,7 +1,10 @@
 # Tailwind
 
-[Página do Tailwind](https://tailwindcss.com/)
-[Documentação](https://tailwindcss.com/docs/installation/using-vite)
+> [!info] Links
+> - [Página do Tailwind](https://tailwindcss.com/)
+> - [Documentação](https://tailwindcss.com/docs/installation/using-vite)
+> - [HyperUI](https://www.hyperui.dev/) coleção de componentes prontos para Tailwind CSS v4
+> 	- Só copiar o código e colar no projeto
 
 Tailwind constrói um CSS estático a partir de todos os arquivos HTML, Javascript e outros tipos de templates do projeto.
 

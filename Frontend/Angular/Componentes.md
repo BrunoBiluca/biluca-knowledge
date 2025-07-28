@@ -93,6 +93,13 @@ export class Child {
 }
 ```
 
+## Componentes Standalone
+
+Componentes Standalone são componentes em Angular que podem ser utilizados independentemente sem a necessidade de declarar um `NgModule`.
+
+> [!tip] Time do Angular recomenda utilizar componentes standalone em vez de ngModule
+
+Por padrão os componentes são standalone, o que significa que é possível importar em outros componentes.
 
 ## Elementos host
 

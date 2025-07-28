@@ -1,6 +1,7 @@
 # Angular
 
-[Página do Framework](https://angular.dev/)
+> [!info] Links
+> [Página do Framework](https://angular.dev/)
 
 Angular é um **framework front-end** desenvolvido pelo Google para construção de **aplicações web SPA (Single Page Applications)** e **aplicativos híbridos/progressivos (PWA)**. 
 
@@ -10,19 +11,20 @@ Ele já inclui soluções integradas para:
 
 - [[Frontend/Angular/Componentes|Componentes]]
 - [[Serviços]]
-- [[Data bindings]]
+	- **Requisições HTTP** (`HttpClient`)
+- [[Gerenciamento de estados]]
+	- [[RxJS]]
 - [[Incremental DOM (Angular Ivy)]]
 - [[Diretivas]] – Estendem HTML com comportamentos dinâmicos (ex.: `*ngIf`, `*ngFor`).
 	- Várias diretivas foram atualizadas a partir da versão 17 para deixarem o código mais fluído
 	- **Deferrable Views** – Carregamento lazy de seções da view (`@defer`).
 - [[Pipes]] – Transformação de dados diretamente nos templates (ex.: `date`, `currency`).
 - [[Roteamento]] (`@angular/router`)
-- **Gerenciamento de estado** (RxJS, Signals, NGXS, etc.) 
 - **Formulários reativos e template-driven**
-- **Requisições HTTP** (`HttpClient`)
 - [[Frontend/Angular/Testes automatizados|Testes automatizados]]
 - [[Angular CLI]]
 - [[Frontend/Angular/Estilização|Estilização]]
+- [[App config]]
 
 ## Bibliotecas relacionadas
 
