@@ -100,6 +100,15 @@ export class Child {
 
 ## Ciclo de vida de componentes
 
+> [!quote] [Documentação](https://angular.dev/guide/components/lifecycle)
+
+Fases do ciclo de vida:
+
+- criação
+- detecção de mudanças
+- renderização
+- destruição
+
 ### Inicialização
 
 ```ts
