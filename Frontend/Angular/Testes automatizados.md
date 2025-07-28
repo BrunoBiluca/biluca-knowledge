@@ -6,8 +6,8 @@ Testes automatizados em [[Angular]] já são habilitados por padrão. (mais sobr
 
 As ferramentas padrão utilizadas são:
 
-- [[Jasmine]]
-- Karma
+- [[Jasmine]] como framework de testes
+- [[Karma]] como executor dos testes
 
 Principais elementos que queremos testar:
 
@@ -94,7 +94,7 @@ describe('BannerComponent (with beforeEach)', () => {
 
 ## TestBed
 
-Angular já providencia uma implementação de injeção de dependência para os testes.
+Utilizando `TestBed` podemos configurar vários elementos para o nosso ambiente de testes, como componentes, serviços, httpclient, rotas e muito mais.
 
 ```js
 ...
