@@ -6,4 +6,4 @@ Prover significado semântico a partir das Tags do HTML permite ajudar browser, 
 
 ### article
 
-Elemento auto-contido, independente que pode ser distribuído e reutilizado independentemente do resto da aplicaçãol.
+Elemento auto-contido, independente que pode ser distribuído e reutilizado independentemente do resto da aplicação.
