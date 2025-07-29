@@ -37,6 +37,13 @@ O controle de acesso garante que o usuário está registrado na plataforma antes
 
 # Requisitos
 
+**Índice**
+
+- [[#RF 01 - Cadastro de usuário]]
+- [[#RF 02 - Login]]
+- [[#RF 03 - Logout]]
+- [[#RF 04 - Rota protegida com usuário não autenticado]]
+
 ### RF 01 - Cadastro de usuário
 
 __Descrição__

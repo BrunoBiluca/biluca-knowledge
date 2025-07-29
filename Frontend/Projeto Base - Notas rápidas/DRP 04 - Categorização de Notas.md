@@ -39,6 +39,12 @@ Objetivos:
 
 # Requisitos
 
+- [[#RF 01 - Atribuição de categoria a Nota]]
+- [[#RF 02 - Agrupamento por categoria]]
+- [[#RF 03 - Exibição das categoria]]
+- [[#RF 04 - Remoção de categoria]]
+- [[#RF 05 - Filtro]]
+
 ### RF 01 - Atribuição de categoria a Nota
 
 __Descrição__
