@@ -104,10 +104,16 @@ Dessa forma podemos passar diretamente para o observable um observer.
 
 ### Manipulação
 
+#### Pipe
+
 - `pipe([UnaryFunction<any, any>[]])` operador utilizado para encadear operações para um observable
 	- Os demais operadores de manipulação são do tipo `UnaryFunction`
 
+#### Map
+
 - `map` mapeia cada elemento retornado pelo observable
+
+#### SwitchMap
 
 - `switchMap` altera o Observable de contexto para a inscrição
 	- Pode ser utilizado para elencar várias requisições em ordem
@@ -131,12 +137,16 @@ fromEvent(target, 'click')
 ...
 ```
 
-- `filter` seleciona a partir de um predicado quais elementos irão prosseguir ou não no fluxo
+#### Take
 
 - `take` determina a quantidade de objetos que serão recebidos do Observable (fonte)
 	- Pode ser utilizado para definir estruturas como "Primeiros 5 valores" mesmo que a API retorne mais valores
 
+#### Skip
+
 - `skip` pula uma quantidade definida de objetos que serão recebidos do Observable (fonte)
+
+#### DebounceTime
 
 - `debounceTime` pula uma quantidade de tempo até liberar o Observable
 	- Pode ser utilizado para buscas onde a requisição será feita apenas a partir de tantos caracteres, ou para ignorar uma sequência de eventos
@@ -152,6 +162,8 @@ fromEvent(this.textInput, 'keyup')
 .subscribe(...)
 ```
 
+#### TakeUntil
+
 - `takeUntil(Observable)` cancela a inscrição de um Observable dada a conclusão de outro Observable
 
 ```ts
@@ -163,11 +175,60 @@ interval(1000)
 .subscribe(console.log) // imprime no console os número gerados a cada segundo
 ```
 
+#### TakeWhile
+
 - `takeWhile((val) => ...)` cancela a inscrição quando o resultado de um Observable atende um predicado definido
 
-- `tap((val) => ...)` executa efeitos colaterais a uma notificação sem transformar a notificação
-	- Usar o `tap` permite deixar funções `map` sem efeitos colaterais o que as deixariam impuras
-	- Muito utilizado por exemplo
-		- Para aplicar `console.log()`
-		- Analisar elementos e lançar erros
+#### combineLatest
 
+Combina vários Observables (fontes) executando sempre a emissão mais recente da combinação dos resultados.
+
+Pode ser utilizado para combinar requisições HTTP que precisam de compor dados para montar um modelo único.
+
+#### share/sharedReplay
+
+Faz um tipo de cache de um Observable. Operadores aplicados após o sharedReplay compartilham o resultado revisado.
+
+Pode ser utilizado para aplicação de filtros provenientes de uma única requisição.
+
+```ts
+http.get(...)
+.pipe(
+	sharedReplay(1) // compartilha uma instância desse resultado
+	share() // mesmo comportamento do sharedReplay(1)
+)
+.pipe(
+	filter((value) => ...)
+)
+```
+
+#### catchError
+
+Operador captura um erro emitido pelo Observable.
+
+Pode ser utilizado para tratar requisições a servidores ou serviços externos.
+
+#### retry
+
+Operador captura um erro e então reexecuta até uma quantidade limite definida.
+
+### Operadores auxiliares
+
+#### tap
+
+`tap((val) => ...)` executa efeitos colaterais a uma notificação sem transformar a notificação
+
+- Usar o `tap` permite deixar funções `map` sem efeitos colaterais o que as deixariam impuras
+- Muito utilizado por exemplo
+	- Para aplicar `console.log()` antes e depois de operações de transformação
+	- Analisar elementos e lançar erros
+
+### Operadores condicionais
+
+#### every
+
+Passa o Observable no pipe se todos os valores satisfazem uma condição.
+
+#### filter
+
+- `filter` seleciona a partir de um predicado quais elementos irão prosseguir ou não no fluxo
