@@ -26,6 +26,8 @@ Ele já inclui soluções integradas para:
 - [[Frontend/Angular/Estilização|Estilização]]
 - [[App config]]
 
+O [[Guia de projetos em Angular]]  oferece várias dicas relacionadas ao código, implementação, estratégias e outros elementos do projeto para um melhor aproveitamento do framework.
+
 ## Bibliotecas relacionadas
 
 - [Angular Material](https://material.angular.dev/)
