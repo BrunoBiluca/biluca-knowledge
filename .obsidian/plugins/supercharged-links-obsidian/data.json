@@ -155,6 +155,18 @@
       "selectAppend": true,
       "selectPrepend": true,
       "selectBackground": true
+    },
+    {
+      "type": "tag",
+      "name": "categoria",
+      "value": "excalidraw",
+      "matchCaseSensitive": false,
+      "match": "exact",
+      "uid": "6f1d-ccd1",
+      "selectText": true,
+      "selectAppend": true,
+      "selectPrepend": true,
+      "selectBackground": true
     }
   ]
 }
