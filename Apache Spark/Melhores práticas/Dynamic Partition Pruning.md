@@ -2,7 +2,7 @@
 
 Essa é uma funcionalidade introduzida no [[Apache Spark]] 3.
 
-**Partition Pruning** é uma técnica utilizada por vários motores de consulta como Spark e Presto para ignorar dados que são irrelevantes a consulta, melhorando assim a performance.
+**Dynamic Partition Pruning** (Pode dinâmica de partições) é uma técnica utilizada por vários motores de consulta como [[Apache Spark]] e Presto para ignorar dados que são irrelevantes a consulta, melhorando assim a performance.
 
 O Dynamic Partition Pruning é uma combinação de duas outras otimizações:
 
@@ -41,7 +41,7 @@ WHERE f.partition_col IN (
 )
 ```
 
-Assim, nesse exemplo temos as duas otimizações aplicas:
+Nesse exemplo temos as duas otimizações aplicas:
 
 - Predicate Push Down com o filtro da tabela dimensão
 - Transformação da tabela em variável de broadcast

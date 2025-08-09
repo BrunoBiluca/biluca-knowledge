@@ -2,6 +2,8 @@
 tags:
   - análise_de_dados
 ---
+# Análise de Dados não estruturados
+
 Lidar com dados não estruturados para análise de dados apresenta uma série de desafios significativos devido à sua natureza não uniforme e muitas vezes caótica. Alguns dos principais desafios incluem:
 
 1. **Extração de informações relevantes:** Dados não estruturados podem conter uma grande quantidade de informações irrelevantes ou redundantes. Identificar e extrair as informações relevantes para a análise é um desafio, especialmente quando os dados estão em formatos como texto livre, áudio ou vídeo.

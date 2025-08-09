@@ -25,7 +25,7 @@ O nome do arquivo de uma nota deve ser exatamente o conceito definido.
 
 Por exemplo
 
-- Bom exemplo: `Servidor local junto a aplicação em Flutter`
+- Bom exemplo: `Servidor embarcado à uma aplicação Flutter`
 - Mal exemplo: `Flutter e Python`
 - O primeiro nomes define exatamente o conceito que estamos trabalhando na nota, enquanto o segundo não explicita e é necessário abrir a nota para ver qual assunto estamos tratando em relação a Flutter e a Python.
 
