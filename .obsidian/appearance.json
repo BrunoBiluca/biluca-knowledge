@@ -6,8 +6,8 @@
     "default",
     "center-images"
   ],
-  "cssTheme": "Dracula Official",
-  "theme": "obsidian",
+  "cssTheme": "",
+  "theme": "system",
   "nativeMenus": false,
   "showRibbon": false,
   "baseFontSizeAction": false
