@@ -34,3 +34,34 @@ Signals também facilitam a sincronização de estado entre servidor e cliente, 
 	- Remover essa dependência permite utilizar `async/await`
 - Estados Assíncronos Complexos no SSR, a lógica utilizando RxJS pode ser um pouco mais complexa e gerar duplicação
 - Computações Derivadas no Lado do Servidor
+
+## Estado global
+
+### Serviços com RxJS
+
+Esse é uma implementação bem básica para a criação de estados globais na aplicação (Padrão Observable).
+
+```ts
+import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
+
+@Injectable({ providedIn: 'root' })
+export class GlobalStateService {
+  private state = new BehaviorSubject<any>({});
+  currentState = this.state.asObservable();
+
+  updateState(newState: any) {
+    this.state.next({ ...this.state.value, ...newState });
+  }
+}
+
+// Para atualizar
+this.globalStateService.updateState({ user: userData });
+
+// Para acessar
+this.globalStateService.currentState.subscribe(state => {
+  this.user = state.user;
+});
+```
+
+O serviços `GlobalStateService` mantem a referência do estado e em qualquer ponto da aplicação que injete esse serviço pode aguardar por alterações nesse estado ou alterar o estado.
