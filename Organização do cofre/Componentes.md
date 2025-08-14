@@ -5,7 +5,7 @@ Cada componente tem o objetivo de dar forma a alguma aspecto do conhecimento sob
 
 #### Definições
 
-- Calllout diferenciado, criado em duas colunas pelo plugin, [https://github.com/ckRobinson/multi-column-markdown](https://github.com/ckRobinson/multi-column-markdown)
+- Callout diferenciado de informação
 - Breve descrição sobre o que está sendo definido referenciando a outros assuntos relacionados internamente.
 - Conteúdo adicional
     - Documentação
@@ -52,7 +52,7 @@ Dentro da nota relacionada a Delta Lake será possível encontrar referências e
 
 #### Diagramas, fluxogramas e outros tipos de representação gráfica
 
-- Utilizar Excalidraw
+- Utilizar [[Excalidraw]]
     - Excalidraw renderiza o conteúdo do quadro na nota
     - É possível criar uma biblioteca de componentes
     - É possível criar um quadro transparente de fundo a fim de garantir a melhor visualização quando o diagrama for integrado em uma nota
@@ -77,9 +77,9 @@ Esses tipos de arquivos devem ser tratados como anexos e sempre vinculados a uma
 
 Grandes blocos de código devem ser evitados no texto, caso faça sentido ter o arquivo completo como referência, este deve ser adicionado como anexo e apenas os trechos mais relevantes destacados nas notas.
 
-Exemplo na nota **Exemplo - Envio de emails** 
+Exemplo na nota: [[Exemplo - Envio de emails]]
 Na versão anterior temos todos os códigos no corpo do texto, sendo que apenas algumas linhas deveriam ser destacadas durante a explicação. Como é o caso da linha de configuração do host do banco de dados que é configurada para usar “db” e essa configuração faz sentido por causa do docker compose que define o container com o nome “db”. Da forma que está lá fica difícil de entender essa relação, já que ela em si não foi apresentada no texto ou está ofuscada pela quantidade de código na tela.
 
 Outros exemplos:
 - podemos ter uma nota de exemplo que apresente o conceito de configuração do editor da Unity e temos a configuração total para consulta, esse arquivo deve ser referenciado no texto
-- um arquivo docker com a configuração de um cluster spark deve ser referenciado no texto de definição ou no exemplo.
+- [[Docker para Apache Spark]] um arquivo docker com a configuração de um cluster spark deve ser referenciado no texto de definição ou no exemplo.

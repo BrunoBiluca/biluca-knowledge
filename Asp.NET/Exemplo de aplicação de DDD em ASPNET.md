@@ -2,7 +2,7 @@
 
 # Exemplo de aplicação de DDD em ASPNET
 
-Um backend desenvolvido utilizando separação por domínio aumenta a flexibilidade em relação a implementação.
+Um backend desenvolvido utilizando separação por domínio ([[Getting Started with DDD]]) aumenta a flexibilidade em relação a implementação.
 
 Basicamente um projeto de backend pode ser dividido em 4 responsabilidades:
 
@@ -56,4 +56,4 @@ External --> Foundation
 
 Aqui tem um exemplo de projeto em `dotnet core` que segue esse formato.
 
-![](dotnet_backend_sample.png)
+![Backend em ASP.NET utilizado princípios da arquitetura DDD|300](dotnet_backend_sample.png)

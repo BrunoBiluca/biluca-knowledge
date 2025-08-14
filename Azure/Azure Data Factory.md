@@ -1,25 +1,12 @@
 # Azure Data Factory
 
---- start-multi-column: ExampleRegion1  
-```column-settings  
-number of columns: 2
-Column Size: [59%, 40%]
-Border: disabled
-Shadow: off
-```
+> [!info] Principais referências
+> - [Página do produto](https://azure.microsoft.com/pt-br/products/data-factory)
+>- [Documentação](https://learn.microsoft.com/pt-br/azure/data-factory/introduction) 
 
 Azure Data Factory (ADF) é um serviço de integração de dados baseado na nuvem [[Azure]].
 
 Ele foi projetado para orquestrar e automatizar a movimentação e transformação de dados.
-
---- end-column ---
-
-> [!info] Principais referências
-> - [Página do produto](https://azure.microsoft.com/pt-br/products/data-factory)
->- [Documentação](https://learn.microsoft.com/pt-br/azure/data-factory/introduction)
->- 
-
---- end-multi-column
 
 Seus principais cenários de utilização são:
 

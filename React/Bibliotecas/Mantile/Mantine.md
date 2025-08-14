@@ -1,3 +1,6 @@
+---
+categoria: biblioteca
+---
 # Mantine
 
 [Página do Mantine](https://mantine.dev/)

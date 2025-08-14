@@ -11,7 +11,7 @@
 		{"id":"6a22e2333597c16a","type":"text","text":"### Design de comandos\n\n- [[Design de comandos (Engenharia de prompts)]]","x":280,"y":1100,"width":329,"height":100},
 		{"id":"6364593b80e46560","type":"text","text":"### Modelos\n\n- ","x":280,"y":140,"width":329,"height":86},
 		{"id":"b5545fbb20efed68","type":"text","text":"### Árvore de decisão\n\n- [[Árvore de decisão]]","x":720,"y":140,"width":329,"height":86},
-		{"id":"edd223b1133bd206","type":"text","text":"### Plataformas em cloud\n\n-  [[Comparação entre plataformas]]","x":-164,"y":1320,"width":329,"height":86},
+		{"id":"edd223b1133bd206","type":"text","text":"### Plataformas em cloud\n\n-  [[Comparação entre plataformas de AI]]","x":-164,"y":1320,"width":329,"height":86},
 		{"id":"4d825ea58f96ea39","type":"text","text":"### VertexAI\n\n- [[Vertex AI]]","x":280,"y":1320,"width":329,"height":86},
 		{"id":"071257b3305961e6","type":"text","text":"### Microsoft OpenAI\n\n- [[Microsoft OpenAI]]\n- [[Azure AI Services]]","x":280,"y":1440,"width":329,"height":86},
 		{"id":"f392a6437ba3dba1","type":"text","text":"### Amazon\n\n- [[Amazon Bedrock]]\n- [[Amazon SageMaker]]","x":280,"y":1560,"width":329,"height":86}

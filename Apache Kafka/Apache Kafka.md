@@ -5,15 +5,18 @@ tags:
 ---
 # Apache Kafka
 
+> [!info] Links
+> - [Documentação](https://kafka.apache.org/documentation/)
+
 O Apache Kafka é uma plataforma de [[Event streaming]] distribuídos de código aberto usada por milhares de empresas para pipelines de dados de alto desempenho, análise de streaming, integração de dados e aplicativos de missão crítica.
 
-O Kafka combina três recursos principais para que você possa implementar [seus casos de uso](https://kafka.apache.org/powered-by) para streaming de eventos de ponta a ponta com uma única solução testada em batalha:
+O Kafka combina três recursos principais ([casos de uso](https://kafka.apache.org/powered-by)) para streaming de eventos de ponta a ponta com uma única solução:
 
 1. Para **publicar** (gravar) e **subscrever** (ler) fluxos de eventos, incluindo importação/exportação contínua dos seus dados de outros sistemas.
 2. Para **armazenar** fluxos de eventos de forma durável e confiável pelo tempo que desejar.
 3. Processar fluxos de eventos à medida que ocorrem ou retrospectivamente.
 
-E toda essa funcionalidade é fornecida de forma distribuída, altamente escalável, elástica, tolerante a falhas e segura. O Kafka pode ser implantado em diretamente no hardware, máquinas virtuais e contêineres, e no local, bem como na nuvem. Você pode escolher entre autogerenciar seus ambientes Kafka e usar serviços totalmente gerenciados oferecidos por uma variedade de fornecedores.
+E toda essa funcionalidade é fornecida de forma distribuída, altamente escalável, elástica, tolerante a falhas e segura. O Kafka pode ser implantado em diretamente no hardware, máquinas virtuais e contêineres, e no local, bem como na nuvem. Você pode escolher entre auto-gerenciar seus ambientes Kafka e usar serviços totalmente gerenciados oferecidos por uma variedade de fornecedores.
 
 ### Como funciona?
 
@@ -97,6 +100,3 @@ Por exemplo, sistemas de processamentos de pagamentos em bancos. Esses tipos de 
 - Importação/Exportação dos dados como streams de eventos com Kafka Connect
 - Processamento dos dados com Kafka Streams
 - Encerrar o ambiente Kafka
-# Referências
-
-- https://kafka.apache.org/documentation/
