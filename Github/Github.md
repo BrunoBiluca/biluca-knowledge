@@ -24,4 +24,5 @@ Website que disponibiliza armazenamento grátis para versionamento de projetos u
 ### Soluções de problemas
 
 - [[Utilização de Token de Acesso]]
+- [[Fim dos Merge commits]]
 - [[Publicações de versão]]
