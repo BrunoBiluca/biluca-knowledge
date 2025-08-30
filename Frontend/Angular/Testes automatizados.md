@@ -153,7 +153,8 @@ Importante entender os conceitos de [[Fila de tarefas do Javascript]] para saber
 Principais funções:
 
 - `tick(time)` move o relógio fake em tanto tempo
-- `flush()` libera a próxima tarefa na fila de passagem do tempo
+- `flush()` libera a próxima tarefa na fila de passagem do tempo para microtasks
+	- Flush funciona para tarefas não periódicas, assim tarefas periódicas como `setInterval` não funcionam
 	- Usando o flush não precisamos de fixar os valores de passagem de tempo no nosso código, deixando mais flexível.
 	- `flushMicrotask()` variação para liberar micro tasks (ex: Promises)
 

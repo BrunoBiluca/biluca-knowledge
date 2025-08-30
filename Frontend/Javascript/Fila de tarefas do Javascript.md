@@ -4,5 +4,9 @@ Fila de tarefas é uma estrutura que o [[Javascript]] utiliza para mover execuç
 
 - Microtasks
 	- Promises
+
 - Macrotasks
-	- setTimeout
+	- Periódicas
+		- [[setInterval]]
+	- Não periódicas
+		- [[setTimeout]]
