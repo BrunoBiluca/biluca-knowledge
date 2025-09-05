@@ -33,6 +33,9 @@ O [[Guia de projetos em Angular]]  oferece várias dicas relacionadas ao código
 - [Angular Material](https://material.angular.dev/)
 	- Componentes de Material Design aplicada ao Angular
 
+- [[Angular CDK]]
+	- Componentes agnósticos de exibição como Drag and Drop ou Clipboard
+
 ## Plugins/Ferramentas recomendados
 
 - Angular DevTools para o navegador
