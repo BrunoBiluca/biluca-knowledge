@@ -2,6 +2,8 @@
 tags:
   - banco_de_dados
 ---
+# Logs
+
 Um log talvez seja a abstração de armazenamento mais simples possível. É uma sequência apenas de apêndice de registros totalmente ordenada pelo tempo. Fica assim:
 
 ![[log.png|Representação de um log|center]]

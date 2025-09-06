@@ -1,4 +1,4 @@
-#escrita 
+# Introduction to the Tech Writers Master Class
 
 Nessa seção a autora passa por alguns exemplos de escrita técnica e dos impactos que uma péssima escrita pode causar. Também trás algumas visões de outros escritores técnicos a fim de motivar o estudo do assunto no decorrer do curso.
 

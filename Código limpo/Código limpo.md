@@ -1,4 +1,4 @@
-#programação/padrões   
+# Código limpo
 
 - [Semântica de código](#semântica-de-código)
   - [Ferramentas de refatoração](#ferramentas-de-refatoração)
@@ -26,7 +26,7 @@
 
 > Minha definição: Quando vc olha para o código e não te vem um que porra é essa na cabeça, a pessoa consegue entender o que foi implementado e quais as decisões que foram tomadas.
 
-![](Código%20limpo/Apresentação%20-%20Código%20limpo/wtf.png)
+![](Código%20limpo/Apresentação%20-%20Código%20limpo%20(descontinuado)/wtf.png)
 
 Existem arquiteturas que favorecem a semântica de um projeto. Eric Evans autor do livro Domain Driven Design descreve em seu livro ferramentas e procedimentos que auxiliam na criação de uma aplicação ou conjunto de serviços que possuem um linguagem de comum entendimento entre todas as entidades responsáveis pelo projeto.
 
@@ -74,7 +74,7 @@ Aumento da complexidade do código:
 - estruturas aninhadas
 - múltiplos condicionais
 
-![](Código%20limpo/Apresentação%20-%20Código%20limpo/ciclomatic_complexity_graph.png)
+![](Código%20limpo/Apresentação%20-%20Código%20limpo%20(descontinuado)/ciclomatic_complexity_graph.png)
 
 ## Side effects (evitar utilizando múltiplos retornos)
 

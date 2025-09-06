@@ -17,7 +17,7 @@ Data Engineer Zoomcamp é uma curso gratuito que busca ensinar os fundamentos da
 
 --- end-multi-column
 
-![[Pasted image 20250325151000.jpg|Escopo completo do curso|%cheio]]
+![[Escopo do projeto do Zoomcamp.jpg|Escopo completo do curso|%cheio]]
 
 
 > [!important] **Meu principal objetivo** com o curso é desenvolver minhas habilidades na área de engenharia de dados enquanto experimento algumas tecnologias que não são do meu arcabouço de atuação.

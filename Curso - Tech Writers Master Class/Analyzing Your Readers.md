@@ -1,5 +1,4 @@
-#escrita 
-
+# Analyzing Your Readers
 
 Classificar os seus leitores é um fator crucial no início do desenvolvimento de qualquer texto. Os leitores podem guiar a forma da escrita, termos utilizados, e vários outros fatores.
 

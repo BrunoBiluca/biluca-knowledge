@@ -1,4 +1,4 @@
-#escrita 
+# Getting Ready to Write
 
 Esse capítulo foca na pré-produção da documentação de um projeto.
 # Processo de escrita

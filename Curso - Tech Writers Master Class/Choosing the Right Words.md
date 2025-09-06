@@ -1,4 +1,4 @@
-#escrita 
+# Choosing the Right Words
 
 Nesse capítulo a autora foca em que tipo de palavras devem ser utilizadas a fim de aumentar o entendimento e diminuir a ambiguidade.
 # Resumo

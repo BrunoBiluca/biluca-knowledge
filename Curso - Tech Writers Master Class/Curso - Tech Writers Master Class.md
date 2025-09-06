@@ -3,6 +3,8 @@ tags:
   - escrita
   - curso
 ---
+# Curso - Tech Writers Master Class
+
 > [!info] Informações gerais
 > Autora
 > [Janet Underwood](https://www.udemy.com/user/janet-underwood-4/)

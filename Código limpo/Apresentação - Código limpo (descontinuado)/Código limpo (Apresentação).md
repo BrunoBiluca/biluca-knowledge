@@ -16,7 +16,7 @@ style: |
 
 > Definição: Semântica é o estudo do significado. 
 
-![[Código limpo/Apresentação - Código limpo/wtf.png]]
+![[Código limpo/Apresentação - Código limpo (descontinuado)/wtf.png]]
 
 ---
 
@@ -38,7 +38,7 @@ Seguindo o princípio de responsabilidade única cada função deve resolver um 
 
 # Evitar condicionais com múltiplas instruções
 
-![](Código%20limpo/Apresentação%20-%20Código%20limpo/ciclomatic_complexity_graph.png)
+![](Código%20limpo/Apresentação%20-%20Código%20limpo%20(descontinuado)/ciclomatic_complexity_graph.png)
 
 ---
 

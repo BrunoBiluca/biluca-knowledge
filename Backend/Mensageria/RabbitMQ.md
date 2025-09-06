@@ -2,6 +2,8 @@
 tags:
   - streaming_de_dados
 ---
+# RabbitMQ
+
 O RabbitMQ é um agente de mensagens distribuído, compatível com Advanced Message Queuing Protocol (AMQP), que coleta dados de streaming de várias fontes para roteá-los para diferentes destinos para processamento.
 
 # **Abordagem arquitetônica do RabbitMQ**
