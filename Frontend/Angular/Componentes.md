@@ -134,3 +134,28 @@ export class BarComponent implements OnInit {
 
 1. `ngOnInit` de [[Diretivas]] é executado antes do
 2. `ngOnInit` do Componente.
+
+### OnChanges
+
+O `ngOnChanges` é um gancho de ciclo de vida no [[Angular]] projetado para detectar mudanças as propriedades do tipo "Entrada" (Input) do componente. Ele apenas ativa quando a referência é da propriedade é alterada.
+
+```ts
+ngOnChanges(changes: SimpleChanges): void {
+  changes['property'] // propriedade assinada com @Input
+}
+```
+
+Para o caso de listas é importante ressaltar que qualquer mudança na lista não é gatilho para chamar o método `ngOnChanges` apenas uma mudança na referência.
+
+```ts
+class Component implements OnChanges {
+	@Input array = []
+	
+	ngOnChanges(changes: SimpleChanges): void {
+	  array = changes['array']
+	}
+}
+
+component.instance.array.push({element}) // não ativa o ngOnChanges
+component.instance.array = [{element}]   // ativa o ngOnChanges
+```
