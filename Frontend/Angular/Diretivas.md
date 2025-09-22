@@ -46,7 +46,7 @@ Adiciona e remove classes CSS no HTML:
 
 `ng_container` é um elemento especial que segura diretivas estruturais sem adicionar nenhum elemento no DOM.
 
-Pode ser utilizado para permitir usar diretivas estruturais sem quebrar a estilização como uso de conteiner Flex, margens...
+Pode ser utilizado para permitir usar diretivas estruturais sem quebrar a estilização como uso de container Flex, margens...
 
 Pode ser utilizado em combinação com outras diretivas estruturais como `ngIf` ou `ggCompomentOutlet`.
 
@@ -65,35 +65,40 @@ export class UserProfile {
 }
 ```
 
-## Diretivas de Atributo
+### ng-template
 
-#### Exemplo: Destaque de elementos
-
-Estende o comportamento do elemento aplicando um tipo de destaque na sua inicialização.
-
-```ts
-import { Directive, ElementRef, Input, OnInit } from '@angular/core';
-
-@Directive({
-  selector: '[appHighlight]' // Seletor da diretiva (usado como atributo HTML)
-})
-export class HighlightDirective implements OnInit {
-  @Input() appHighlight: boolean = false; // Recebe um valor do template
-
-  constructor(private el: ElementRef) {}
-
-  ngOnInit() {
-    if (this.appHighlight) {
-      this.el.nativeElement.style.backgroundColor = 'yellow';
-      this.el.nativeElement.style.fontWeight = 'bold';
-    }
-  }
-}
-```
-
-Uso da diretiva
+`ng-template` é utilizado para definir um componente sem a necessidade de criar um novo módulo. Cada módulo adicionar complexidade a aplicação, assim, deixar tudo no mesmo componente pode ser uma forma de reduzir essa complexidade além de isolar melhor as visualizações relacionadas.
 
 ```html
-<div [appHighlight]="true">Texto destacado em amarelo!</div>
-<div [appHighlight]="false">Texto sem destaque.</div>
+@for (n of otherNotes; track n.id) {
+    <ng-container
+      *ngTemplateOutlet="note; context: { $implicit: n, $index: n.id }"
+    ></ng-container>
+}
+
+<ng-template #note let-note let-index="index">
+...
+<ng-template>
 ```
+
+Também pode ser utilizado para chavear vários tipos de templates.
+
+```html
+<ng-container
+  *ngTemplateOutlet="isLoading() ? loading : note"
+></ng-container>
+
+<ng-template #loading>
+...
+</ng-template>
+
+<ng-template #note>
+...
+<ng-template>
+```
+
+## Diretivas de Atributo
+
+- [[Exemplo - Destaque de elementos]]
+- [[Exemplo - Login e registro de usuários]]
+	- Nesse exemplo é implementado uma diretiva para verificar os papéis do usuário autenticado

@@ -20,13 +20,13 @@ Ele já inclui soluções integradas para:
 	- **Deferrable Views** – Carregamento lazy de seções da view (`@defer`).
 - [[Pipes]] – Transformação de dados diretamente nos templates (ex.: `date`, `currency`).
 - [[Roteamento]] (`@angular/router`)
-- **Formulários reativos e template-driven**
+- [[Formulários]]
 - [[Frontend/Angular/Testes automatizados|Testes automatizados]]
 - [[Angular CLI]]
 - [[Frontend/Angular/Estilização|Estilização]]
 - [[App config]]
 
-O [[Guia de projetos em Angular]]  oferece várias dicas relacionadas ao código, implementação, estratégias e outros elementos do projeto para um melhor aproveitamento do framework.
+O [[🏅 Guia de projetos em Angular]]  oferece várias dicas relacionadas ao código, implementação, estratégias e outros elementos do projeto para um melhor aproveitamento do framework.
 
 ## Bibliotecas relacionadas
 
@@ -44,3 +44,8 @@ O [[Guia de projetos em Angular]]  oferece várias dicas relacionadas ao código
 
 - [Angular Language Service](https://marketplace.visualstudio.com/items?itemName=Angular.ng-template) (oficial)
 	- Fornece várias funcionalidades para desenvolvimento como: auto complete de código entre template e classe TypeScript, Go to Definition, Verificação de erros e outras.
+
+## Exemplos de implementação
+
+- [[Exemplo - Login e registro de usuários]]
+- [[Exemplo - Destaque de elementos]]

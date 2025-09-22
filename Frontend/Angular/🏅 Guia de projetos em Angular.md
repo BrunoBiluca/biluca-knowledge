@@ -1,4 +1,4 @@
-# Guia de projetos em Angular
+# 🏅 Guia de projetos em Angular
 
 Esse guia tem como objetivo tratar sobre melhores práticas no desenvolvimento de aplicações com [[Angular]].
 
