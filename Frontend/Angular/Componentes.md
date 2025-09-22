@@ -116,7 +116,35 @@ Fases do ciclo de vida:
 - renderização
 - destruição
 
+### Construtor
+
+- Chamado quando a classe é instanciada
+- Executado antes do Angular assumir o controle
+
+```ts
+export class MyComponent {
+  private http: HttpClient;
+  
+  constructor(http: HttpClient) {
+    // ✅ Correto - Injeção de dependências
+    this.http = http;
+	
+	// ❌ Chamadas HTTP
+    // this.http.get('/api/data').subscribe();
+  
+    // ❌ Evitar - Lógica complexa
+    // this.loadData(); // Não fazer aqui!
+    
+    // ❌ Evitar - Acesso a DOM
+    // document.getElementById(); // Não funciona!
+  }
+}
+```
+
 ### Inicialização
+
+- Chamado após o Angular inicializar propriedades vinculadas a dados
+- Executado quando o componente está pronto
 
 ```ts
 @Component({
@@ -124,8 +152,14 @@ Fases do ciclo de vida:
 })
 export class BarComponent implements OnInit {
 	ngOnInit(): void {
-		// inicialização do componente
-		// antes da renderização
+	    // ✅ Correto - Lógica de inicialização
+	    this.loadData();
+	    
+	    // ✅ Correto - Acesso a Input properties
+	    console.log(this.inputValue);
+	    
+	    // ✅ Correto - Chamadas HTTP
+	    this.fetchData();
 	}
 }
 ```
@@ -159,3 +193,13 @@ class Component implements OnChanges {
 component.instance.array.push({element}) // não ativa o ngOnChanges
 component.instance.array = [{element}]   // ativa o ngOnChanges
 ```
+
+## Comparação entre os momentos do ciclo de vida
+
+| Aspecto          | Constructor                            | OnInit                              | OnChanges                                                   |
+| ---------------- | -------------------------------------- | ----------------------------------- | ----------------------------------------------------------- |
+| **Ordem**        | 1º a executar                          | 2º a executar                       | Executado sempre que alguma referência de @Input é alterada |
+| **Propriedades** | `@Input()` ainda não estão disponíveis | `@Input()` já estão disponíveis     | Atualiza propriedades                                       |
+| **DOM**          | Elementos não renderizados             | Elementos prontos (View inicial)    | Elementos prontos                                           |
+| **Injeção**      | Ideal para DI                          | Já pode usar dependências injetadas | Já pode usar dependências injetadas                         |
+| **Lógica**       | Apenas configuração inicial            | Lógica de negócio, chamadas API     | Atualização das propriedades                                |
