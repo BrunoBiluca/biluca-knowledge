@@ -19,7 +19,7 @@ Testes automatizados apresentam várias vantagens e são uma revolução quando 
   - Exatamente por isso temos feedback constante de cada novo código submetido ao sistema.
 
 - Aumento de produtividade
-  - Times que empregam técnicas como TDD, Continuous integration and delivery gastam 44 porcento mais tempo em trabalho útil (novas funcionalidades) do que corrigindo bugs.
+  - Times que empregam técnicas como TDD, Continuous integration and delivery gastam 44 porcento mais tempo em trabalho útil (novas funcionalidades) do que corrigindo bugs. (fonte: [Accelerate: The Science of Lean Software and DevOps: Building and Scaling High Performing Technology Organizations](https://www.amazon.com/Accelerate-Software-Performing-Technology-Organizations/dp/1942788339))
 
 ## Tipos de Teste automatizados
 
@@ -164,6 +164,5 @@ Algumas ferramentas de criação de relatório apresentam informações diferent
 
 - [Documentação do Jest](https://jestjs.io/)
 - [Clean Code Class 4](https://www.youtube.com/watch?v=58jGpV2Cg50&list=PLmmYSbUCWJ4x1GO839azG_BBw8rkh-zOj&index=5)
-- [Accelerate: The Science of Lean Software and DevOps: Building and Scaling High Performing Technology Organizations](https://www.amazon.com/Accelerate-Software-Performing-Technology-Organizations/dp/1942788339)
 
 #### [You are naming your tests wrong! by Vladimir Khorikov](https://enterprisecraftsmanship.com/posts/you-naming-tests-wrong/)

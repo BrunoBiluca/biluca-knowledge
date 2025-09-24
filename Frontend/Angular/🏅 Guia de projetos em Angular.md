@@ -2,10 +2,17 @@
 
 Esse guia tem como objetivo tratar sobre melhores práticas no desenvolvimento de aplicações com [[Angular]].
 
-Ele é inspirado em:
+O desenvolvimento de aplicações [[Frontend]] se apresenta com vários desafios, entre eles:
 
-- [[Princípios de código]]
-- [[Código limpo]]
+- Aumento da complexidade em relação as regras de negócio implementadas nas aplicações
+- Lidar com vários desenvolvedores no mesmo projeto
+- Manutenção da entrega de funcionalidades com qualidade
+- Performance da aplicação
+
+> [!quote] Referências 
+> - [[Princípios de código]]
+> - [[Código limpo]]
+> - [[Fundamentos de Ciências da Computação/Testes automatizados/Testes automatizados|Testes automatizados]]
 
 ## Estrutura de pastas e arquivos
 
@@ -20,7 +27,7 @@ Ele é inspirado em:
 
 ## Responsabilidade única
 
-Cada componente deve fazer apenas uma única coisa. Com isso em mente:
+Cada componente deve fazer apenas uma única coisa, assim sempre que necessário podemos extrair código de forma a isolar novamente esses comportamentos.
 
 ### Extrair componentes apenas de visualização
  
