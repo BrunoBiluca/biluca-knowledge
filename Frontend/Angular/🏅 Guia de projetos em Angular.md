@@ -21,6 +21,28 @@ O desenvolvimento de aplicações [[Frontend]] se apresenta com vários desafios
 - Armazenar tudo em uma entidade
 - [Guia oficial do Angular](https://angular.dev/style-guide)
 
+### Caminhos absolutos
+
+Caminhos absolutos são muito mais simples de serem gerenciados em comparação com os caminhos relativos. Quando isolamos os módulos do projeto podemos definir caminhos absolutos para cada um desses módulos.
+
+A configuração do caminho absoluto é feita no arquivo `tsconfig.json` encontrado na raiz do projeto.
+
+```json
+{
+  ...
+  "compilerOptions": {
+    "baseUrl": "./src",
+    "paths": {
+      "@common/*": ["common/*"],
+      "@app/*": ["app/*"],
+      "@shared/*": ["app/shared/*"],
+      "@environments/*": ["environments/*"]
+    },
+  }
+  ...
+```
+
+Também podemos utilizar essa configuração para módulos recorrentes em projetos com Angular, como é o caso do módulo `common`, `shared`, `app` entre outros.
 ## Auxílios
 
 - **Utilizar um Linter**
