@@ -1,12 +1,6 @@
 # Desenvolvimento de software sustentável
 
---- start-multi-column: ExampleRegion1  
-```column-settings  
-number of columns: 2
-Column Size: [59%, 40%]
-Border: disabled
-Shadow: off
-```
+Esse curso é uma nova elaboração dos DOJOS de [[dojo_code_basics]] e [[dojo_project_greatness]].
 
 > [!info] Objetivo
 > Apresentar práticas no desenvolvimento de projetos de software para alcançar o sucesso de entregar o resultado com a qualidade esperada ✨ e de forma sustentável ♻️.
@@ -27,13 +21,8 @@ Principais conceitos abordados:
 
 
 
---- end-column ---
-
 > [!info] Principais referências
 > - 
 >- 
 
-Esse curso é uma nova elaboração dos DOJOS de [[dojo_code_basics]] e [[dojo_project_greatness]].
-
---- end-multi-column
 
