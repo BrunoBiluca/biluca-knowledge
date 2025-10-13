@@ -129,113 +129,29 @@ imagesPreview = computed(() =>
 );
 ```
 
-## Componentes Standalone
+#### Comparação entre Signals e propriedades tradicionais
 
-Componentes Standalone são componentes em Angular que podem ser utilizados independentemente sem a necessidade de declarar um `NgModule`.
+Signals apresentam uma nova forma de avisar componentes dependentes isso permite uma melhor performance:
 
-> [!tip] Time do Angular recomenda utilizar componentes standalone em vez de ngModule
+- Componentes são alterados apenas pelos valores específicos
+- Signals são otimizados para atualizar apenas o que é necessário
 
-Por padrão os componentes são standalone, o que significa que é possível importar em outros componentes.
-
-## Elementos host
-
-[Elementos host](https://angular.dev/guide/components/host-elements)
-
-## Ciclo de vida de componentes
-
-> [!quote] [Documentação](https://angular.dev/guide/components/lifecycle)
-
-Fases do ciclo de vida:
-
-- criação
-- detecção de mudanças
-- renderização
-- destruição
-
-### Construtor
-
-- Chamado quando a classe é instanciada
-- Executado antes do Angular assumir o controle
+Também existe uma melhoria na simplicidade de código, já que agora existem funções próprias para alteração de estado.
 
 ```ts
-export class MyComponent {
-  private http: HttpClient;
-  
-  constructor(http: HttpClient) {
-    // ✅ Correto - Injeção de dependências
-    this.http = http;
-	
-	// ❌ Chamadas HTTP
-    // this.http.get('/api/data').subscribe();
-  
-    // ❌ Evitar - Lógica complexa
-    // this.loadData(); // Não fazer aqui!
-    
-    // ❌ Evitar - Acesso a DOM
-    // document.getElementById(); // Não funciona!
-  }
-}
+count = signal(0);
+doubleCount = computed(() => this.count() * 2);
+
+// Atualiza o valor
+this.count.set(5); // doubleCount() automaticamente vira 10
 ```
 
-### Inicialização
+Signals também facilitam a sincronização de estado entre servidor e cliente, resolvendo alguns problemas comuns ao modelo mais tradicional de propriedades como:
 
-- Chamado após o Angular inicializar propriedades vinculadas a dados
-- Executado quando o componente está pronto
+- Hidratação ineficiente
+- Vazamento de memória
+- Dependência do Zone.js (Change Detection Ineficiente)
+	- Remover essa dependência permite utilizar `async/await`
+- Estados Assíncronos Complexos no SSR, a lógica utilizando RxJS pode ser um pouco mais complexa e gerar duplicação
+- Computações Derivadas no Lado do Servidor
 
-```ts
-@Component({
-...
-})
-export class BarComponent implements OnInit {
-	ngOnInit(): void {
-	    // ✅ Correto - Lógica de inicialização
-	    this.loadData();
-	    
-	    // ✅ Correto - Acesso a Input properties
-	    console.log(this.inputValue);
-	    
-	    // ✅ Correto - Chamadas HTTP
-	    this.fetchData();
-	}
-}
-```
-
-#### Ordem de Execução do `ngOnInit`:
-
-1. `ngOnInit` de [[Diretivas]] é executado antes do
-2. `ngOnInit` do Componente.
-
-### OnChanges
-
-O `ngOnChanges` é um gancho de ciclo de vida no [[Angular]] projetado para detectar mudanças as propriedades do tipo "Entrada" (Input) do componente. Ele apenas ativa quando a referência é da propriedade é alterada.
-
-```ts
-ngOnChanges(changes: SimpleChanges): void {
-  changes['property'] // propriedade assinada com @Input
-}
-```
-
-Para o caso de listas é importante ressaltar que qualquer mudança na lista não é gatilho para chamar o método `ngOnChanges` apenas uma mudança na referência.
-
-```ts
-class Component implements OnChanges {
-	@Input array = []
-	
-	ngOnChanges(changes: SimpleChanges): void {
-	  array = changes['array']
-	}
-}
-
-component.instance.array.push({element}) // não ativa o ngOnChanges
-component.instance.array = [{element}]   // ativa o ngOnChanges
-```
-
-## Comparação entre os momentos do ciclo de vida
-
-| Aspecto          | Constructor                            | OnInit                              | OnChanges                                                   |
-| ---------------- | -------------------------------------- | ----------------------------------- | ----------------------------------------------------------- |
-| **Ordem**        | 1º a executar                          | 2º a executar                       | Executado sempre que alguma referência de @Input é alterada |
-| **Propriedades** | `@Input()` ainda não estão disponíveis | `@Input()` já estão disponíveis     | Atualiza propriedades                                       |
-| **DOM**          | Elementos não renderizados             | Elementos prontos (View inicial)    | Elementos prontos                                           |
-| **Injeção**      | Ideal para DI                          | Já pode usar dependências injetadas | Já pode usar dependências injetadas                         |
-| **Lógica**       | Apenas configuração inicial            | Lógica de negócio, chamadas API     | Atualização das propriedades                                |

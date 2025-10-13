@@ -42,3 +42,60 @@ it("should show note's details when note is clicked", fakeAsync(() => {
 > [!tip] Roteamento é assíncrono
 > Todo o roteamento no Angular é feito de forma assíncrona, então para os testes é necessário invocar uma zona de fakeAsync para fazer os testes. Caso contrário o click do botão é registrado, porém o roteamento não é feito.
 
+## Guardas
+
+Guardas são classes especiais que guardam rotas de acordo com a necessidade. 
+
+Um caso de uso muito comum para guardas é definir se o usuário tem acesso a determinada página de acordo com sua autorização.
+
+```ts
+export const routes: Routes = [
+  // rota acessada por qualquer usuário
+  {
+    path: '',
+    redirectTo: '/login',
+    pathMatch: 'full',
+  },
+  // rota guardada de acordo com a autenticação do usuário
+  {
+    path: '',
+    component: AuthLayout,
+    canActivate: [authGuard], // Ativa a rota se o usuário está logado
+    children: [
+      {
+        path: 'login',
+        component: Login,
+        pathMatch: 'full',
+      },
+      {
+        path: 'signup',
+        component: Signup,
+        pathMatch: 'full',
+      },
+    ],
+  },
+];
+```
+
+Toda guarda tem que retornar uma função do tipo `CanActivateFn`, quando o resultado da função é verdade então a rota é guardada.
+
+```ts
+export const userIsAuthenticated: CanActivateFn = (route, state) : boolean | UrlTree => {
+  const isLoggedIn = inject(UserService).isLoggedIn();
+  const isAuthPage = ['/login', '/signup'].includes(state.url);
+  const router = inject(Router);
+
+  if (isLoggedIn && isAuthPage) {
+    return router.createUrlTree(['/notes']);
+  }
+
+  if (!isLoggedIn && !isAuthPage) {
+    return router.createUrlTree(['/login']);
+  }
+
+  return true;
+};
+
+```
+
+Outro exemplo de implementação de guardas está em [[Exemplo - Login e registro de usuários]].

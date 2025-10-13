@@ -12,9 +12,11 @@ Ele já inclui soluções integradas para:
 - [[Frontend/Angular/Componentes|Componentes]]
 - [[Serviços]]
 	- **Requisições HTTP** (`HttpClient`)
-- [[Gerenciamento de estados]]
+- Gerenciamento de estados
 	- [[RxJS]] é um biblioteca completa de gerenciado de estado e eventos
 	- [[Sinais]] são estruturas nativas do Angular criadas para gerenciamento de estado.
+	- Propriedades tradicionais (Two-way data binding)
+	- [[NgRx]]
 - [[Incremental DOM (Angular Ivy)]]
 - [[Diretivas]] – Estendem HTML com comportamentos dinâmicos (ex.: `*ngIf`, `*ngFor`).
 	- Várias diretivas foram atualizadas a partir da versão 17 para deixarem o código mais fluído
@@ -50,3 +52,4 @@ O [[🏅 Guia de projetos em Angular]]  oferece várias dicas relacionadas ao c�
 
 - [[Exemplo - Login e registro de usuários]]
 - [[Exemplo - Destaque de elementos]]
+- [[Exemplo - Ajustar à cor de fundo]]
