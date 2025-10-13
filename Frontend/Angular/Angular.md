@@ -13,7 +13,8 @@ Ele já inclui soluções integradas para:
 - [[Serviços]]
 	- **Requisições HTTP** (`HttpClient`)
 - [[Gerenciamento de estados]]
-	- [[RxJS]]
+	- [[RxJS]] é um biblioteca completa de gerenciado de estado e eventos
+	- [[Sinais]] são estruturas nativas do Angular criadas para gerenciamento de estado.
 - [[Incremental DOM (Angular Ivy)]]
 - [[Diretivas]] – Estendem HTML com comportamentos dinâmicos (ex.: `*ngIf`, `*ngFor`).
 	- Várias diretivas foram atualizadas a partir da versão 17 para deixarem o código mais fluído
