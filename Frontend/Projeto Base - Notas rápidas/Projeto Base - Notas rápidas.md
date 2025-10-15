@@ -44,10 +44,6 @@ As seguintes funcionalidades foram selecionadas para praticar vários tipos de c
 	- Gerenciamento de estado global
 	- Entrada de configurações por usuário
 
-- [[DRP 04 - Categorização de Notas]]
-	- Agrupamentos
-	- Atualização de múltiplos objetos simultaneamente
-
 # Referências visuais
 
 ![[Referências visuais]]

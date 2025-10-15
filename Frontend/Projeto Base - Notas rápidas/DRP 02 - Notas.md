@@ -45,24 +45,25 @@ Gerenciamento de notas.
 
 # Requisitos
 
-**Índice**
-
-- [[#RF 01 - Nova nota]]
-- [[#RF 02 - Exibição de todas as notas em Lista]]
-- [[#RF 03 - Exibição de todas as notas em Grade]]
-- [[#RF 04 - Seleção de nota]]
-- [[#RF 05 - Edição de nota]]
-- [[#RF 06 - Remoção de nota]]
-- [[#RF 07 - Pesquisa por nota]]
-- [[#RF 08 - Fixar nota]]
-- [[#RF 08.01 - Desafixar nota]]
-- [[#RF 09 - Ordenação de notas]]
-- [[#RF 10 - Ordenação manual de Notas]]
-
-### RF 01 - Nova nota
+### RF 02.01 - Nova nota
 
 __Descrição__
 Como usuário quero criar uma nova nota.
+
+A criação da nota é feita de acordo com [[#Modelagem]] descrita.
+
+**Campos obrigatórios:**
+- título
+
+**Campos opcionais:**
+- conteúdo
+- cor de fundo
+
+**Campos preenchidos automaticamente:**
+- id: cria quando a nota é criada
+- criado em: quando a nota foi criada
+- atualizado em: mesmo valor do criado em
+- user_id: id do usuário autenticado
 
 #### Critérios de aceite
 
@@ -74,12 +75,14 @@ Como usuário quero criar uma nova nota.
 **Cenários alternativos:**
 
 - **Campo vazio**: Se o título estiver vazio, exibir erro ("Título obrigatório").
-- **Limite de caracteres**: Se exceder (ex: 500 caracteres), truncar ou avisar.
+- **Limite de caracteres**: Se exceder 200 caracteres avisar o limite máximo.
 
-### RF 02 - Exibição de todas as notas em Lista
+### RF 02.02 - Exibição de todas as notas em Lista
 
 __Descrição__
 Como usuário quero ter a opção de ver todas as minhas notas exibidas em lista.
+
+Ordenação padrão é pela data de atualização, quanto mais recentemente editada uma nota foi mais no topo ela aparece.
 
 #### Critérios de aceite
 
@@ -88,7 +91,7 @@ Como usuário quero ter a opção de ver todas as minhas notas exibidas em lista
 - **Quando** está selecionada a opção de exibição por lista
 - **Então** todas as notas devem ser exibidas em lista, uma seguida da outra
 
-### RF 03 - Exibição de todas as notas em Grade
+### RF 02.03 - Exibição de todas as notas em Grade
 
 __Descrição__
 Como usuário quero ter a opção de ver todas as minhas notas exibidas em grade
@@ -100,7 +103,7 @@ Como usuário quero ter a opção de ver todas as minhas notas exibidas em grade
 - **Quando** está selecionada a opção de exibição por grade
 - **Então** todas as notas devem ser exibidas em grade, com no máximo 3 colunas
 
-### RF 04 - Seleção de nota
+### RF 02.04 - Detalhes da nota
 
 __Descrição__
 Como usuário quero selecionar uma nota a fim de destacar a nota e conseguir visualizar todas as suas informações.
@@ -117,7 +120,7 @@ Como usuário quero selecionar uma nota a fim de destacar a nota e conseguir vis
 - **Quando** coloco o endereço url de uma nota que foi removida
 - **Então** deve ser exibida uma mensagem de que a nota foi removida e não existe mais
 
-### RF 05 - Edição de nota
+### RF 02.05 - Edição de nota
 
 __Descrição__
 Como usuário quero poder atualizar o título e conteúdo de uma nota já cadastrada
@@ -132,7 +135,7 @@ Como usuário quero poder atualizar o título e conteúdo de uma nota já cadast
 **Cenários alternativos:**
 - **Cancelar edição**: Se clicar em "Cancelar", descartar alterações.
 
-### RF 06 - Remoção de nota
+### RF 02.06 - Remoção de nota
 
 __Descrição__
 Como usuário quero poder remover notas para que elas não sejam mais exibidas
@@ -146,25 +149,35 @@ Como usuário quero poder remover notas para que elas não sejam mais exibidas
 - **Quando** eu seleciono a opção remover
 - **Então** a nota é removida da exibição
 
-### RF 07 - Pesquisa por nota
+### RF 02.07 - Pesquisa por nota
 
 __Descrição__
 Como usuário quero poder buscar por notas a partir de palavras contidas no título ou no conteúdo.
 
 #### Critérios de aceite
 
+ - Barra de pesquisa deve estar disponível em qualquer local da página de Notas
+	 - Um bom lugar é o cabeçalho
+
 **Cenário:** Busca por palavras
 - **Dado** que estou na página de Notas
-- **Quando** escrevo uma palavra
+- **Quando** escrevo uma palavra (mínimo 3 caracteres)
 - **Então** então apenas notas que tem essa palavra no seu título ou conteúdo são exibidas
 - **E** essa palavra é destacada na exibição
+
+**Cenário:** Adição de notas com busca ativa
+- Dado que estou na página de Notas 
+- E já tem um termo de busca
+- Quando adiciono uma nota
+- Se ela tem o termo da busca deve aparecer
+- Senão ela não deve aparecer
 
 **Cenário:** Palavra não existe
 - **Dado** que estou na página de Notas
 - **Quando** escrevo uma palavra que não existe em nenhuma nota (nem título, nem conteúdo)
 - **Então** é exibida uma mensagem de que não foi encontrada nenhuma nota
 
-### RF 08 - Fixar nota
+### RF 02.08 - Fixar nota
 
 __Descrição__
 Como usuário quero ter a opção de fixar uma nota no topo da página de exibição.
@@ -176,7 +189,7 @@ Como usuário quero ter a opção de fixar uma nota no topo da página de exibi�
 - **Quando** seleciono a opção de fixar uma nota
 - **Então** ele é movida para o topo da exibição
 
-### RF 08.01 - Desafixar nota
+### RF 02.08.01 - Desafixar nota
 
 __Descrição__
 Como usuário quero ter a opção de desafixar uma nota fixada no topo da página de exibição.
@@ -188,7 +201,7 @@ Como usuário quero ter a opção de desafixar uma nota fixada no topo da págin
 - **Quando** seleciona uma opção de desafixar a nota
 - **Então** ele é movida para a primeira posição (após as notas fixadas) na exibição de notas
 
-### RF 09 - Ordenação de notas
+### RF 02.09 - Ordenação de notas
 
 __Descrição__
 Como usuário quero ordenar automaticamente as notas pelos seus atributos ordenáveis.
@@ -217,11 +230,16 @@ Como usuário quero ordenar automaticamente as notas pelos seus atributos orden�
 - **Quando** ele seleciona a opção de ordenação por data de criação (novamente)
 - **Então** as notas são ordenadas da mais antiga para a mais recente
 
-### RF 10 - Ordenação manual de Notas
+**Cenário:** Manutenção da ordenação
+- **Dado** que estou na tela de Notas
+- **E** já existe uma ordenação selecionada
+- **Quando** adiciono/edito uma nota
+- **Então** ela deve ser inserida de acordo com a ordenação selecionada
+
+### RF 02.10 - Ordenação manual de Notas
 
 __Descrição__
 Como usuário quero ordenar as notas de forma manual assim posso deixar as notas mais importantes mais destacadas.
-
 #### Critérios de aceite
 
 **Cenário:** Ordenação manual
@@ -239,6 +257,31 @@ Como usuário quero ordenar as notas de forma manual assim posso deixar as notas
 - **Dado** que estou na tela de notas 
 - **E** selecionada a visualização em grade
 - **Então** as notas são ordenadas de cima para baixo, da esquerda para a direita
+
+
+### RF 02.11 - Adição de imagem
+
+__Descrição__
+Como usuário quero adicionar imagens as minhas notas.
+
+#### Critérios de aceite
+
+**Cenário:** Imagem anexada
+- **Dado** que estou na criação de notas
+- **Quando** adiciono uma imagem como anexo
+- **Então** nos detalhes da nota a imagem aparece em tela cheia
+- **E** na tela de notas aparece apenas a miniatura da imagem
+
+**Cenário:**  Cancelar imagem
+- **Dado** que estou na criação de notas
+- **E** adiciona uma imagem como anexo
+- **Então** tenho a opção de cancelar aquela imagem
+- **E** ela não será anexada quando a nota for criada
+
+**Cenário:** Carregamento inicial
+- **Dado** que estou na página de notas
+- **E** a nota foi criada com imagens
+- **Então** as imagens devem ser apresentadas
 
 # Especificação de arquitetura
 
@@ -262,9 +305,24 @@ nota = {
 
 ## Requisitos não funcionais
 
-### RNF 01 - Carregamento de grande quantidade de Notas
+### RNF 02.01 - Carregamento de grande quantidade de Notas
 
 Para grande quantidade de notas (+100) utilizar técnicas de carregamento de Lazy Loading, onde quando chega na base da página são carregadas mais notas.
+
+### RNF 02.02 Comportamento das notas na exibição
+
+Usuário deve ver apenas as informações das notas, apenas quando a nota é destacada a partir do hover para mostrar as ações disponíveis.
+
+**Cenário:** Nota exibida
+- **Dado** que o usuário está na página de exibição
+- **Quando** existe uma nota listada (seja lista ou grade)
+- **Então** a nota deve exibir apenas as informações principais
+
+**Cenário:** Nota destacada
+- **Dado** que o usuário está na página exibição
+- **Quando** passa o mouse sob a nota
+- **Então** a nota é destacada apresentando outras ações do usuário
+
 
 # Esboços ou protótipos de UX
 

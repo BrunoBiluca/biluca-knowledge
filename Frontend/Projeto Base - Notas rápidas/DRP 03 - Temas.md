@@ -44,13 +44,7 @@ Objetivos:
 
 # Requisitos
 
-**Índice**
-
-- [[#RF 01 - Exibição dos temas preestabelecidos]]
-- [[#RF 02 - Troca de tema]]
-- [[#RF 03 - Manter o último tema escolhido]]
-
-### RF 01 - Exibição dos temas preestabelecidos
+### RF 03.01 - Exibição dos temas preestabelecidos
 
 __Descrição__
 Como usuário quero ver quais são os temas disponíveis para quando quiser escolher qual tema aplicar.
@@ -62,7 +56,7 @@ Como usuário quero ver quais são os temas disponíveis para quando quiser esco
 - **Então** quero ter a visualização dos temas disponíveis
 - **E** quero ver o tema atualmente aplicado de forma destacada
 
-### RF 02 - Troca de tema
+### RF 03.02 - Troca de tema
 
 __Descrição__
 Como usuário quero poder escolher um dos temas disponíveis para aplicá-lo.
@@ -74,7 +68,7 @@ Como usuário quero poder escolher um dos temas disponíveis para aplicá-lo.
 - **Quando** eu seleciono um tema diferente do que está aplicado
 - **Então** eu vejo a mudança das cores da aplicação (ver seção de performance)
 
-### RF 03 - Manter o último tema escolhido
+### RF 03.03 - Manter o último tema escolhido
 
 __Descrição__
 Como usuário quero poder abrir a aplicação e carregar o último tema selecionado.
@@ -107,6 +101,14 @@ Como usuário quero poder abrir a aplicação e carregar o último tema selecion
 #### Performance
 
 A troca de tema não deve causar **recarregamento da página**.
+
+# RNF 02 - Visibilidade dos comandos
+
+Ao alterar o tema não deve impactar na visibilidade dos comandos do site.
+
+Todos os botões devem ter uma boa visibilidade independente do tema vigente.
+
+Para isso aplicar filtros de imagem sobre os botões, ícones e fundos para garantir essa visibilidade.
 
 # Qualidade
 
