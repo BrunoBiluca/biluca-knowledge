@@ -7,4 +7,8 @@ Projeto desenvolvido para estudo do Framework [[Angular]] utilizando o [[Projeto
 
 #### Soluções
 
-- Armazenamento de Imagens no Local Storage do navegador
+- Armazenamento de Imagens no Local Storage do navegador (IndexedDB)
+	- `/src/common/indexedDB.ts`
+
+- Reuso de testes entre componentes
+	- `/src/app/notes/notes-presenter.spec.ts`
