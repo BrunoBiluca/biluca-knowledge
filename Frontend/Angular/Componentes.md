@@ -141,7 +141,7 @@ component.instance.array.push({element}) // não ativa o ngOnChanges
 component.instance.array = [{element}]   // ativa o ngOnChanges
 ```
 
-## Comparação entre os momentos do ciclo de vida
+### Comparação entre os momentos do ciclo de vida
 
 | Aspecto          | Constructor                            | OnInit                              | OnChanges                                                   |
 | ---------------- | -------------------------------------- | ----------------------------------- | ----------------------------------------------------------- |
@@ -150,3 +150,16 @@ component.instance.array = [{element}]   // ativa o ngOnChanges
 | **DOM**          | Elementos não renderizados             | Elementos prontos (View inicial)    | Elementos prontos                                           |
 | **Injeção**      | Ideal para DI                          | Já pode usar dependências injetadas | Já pode usar dependências injetadas                         |
 | **Lógica**       | Apenas configuração inicial            | Lógica de negócio, chamadas API     | Atualização das propriedades                                |
+## Detecção de mudanças
+
+O [[Angular]] detecta mudanças em seus componentes de forma automática sempre que uma informação é alterada no modelo de dados relacionado.
+
+Existem duas estratégias de detecção de mudanças
+
+- `Default` - detecção automática habilitada
+
+- `OnPush` - detecção automática desabilitada
+
+O Angular só atualiza a visão do componente quando detecta que as entradas do formulário ou as referências de serviço foram alteradas. Isso melhora a performance em componentes com campos de entrada.
+
+Quando utilizamos a estratégia `OnPush` pode ser necessário detectar mudanças de forma manual. Para isso utilizamos o `ChangeDetectorRef.detectChanges()`.
