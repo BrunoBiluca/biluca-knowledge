@@ -10,6 +10,10 @@ Ele utiliza [[TypeScript]] como linguagem padrão e segue uma arquitetura basead
 Ele já inclui soluções integradas para:
 
 - [[Frontend/Angular/Componentes|Componentes]]
+	- [[Diretivas]] – Estendem HTML com comportamentos dinâmicos (ex.: `*ngIf`, `*ngFor`).
+		- Várias diretivas foram atualizadas a partir da versão 17 para deixarem o código mais fluído
+		- **Deferrable Views** – Carregamento lazy de seções da view (`@defer`).
+	- [[Formulários]]
 - [[Serviços]]
 	- **Requisições HTTP** (`HttpClient`)
 - Gerenciamento de estados
@@ -18,16 +22,12 @@ Ele já inclui soluções integradas para:
 	- Propriedades tradicionais (Two-way data binding)
 	- [[NgRx]]
 - [[Incremental DOM (Angular Ivy)]]
-- [[Diretivas]] – Estendem HTML com comportamentos dinâmicos (ex.: `*ngIf`, `*ngFor`).
-	- Várias diretivas foram atualizadas a partir da versão 17 para deixarem o código mais fluído
-	- **Deferrable Views** – Carregamento lazy de seções da view (`@defer`).
 - [[Pipes]] – Transformação de dados diretamente nos templates (ex.: `date`, `currency`).
 - [[Roteamento]] (`@angular/router`)
-- [[Formulários]]
 - [[Frontend/Angular/Testes automatizados|Testes automatizados]]
-- [[Angular CLI]]
 - [[Frontend/Angular/Estilização|Estilização]]
 - [[App config]]
+- [[Bases de dados e armazenamento]]
 
 O [[🏅 Guia de projetos em Angular]]  oferece várias dicas relacionadas ao código, implementação, estratégias e outros elementos do projeto para um melhor aproveitamento do framework.
 
@@ -58,6 +58,8 @@ O [[🏅 Guia de projetos em Angular]]  oferece várias dicas relacionadas ao c�
 
 - [Angular Language Service](https://marketplace.visualstudio.com/items?itemName=Angular.ng-template) (oficial)
 	- Fornece várias funcionalidades para desenvolvimento como: auto complete de código entre template e classe TypeScript, Go to Definition, Verificação de erros e outras.
+
+- [[Angular CLI]]
 
 ## Exemplos de implementação
 
