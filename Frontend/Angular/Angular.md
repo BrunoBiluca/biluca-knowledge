@@ -31,6 +31,17 @@ Ele já inclui soluções integradas para:
 
 O [[🏅 Guia de projetos em Angular]]  oferece várias dicas relacionadas ao código, implementação, estratégias e outros elementos do projeto para um melhor aproveitamento do framework.
 
+### Minhas considerações sobre Angular
+
+💚 Pontos positivos
+
+- Injeção de dependências direto de fábrica
+- Curva de aprendizado leve para quem tem costume com desenvolvimento WEB
+
+❌ Pontos negativos
+
+- Difícil de refatorar, mesmo com os plugins
+
 ## Bibliotecas relacionadas
 
 - [Angular Material](https://material.angular.dev/)

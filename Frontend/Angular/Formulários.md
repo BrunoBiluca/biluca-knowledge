@@ -69,26 +69,32 @@ export class Signup {
 }
 ```
 
-#### Testes
+## Validadores
 
-**View to model**
+[[Angular]] disponibiliza por padrão vários validadores para os vários tipos de campos necessários em formulários.
 
-```ts
-it('should update the value of the input field', () => {
-	const input = fixture.nativeElement.querySelector('input');
-	const event = createNewEvent('input');
-	input.value = 'Red';
-	input.dispatchEvent(event);
-	expect(fixture.componentInstance.favoriteColorControl.value).toEqual('Red');
-});
-```
-
-**Model to view**
+Também é possível definir validadores customizados.
 
 ```ts
-it('should update the value in the control', () => {
-	component.favoriteColorControl.setValue('Blue');
-	const input = fixture.nativeElement.querySelector('input');
-	expect(input.value).toBe('Blue');
-});
+@Component({...})
+export class FormComponent {
+  // Verifica se o nome de usuário não existe
+  nonExistingUserValidator = inject(NonExistingUserValidator);
+  username = new FormControl('', [
+    Validators.required,
+    this.nonExistingUserValidator.check,
+  ]);
+  
+  email = new FormControl('', 
+  [
+	Validators.required, 
+	Validators.email
+  ]);
+  
+  password = new FormControl('', 
+  [
+    Validators.required,
+    Validators.minLength(6),
+  ]);
+}
 ```
