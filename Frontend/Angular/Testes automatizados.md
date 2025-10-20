@@ -177,3 +177,28 @@ describe('this test', () => {
   );
 });
 ```
+
+## Categorias de testes
+
+Essa sessão demonstra com exemplos como fazer testes para diferentes elementos dentro do projeto.
+
+### Roteamento
+
+#### Navegação para rota
+
+Podemos testar a navegação por um espião no método `navigate` do router.
+
+```ts
+describe("...", () => {
+	beforeEach(() => {
+	    ...
+		router = TestBed.inject(Router);
+		spyOn(router, 'navigate');
+	})
+	
+	it("should redirect to /login", () => {
+	    ...
+	    expect(router.navigate).toHaveBeenCalledWith(['/login']);
+	})
+})
+```
