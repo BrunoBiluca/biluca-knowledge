@@ -63,6 +63,13 @@ O [[🏅 Guia de projetos em Angular]]  oferece várias dicas relacionadas ao c�
 
 ## Exemplos de implementação
 
+Exemplos de módulos de funcionalidades
+
 - [[Exemplo - Login e registro de usuários]]
+
+Exemplos de Estilização
+
 - [[Exemplo - Destaque de elementos]]
 - [[Exemplo - Ajustar à cor de fundo]]
+- [[Exemplo - Personalizar input]]
+- [[Exemplo - Temas de estilos]]

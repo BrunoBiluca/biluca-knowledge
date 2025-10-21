@@ -12,3 +12,7 @@ Projeto desenvolvido para estudo do Framework [[Angular]] utilizando o [[Projeto
 
 - Reuso de testes entre componentes
 	- `/src/app/notes/notes-presenter.spec.ts`
+
+- Temas de estilos
+	- `src/app/shared/theme-selector`
+	- Permite alternar entre os temas escuro/claro/sistema

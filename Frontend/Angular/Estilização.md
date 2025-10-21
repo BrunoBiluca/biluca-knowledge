@@ -1,6 +1,10 @@
 # Estilização
 
-#### Estilização dinâmica
+## Temas
+
+
+
+## Estilização dinâmica
 
 Um caso muito comum de estilização é permitir a configuração dos elementos da tela pelo próprio usuário. Para isso é necessário vincular dados de origem do usuário com CSS.
 
@@ -22,3 +26,5 @@ export class CustomSlider {
   columns = signal(2)
 }
 ```
+
+Necessário **importar** o `CommonModule` para utilizar essas diretivas.
