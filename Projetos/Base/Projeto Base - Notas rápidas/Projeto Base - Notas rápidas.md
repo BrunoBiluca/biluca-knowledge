@@ -17,7 +17,7 @@ Mesmo que o processo seja bem simples ele aborda os seguintes conceitos focados 
 Além dos conceitos de Frontend abordados, também podemos estender para outros conceitos mais gerais do desenvolvimento de software:
 
 - Infraestrutura
-- Modularização
+- Modularizarão
 - Separação de responsabilidades
 - Coesão
 
