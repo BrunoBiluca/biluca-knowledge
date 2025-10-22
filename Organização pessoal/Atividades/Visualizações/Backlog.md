@@ -1,6 +1,6 @@
 # Backlog
 
-O Backlog é uma visualização que tem o objetivo de centralizar informações sobre [[Organização pessoal/Entidades/🏆 Épicos|🏆 Épicos]] e [[🏗️ Execuções]] que estão prontas para serem trabalhadas de forma a facilitar o processo de [[📆 Planejamento]].
+O Backlog é uma visualização que tem o objetivo de centralizar informações sobre [[Organização pessoal/Atividades/Entidades/🏆 Épicos|🏆 Épicos]] e [[🏗️ Execuções]] que estão prontas para serem trabalhadas de forma a facilitar o processo de [[📆 Planejamento]].
 
 Mesmo que o Backlog seja uma forma de centralizar as informações sobre os elementos da organização é importante fazer algumas separações. Quanto mais informações apresentamos menos visão temos. Um formato de separar essas visualizações é:
 

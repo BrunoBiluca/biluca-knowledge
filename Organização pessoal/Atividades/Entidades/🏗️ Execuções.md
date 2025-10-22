@@ -1,7 +1,7 @@
 # 🏗️ Execuções
 
 > [!info] Definição
-> Execuções são as **atividades** que quando realizadas avançamos na realização dos [[Organização pessoal/Entidades/🌟 Valores]].
+> Execuções são as **atividades** que quando realizadas avançamos na realização dos [[Organização pessoal/Atividades/Entidades/🌟 Valores]].
 
 O estado das execuções são alterados pelos rituais de [[📆 Planejamento]] e [[🔬 Refinamento]].
 
@@ -42,7 +42,7 @@ O estado das execuções são alterados pelos rituais de [[📆 Planejamento]] e
 - **Objetivo** - Uma frase clara do que será executado.
 - **Impacto** - Por que será executado? Qual o ganho em realizar essa execução?
 - **Critérios de aceite** - O que espero com a realização dessa execução? São os principais requisitos para definir essa execução como concluída.
-	- Para mais informações sobre [[Organização pessoal/Entidades/Critérios de aceite|Critérios de aceite]]
+	- Para mais informações sobre [[Organização pessoal/Atividades/Entidades/Critérios de aceite|Critérios de aceite]]
 - **Refinamento** - O que preciso antes da realização dessa execução?
 - **Tarefas** - Subdivisão de tarefas, auxilia na realização da execução.
 - **Contexto** - Apresentação do contexto em que a execução foi levantada.
@@ -89,9 +89,9 @@ Qualquer nova ideia começa como uma Execução nova. Nesse momento ainda estamo
 
 As informações para uma execução nova são as mais diversas, como aqui estamos falando de ideias sem muita restrições ela pode adotar vários formatos. Assim é importante tentar trazer o máximo de informação para então pensarmos com o que essa ideia se parece mais.
 
-Caso a ideia tenha um objetivo muito amplo talvez estamos falando de um [[Organização pessoal/Entidades/🌟 Valores|🌟 Valores]].
+Caso a ideia tenha um objetivo muito amplo talvez estamos falando de um [[Organização pessoal/Atividades/Entidades/🌟 Valores|🌟 Valores]].
 
-Caso a ideia já seja tenha um Valor associado e tenha um prazo de execução ou tenha um escopo grande que não seja tão bem delimitado, talvez estamos falando de um [[Organização pessoal/Entidades/🏆 Épicos|🏆 Épicos]].
+Caso a ideia já seja tenha um Valor associado e tenha um prazo de execução ou tenha um escopo grande que não seja tão bem delimitado, talvez estamos falando de um [[Organização pessoal/Atividades/Entidades/🏆 Épicos|🏆 Épicos]].
 
 Caso a ideia já tenha uma Valor associado e um escopo fechado, que já defina qual tipo de atividade será realizada, então talvez estamos falando uma Execução que precisa ser refinada.
 
@@ -156,7 +156,7 @@ Conteúdo final, a partir daqui não devemos fazer alterações a essas informa�
 
 # Tipos de execuções
 
-Como definido as execuções são atividades, dessa forma podemos ter vários tipos de atividades desempenhadas para alcançar os [[Organização pessoal/Entidades/🌟 Valores]]. Cada tipo de execução pode ter conteúdos, critérios de aceite e tipos de refinamento diferentes.
+Como definido as execuções são atividades, dessa forma podemos ter vários tipos de atividades desempenhadas para alcançar os [[Organização pessoal/Atividades/Entidades/🌟 Valores]]. Cada tipo de execução pode ter conteúdos, critérios de aceite e tipos de refinamento diferentes.
 
 É importante definir os tipos de execuções de forma a facilitar a criação do escopo. Uma execução de desenvolvimento tem como critérios de aceite implementações, enquanto uma execução de descoberta tem como resultado final a resposta de uma pergunta ou o levantamento de alguma questão.
 

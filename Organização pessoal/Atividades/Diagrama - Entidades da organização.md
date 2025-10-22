@@ -10,13 +10,13 @@ tags: [excalidraw]
 # Excalidraw Data
 
 ## Text Elements
-[[Organização pessoal/Entidades/🏆 Épicos|🏆 Épicos]] ^4FRmQNTm
+[[Organização pessoal/Atividades/Entidades/🏆 Épicos|🏆 Épicos]] ^4FRmQNTm
 
 [[🏗️ Execuções]] ^zgOFsvwy
 
 agrupa ^aDKkEWQC
 
-[[Organização pessoal/Entidades/🌟 Valores|🌟 Valores]] ^ijw6X6zs
+[[Organização pessoal/Atividades/Entidades/🌟 Valores|🌟 Valores]] ^ijw6X6zs
 
 é atingido pelos ^JzYDvOoa
 

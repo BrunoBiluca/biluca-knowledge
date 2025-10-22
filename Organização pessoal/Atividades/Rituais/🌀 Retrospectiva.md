@@ -6,7 +6,7 @@ Durante esse momento podemos verificar algumas questões:
 
 - O impacto foi realmente o esperado com a realização das [[🏗️ Execuções]]?
 - As estimativas levantadas atenderam os prazos?
-- Os objetivos das [[🏗️ Execuções]] e dos [[Organização pessoal/Entidades/🏆 Épicos|🏆 Épicos]] estavam devidamente alinhados com o que queríamos?
+- Os objetivos das [[🏗️ Execuções][[Organização pessoal/Atividades/Entidades/🏆 Épicos|🏆 Épicos]]Épicos]] estavam devidamente alinhados com o que queríamos?
 - Os critérios de aceite estavam alinhados com os objetivos das [[🏗️ Execuções]]?
 
 Também é importante reavaliar os [[🗓️ Planos]] de acordo com o andamento do trabalho.

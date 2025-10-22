@@ -1,4 +1,4 @@
-# Organização pessoal
+# Organização de atividades pessoais
 
 > [!info] Objetivo
 > A organização pessoal tem o objetivo de organizar **atividades** de **coisas** (valores, vontades, funções, desejos) que preciso, posso ou apenas quero executar.
@@ -12,10 +12,7 @@ Entidades são compostas de alguns elementos:
 - **Conteúdo:** são elementos descritivos a entidade, estão mais interessados em fornecer informações mais detalhadas sobre a entidade, como objetivos, justificativas, contextos e discussões.
 - **Relações:** são a forma que uma entidade relaciona com as demais.
 
-Elas são:
-
-- [[Organização pessoal/Entidades/🌟 Valores|🌟 Valores]]
-- [[Organização pessoal/Entidades/🏆 Épicos|🏆Épicos]]
+[[Organização pessoal/Atividades/Entidades/🌟 Valores|🌟 Valores]]res[[Organização pessoal/Atividades/Entidades/🏆 Épicos|🏆Épicos]]Épicos|🏆Épicos]]
 - [[🏗️ Execuções]]
 - [[🗓️ Planos]]
 

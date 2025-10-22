@@ -21,7 +21,7 @@ Principais elementos:
 - **Tarefas ou Histórias de usuários:** levantamento de tarefas, histórias e elementos mais concretos para o desenvolvimento do requisito
 	- [[Requisitos funcionais]]
 	- [[Requisitos não-funcionais]]
-- **Critérios de aceite:**  condições que indicam que o requisito está concluído ([[Critérios de aceite]]).
+- **Critérios de aceite:**  condições que indicam que o requisito está concluído ([[Documentação/Componentes/Critérios de aceite]]).
 
 Elementos opcionais:
 

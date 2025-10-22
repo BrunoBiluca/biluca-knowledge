@@ -13,9 +13,9 @@ Como uma cache inteligente de informações a **própria organização está em 
 Para implementar essa filosofia de organização os elementos das informações foram definidos nos seguintes conceitos:
 
 - [[Entidades]] são os elementos estruturantes do conhecimento.
-- [[Componentes]] dão forma as Entidades.
+- [[Organização pessoal/Cofre de conhecimento/Componentes]] dão forma as Entidades.
 
-As informações do cofre são versionadas utilizado o Github como repositório remoto de sincronização e a estratégia está definida em [[Organização do cofre/Versionamento|Versionamento]].
+As informações do cofre são versionadas utilizado o Github como repositório remoto de sincronização e a estratégia está definida em [[Organização pessoal/Cofre de conhecimento/Versionamento|Versionamento]].
 
 # Plugins utilizados
 
