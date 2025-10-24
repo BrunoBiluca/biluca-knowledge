@@ -1,13 +1,20 @@
-# 📆 Planejamento semanal
+# 📆 Planejamento
+
+> [!tip] Planejamento orgânico ou planejado
+> O planejamento pode ou não ser feito de forma periódica. 
+> 
+> Dependendo do tanto de **tempo disponível** para tocar as tarefas pessoais, dispensar o planejamento pode ser uma boa medida para evitar ansiedade e ganhar tempo para fazer o que realmente interessa.
+> 
+> Quando temos mais tempo para tocar as tarefas, fazer o planejamento de forma recorrente é uma boa prática, já que permite a reflexão do que está em andamento, se isso ainda faz sentido ou não para os objetivos correntes.
 
 O planejamento é uma atividade feita de forma periódica e serve principalmente para definir as execuções que serão realizadas em um ciclo de trabalho.
 
 Pré-planejamento
 
 - São definidos os horários disponíveis
-- Sã[[Organização pessoal/Atividades/Entidades/🌟 Valores|🌟 Valores]]es|🌟 Valores]] prioritários
+- São [[Organização pessoal/Atividades/Entidades/🌟 Valores|🌟 Valores]] prioritários
 
-O planejamento é feito principalmente utilizando a visualização de [[Backlog]] para verificar as [[🏗️ Execuções]] que estão prontas para serem realizadas.
+O planejamento é feito principalmente utilizando a visualização de [[🗃️ Backlog]] para verificar as [[🚧 Atividade]] que estão prontas para serem realizadas.
 
 Mudanças de estados de Execuções:
 

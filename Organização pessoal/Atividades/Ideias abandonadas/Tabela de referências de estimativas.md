@@ -1,6 +1,6 @@
 # Tabela de referência de estimativas
 
-A Tabela de referência de estimativas ajuda a **consolidar informações sobre quantidade de tempo real trabalhado** em [[🏗️ Execuções]]. Por meio dela podemos usar informações de execuções anteriores para ajudar no processo de gerar estimativas.
+A Tabela de referência de estimativas ajuda a **consolidar informações sobre quantidade de tempo real trabalhado** em [[🚧 Atividade]]. Por meio dela podemos usar informações de execuções anteriores para ajudar no processo de gerar estimativas.
 
 Ela é preenchida durante o ritual de [[🌀 Retrospectiva]], onde as execuções concluídas irão prover informações relevantes para serem consolidadas.
 

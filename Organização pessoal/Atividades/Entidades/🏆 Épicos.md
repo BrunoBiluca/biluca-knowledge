@@ -1,7 +1,7 @@
 # 🏆 Épicos
 
 > [!info] Definição
-> Épicos são agrupamentos de [[🏗️ Execuções]] que apresentam um avanço grande na realização do [[Organização pessoal/Atividades/Entidades/🌟 Valores|Valor]] relacionado.
+> Épicos são agrupamentos de [[🚧 Atividade]] que apresentam um avanço grande na realização do [[Organização pessoal/Atividades/Entidades/🌟 Valores|Valor]] relacionado.
 > 
 > São a principal entidade para ter uma **visão macro** de evolução de um Valor.
 

@@ -12,7 +12,7 @@ tags: [excalidraw]
 ## Text Elements
 [[Organização pessoal/Atividades/Entidades/🏆 Épicos|🏆 Épicos]] ^4FRmQNTm
 
-[[🏗️ Execuções]] ^zgOFsvwy
+[[🚧 Atividade]] ^zgOFsvwy
 
 agrupa ^aDKkEWQC
 

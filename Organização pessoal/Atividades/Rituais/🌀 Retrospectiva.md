@@ -4,10 +4,10 @@ O ritual de retrospectiva é utilizado para **consolidar os aprendizados** em re
 
 Durante esse momento podemos verificar algumas questões:
 
-- O impacto foi realmente o esperado com a realização das [[🏗️ Execuções]]?
+- O impacto foi realmente o esperado com a realização das [[🚧 Atividade]]?
 - As estimativas levantadas atenderam os prazos?
-- Os objetivos das [[🏗️ Execuções][[Organização pessoal/Atividades/Entidades/🏆 Épicos|🏆 Épicos]]Épicos]] estavam devidamente alinhados com o que queríamos?
-- Os critérios de aceite estavam alinhados com os objetivos das [[🏗️ Execuções]]?
+- Os objetivos das [[🚧 Atividade]] estavam devidamente alinhados com o que queríamos?
+- Os critérios de aceite estavam alinhados com os objetivos das [[🚧 Atividade]]?
 
 Também é importante reavaliar os [[🗓️ Planos]] de acordo com o andamento do trabalho.
 
