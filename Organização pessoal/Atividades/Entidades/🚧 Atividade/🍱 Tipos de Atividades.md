@@ -1,6 +1,6 @@
-# 🍱 Tipos de uma [[🚧 Atividade]]
+# 🍱 Tipos de Atividades
 
-Como definido as execuções são atividades, dessa forma podemos ter vários tipos de atividades desempenhadas para alcançar os [[Organização pessoal/Atividades/Entidades/🌟 Valores]]. Cada tipo de execução pode ter conteúdos, critérios de aceite e tipos de refinamento diferentes.
+Cada tipo de [[🚧 Atividade]] pode ter conteúdos, critérios de aceite e tipos de refinamento diferentes.
 
 É importante definir os tipos de execuções de forma a facilitar a criação do escopo. Uma execução de desenvolvimento tem como critérios de aceite implementações, enquanto uma execução de descoberta tem como resultado final a resposta de uma pergunta ou o levantamento de alguma questão.
 

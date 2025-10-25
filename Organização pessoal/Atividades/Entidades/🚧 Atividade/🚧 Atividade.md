@@ -53,7 +53,9 @@ O estado das execuções são alterados pelos rituais de [[📆 Planejamento]] e
 
 ## Conteúdo
 
-O conteúdo de uma [[🚧 Atividade]] muda de acordo com o seu [[🍱 Tipos de Atividades]]
+O conteúdo de uma [[🚧 Atividade]] muda de acordo com o seu [[🍱 Tipos de Atividades]], principalmente dependendo do tipo de atividades temos um tratamento diferente para sua execução.
+
+Para todas as atividades temos:
 
 - **Objetivo** - Uma frase clara do que será executado.
 

@@ -3,6 +3,12 @@
 > [!info] Objetivo
 > A organização pessoal tem o objetivo de organizar **atividades** de **coisas** (valores, vontades, funções, desejos) que preciso, posso ou apenas quero executar.
 
+A organização não deve ser utilizada apenas para **acumular coisas para fazer**, cada atividade deve ser justificada de forma que sua conclusão gere um impacto relevante para minha vida. 
+
+Se bem feita, a organização diminui a ansiedade e permite avaliar de forma crítica o que fazer e o momento certo de fazê-lo. Isso ajuda muito a refletir o estado atual da organização.
+
+Assim, quando qualquer elemento da organização quando não fazem mais sentido, devem ser abandonados para não virarem um acúmulo de coisas.
+
 Minha organização é dividida em 2 elementos: entidades e rituais.
 
 ### Entidades
