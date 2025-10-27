@@ -1,7 +1,7 @@
 # 🚧 Atividade
 
 > [!info] Definição
-> As **atividades** quando realizadas avançamos na realização dos [[Organização pessoal/Atividades/Entidades/🌟 Valores|🌟 Valores]].
+> As **atividades** quando realizadas avançamos na realização dos [[🌟 Valor|🌟 Valor]].
 
 O estado das execuções são alterados pelos rituais de [[📆 Planejamento]] e [[🔬 Refinamento]].
 

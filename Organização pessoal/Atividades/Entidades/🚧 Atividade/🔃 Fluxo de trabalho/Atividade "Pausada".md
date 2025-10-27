@@ -16,9 +16,9 @@ Quando entende-se que o impacto ao realizar a atividade seria pequeno demais par
 
 #### Saindo de "Pausada"
 
-- [[Atividade "Elencada"]]
+- [[Atividade "Aberta"]]
 
-Quando entende-se que a atividade já volta a ter um impacto grande com sua realização.
+Quando entende-se que a atividade já volta a ter um impacto com sua realização.
 
 - [[Atividade "Caducou"]]
 

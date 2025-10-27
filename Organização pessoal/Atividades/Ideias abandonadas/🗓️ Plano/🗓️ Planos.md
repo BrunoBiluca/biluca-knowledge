@@ -10,7 +10,7 @@
 
 A [[🌀 Retrospectiva]] pode ser utilizada como ponto de controle para avaliar o andamentos de cada um dos planos, e tomar decisões a partir dessa análise sobre continuar, postergar ou cancelar certos planos.
 
-A ideia da utilização de um cadastro de Planos é permitir que cada [[Organização pessoal/Atividades/Entidades/🌟 Valores|🌟 Valores]] (o que se valora desenvolver) esteja definido no planejamento e que pela visualização da organização de forma clara e flexível possa diminuir a ansiedade e garantir que as coisas certas estão sendo feitas.
+A ideia da utilização de um cadastro de Planos é permitir que cada [[🌟 Valor|🌟 Valor]] (o que se valora desenvolver) esteja definido no planejamento e que pela visualização da organização de forma clara e flexível possa diminuir a ansiedade e garantir que as coisas certas estão sendo feitas.
 
 ## Campos
 
@@ -44,7 +44,7 @@ Isso ajuda a ter uma visão de linha do tempo que permite verificar todos os pla
 
 ## Relações
 
-- [[Organização pessoal/Atividades/Entidades/🌟 Valores|🌟 Valores]]
+- [[🌟 Valor|🌟 Valor]]
 	- Cada plano tem que avançar em alguma medida um valor. Não existe plano sem um valor associado, já que são os valores que indicam o que queremos fazer.
 
 - [[🌀 Relatório de Retrospectiva]]

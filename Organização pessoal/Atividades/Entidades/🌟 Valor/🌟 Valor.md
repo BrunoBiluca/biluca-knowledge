@@ -1,4 +1,4 @@
-# 🌟 Valores
+# 🌟 Valor
 
 > [!info] Definição de 🌟 Valores
 > São as **coisas** que quero realizar, alcançar ou apenas fazer. Um Valor não é necessariamente alcançável, ele foca em definir um ideal que irá guiar as minhas atividades.
@@ -24,37 +24,30 @@ Ao longo do tempo é possível que:
 	- Quanto maior a prioridade mais tempo e esforço são dispendidos. 
 	- Uma boa prática é definir poucos valores nas prioridades que devem ser elencadas, acho que o ponto de equilíbrio é definir 3 valores nas prioridades.
 
-- **Descontinuado** - Valor não deve mais se escalado como prioridade
+- **Descontinuado** - Valor não será escalado como prioridade
 
 - **Descontinuado em** - Data de quando este 🌟 Valor foi descontinuado
 
 ## Propriedades
 
-- **Tem execução essa semana** - exibe se existe alguma execução relacionada essa semana. 
+- **Tem atividade essa semana** - exibe se existe alguma [[🚧 Atividade]] relacionada essa semana. 
 	- Isso ajuda no processo de planejamento da semana.
 
-- **Última execução concluída** - exibe a quantidade de dias desde a última execução concluída. 
+- **Última atividade concluída** - exibe a quantidade de dias desde a última [[Atividade "Concluída"]]. 
 	- Isso ajuda a entender se esse valor está sendo trabalhado, ou já podemos arquivar.
 
 - **Não ativo** 
-	- Um valor não ativo é definido quando :
-		- Está descontinuado ou não tem nenhum plano associado.
-	- Valores arquivados não são escalados para executar.
+	- Quando nenhum [[Organização pessoal/Atividades/Entidades/🏆 Épicos|🏆 Épicos]] está definido para este Valor
 
 ## Relações
 
-- **Execuções** - Um 🌟 Valor pode ter várias execuções relacionadas
+- [[🚧 Atividade]] - Um 🌟 Valor pode ter várias atividades relacionadas
 
-- **Épicos** - Um 🌟 Valor pode ter vários épicos relacionados
-
-- **Planos** - Um 🌟 Valor pode ter vários planos.
-	- O ponto de equilíbrio é ter no máximo 3, um para cada período de tempo.
+- [[Organização pessoal/Atividades/Entidades/🏆 Épicos|🏆 Épicos]] - Um 🌟 Valor pode ter vários épicos relacionados
 
 ## Conteúdo
 
 - **Qual ideal, vontade ou função esse Valor quer alcançar?** - Descrição sobre os objetivos do valor
-
-- **O que fazer para alcançar esse valor?** - Descrições por alto de atividades, etapas e ideias para conseguir alcançar o valor.
 
 ## Visualizações
 
@@ -106,6 +99,5 @@ Fornece informações sobre o estado atual do 🌟 Valor.
 
 - Criar uma Atividade
 - Criar um Épico
-- Criar um Plano
 - Descontinuar
 	- Define o campo Descontinuado para marcado e a data de descontinuado

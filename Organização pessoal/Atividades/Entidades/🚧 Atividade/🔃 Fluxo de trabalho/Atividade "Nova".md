@@ -6,7 +6,7 @@ Qualquer nova ideia começa como uma Execução nova. Nesse momento ainda estamo
 
 As informações para uma execução nova são as mais diversas, como aqui estamos falando de ideias sem muita restrições ela pode adotar vários formatos. Assim é importante tentar trazer o máximo de informação para então pensarmos com o que essa ideia se parece mais.
 
-Caso a ideia tenha um objetivo muito amplo talvez estamos falando de um [[Organização pessoal/Atividades/Entidades/🌟 Valores|🌟 Valores]].
+Caso a ideia tenha um objetivo muito amplo talvez estamos falando de um [[🌟 Valor|🌟 Valor]].
 
 Caso a ideia já seja tenha um Valor associado e tenha um prazo de execução ou tenha um escopo grande que não seja tão bem delimitado, talvez estamos falando de um [[Organização pessoal/Atividades/Entidades/🏆 Épicos|🏆 Épicos]].
 

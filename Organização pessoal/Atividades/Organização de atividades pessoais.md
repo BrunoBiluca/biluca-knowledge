@@ -27,7 +27,7 @@ Entidades são compostas de alguns elementos:
 
 Entidades:
 
-- [[Organização pessoal/Atividades/Entidades/🌟 Valores|🌟 Valores]]
+- [[🌟 Valor|🌟 Valor]]
 - [[Organização pessoal/Atividades/Entidades/🏆 Épicos|🏆Épicos]]
 - [[🚧 Atividade]]
 - [[🗓️ Planos]]
@@ -59,7 +59,7 @@ Tanto as entidades quanto os rituais devem ser organizadas de forma clara para a
 Visualizações
 
 - [[🗂️ Quadro de tarefas]]
-- [[🗃️ Backlog]]
+- [[🗃️ Backlog geral]]
 
 Existem também alguns elementos que são auxiliares ao processo de organização:
 

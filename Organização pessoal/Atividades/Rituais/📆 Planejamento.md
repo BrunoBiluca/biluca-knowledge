@@ -12,9 +12,9 @@ O planejamento é uma atividade feita de forma periódica e serve principalmente
 Pré-planejamento
 
 - São definidos os horários disponíveis
-- São [[Organização pessoal/Atividades/Entidades/🌟 Valores|🌟 Valores]] prioritários
+- São [[🌟 Valor|🌟 Valor]] prioritários
 
-O planejamento é feito principalmente utilizando a visualização de [[🗃️ Backlog]] para verificar as [[🚧 Atividade]] que estão prontas para serem realizadas.
+O planejamento é feito principalmente utilizando a visualização de [[🗃️ Backlog geral]] para verificar as [[🚧 Atividade]] que estão prontas para serem realizadas.
 
 Mudanças de estados de Execuções:
 

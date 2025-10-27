@@ -16,7 +16,7 @@ tags: [excalidraw]
 
 agrupa ^aDKkEWQC
 
-[[Organização pessoal/Atividades/Entidades/🌟 Valores|🌟 Valores]] ^ijw6X6zs
+[[🌟 Valor|🌟 Valor]] ^ijw6X6zs
 
 é atingido pelos ^JzYDvOoa
 

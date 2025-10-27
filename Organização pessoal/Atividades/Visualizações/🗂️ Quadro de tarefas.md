@@ -6,19 +6,21 @@ O quadro de tarefas também deve disponibilizar acessos rápidos a todos os elem
 
 Elementos
 
-- **Quadro de Execuções** - Exibe as [[🚧 Atividade]] em progresso e as elencadas para o ciclo de trabalho.
-- **Calendário de Execuções** - Exibe as [[🚧 Atividade]] pelo período definido considerando o ciclo de trabalho.
-- **Quadro de Valores** - Exibe todos os [[Organização pessoal/Atividades/Entidades/🌟 Valores]] ativos
-- **Quadro de Épicos** - Exibe todos os [[Organização pessoal/Atividades/Entidades/🏆 Épicos]] ativos
-- **Linha do tempo de Épicos** - Exibe os [[Organização pessoal/Atividades/Entidades/🏆 Épicos]] ativos em relação ao período definido
+- **Quadro de Atividades** - Exibe as [[🚧 Atividade]] em progresso e as elencadas para o ciclo de trabalho.
+
+- **Calendário de Atividades** - Exibe as [[🚧 Atividade]] pelo período definido considerando o ciclo de trabalho, em relação a data de realização da atividade
+
+- **Quadro de Valores** - Exibe todos os [[🌟 Valor|🌟 Valor]] priorizados
+
+- **Quadro de Épicos** - Exibe todos os [[Organização pessoal/Atividades/Entidades/🏆 Épicos|🏆 Épicos]] com alguma [[🚧 Atividade]] elencada ou em progresso.
 
 Acessos rápidos
 
 - Todos os Valores - caso seja necessário verificar outros valores
 - Todos os Épicos - caso seja necessário verificar todos os Épicos
-- [[🗃️ Backlog]] - caso a realização das execuções seja finalizada, podemos durante o mesmo ciclo de trabalho escolher outras execuções baseadas nos valores ativos.
+- [[🗃️ Backlog geral]] - caso a realização das execuções seja finalizada, podemos durante o mesmo ciclo de trabalho escolher outras execuções baseadas nos valores ativos.
 
-### Quadro de Execuções
+### Quadro de [[🚧 Atividade]]
 
 Informações exibidas:
 
@@ -27,34 +29,24 @@ Informações exibidas:
 - Épico
 - Valor
 
-### Calendário de Execuções
+### Calendário de [[🚧 Atividade]]
 
 Informações exibidas:
 
 - Nome
 - Período
 
-### Quadro de Valores
+### Quadro de [[🌟 Valor|🌟 Valor]]
 
 Informações exibidas:
 
 - Nome
 - Prioridade
 
-### Quadro de Épicos
+### Quadro de [[Organização pessoal/Atividades/Entidades/🏆 Épicos|🏆 Épicos]]
 
 Informações exibidas:
 
 - Nome
 - Progresso
-- Valor
-
-### Linha do tempo de Épicos
-
-Informações exibidas
-
-- Nome
-- Período
-- Progresso
-- Progresso de tempo
 - Valor
