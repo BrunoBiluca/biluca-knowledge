@@ -1,4 +1,4 @@
-# 📆 Planejamento
+# 📆 Levantamento de atividades
 
 > [!tip] Planejamento orgânico ou planejado
 > O planejamento pode ou não ser feito de forma periódica. 
@@ -7,7 +7,7 @@
 > 
 > Quando temos mais tempo para tocar as tarefas, fazer o planejamento de forma recorrente é uma boa prática, já que permite a reflexão do que está em andamento, se isso ainda faz sentido ou não para os objetivos correntes.
 
-O planejamento é uma atividade feita de forma periódica e serve principalmente para definir as execuções que serão realizadas em um ciclo de trabalho.
+O planejamento é uma atividade feita de forma periódica e serve principalmente para definir as [[🚧 Atividade]] que serão realizadas em um ciclo de trabalho.
 
 Pré-planejamento
 

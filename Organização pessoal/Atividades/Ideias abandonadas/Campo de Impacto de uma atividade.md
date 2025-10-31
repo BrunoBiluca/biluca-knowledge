@@ -5,4 +5,4 @@
 
 Esse era um campo de [[🚧 Atividade]]
 
-**Impacto** - Nível do impacto que a execução quando realizada causa no Valor relacionado. Essa é uma propriedade totalmente subjetiva e dependente do contexto e do momento que está sendo avaliado. O impacto é alterado sempre durando o ritual de [[📆 Planejamento]].
+**Impacto** - Nível do impacto que a execução quando realizada causa no Valor relacionado. Essa é uma propriedade totalmente subjetiva e dependente do contexto e do momento que está sendo avaliado. O impacto é alterado sempre durando o ritual de [[📆 Levantamento de atividades]].

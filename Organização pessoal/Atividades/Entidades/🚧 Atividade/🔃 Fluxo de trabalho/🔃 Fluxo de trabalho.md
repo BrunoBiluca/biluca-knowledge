@@ -40,4 +40,4 @@ Uma [[🚧 Atividade]] é dividida em 3 estágios:
 
 - [[🔬 Refinamento]] é utilizado para transformar ideias em atividades prontas para serem executadas
 
-- [[📆 Planejamento]] é utilizado para selecionar as atividades para entrar ou sair de andamento.
+- [[📆 Levantamento de atividades]] é utilizado para selecionar as atividades para entrar ou sair de andamento.

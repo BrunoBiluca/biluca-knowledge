@@ -3,7 +3,7 @@
 > [!info] Definição
 > As **atividades** quando realizadas avançamos na realização dos [[🌟 Valor|🌟 Valor]].
 
-O estado das execuções são alterados pelos rituais de [[📆 Planejamento]] e [[🔬 Refinamento]].
+O estado das execuções são alterados pelos rituais de [[📆 Levantamento de atividades]] e [[🔬 Refinamento]].
 
 ## Campos
 

@@ -48,7 +48,7 @@ Rituais também servem como momento de reflexão sobre as entidades específicas
 
 Os rituais da organização são:
 
-- [[📆 Planejamento]]
+- [[📆 Levantamento de atividades]]
 - [[🔬 Refinamento]]
 - [[🌀 Retrospectiva]]
 
