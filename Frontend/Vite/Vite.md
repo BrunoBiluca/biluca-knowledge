@@ -1,13 +1,5 @@
 # Vite
 
---- start-multi-column: ExampleRegion1  
-```column-settings  
-number of columns: 2
-Column Size: [59%, 40%]
-Border: disabled
-Shadow: off
-```
-
 É uma ferramenta que visa criar uma experiência de desenvolvimento mais rápida e simples para projetos web.
 
 Consiste em duas principais partes:
@@ -17,18 +9,12 @@ Consiste em duas principais partes:
 
 Vite pode ser utilizado com vários frameworks de Frontend como [[React]], Vue, Svelte...
 
---- end-column ---
-
 > [!info] Principais referências
 > - [Documentação](https://vite.dev/guide/)
 >- 
 
----
-
 > [!quote]- Outras referências
 > - [Utilizando o Vite para criar uma aplicação React com TypeScript](https://www.alura.com.br/artigos/vite-criar-aplicacao-react-typescript) apresenta um tutorial de utilização do Vite com React e explica cada um dos principais componentes e vantagens desse formato de desenvolvimento
-
---- end-multi-column
 
 Desenvolver utilizando o Vite permite utilizar uma gama de funcionalidades típicas de [[bundler-based setups]] sem ser muito diferente do desenvolvimento utilizando arquivos estáticos.
 

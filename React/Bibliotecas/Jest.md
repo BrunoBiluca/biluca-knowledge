@@ -3,26 +3,13 @@ categoria: biblioteca
 ---
 # Jest
 
---- start-multi-column: ExampleRegion1  
-```column-settings  
-number of columns: 2
-Column Size: [59%, 40%]
-Border: disabled
-Shadow: off
-```
-
 Jest é um framework geral de testes para Javascript, essa biblioteca provê um Runner para a execução dos testes.
-
---- end-column ---
 
 > [!info] Principais referências
 > - [Jest](https://jestjs.io/)
 >- [Documentação](https://jestjs.io/docs)
 >- [Documentação - Mocks](https://jestjs.io/pt-BR/docs/es6-class-mocks)
 >- [Github](https://github.com/jestjs/jest)
-
---- end-multi-column
-
 
 Necessário adicionar o comando no `package.json`:
 
