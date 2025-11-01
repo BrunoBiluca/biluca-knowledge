@@ -10,7 +10,7 @@ tags: [excalidraw]
 # Excalidraw Data
 
 ## Text Elements
-[[Organização pessoal/Atividades/Entidades/🏆 Épicos|🏆 Épicos]] ^4FRmQNTm
+[[🏆 Épico|🏆 Épico]] ^4FRmQNTm
 
 [[🚧 Atividade]] ^zgOFsvwy
 

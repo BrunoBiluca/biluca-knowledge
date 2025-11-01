@@ -49,7 +49,7 @@ Isso ajuda a ter uma visão de linha do tempo que permite verificar todos os pla
 
 - [[🌀 Relatório de Retrospectiva]]
 
-- (Opcional) [[Organização pessoal/Atividades/Entidades/🏆 Épicos|🏆 Épicos]] podem ser adicionadas a um plano a fim de rastrear seu andamento.
+- (Opcional) [[🏆 Épico|🏆 Épico]] podem ser adicionadas a um plano a fim de rastrear seu andamento.
 
 - (Opcional) [[🚧 Atividade]] podem ser adicionadas a um plano a fim de rastrear seu andamento.
 

@@ -37,13 +37,13 @@ Ao longo do tempo é possível que:
 	- Isso ajuda a entender se esse valor está sendo trabalhado, ou já podemos arquivar.
 
 - **Não ativo** 
-	- Quando nenhum [[Organização pessoal/Atividades/Entidades/🏆 Épicos|🏆 Épicos]] está definido para este Valor
+	- Quando nenhum [[🏆 Épico|🏆 Épico]] (Em refinamento ou Aberto) está definido para este Valor
 
 ## Relações
 
 - [[🚧 Atividade]] - Um 🌟 Valor pode ter várias atividades relacionadas
 
-- [[Organização pessoal/Atividades/Entidades/🏆 Épicos|🏆 Épicos]] - Um 🌟 Valor pode ter vários épicos relacionados
+- [[🏆 Épico|🏆 Épico]] - Um 🌟 Valor pode ter vários épicos relacionados
 
 ## Conteúdo
 

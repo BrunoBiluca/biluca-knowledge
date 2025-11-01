@@ -1,5 +1,8 @@
 # 🗂️ Quadro de tarefas
 
+> [!info] Objetivo
+> Ter visão do que está atualmente em progresso.
+
 O quadro de tarefas é a principal visualização da [[Organização de atividades pessoais]]. Ele define todas informações necessárias para a execução do trabalho cotidiano.
 
 O quadro de tarefas também deve disponibilizar acessos rápidos a todos os elementos da organização.
@@ -12,7 +15,7 @@ Elementos
 
 - **Quadro de Valores** - Exibe todos os [[🌟 Valor|🌟 Valor]] priorizados
 
-- **Quadro de Épicos** - Exibe todos os [[Organização pessoal/Atividades/Entidades/🏆 Épicos|🏆 Épicos]] com alguma [[🚧 Atividade]] elencada ou em progresso.
+- **Quadro de Épicos** - Exibe todos os [[🏆 Épico|🏆 Épico]] com alguma [[🚧 Atividade]] elencada ou em progresso.
 
 Acessos rápidos
 
@@ -43,7 +46,7 @@ Informações exibidas:
 - Nome
 - Prioridade
 
-### Quadro de [[Organização pessoal/Atividades/Entidades/🏆 Épicos|🏆 Épicos]]
+### Quadro de [[🏆 Épico|🏆 Épico]]
 
 Informações exibidas:
 

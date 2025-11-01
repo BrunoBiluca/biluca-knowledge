@@ -8,7 +8,7 @@ As informações para uma execução nova são as mais diversas, como aqui estam
 
 Caso a ideia tenha um objetivo muito amplo talvez estamos falando de um [[🌟 Valor|🌟 Valor]].
 
-Caso a ideia já seja tenha um Valor associado e tenha um prazo de execução ou tenha um escopo grande que não seja tão bem delimitado, talvez estamos falando de um [[Organização pessoal/Atividades/Entidades/🏆 Épicos|🏆 Épicos]].
+Caso a ideia já seja tenha um Valor associado e tenha um prazo de execução ou tenha um escopo grande que não seja tão bem delimitado, talvez estamos falando de um [[🏆 Épico|🏆 Épico]].
 
 Caso a ideia já tenha uma Valor associado e um escopo fechado, que já defina qual tipo de atividade será realizada, então talvez estamos falando uma Execução que precisa ser refinada.
 

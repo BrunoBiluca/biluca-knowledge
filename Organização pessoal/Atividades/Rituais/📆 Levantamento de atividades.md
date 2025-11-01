@@ -1,6 +1,9 @@
 # 📆 Levantamento de atividades
 
-> [!tip] Planejamento orgânico ou planejado
+> [!info] Objetivo
+> Levantar as atividades para execução a curtíssimo prazo. 
+
+> [!tip]- Planejamento orgânico ou planejado
 > O planejamento pode ou não ser feito de forma periódica. 
 > 
 > Dependendo do tanto de **tempo disponível** para tocar as tarefas pessoais, dispensar o planejamento pode ser uma boa medida para evitar ansiedade e ganhar tempo para fazer o que realmente interessa.
@@ -21,6 +24,7 @@ Mudanças de estados de Execuções:
 - Execuções "Em progresso" ou "Elencadas" devem ser Pausadas caso o Valor foi congelado
 - Execuções em "Aberto" são "Elencadas" de acordo com as prioridades
 
+Após o ritual, todas as mudanças são refletidas no [[🗂️ Quadro de tarefas]].
 ### Exemplo - Planejamento semanal
 
 Para um planejamento semanal não é necessário mais do que meia hora de planejamento levando em consideração 3 prioridades.

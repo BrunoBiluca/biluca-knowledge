@@ -1,11 +1,14 @@
 # 🔬 Refinamento
 
+> [!info] Objetivo
+> 
+
 Refinamento é um momento dedicado a entender melhor os [[🌟 Valor]] ativos.
 
 O refinamento pode ser feito de duas formas:
 
 - Geral: todos os valores são reanalisados
-- Individual: apenas um valor é selecionado para ser refinado, focando na definição de [[Organização pessoal/Atividades/Entidades/🏆 Épicos]] e [[🚧 Atividade]] para esse valor
+- Individual: apenas um valor é selecionado para ser refinado, focando na definição de [[🏆 Épico]] e [[🚧 Atividade]] para esse valor
 
 
 ![[Diagrama - Referência do processo de refinamento|Referência do processo de refinamento de uma nova ideia|%cheio]]

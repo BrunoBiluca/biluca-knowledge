@@ -28,7 +28,7 @@ Entidades são compostas de alguns elementos:
 Entidades:
 
 - [[🌟 Valor|🌟 Valor]]
-- [[Organização pessoal/Atividades/Entidades/🏆 Épicos|🏆Épicos]]
+- [[🏆 Épico|🏆Épicos]]
 - [[🚧 Atividade]]
 - [[🗓️ Planos]]
 
