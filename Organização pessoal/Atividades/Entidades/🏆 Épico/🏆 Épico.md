@@ -29,7 +29,7 @@ O **escopo é possivelmente aberto** porque para se alcançar o objetivo de um �
 - **Criado em** - Data da criação do Épico
 
 - **Estado** - Estado atual do Épico
-	- Em refinamento
+	- Refinando
 	- Aberto
 	- Concluído
 	- Caducou
@@ -57,6 +57,16 @@ O **escopo é possivelmente aberto** porque para se alcançar o objetivo de um �
 - **Total** - Total de Execuções associadas
 
 - **Em Atividade** - Épicos ativos são aquelas que estão sendo trabalhados, ou seja, alguma Atividade com estado "Em progresso" ou "Elencada"
+
+- **Está no período** - Se a data atual da análise está dentro do Período definido
+
+- **Ordem** - define a diferença entre a data de início do Épico e o momento da consulta
+	- Utilizado para ordenar os Épicos em visualizações de linha do tempo.
+
+- **Pronto para puxar [[🚧 Atividade]]** - define se o Épicos está pronto para ter atividades elencadas
+	- Estado do Épico está Aberto
+	- Está no período definido no planejamento (relacionado ao campo `Período`)
+	- Se o não não está descontinuado
 
 ## Relações
 

@@ -1,7 +1,7 @@
 # 🐣 Incubadora
 
 > [!info] Objetivo
-> 
+> Essa visualização via ajudar no processo de refinamento de [[🚧 Atividade]] e [[🏆 Épicos]]
 
 Da mesma forma que o [[🗃️ Backlog geral]] é a principal visualização utilizada no ritual de [[📆 Levantamento de atividades]], a Incubadora é a principal visualização para o processo de [[🔬 Refinamento]].
 

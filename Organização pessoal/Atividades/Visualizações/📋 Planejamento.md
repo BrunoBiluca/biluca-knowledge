@@ -3,7 +3,7 @@
 > [!info] Objetivo
 > Ter visão macro da perspectiva de futuro do andamento dos [[🌟 Valor|🌟 Valores]].
 
-A visualização de Planejamento é utilizada principalmente durante o ritual de [[Organização pessoal/Atividades/Rituais/📋 Planejamento|📋 Planejamento]], onde durante esse ritual temos todas as principais informações para tomar as decisões relacionadas ao avanço nos valores de forma Macro.
+A visualização de Planejamento é utilizada principalmente durante o ritual de [[Organização pessoal/Atividades/Rituais/📋 Planejamento|📋 Planejamento]], onde durante esse ritual temos todas as principais informações para tomar decisões relacionadas ao avanço nos valores de forma Macro.
 
 Ela apresenta informações relacionadas principalmente aos [[🌟 Valor|🌟 Valores]] e [[🏆 Épico|🏆 Épicos]].
 

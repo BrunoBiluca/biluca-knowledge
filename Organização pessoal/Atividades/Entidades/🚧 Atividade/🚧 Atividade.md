@@ -42,6 +42,11 @@ O estado das execuções são alterados pelos rituais de [[📆 Levantamento de 
 
 - **Ano/Mês de conclusão** - Formatação para a data de conclusão que é utilizada as visualizações históricas.
 
+- **Pode elencar?**
+	- Valor deve estar ativo
+	- Estado da Atividade deve está Aberta
+	- Se existir Valor, ele deve estar pronto para ter uma atividade elencada (propriedade do [[🏆 Épico]] `Pronto para puxar 🚧 Atividade`)
+
 ## Relações
 
 - **Valor** - Toda execução está associada a apenas um valor.

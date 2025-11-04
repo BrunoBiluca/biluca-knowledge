@@ -25,6 +25,7 @@ Mudanças de estados de Execuções:
 - Execuções em "Aberto" são "Elencadas" de acordo com as prioridades
 
 Após o ritual, todas as mudanças são refletidas no [[🗂️ Quadro de tarefas]].
+
 ### Exemplo - Planejamento semanal
 
 Para um planejamento semanal não é necessário mais do que meia hora de planejamento levando em consideração 3 prioridades.
