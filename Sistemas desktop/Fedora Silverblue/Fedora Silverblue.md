@@ -1,5 +1,18 @@
 # Fedora Silverblue
 
+## Programação
+
+Pelo Fedora Silverblue ser um sistema atômico programação dentro da distro precisa ser feita a partir dos containers.
+
+Fluxo de trabalho para projetos de programação:
+
+- Criar o container (recomendado Fedora ou Ubuntu)
+- Instalar o pacotes necessários para o desenvolvimento
+- Instalar a IDE (atualmente utilizo [[VSCode]])
+	- Por algum motivo a mesma instalação do VSCode é compartilhada entre os ambientes.
+
+Essa configuração permite que a IDE tenha acesso diretamente ao ambiente utilizado na programação.
+
 ## Instalação de softwares
 
 Fedora Silverblue é um sistema atômico, nesse sentido existem duas formas de instalar aplicações:
