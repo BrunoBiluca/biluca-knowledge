@@ -34,5 +34,6 @@ Para criar testes em React é possível utilizando duas extensões:
 
 - [[Jest]]
 - [[React Testing Library]]
+- [[React/Vitest|Vitest]]
 
 

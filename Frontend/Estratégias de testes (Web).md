@@ -10,4 +10,4 @@
 
 3) Outro problema da utilização de `data-testid` é a incapacidade de injetar esse atributos em componentes de terceiros, o que será necessário utilizar referências diretas a esses elementos.
 
-**Em vez de utilizar** `data-testid` para alvejar elementos da interface, é ideia utilizar uma lista de redundâncias para recuperar esses elementos, como por exemplo, o texto, ou placeholder, ou título, ou aria-label, ou role, e assim por diante. Dessa forma, estamos testando a real interface de usuário, fazendo com que os testes reflitam cenários reais de uso.
+**Em vez de utilizar** `data-testid` para alvejar elementos da interface, é ideial utilizar uma lista de redundâncias para recuperar esses elementos, como por exemplo, o texto, ou placeholder, ou título, ou aria-label, ou role, e assim por diante. Dessa forma, estamos testando a real interface de usuário, fazendo com que os testes reflitam cenários reais de uso.

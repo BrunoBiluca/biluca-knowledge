@@ -3,24 +3,11 @@ categoria: biblioteca
 ---
 # React Testing Library
 
---- start-multi-column: ExampleRegion1  
-```column-settings  
-number of columns: 2
-Column Size: [59%, 40%]
-Border: disabled
-Shadow: off
-```
-
- React Testing Library é uma solução leve para testes em componentes do React. Esse biblioteca é baseado no DOM  e visa possibilitar a criação de testes que se assemelham a forma como o software é utilizado.
- 
---- end-column ---
+ React Testing Library é uma solução leve para testes em componentes do [[React]]. Esse biblioteca é baseado no DOM  e visa possibilitar a criação de testes que se assemelham a forma como o software é utilizado.
 
 > [!info] Principais referências
 >- [Documentação](https://testing-library.com/docs/react-testing-library/intro/)
 >- [Guia de princípios](https://testing-library.com/docs/guiding-principles/)
-
---- end-multi-column
-
 
 # Guia de princípios
 
@@ -42,6 +29,28 @@ Ordem de prioridade na hora de implementar testes
 2. Consultas semânticas
 
 3. Test IDs deve ser utilizado apenas quando não é possível consultar por role (papel) ou o texto é dinâmico.
+
+# Casos de uso
+
+### Act
+
+Act é utilizado para simular eventos assíncronos, permitindo que o teste sempre esteja no estado esperado.
+
+```ts
+it('should add todo', () => {
+	const { result } = renderHook(() => useTodoList())
+	
+	act(() => {
+	  result.current.addTodo('Test todo')
+	})
+	
+	expect(result.current.todos).toHaveLength(1)
+	expect(result.current.todos[0].text).toBe('Test todo')
+	expect(result.current.todos[0].completed).toBe(false)
+})
+```
+
+No exemplo acima, o `act` é utilizado para atualizar o estado do Hook de uma lista de tarefas, permitindo assim verificar o estado esperado logo após a invocação da função.
 
 # Eventos de usuários
 
