@@ -1,5 +1,23 @@
 # Estratégias de testes (Web)
 
+## Testes de componentes
+
+Testar componentes tem como principal objetivo garantir que esses componentes funcionem de maneira independentes, facilitando sua execução e depuração.
+
+Esse tipo de testes estão entre os testes unitários e os testes fim-a-fim, oferecendo as principais vantagens:
+
+- Resposta rápida a mudanças
+- Isolamento dos testes
+- Facilitação na depuração por se tratar de elementos mais isolados
+- Facilidade de definir os escopos do componente, como tratamento de erros e gerenciamento de estado.
+
+> [!info] Bons testes de componentes
+> Bons testes de componentes focam em testar o comportamento e a experiência do usuário a partir da implementação. Assim, é importante testar:
+> - **Contato (interface)** - testes de entrada e saída
+> - **Integrações do usuário** - clicks, submissão de formulários, navegação pelo teclado
+> - **Casos de exceção** - tratamento de erros, carregamento de informações
+> - **Evitar testes a partir de controles internos** - um bom teste não deve saber como o componente foi implementado
+
 ## Utilizar `data-testid`?
 
 `data-testid` são uma forma de testar elementos web a partir das interações dos usuários sem depender de categorizações que podem ser dinâmicas, como textos ou classes CSS.

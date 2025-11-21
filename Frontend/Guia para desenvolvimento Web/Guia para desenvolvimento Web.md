@@ -1,4 +1,4 @@
-# Guia para desenvolvimento Web Frontend
+# Guia para desenvolvimento Web
 
 ## Configurações de projeto
 
@@ -13,6 +13,7 @@ Podemos executar a aplicação em diferentes modos como:
 
 ## Testes
 
+[[Fundamentos de Ciências da Computação/Testes automatizados/Testes automatizados|Testes automatizados]]
 [[Estratégias de testes (Web)]]
 
 Para [[Frontend]] testes são muito importantes para garantir que a interação direta do usuário seja especificada, evitando problemas e garantindo que o usuário está seguindo um caminho otimizado para fazer o que ele precisa.
@@ -22,10 +23,14 @@ Assim, são coisas importantes para testar no Frontend:
 - Comportamento dos componentes
 	- Forma de renderização
 	- Caminhos condicionais
+		- Tratamento de erros
+		- Carregamento de dados
+	- Comunicação do componentes como a emissão de eventos a partir de ações dentro do componente.
 
 - Controle de estado
 	- Como os dados estão sendo gerenciado pela aplicação.
 	- Como dados externos são recuperados.
+		- Para dados externos podemos utilizar de mock para emular os dados
 
 - Classes, funções ou módulos utilitários
 

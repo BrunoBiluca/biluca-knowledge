@@ -1,6 +1,10 @@
 # Frontend
 
-Frameworks comuns de desenvolvimento
+## Frameworks
 
 - [[Angular]]
 - [[React]]
+
+## Melhores práticas
+
+- [[Guia para desenvolvimento Web]]

@@ -2,7 +2,7 @@
 
 Uma solução muito comum para aplicações quando precisamos nos comunicar com serviços externos é definir uma interface comum e múltiplas implementações, o que permite que podemos ter estados da aplicação diferentes dependendo das condições.
 
-Isso nos permite também definir vários modos de execução da aplicação, como recomendado em [[Guia para desenvolvimento Web Frontend]].
+Isso nos permite também definir vários modos de execução da aplicação, como recomendado em [[Guia para desenvolvimento Web]].
 
 Esse tipo de solução é relacionada ao [[Princípio Inversão de dependências]].
 ## Exemplo: Informações de usuários
