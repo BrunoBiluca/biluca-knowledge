@@ -18,6 +18,8 @@ Funcionalidades:
 - Renderização a partir do ambiente mais próximo do real
 - Performance é melhor que testes executados em ambientes node.js como [[React Testing Library]]
 
+Os testes criados em modo browser visam principalmente verificar a aplicação a partir da sua camada semântica utilizando principalmente `roles` como localizadores dos elementos. Isso segue o padrão semântico defendido pela Mozilla na criação de aplicações web, garantindo que ferramentas de acessibilidade sejam utilizadas com eficiência. Mais informações [ARIA Guides](https://developer.mozilla.org/pt-BR/docs/Web/Accessibility/ARIA/Guides/Techniques).
+
 ## Migração de outros frameworks
 
 ### [[Jest]] + [[React Testing Library]]
