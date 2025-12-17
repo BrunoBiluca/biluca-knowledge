@@ -30,3 +30,10 @@ for row in df.itertuples():
     st.write(f"{row.NAME} has a :{row.PET}:")
 ```
 
+### Aplicativos nativo do Snowflake
+
+## Precificação
+
+[Documentação sobre precificação de aplicações Streamlit no Snowflake](https://docs.snowflake.com/en/developer-guide/streamlit/object-management/billing)
+
+[[StreamLit]] no [[Snowflake]] é precificado de acordo com o ambiente de execução da aplicação e query warehouse.
