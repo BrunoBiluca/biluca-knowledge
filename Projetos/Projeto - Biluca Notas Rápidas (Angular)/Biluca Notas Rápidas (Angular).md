@@ -13,6 +13,9 @@ Projeto desenvolvido para estudo do Framework [[Angular]] utilizando o [[Projeto
 
 #### Soluções
 
+- Abertura de modal em nova rota mantendo a página principal
+	- 
+
 - Armazenamento de Imagens no Local Storage do navegador (IndexedDB)
 	- `/src/common/indexedDB.ts`
 
