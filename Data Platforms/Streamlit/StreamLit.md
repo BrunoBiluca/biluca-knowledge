@@ -13,3 +13,7 @@ Principais elementos do StreamLit:
 - [[Widgets]]
 - [[Caching]]
 - [[Layouts]]
+
+## Arquitetura no Front-End
+
+![[Arquitetura Front-End do Streamlit.png|Arquitetura Front-End do Streamlit]]

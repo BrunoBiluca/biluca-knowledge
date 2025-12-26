@@ -1,21 +1,11 @@
 # Fundamentos do desenvolvimento de software sustentável
 
---- start-multi-column: ExampleRegion1  
-```column-settings  
-number of columns: 2
-Column Size: [59%, 40%]
-Border: disabled
-Shadow: off
-```
-
 > [!info] Objetivo
 > Apresentar um conjunto básico de técnicas e métodos para o desenvolvimento de software, onde pela organização do trabalho num formato eficiente podem alcançar os resultados esperados.
 
 O treinamento **Fundamentos de Desenvolvimento de software sustentável** tem como objetivo preparar desenvolvedores para a criação de projetos que tenham impacto real na sociedade, projetos que não sejam iniciados de qualquer forma para logo depois serem abandonados, mas sim projetos que pessoas reais se beneficiem.
 
 Ao mesmo tempo que o esforço colocado pelos desenvolvedores seja eficiente para manter o projeto evoluindo por muitos anos.
-
---- end-column ---
 
 > [!info] Principais referências
 > - Código limpo do Robert C. Martin
@@ -30,7 +20,6 @@ Ao mesmo tempo que o esforço colocado pelos desenvolvedores seja eficiente para
 > - [Continuous Delivery](https://www.youtube.com/@ContinuousDelivery)
 >Canal no YouTube do Dave Farley auto do Modern Software Engineering que abordar vários tópicos cruciais ao desenvolvimento com um viés voltado a entrega de valor e um modelo de trabalho organizado e sustentável
 
---- end-multi-column
 #### Principais conceitos abordados
 
 - **Código limpo** e fácil de ser alterado
