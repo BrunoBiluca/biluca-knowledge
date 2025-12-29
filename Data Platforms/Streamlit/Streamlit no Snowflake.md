@@ -81,6 +81,38 @@ queried_data = data_frame.to_pandas()
 st.dataframe(queried_data, use_container_width=True)
 ```
 
+### Sessão ativa e fallback para desenvolvimento local
+
+No [[SnowFlake]] a conexão ativa (`get_active_session()`) é sempre o modo preferencial de obtenção da sessão, já que dessa maneira o usuário já é autorizado de acordo com seus respectivos papéis, limitando seu acesso.
+
+```py
+import os, configparser
+import streamlit as st
+from snowflake.snowpark import Session
+from snowflake.snowpark.context import get_active_session
+
+# Mantém a conexão ativa
+@st.cache_resource(show_spinner="Connecting to Snowflake...")
+def getSession():
+    try:
+	    # Busca a sessão ativa do SnowFlake
+        return get_active_session()
+    except:
+		# Cria uma instância partir do config file
+	    parser = configparser.ConfigParser()
+        parser.read(os.path.join(os.path.expanduser('~'), ".snowsql/config"))
+        section = "connections.demo_conn"
+        pars = {
+            "account": parser.get(section, "accountname"),
+            "user": parser.get(section, "username"),
+            "password": os.environ['SNOWSQL_PWD']
+        }
+        return Session.builder.configs(pars).create()
+
+```
+
+O código acima permite que consigamos utilizar tanto a conexão a partir do SnowFlake como também um arquivo de configuração para desenvolvimento local.
+
 ### Diferenças entre Snowpark e SnowConnector
 
 - **SnowConnector** (Python connector) executa a lógica de negócios no cliente antes de enviar para o servidor computar os dados
@@ -99,3 +131,19 @@ st.dataframe(queried_data, use_container_width=True)
 [Documentação sobre precificação de aplicações Streamlit no Snowflake](https://docs.snowflake.com/en/developer-guide/streamlit/object-management/billing)
 
 [[StreamLit]] no [[Snowflake]] é precificado de acordo com o ambiente de execução da aplicação e query warehouse.
+
+## Fluxo de desenvolvimento
+
+Para aplicações [[StreamLit]] hospedadas no [[Snowflake]], o [[Curso - Training with Streamlit for Snowflake Masterclass Hands-On]] recomenda o seguinte fluxo:
+
+- Crie e teste aplicações Streamlit no seu formato local
+	- Crie um aplicativo local Streamlit
+	- Conecte localmente ao Snowflake pelo Snowpark
+	- Teste sua aplicação
+
+- Publique como um aplicativo Streamlit nos aplicativos do Snowflake
+	- Crie uma base de dados com um stage nomeado
+	- Faça upload do seus arquivos em python no state nomenado
+	- Crie um objeto STREAMLIT, definindo como ponto de entrada o arquivo python
+	- Conecte ao Snowflake pelo `get_active_session()`
+	- Continue a edição, execute e teste a aplicação no SnowFlake.

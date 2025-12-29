@@ -11,6 +11,9 @@ Sua arquitetura consiste em 3 camadas:
 
 - **Query Processing**
 	- Snowflake processes queries using “virtual warehouses”
+	- Possui várias funções específicas que permitem criar visualizações em tabelas ricas
+		- [[SQL Reference]]
+		- [[Table functions]]
 
 - **Cloud Services**
 	- Authentication
