@@ -16,3 +16,10 @@ O supabase já disponibiliza vários fluxos de utilização do serviço de auten
 npm install @supabase/supabase-js
 ```
 
+# Precificação
+
+Supabase tem vários tipos de planos.
+
+### Plano gratuito
+
+- Projetos são pausados e tem exigem reativação em 90 dias
