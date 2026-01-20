@@ -5,6 +5,10 @@ Uma solução muito comum para aplicações quando precisamos nos comunicar com 
 Isso nos permite também definir vários modos de execução da aplicação, como recomendado em [[Guia para desenvolvimento Web]].
 
 Esse tipo de solução é relacionada ao [[Princípio Inversão de dependências]].
+
+> [!warning] Sobre essa implementação
+> 
+> A utilização de Contexto no React não é exatamente injeção de dependência, já que apenas a árvore de componentes tem acesso as instâncias criadas, nesse sentido, uma classe puramente javascript não consegue buscar instâncias como em um container de injeção de dependências.
 ## Exemplo: Informações de usuários
 
 Interface definida:

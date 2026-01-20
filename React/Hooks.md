@@ -219,6 +219,9 @@ Considerações sobre o uso de contexto:
 > [!info] Contexto não é limitado a dados estáticos.
 > Quando um valor diferente é passado para o contexto ele ativa a renderização para todos os elementos que leem desse contexto.
 
+> [!warning] Contexto não é injeção de dependências
+> Por mais que o contexto seja acessível em toda a árvore de componentes, ele não é um container de injeção de dependências ([[Injeção de dependências]]), suas dependências não podem ser injetadas a classes puramente javascript.
+
 ### [useReducer](https://react.dev/reference/react/useReducer)
 
 Adiciona um redutor (reducer) ao componente. Ele é muito parecido com o `useState`, porém permite ao declarador ter maior controle sobre o comportamento que muda o valor da variável.
