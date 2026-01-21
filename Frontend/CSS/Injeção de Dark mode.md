@@ -1,3 +1,4 @@
+# Injeção de Dark mode
 
 Código para injetar Dark mode quando este não está disponível para utilização
 
