@@ -14,6 +14,12 @@ Projeto desenvolvido para estudo de tecnologias para [[Frontend]] baseado no [[P
 - Aplicação de interação com o usuário
 	- [[React]]
 	- [[React Router]]
+	- [Shadcn](https://ui.shadcn.com/)
+		- Auxiliar para criação de componentes
+		- Agnóstico a frameworks
+		- Facilmente integrado com [[Tailwind]]
+	- [Phosphor](https://phosphoricons.com/)
+		- Biblioteca de ícones
 
 - Autenticação
 	- Supabase - https://supabase.com/
@@ -30,6 +36,7 @@ Projeto desenvolvido para estudo de tecnologias para [[Frontend]] baseado no [[P
 
 #### Soluções desenvolvidas
 
-
+- [[Standalone mode]]
+	- Configuração a partir do localStorage
 
 #### Minhas considerações
