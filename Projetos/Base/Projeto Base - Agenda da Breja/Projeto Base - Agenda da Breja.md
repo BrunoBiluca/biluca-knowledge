@@ -5,7 +5,8 @@ Título: Agenda da Breja
 O usuário irá poder marcar suas próximas visitas as cervejarias cadastradas.
 
 API de cervejarias:
-[https://api.openbrewerydb.org/v1/breweries/](https://api.openbrewerydb.org/v1/breweries/)
+[Documentação](https://www.openbrewerydb.org/documentation)
+[Endpoint de cervejarias](https://www.openbrewerydb.org/documentation)
 
 ## Conceitos abordados
 
@@ -237,3 +238,18 @@ A aplicação deve ser desenvolvida aplicando o conceito de TDD.
 ### Publicação
 
 Essa aplicação deve estar disponível publicamente.
+
+## Arquitetura
+
+### Serviço de Cervejarias
+
+A interface para implementação do serviço de busca de cervejarias:
+
+```ts
+export abstract class BreweriesData {
+  pageSize = 10;
+  abstract get(breweryId: string): Promise<Brewery>;
+  abstract getPage(page: number): Promise<Brewery[]>;
+  abstract getAll(): Promise<Brewery[]>;
+}
+```
