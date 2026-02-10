@@ -24,6 +24,8 @@ Algumas boas práticas no gerenciamento de estado global são:
 
 O **Context** foi criado para facilitar o consumo de dados entre componentes de uma aplicação. Ele **não é para ser utilizado** em casos que esses dados precisam de ser atualizados com frequência, já que ele causa re-renderizações desnecessárias na árvore de componentes quando esses dados são atualizados.
 
+O [[Exemplo - Serviços com múltiplas implementações]] demonstra a utilização do context para múltiplas implementações de uma mesma interface.
+
 Uma das **principais limitações** do Context é que ele consegue **armazenar apenas um único valor**, o que dificulta muito a modularização do código. Esse tipo de limitação é bem endereçada pelos bibliotecas externas.
 
 > [!quote]- (Documentação) - [Passando dados com Context](https://react.dev/learn/passing-data-deeply-with-context#use-cases-for-context)

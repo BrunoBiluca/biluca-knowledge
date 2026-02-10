@@ -2,6 +2,7 @@
 
 > [!info] Links
 > - [Repositório](https://github.com/BrunoBiluca/biluca-agenda-breja-react)
+> - [Link da aplicação](https://biluca-agenda-breja-react.vercel.app/)
 
 Projeto desenvolvido para estudo de tecnologias para [[Frontend]] baseado no [[Projeto Base - Agenda da Breja]].
 
@@ -37,6 +38,8 @@ Projeto desenvolvido para estudo de tecnologias para [[Frontend]] baseado no [[P
 - [[Standalone mode]]
 	- Configuração a partir do localStorage
 
+- Tratamentos de erros
+	- Cervejaria não encontrada: a aplicação redireciona a partir das rotas quando uma cervejaria não é encontrada
 #### Investigações futuras
 
 - Injeção de dependências em React

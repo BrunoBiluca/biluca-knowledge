@@ -3,23 +3,11 @@ categoria: biblioteca
 ---
 # React Router
 
---- start-multi-column: ExampleRegion1  
-```column-settings  
-number of columns: 2
-Column Size: [59%, 40%]
-Border: disabled
-Shadow: off
-```
-
-React Router é um roteador múlti-estratégia para [[React]].
-
---- end-column ---
-
 > [!info] Principais referências
 > - [Documentação](https://reactrouter.com/home)
 >- 
 
---- end-multi-column
+React Router é um roteador múlti-estratégia para [[React]].
 
 Ele apresenta 3 modos:
 
@@ -101,3 +89,57 @@ export default function Product({
   );
 }
 ```
+
+## Tratamento de erros
+
+### Página não encontrada
+
+Para tratar uma rota de uma página não encontrada precisamos configurar as seguintes partes da aplicação:
+
+- `routes.ts`
+
+```ts
+// routes.ts
+
+export const router = createBrowserRouter([
+    ...
+	{
+		path: ":breweryId",
+		errorElement: <BreweryNotFound />,           // Captura um error
+		Component: BreweryDetail,
+	},
+	...
+```
+
+- `BreweryDetail`
+
+```ts
+export const BreweryDetail = () => {
+  const [error, setError] = useState<Error | undefined>(undefined);
+  if (error) throw error;
+
+  const params = useParams();
+  const data = useBreweriesData();
+  const [brewery, setBrewery] = useState<Brewery | null>(null);
+
+  useEffect(() => {
+    const fetchBrewery = async () => {
+      if (!params.breweryId) return;
+      try {
+        const breweryData = await data.get(params.breweryId);
+        setBrewery(breweryData);
+      } catch (error) {
+        setError(error as Error);
+      }
+    };
+    fetchBrewery();
+  }, [params.breweryId, data]);
+  
+  return <div>
+      ...
+  </div>
+```
+
+É necessário capturar o erro em uma estrutura de estado e relançar o erro para que o roteamento (definido em `routes.ts`) receba e trate esse erro o que fará redirecionar para o `errorElement` configurado.
+
+O [[Projeto - Biluca Agenda da Breja (React)]] implementa uma solução completa para isso.
