@@ -1,18 +1,8 @@
 # 📕 Documentação de sistemas de software
 
---- start-multi-column: ExampleRegion1  
-```column-settings  
-number of columns: 2
-Column Size: [59%, 40%]
-Border: disabled
-Shadow: off
-```
-
 A documentação é um componente de um projeto de software que provê informações sobre o software e seus comportamentos. 
 
 A documentação não é uma coisa única e amorfa, é importante entender os diversos tipos de documentações e a audiência que as irá consumir para direcionar melhor os esforços e o tipo de informação necessária.
-
---- end-column ---
 
 > [!info] Principais referências
 >- 
@@ -24,8 +14,6 @@ A documentação não é uma coisa única e amorfa, é importante entender os di
 > 	- Apresenta vários aspectos de documentação de software com exemplos de melhores práticas
 > - [Artigo - Technical documentation in software development types best practices and tools](https://www.altexsoft.com/blog/technical-documentation-in-software-development-types-best-practices-and-tools/)
 > 	- Ótimo resumo dos principais aspectos sobre documentação em projetos de software
-
---- end-multi-column
 
 > [!important]- Toda comunicação deve ser claramente comunicada em vez de ser deixada no ar.
 > A documentação é o local onde a comunicação deve ser mais clara e objetiva. Qualquer informação que seja implícita, ou seja, está na cabeça de alguém deve ser adicionada na documentação.

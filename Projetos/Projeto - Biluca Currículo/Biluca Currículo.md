@@ -3,36 +3,17 @@ categoria: projeto
 ano: 2023
 última atualização: 2024-11-19
 ---
-
 # Biluca Currículo
-
---- start-multi-column: ID_e76b
-
-```column-settings
-Number of Columns: 2
-Column Size: [59%, 40%]
-border: off
-shadow: off
-```
 
 Esse projeto tem por objetivo fornecer um sistema simples e prático de criação de currículos de qualidade.
 
 Atualmente é utilizado no projeto do Biluca Portal.
-
---- column-break ---
 
 > [!info] Links
 > 
 > - [Repositório](https://github.com/BrunoBiluca/biluca-resume)
 > - [Documentação (Obsidian)](https://github.com/BrunoBiluca/biluca-resume/tree/main/docs)
 > - [NPM](https://www.npmjs.com/package/@brunobiluca/biluca-resume)
-
----
-
-> [!quote] Referências
->- 
-
---- end-multi-column
 
 #### Galeria
 

@@ -5,33 +5,22 @@ ano: 2024
 ---
 # Biluca Finanças
 
---- start-multi-column: ID_e76b
-
-```column-settings
-Number of Columns: 2
-Column Size: [59%, 40%]
-border: off
-shadow: off
-```
-
 Aplicativo centralizador de todas as informações para o controle das finanças de um pessoa ou família.
 
 O serviço deve ser o mais automatizado possível, de forma que o usuário não tenha que ficar cadastrando ou gerenciando informações.
 
---- column-break ---
+Utiliza os seguintes projetos desenvolvidos por mim:
+
+- [[Projeto - Biluca Doc]]
 
 > [!info] Links
 > 
 > - [Repositório](https://github.com/BrunoBiluca/biluca-finances)
 > - [Documentação (Obsidian)](https://github.com/BrunoBiluca/biluca-finances/tree/main/docs)
 
----
-
 > [!quote] Referências
 >- [[Curso - Flutter Clean Architecture Full Course For Beginners - Bloc, Supabase, Hive, GetIt]]
 >    - Refatoração do código e estruturação do projeto
-
---- end-multi-column
 
 #### Galeria
 

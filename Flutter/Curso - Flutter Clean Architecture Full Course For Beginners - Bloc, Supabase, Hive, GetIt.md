@@ -1,24 +1,12 @@
 # Curso - Flutter Clean Architecture Full Course For Beginners - Bloc, Supabase, Hive, GetIt
 
---- start-multi-column: ExampleRegion1  
-```column-settings  
-number of columns: 2
-Column Size: [59%, 40%]
-Border: disabled
-Shadow: off
-```
-
-Autor: Rivaan Ranawat
-
 Esse curso apresenta o desenvolvimento de uma aplicação completa a fim de apresentar tópicos de arquitetura limpa e boas práticas de desenvolvimento em flutter e auxiliares.
-
---- end-column ---
 
 > [!info] Principais referências
 > - [Vídeo](https://www.youtube.com/watch?v=ELFORM9fmss)
 >- [Github](https://github.com/RivaanRanawat/blog-app-clean-architecture)
-
---- end-multi-column
+>
+>Autor: Rivaan Ranawat
 
 É um ótimo curso para apresentar Flutter e boas práticas de desenvolvimento. O autor faz um bom trabalho demonstrando os princípios SOLID em vários pontos do projeto, porém algumas estruturas criadas ferem os princípios (provavelmente o autor sabe disso, mas por causa de diminuir a complexidade e onerosidade do curso ele removeu).
 
