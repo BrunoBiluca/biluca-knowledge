@@ -1,12 +1,12 @@
 {
-  "accentColor": "",
+  "accentColor": "#51aa22",
   "baseFontSize": 16,
   "enabledCssSnippets": [
     "supercharged-links",
     "default",
     "center-images"
   ],
-  "cssTheme": "Dracula Official",
+  "cssTheme": "Mono High Contrast",
   "theme": "system",
   "nativeMenus": false,
   "showRibbon": false,
