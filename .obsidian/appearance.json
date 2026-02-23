@@ -6,9 +6,10 @@
     "default",
     "center-images"
   ],
-  "cssTheme": "Mono High Contrast",
+  "cssTheme": "Dracula Official",
   "theme": "system",
   "nativeMenus": false,
   "showRibbon": false,
-  "baseFontSizeAction": false
+  "baseFontSizeAction": false,
+  "showViewHeader": true
 }

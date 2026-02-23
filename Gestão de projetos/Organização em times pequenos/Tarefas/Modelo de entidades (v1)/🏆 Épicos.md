@@ -65,7 +65,7 @@ onde,
 ⬆️ representam as depedências do Épico não concluídas
 ```
 
-Para mais informações sobre as prioridades acesse o [link para 🌟 Valores](Gestão%20de%20projetos/Organização%20em%20times%20pequenos/Modelo%20de%20entidades/🌟%20Valores.md).
+Para mais informações sobre as prioridades acesse o [link para 🌟 Valores](🌟%20Valores.md).
 
 ### Exemplo do cálculo de priorização de um 🏆 Épico
 

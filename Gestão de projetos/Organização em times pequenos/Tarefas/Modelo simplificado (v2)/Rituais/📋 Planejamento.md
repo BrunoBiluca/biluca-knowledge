@@ -1,0 +1,5 @@
+# 📋 Planejamento
+
+> [!info] Objetivo
+> 
+

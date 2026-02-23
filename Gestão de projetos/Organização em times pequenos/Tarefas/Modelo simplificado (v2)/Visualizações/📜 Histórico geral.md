@@ -1,0 +1,4 @@
+# 📜 Histórico geral
+
+> [!info] Objetivo
+
