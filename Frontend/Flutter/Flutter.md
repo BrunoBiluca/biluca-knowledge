@@ -110,7 +110,7 @@ class MyHome extends StatelessWidget {
 
 # Visual e estilo
 
-- [[Flutter/Estilização/Estilização|Estilização]]
+- [[Frontend/Flutter/Estilização/Estilização|Estilização]]
 
 # Notificações do Linter
 

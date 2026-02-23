@@ -17,7 +17,7 @@ Principais elementos do React:
 - [[Tratamento de Erros]]
 - [[Gerenciamento de estado]]
 - [[Hooks]]
-- [[React/Estilização]]
+- [[Frontend/React/Estilização]]
 - [[Eventos]]
 
 # CLI Options
@@ -34,6 +34,6 @@ Para criar testes em React é possível utilizando duas extensões:
 
 - [[Jest]]
 - [[React Testing Library]]
-- [[React/Vitest|Vitest]]
+- [[Frontend/React/Vitest|Vitest]]
 
 

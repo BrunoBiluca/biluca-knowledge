@@ -22,7 +22,7 @@ Projeto desenvolvido para estudo de tecnologias para [[Frontend]] baseado no [[P
 	- [Phosphor](https://phosphoricons.com/)
 		- Biblioteca de ícones
 	- [[Vite]] para gerenciamento de pacotes
-	- [[React/Vitest|Vitest]] como biblioteca de testes automatizados
+	- [[Frontend/React/Vitest|Vitest]] como biblioteca de testes automatizados
 
 - Autenticação
 	- [[Supabase]] como um serviço de backend para armazenamento de informações da aplicação e autenticação de usuários

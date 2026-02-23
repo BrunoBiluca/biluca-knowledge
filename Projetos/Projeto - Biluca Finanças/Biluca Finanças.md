@@ -63,7 +63,7 @@ shadow: off
 	- [[Logging]]
 	- [[Mocktail]]
 	- [[StaggeredGrid]]
-	- [[Flutter/SQLite]]
+	- [[Frontend/Flutter/SQLite]]
 
 - [[Python]]
 	- SKLearn
