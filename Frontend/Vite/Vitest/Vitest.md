@@ -11,7 +11,7 @@ Para melhores práticas na criação de testes seguir o indicado em [[Guia para 
 
 ## Modo Browser
 
-O [[Frontend/Vite/Vitest|Vitest]] recomenda desenvolver os testes aplicados ao modo Browser, dessa forma é possível ter uma ambiente mais próximo que o real, já que os testes estão sendo executados diretamente em um browser.
+O [[Frontend/Vite/Vitest/Vitest|Vitest]] recomenda desenvolver os testes aplicados ao modo Browser, dessa forma é possível ter uma ambiente mais próximo que o real, já que os testes estão sendo executados diretamente em um browser.
 
 Funcionalidades:
 

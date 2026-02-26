@@ -10,7 +10,6 @@ Esse modelo foi então inspirado na minha [[Organização pessoal]] sendo ainda 
 - [[Gestão de projetos/Organização em times pequenos/Tarefas/Modelo simplificado (v2)/🚧 Atividade/🚧 Atividade|🚧 Atividade]]
 - [[Gestão de projetos/Organização em times pequenos/Tarefas/Modelo simplificado (v2)/🏆 Épico/🏆 Épico|🏆 Épico]]
 
-
 #### Visualizações
 
 - [[Gestão de projetos/Organização em times pequenos/Tarefas/Modelo simplificado (v2)/Visualizações/🐣 Incubadora|🐣 Incubadora]]

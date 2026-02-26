@@ -1,6 +1,6 @@
 # Vitest
 
-[[Frontend/Vite/Vitest|Vitest]] é um framework agnóstico que pode ser utilizado para [[React]].
+[[Frontend/Vite/Vitest/Vitest|Vitest]] é um framework agnóstico que pode ser utilizado para [[React]].
 
 ## Comparação entre bibliotecas de testes de renderização
 
