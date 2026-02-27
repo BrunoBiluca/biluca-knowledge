@@ -62,9 +62,8 @@ O conteúdo de uma [[🚧 Atividade]] muda de acordo com o seu [[🍱 Tipos de A
 
 Para todas as atividades temos:
 
-- **Objetivo** - Uma frase clara do que será executado.
-
-- **Impacto** - Por que será executado? Qual o ganho em realizar essa execução?
+- **Objetivo** - Uma frase clara do que será executado e o por que será executado
+	- Deve ficar claro qual o ganho em realizar essa atividade.
 
 - **Conclusão** - Um pequeno texto para descrever resultados, aprendizados e considerações sobre a [[🚧 Atividade]]
 	- Utilizado principalmente no rituais de [[🌀 Retrospectiva]] para entender o que foi feito
