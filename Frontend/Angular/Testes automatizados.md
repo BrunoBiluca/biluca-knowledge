@@ -6,8 +6,11 @@ Testes automatizados em [[Angular]] já são habilitados por padrão. (mais sobr
 
 As ferramentas padrão utilizadas são:
 
+- [[Frontend/Vite/Vitest/Vitest|Vitest]]
 - [[Jasmine]] como framework de testes
+	- Foi descontinuado nas versões mais recentes
 - [[Karma]] como executor dos testes
+	- Foi descontinuado nas versões mais recentes
 
 Principais elementos que queremos testar:
 
