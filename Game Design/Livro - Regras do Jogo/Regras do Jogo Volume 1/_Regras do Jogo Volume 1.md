@@ -14,7 +14,7 @@ Capítulos
 1. [[Sobre essa Obra]]
 2. [[O processo de design]]
 3. [[Interação lúdica significativa]]
-4. [[Design]]
+4. [[Game Design/Livro - Regras do Jogo/Regras do Jogo Volume 1/Design]]
 5. [[Sistemas]]
 6. [[Interatividade]]
 7. [[Definindo Jogos]]

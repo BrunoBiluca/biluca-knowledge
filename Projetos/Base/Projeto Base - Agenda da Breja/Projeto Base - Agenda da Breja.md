@@ -8,7 +8,7 @@ API de cervejarias:
 [Documentação](https://www.openbrewerydb.org/documentation)
 [Endpoint de cervejarias](https://www.openbrewerydb.org/documentation)
 
-## Conceitos abordados
+# Conceitos abordados
 
 ### Frontend
 
@@ -68,7 +68,7 @@ Conceitos mais gerais do desenvolvimento de software:
 - Capacidade de refatoração
 - Testabilidade
 
-## Requisitos
+# Requisitos
 
 ### 01 - Listagem das cervejarias
 
@@ -114,7 +114,7 @@ Campos necessários
 
 Campos opcionais
 - Pessoas
-	- Pessoas cadastradas em outras visitas aparecem como opções para novas visitas
+	- Nomes de pessoas que irão comparecer ao agendamento
 	- [[#Preenchimento da galera]]
 - Observações
 
@@ -182,9 +182,9 @@ __Impacto__
 - Guarda de páginas (usuário está ou não logado)
 
 
-## Requisitos não funcionais
+# Requisitos não funcionais
 
-### Isolar serviços de consultas externas
+### RNF 01 - Isolar serviços de consultas externas
 
 Todas as consultas externas devem ser isoladas em seus respectivos serviços.
 
@@ -192,9 +192,38 @@ Apenas um lugar deve implementar uma requisição.
 
 Simular um delay de carregamento para testar indicador de carregamento.
 
-### Exibição de imagens das cervejarias
+### RNF 02 - Página protegidas
 
-Utilizar algum site aberto de imagens para exibir aleatórias na lista de exibição de imagens.
+As páginas internas da aplicação devem ser protegidas e apenas acessadas por usuários logados.
+
+### RNF 03 - Testes automatizados
+
+A aplicação deve ser desenvolvida aplicando o conceito de TDD.
+
+Novo código deverá ter um mínimo de cobertura de testes
+
+### RNF 04 - Publicação
+
+Essa aplicação deve estar disponível publicamente.
+
+### RNF 05 - Modo de Standalone
+
+[[Standalone mode]]
+
+# Arquitetura
+
+### Serviço de Cervejarias
+
+A interface para implementação do serviço de busca de cervejarias:
+
+```ts
+export abstract class BreweriesData {
+  pageSize = 10;
+  abstract get(breweryId: string): Promise<Brewery>;
+  abstract getPage(page: number): Promise<Brewery[]>;
+  abstract getAll(): Promise<Brewery[]>;
+}
+```
 
 ### Gerenciamento de dados de visitas
 
@@ -221,35 +250,13 @@ Galera:
 }
 ```
 
-### Preenchimento da galera
+# Experiência de usuário e design
 
-A galera é preenchida automaticamente por pessoas previamente convidadas em vistas a cervejarias.
 
-São buscadas todas as pessoas relacionadas ao usuário que está cadastrando a visita.
 
-### Página protegidas
+## Soluções
 
-As páginas internas da aplicação devem ser protegidas e apenas acessadas por usuários logados.
+###  Exibição de imagens das cervejarias
 
-### Testes automatizados
+Utilizar algum site aberto de imagens para exibir aleatórias na lista de exibição de imagens.
 
-A aplicação deve ser desenvolvida aplicando o conceito de TDD.
-
-### Publicação
-
-Essa aplicação deve estar disponível publicamente.
-
-## Arquitetura
-
-### Serviço de Cervejarias
-
-A interface para implementação do serviço de busca de cervejarias:
-
-```ts
-export abstract class BreweriesData {
-  pageSize = 10;
-  abstract get(breweryId: string): Promise<Brewery>;
-  abstract getPage(page: number): Promise<Brewery[]>;
-  abstract getAll(): Promise<Brewery[]>;
-}
-```
