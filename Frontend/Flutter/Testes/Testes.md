@@ -1,6 +1,13 @@
 # Testes
 
-- [Testes](https://docs.flutter.dev/testing/overview)
+Testes já são uma funcionalidade nativa do [[Flutter]].
+
+- [Documentação do Flutter de Testes](https://docs.flutter.dev/testing/overview)
+
+#### Algumas soluções comuns para testes
+
+- [[Solução - thenAnswerMany]]
+- 
 
 # Mocks
 
@@ -27,26 +34,4 @@ final service = PredictService(client, repo);
 - `req.url`: captura as informações da url como querystring, caminho, domínio e outros parâmetros
 - `req.body`: captura as informações enviadas no corpo da requisição
 
-## Códigos utilitários
 
-### thenAnswerMany
-
-```dart
-// implementação
-import 'package:mocktail/mocktail.dart';
-
-extension WhenExtension<T> on When<T> {
-  thenAnswerMany(List<Answer<T>> cbs) {
-    return thenAnswer((invocation) {
-      if (cbs.isEmpty) throw "No more answers available";
-      return cbs.removeAt(0)(invocation);
-    });
-  }
-}
-
-// uso
-when(() => mock.someMethod().thenAnswerMany([
-  (_) => 1, // retorno da primeira chamada
-  (_) => 2, // retorno da segunda chamada
-]);
-```

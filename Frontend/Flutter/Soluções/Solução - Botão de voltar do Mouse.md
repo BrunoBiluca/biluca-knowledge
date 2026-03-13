@@ -1,4 +1,4 @@
-# Botão de voltar do Mouse
+# Solução - Botão de voltar do Mouse
 
 Em [[Flutter]] o botão de voltar do Mouse é capturado como qualquer outro evento de pressionamento de botão ([PointerEvent-class](https://api.flutter.dev/flutter/gestures/PointerEvent-class.html)), porém por padrão não apresenta nenhum comportamento.
 

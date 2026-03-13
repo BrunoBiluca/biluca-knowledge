@@ -15,7 +15,7 @@ Principais elementos do React:
 - [[Árvore de componentes]]
 - [[Ciclo de vida dos componentes]]
 - [[Tratamento de Erros]]
-- [[Gerenciamento de estado]]
+- [[Frontend/React/Gerenciamento de estado]]
 - [[Hooks]]
 - [[Frontend/React/Estilização]]
 - [[Eventos]]
