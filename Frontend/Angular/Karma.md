@@ -1,5 +1,8 @@
 # Karma
 
+> [!warning] Descontinuado
+>O Karma foi oficialmente descontinuado em 2023. Agora o [[Angular]] utiliza o [[Frontend/Vite/Vitest/Vitest|Vitest]] como executor dos testes.
+
 Karma é um executor de testes (test runner) criado pelo time de desenvolvimento do [[Angular]].
 
 Suas principais funcionalidades são:
