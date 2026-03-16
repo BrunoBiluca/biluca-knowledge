@@ -24,7 +24,7 @@ Ele já inclui soluções integradas para:
 - [[Incremental DOM (Angular Ivy)]]
 - [[Pipes]] – Transformação de dados diretamente nos templates (ex.: `date`, `currency`).
 - [[Roteamento]] (`@angular/router`)
-- [[Frontend/Angular/Testes automatizados|Testes automatizados]]
+- [[Frontend/Angular/Testes automatizados/Testes automatizados|Testes automatizados]]
 - [[Frontend/Angular/Estilização|Estilização]]
 - [[App config]]
 - [[Bases de dados e armazenamento]]
@@ -73,3 +73,4 @@ Exemplos de Estilização
 - [[Exemplo - Ajustar à cor de fundo]]
 - [[Exemplo - Personalizar input]]
 - [[Exemplo - Temas de estilos]]
+- [[Exemplo - Conter imagem em espaço definido]]
