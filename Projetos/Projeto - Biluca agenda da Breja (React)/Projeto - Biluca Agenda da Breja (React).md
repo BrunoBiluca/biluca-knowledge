@@ -15,7 +15,7 @@ Projeto desenvolvido para estudo de tecnologias para [[Frontend]] baseado no [[P
 - Aplicação de interação com o usuário
 	- [[React]]
 	- [[React Router]]
-	- [Shadcn](https://ui.shadcn.com/)
+	- [[ShadCN]]
 		- Auxiliar para criação de componentes
 		- Agnóstico a frameworks
 		- Facilmente integrado com [[Tailwind]]
@@ -40,12 +40,15 @@ Projeto desenvolvido para estudo de tecnologias para [[Frontend]] baseado no [[P
 
 - Tratamentos de erros
 	- Cervejaria não encontrada: a aplicação redireciona a partir das rotas quando uma cervejaria não é encontrada
+
 #### Investigações futuras
 
 - Injeção de dependências em React
 	- Buscar uma forma de fazer uma injeção de dependência completa, com um container de instâncias, passagem de parâmetros nos construtores, ou um [[Injeção de dependências]]
 	- Ou entender porque não é utilizado e qual outro padrão a seguir para gerenciar estado.
 	- Visto que Angular, Flutter e frameworks backend já estão todos utilizanod DI como prática
+
+- Preciso ainda melhorar na criação de testes automatizados para interfaces de usuário, ainda tenho dúvidas quanto ao que testar e as melhores formas de organizar os testes.
 
 ## Principais aprendizados
 
@@ -61,3 +64,16 @@ Acredito ser um ótimo modo para testar o fluxo da aplicação, até porque temo
 
 Como descrito em [[Hooks]] o contexto é utilizado para definir estado levantado em consideração a árvore de componentes, ou seja, classes puras de javascript não tem acesso aos contextos. Assim, não temos um serviço de injeção de dependências completo, precisando utilizar referências globais para classes puras.
 
+### Integração com o Supabase
+
+O [[Supabase]] é um ótimo serviço para prototipação, criar o sistema de cadastramento e autorização foi bem simples.
+
+Ele também foi utilizado para a persistência das informações de agendamentos de visitas.
+
+## Galeria
+
+![[tela de login.png|Tela de cadastramento e login]]
+
+![[Listagem de agendamentos e cervejarias.png|Listagem de agendamentos e de cervejarias]]
+
+![[Formulário de agendamento.png|Formulário de agendamento de uma visita]]
