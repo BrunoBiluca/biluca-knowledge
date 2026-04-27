@@ -44,11 +44,11 @@ Adiciona e remove classes CSS no HTML:
 
 #### ng-container
 
-`ng_container` é um elemento especial que segura diretivas estruturais sem adicionar nenhum elemento no DOM.
+`ng_container` é um elemento especial que segura diretivas estruturais sem adicionar nenhum elemento no DOM. Para utilizar essa diretiva é necessário importar o módulo `import { CommonModule } from '@angular/common';`
 
 Pode ser utilizado para permitir usar diretivas estruturais sem quebrar a estilização como uso de container Flex, margens...
 
-Pode ser utilizado em combinação com outras diretivas estruturais como `ngIf` ou `ggCompomentOutlet`.
+Pode ser utilizado em combinação com outras diretivas estruturais como `ngIf` ou `ngCompomentOutlet`.
 
 ```ts
 // Uso com ngComponentOutlet 
