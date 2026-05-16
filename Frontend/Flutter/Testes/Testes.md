@@ -6,7 +6,7 @@ Testes já são uma funcionalidade nativa do [[Flutter]].
 
 #### Algumas soluções comuns para testes
 
-- [[Solução - thenAnswerMany]]
+- [[thenAnswerMany]]
 - 
 
 # Mocks

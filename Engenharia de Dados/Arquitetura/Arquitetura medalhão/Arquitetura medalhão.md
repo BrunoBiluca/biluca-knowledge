@@ -3,22 +3,7 @@ categoria: arquitetura
 ---
 # Arquitetura medalhão
 
---- start-multi-column: ExampleRegion1  
-```column-settings  
-number of columns: 2
-Column Size: [59%, 40%]
-Border: disabled
-Shadow: off
-```
-
 A separação por camadas nos permite definir objetivos bem claros para cada conjunto de dados armazenado.
-
---- end-column ---
-
-> [!info] Principais referências
-> - 
-
---- end-multi-column
 
 # Bronze
 
@@ -47,4 +32,6 @@ Caso seja necessário persistir dados inválidos podemos utilizar dois tipos de 
 - Adicionar um campo com o estado da validação
 	- Processa a base inteira apenas uma vez, porém não é possível verificar as métricas de [[Qualidade dos dados]] pela interface (no caso do Databricks)
 - Adicionar um filtro com a restrição desejada ao processamento de dados, dessa forma não é necessário remover os dados inválidos da tabela e apenas recebemos dados válidos a partir daquele momento.
+
 # Ouro
+

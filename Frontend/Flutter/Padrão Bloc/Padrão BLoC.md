@@ -12,7 +12,7 @@ Essa arquitetura visa resolver alguns problemas do desenvolvimento de aplicativo
 
 
 
-![[flutter-bloc-communication-diagram.webp|Diagrama de comunicação entre as camadas em uma arquitetura BLoC|500]]
+![[flutter-bloc-communication-diagram.webp|Diagrama de comunicação entre as camadas em uma arquitetura BLoC]]
 
 ### Flutter bloc
 

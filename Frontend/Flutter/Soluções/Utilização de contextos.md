@@ -1,4 +1,4 @@
-# Solução - Utilização de contextos
+# Utilização de contextos
 
 Um caso muito comum para soluções de [[Frontend]] e principalmente em [[Flutter]] é utilizar um contexto para um ramo da árvore de componentes. Isso é uma boa prática já que reduz a passagem de propriedades entre os componentes, além de garantir que todos os componentes estão ligados a uma mesma instância. Essa prática deixa o código mais legível e evita problemas.
 
