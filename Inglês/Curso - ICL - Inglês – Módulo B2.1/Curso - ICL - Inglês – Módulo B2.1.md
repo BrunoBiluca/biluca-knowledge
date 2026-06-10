@@ -21,3 +21,5 @@ Além disso, compreenderá e usará estruturas gramaticais e vocabulário interm
 ### Conteúdos abordados
 
 - [[Cleft Sentenses]]
+- [[Conditionals]]
+- 
