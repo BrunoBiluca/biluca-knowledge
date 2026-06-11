@@ -23,7 +23,7 @@ Existem várias formas de buscar requisitos funcionais, entre elas podemos:
 
 Quando estiver levantando seus requisitos funcionais tente focar nos seguintes aspectos:
 
-- Levante o máximo de detalhes possíveis, como cenários de uso, [[Documentação/Componentes/Critérios de aceite|Critérios de aceite]]. Isso irá ajudar a definir melhor o escopo do requisito.
+- Levante o máximo de detalhes possíveis, como cenários de uso, [[Critérios de aceite|Critérios de aceite]]. Isso irá ajudar a definir melhor o escopo do requisito.
 - Revisar os documentos quando novas ideias aparecerem ou serem modificadas.
 
 Também é possível descrever os requisitos funcionais como [[Histórias de usuário]], essa é uma forma mais guiada ao usuário dos recursos do produto.

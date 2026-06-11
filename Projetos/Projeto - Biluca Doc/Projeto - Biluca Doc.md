@@ -7,7 +7,7 @@ ano: 2025
 
 O Biluca Doc é um conjunto de plugins e templates que definem a estrutura de um projeto de software, a fim de agilizar a inicialização do projeto e garantir que as pessoas desenvolvam coisas que realmente importem de uma forma sustentável.
 
-Baseado nos conhecimentos consolidados de [[📕 Documentação de sistemas de software]].
+Baseado nos conhecimentos consolidados de [[Documentação de sistemas de software]].
 
 > [!info] Links
 > 

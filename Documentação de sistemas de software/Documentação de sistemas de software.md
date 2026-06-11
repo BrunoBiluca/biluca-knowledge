@@ -1,4 +1,4 @@
-# 📕 Documentação de sistemas de software
+# Documentação de sistemas de software
 
 A documentação é um componente de um projeto de software que provê informações sobre o software e seus comportamentos. 
 

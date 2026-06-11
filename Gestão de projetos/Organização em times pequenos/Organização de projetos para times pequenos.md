@@ -6,7 +6,7 @@ Utilização do [[Modelo de entidades]] para controle das entidades de software 
 
 A documentação é uma entidade inegociável do processo de organização de um projeto de software. Cada tipo de documentação nos fornece os mais distintos benefícios sejam eles antes de iniciar o projeto, durante o desenvolvimento e depois da sua entrega.
 
-[[📕 Documentação de sistemas de software]]
+[[Documentação de sistemas de software]]
 
 # Papéis do time
 

@@ -108,7 +108,7 @@ Maus exemplos
 
 ### Critérios de aceite (CA)
 
-[[Documentação/Componentes/Critérios de aceite|Critérios de aceite]]
+[[Critérios de aceite|Critérios de aceite]]
 
 Bons exemplos
 
