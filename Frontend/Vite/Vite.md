@@ -24,7 +24,7 @@ Vite é uma ferramenta que busca incentivar a criação de código moderno por m
 
 - **Resolução de dependências do [[npm]] e pre-bundling**
 - **Troca de módulos quentes:** providencia troca de componentes pelas versões mais atualizadas sem recarregar a página ou jogar fora o estado da aplicação
-- [[Typescript]]
+- [[TypeScript]]
 	- Usa [[esbuild]] para fazer a transpilação em JavaScript.
 - **Multi-page application** por meio de páginas HTML
 - Suporte ao **JSX e TSX**

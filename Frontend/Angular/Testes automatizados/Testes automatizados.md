@@ -2,7 +2,7 @@
 
 [Documentação](https://angular.dev/guide/testing)
 
-Testes automatizados em [[Angular]] já são habilitados por padrão. (mais sobre [[Fundamentos de Ciências da Computação/Testes automatizados/Testes automatizados|Testes automatizados]])
+Testes automatizados em [[Angular]] já são habilitados por padrão. (mais sobre [[Fundamentos de Software/Testes automatizados/Testes automatizados|Testes automatizados]])
 
 As ferramentas padrão utilizadas são:
 

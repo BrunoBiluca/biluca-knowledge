@@ -36,7 +36,7 @@
 		{"id":"2b99e126378707ab","type":"text","text":"### Azure Data Lake\n\n- ","x":200,"y":3814,"width":329,"height":86,"color":"1"},
 		{"id":"ac8890ee6fdc9787","type":"text","text":"### Ingestão de dados\n\n- ","x":-274,"y":2860,"width":334,"height":100},
 		{"id":"c6ab8983e8d89770","type":"text","text":"### Logstash\n\n- [[LogStash]]","x":200,"y":2860,"width":329,"height":120,"color":"3"},
-		{"id":"ba636fff78d30e71","type":"file","file":"Fundamentos de Ciências da Computação/Fundamentos de Ciências da Computação.canvas","x":-895,"y":-1480,"width":329,"height":380},
+		{"id":"ba636fff78d30e71","type":"file","file":"Fundamentos de Software/Fundamentos de Ciências da Computação.canvas","x":-895,"y":-1480,"width":329,"height":380},
 		{"id":"fd9e112889aba756","type":"text","text":"### ElasticSearch\n\n- [[Elasticsearch]]","x":-269,"y":1363,"width":324,"height":122,"color":"5"},
 		{"id":"96fa2b445d21d611","type":"text","text":"### FSCrawler\n\n- [[FSCrawler]]","x":620,"y":2860,"width":329,"height":120},
 		{"id":"ac9a28634dcb3d44","type":"text","text":"### Orquestração\n\n- ","x":-895,"y":4071,"width":329,"height":87},

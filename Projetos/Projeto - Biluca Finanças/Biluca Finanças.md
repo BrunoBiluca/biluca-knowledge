@@ -70,7 +70,7 @@ shadow: off
 	- [[pypdf]]
 	- [[PyInstaller]]
 
-- [[SQLite/SQLite|SQLite]]
+- [[Bancos de dados/SQLite/SQLite|SQLite]]
 
 - [[Inno Setup]] utilizada na compilação do pacote e criação de instalador para windows
 
@@ -93,7 +93,7 @@ Nesse projeto eu desempenhei as seguintes funções:
 - Idealizador: levantamento de funcionalidades
 - Coordenador: organização de definição das tarefas
 - Arquiteto: arquitetura geral da aplicação, definição das tecnologias utilizadas, modelagem dos dados
-- Desenvolvedor: implementação do frontend ([[Flutter]]), backend ([[Python]]) e banco de dados [[SQLite/SQLite|SQLite]]
+- Desenvolvedor: implementação do frontend ([[Flutter]]), backend ([[Python]]) e banco de dados [[Bancos de dados/SQLite/SQLite|SQLite]]
 - Designer: criação da experiência de usuário, criação do layout
 
 #### Considerações

@@ -13,7 +13,7 @@ Podemos executar a aplicação em diferentes modos como:
 
 ## Testes
 
-[[Fundamentos de Ciências da Computação/Testes automatizados/Testes automatizados|Testes automatizados]]
+[[Fundamentos de Software/Testes automatizados/Testes automatizados|Testes automatizados]]
 [[Estratégias de testes (Web)]]
 
 Para [[Frontend]] testes são muito importantes para garantir que a interação direta do usuário seja especificada, evitando problemas e garantindo que o usuário está seguindo um caminho otimizado para fazer o que ele precisa.

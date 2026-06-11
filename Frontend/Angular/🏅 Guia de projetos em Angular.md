@@ -12,7 +12,7 @@ O desenvolvimento de aplicações [[Frontend]] se apresenta com vários desafios
 > [!quote] Referências 
 > - [[Princípios de código]]
 > - [[Código limpo]]
-> - [[Fundamentos de Ciências da Computação/Testes automatizados/Testes automatizados|Testes automatizados]]
+> - [[Fundamentos de Software/Testes automatizados/Testes automatizados|Testes automatizados]]
 
 ## Estrutura de pastas e arquivos
 
