@@ -4,7 +4,7 @@
 
 [[Tailwind]] é um framework criado para construir designs personalizados e para isso é necessário configurar tipografia, cores, sombras, pontos de quebra de responsividade e mais.
 
-Basicamente definirmos essas variáveis personalizadas no CSS na raiz do projeto.
+Basicamente definimos essas variáveis personalizadas no [[CSS]] na raiz do projeto.
 
 ```css
 @import "tailwindcss";
@@ -25,6 +25,9 @@ Nesse exemplo podemos:
 Algum texto
 </p>
 ```
+
+> [!tip] Por que `@theme` em vez de `:root`?
+> Variáveis do tema não são apenas variáveis do CSS, elas também são importantes para instruir [[Tailwind]] para criar novas classes utilitárias que serão utilizadas durante o projeto.
 
 ## Layers (camadas)
 

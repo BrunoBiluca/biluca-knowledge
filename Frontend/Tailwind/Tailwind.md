@@ -6,7 +6,7 @@
 > - [HyperUI](https://www.hyperui.dev/) coleção de componentes prontos para Tailwind CSS v4
 > 	- Só copiar o código e colar no projeto
 
-Tailwind constrói um CSS estático a partir de todos os arquivos HTML, Javascript e outros tipos de templates do projeto.
+Tailwind constrói um [[CSS]] estático a partir de todos os arquivos [[HTML]], [[Javascript]] e outros tipos de templates do projeto.
 
 Tailwind disponibiliza uma série de classes utilitárias que definem o CSS, isso é uma forma muito mais flexível e simples de estilizar o HTML do que o que estamos acostumados.
 
