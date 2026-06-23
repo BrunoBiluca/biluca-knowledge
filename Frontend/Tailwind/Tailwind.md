@@ -20,6 +20,8 @@ Construir HTML dessa forma pode contradizer vários dos princípios que estamos 
 
 #### Principais funcionalidades
 
+- Utilização de [[Layers (camadas)]] para definir cada elemento
+
 - **Fácil estilização de estados hover e focus** 
 
 - **Media queries** são implementadas de forma direta a partir das classes utilitárias de forma muito simples
@@ -58,3 +60,7 @@ O código abaixo cria uma caixa de informação que exibe quando uma nova mensag
 ```
 
 ![[Exemplo de utilização do Tailwind.png|Output da estilização]]
+
+## Melhores práticas
+
+- [Lidando com duplicação de código](https://tailwindcss.com/docs/styling-with-utility-classes#managing-duplication)
