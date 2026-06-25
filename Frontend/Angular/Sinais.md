@@ -13,7 +13,7 @@ Vantagens da utilização de sinais sobre o modelo Two-way binding tradicional:
 > [!warning] Sinais vs Eventos
 > Sinais são estruturas utilizadas principalmente para gerenciamento de estado. Mesmo que elas emitam eventos de mudança de estado, utilizar sinais para inscrição em eventos não é o ideal, a interface para isso com [[RxJS]] é muito mais eficiente.
 
-#### Input e Output
+### Input e Output
 
 Demonstração do Input e Output entre componentes.
 
@@ -155,3 +155,53 @@ Signals também facilitam a sincronização de estado entre servidor e cliente, 
 - Estados Assíncronos Complexos no SSR, a lógica utilizando RxJS pode ser um pouco mais complexa e gerar duplicação
 - Computações Derivadas no Lado do Servidor
 
+### Resources
+
+Todos os sinais (signals, computed, input, etc) são síncronos, porém em várias aplicações temos a necessidade de lidar com dados de forma assíncrona, para isso temos os Resources.
+
+No [[Projeto - Biblioteca de Jogos]] esse recurso foi utilizado para buscar as informações de campos em formulários em APIs externas, como o caso de nomes de jogos, desenvolvedores.
+
+```ts
+export class GameRegistrationForm {
+  readonly search = signal('');
+
+  // Executa o loader sempre que o signal 'search' é alterado
+  gamesOptions = resource({
+    defaultValue: [],
+    params: () => ({ search: this.search() }),
+    loader: async ({ params }) => {
+      const search = params.search;
+
+      if (search.length === 0) {
+        return [];
+      }
+
+      return await this.searchGames(search.toLowerCase());
+    },
+  });
+
+  searchGames(search: string): Promise<any[]> {
+    // Consulta a API para a busca de jogos
+  }
+...
+}
+
+```
+
+#### Encadeamento de `resources`
+
+```ts
+import {resource} from '@angular/core';
+
+const userResource = resource({
+  params: () => ({id: getUserId()}),
+  loader: ({params}) => fetchUser(params),
+});
+
+const companyResource = resource({
+  params: ({chain}) => chain(userResource)?.companyId,
+  loader: ({params: companyId}) => fetchCompany(companyId),
+});
+```
+
+Nesse exemplo, o `companyResource` só estará disponível para buscar a companhia quando o resultado do `userResource` for resolvido.
