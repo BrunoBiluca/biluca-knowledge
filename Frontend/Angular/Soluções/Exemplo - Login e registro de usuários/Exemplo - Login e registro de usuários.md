@@ -6,6 +6,18 @@
 
 ![[large_auth_strategy.webp|Diagrama de classes da implementação de login no projeto]]
 
+
+Aqui está contida a lógica do sistema de [[Backend/Autenticação/Autenticação|Autenticação]] e de [[Autorização]].
+
+#### Funcionalidades
+
+- Cadastro do usuário
+- Gerenciamento da sessão do usuário
+	- Login
+	- Logout
+- Adaptação da UI de acordo com a autorização do usuário
+- Guarda de rotas em relação a autenticação e a autorização do usuário
+
 ### Componente de Login
 
 ```ts
