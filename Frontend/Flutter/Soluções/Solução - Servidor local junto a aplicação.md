@@ -1,6 +1,6 @@
-# Servidor local junto a aplicação
+# Solução - Servidor local junto a aplicação
 
-É possível empacotar um servidor rodando python junto com a aplicação. Dessa forma podemos encapsular algumas funcionalidades para esse servidor local ou remoto. Para aplicativos desktop podemos utilizar o servidor local e para aplicativos mobile e web servidores remotos.
+É possível empacotar um servidor rodando [[Python]] junto com a aplicação [[Flutter]]. Dessa forma podemos encapsular algumas funcionalidades para esse servidor local ou remoto. Para aplicativos desktop podemos utilizar o servidor local e para aplicativos mobile e web servidores remotos.
 
 > [!Documentação]
 > - [Guia de integração do Flutter com Python](https://dev.to/maximsaplin/integrating-flutter-all-6-platforms-and-python-a-comprehensive-guide-4ipo)
@@ -12,7 +12,7 @@ Esse repositório foca na criação de um servidor gRPC que o flutter irá fazer
 
 Recursos necessários:
 
-- [[Python#PyInstaller]] utilizado para gerar o executável do servidor python
+- [[PyInstaller]] utilizado para gerar o executável do servidor python
 
 Componentes
 - Aplicativo flutter: processo principal

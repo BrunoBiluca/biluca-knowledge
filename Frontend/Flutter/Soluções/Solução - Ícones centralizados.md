@@ -1,4 +1,4 @@
-# Ícones centralizados
+# Solução - Ícones centralizados
 
 O flutter tem por padrão ícones quadrados que garante a renderização centralizada, porém quando estamos utilizando ícones de outros pacotes não temos essa garantia, o que pode levar a ícones desalinhas quando estes são retangulares.
 
