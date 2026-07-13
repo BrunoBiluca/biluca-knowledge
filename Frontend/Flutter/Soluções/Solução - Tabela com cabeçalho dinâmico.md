@@ -1,4 +1,7 @@
-# Tutorial - Alterar cabeçalho de acordo com a posição da rolagem
+# Solução - Tabela com cabeçalho dinâmico
+
+> [!example] Projetos relacionados
+> - [[Projetos/Projeto - Biluca Finanças/Biluca Finanças|Biluca Finanças]]
 
 Como o [[DataTable2]] nos permite fixar o cabeçalho de uma tabela uma funcionalidade nesse tipo de apresentação é **alterar as informações no cabeçalho a fim de situar o usuário** sobre a seção que ele está visualizando. Isso é muito comum para mostrar seções de acordo com a ordenação da tabela.
 

@@ -27,3 +27,29 @@ Examples
 - Second conditional
 
 1. If I ever forgot to lock the front door or turn off the stove, my smart home would send me a notification and allow me to take care of it no matter where I was.
+
+### 3rd Conditional
+
+> [!info] Structure - Present consequences
+> If + hadn't + Past Participle, wouldn't + Present simple/continuous
+
+> [!info] Structure - Past consequences
+> If + hadn't + Past Participle, wouldn't + have + Past participle
+
+Examples:
+
+| Past fact (verb)                              | Present consequence (verb)                                 | Past Consequence (verb)                                        |
+| --------------------------------------------- | ---------------------------------------------------------- | -------------------------------------------------------------- |
+| Greenhouse gas emissions have risen           | Glaciers are melting at a fast speed. (present continuous) | The Earth's temperature has changed. (Present perfect)         |
+| Deforestation increased in the past 10 years. | Biodiversity loss is more severe. (Simple present)         | Many species were impacted in the past ten years (simple past) |
+
+Present consequences:
+
+- If greenhouse gas emissions **hadn't risen**, glaciers **wouldn't be melting** (present continuous) at a fast speed.
+- If deforestation **hadn't increased** in the past ten years, the biodiversity loss **wouldn't be** (simple present) more severe.
+
+Past consequences:
+
+- If greenhouse gas emissions **hadn't risen**, the Earth's temperature **wouldn't have changed.**
+- If deforestation **hadn't increased** in the past 10 years, that **wouldn't have impacted** many species.
+

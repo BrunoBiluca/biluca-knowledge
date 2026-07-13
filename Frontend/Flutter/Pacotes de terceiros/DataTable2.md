@@ -27,4 +27,4 @@ Plataformas suportadas
 
 # Tutoriais
 
-- [[Tutorial - Alterar cabeçalho de acordo com a posição da rolagem]]
+- [[Solução - Tabela com cabeçalho dinâmico]]
