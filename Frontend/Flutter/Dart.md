@@ -10,7 +10,7 @@ categoria: linguagem
 >
 >- [Documentação](https://dart.dev/overview)
 
-# Interfaces e Abstrações
+## Interfaces e Abstrações
 
 Em Dart todos os objetos são definidos na declaração de classes possibilitando a uma classe filha implementar qualquer método da classe pai ([Interfaces implícitas](https://dart.dev/language/classes#implicit-interfaces)).
 
@@ -37,7 +37,7 @@ class B implements A {
 var a = A(); // ERROR: acusa erro de inicialização já que não possui construtor
 ```
 
-# Classes executáveis (callable classes)
+## Classes executáveis (callable classes)
 
 É uma função simples que poder ser utilizada sempre que uma classe implementa o método `call`, esse método pode ter parâmetros também.
 

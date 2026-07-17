@@ -1,4 +1,4 @@
-# Acessibilidade
+# Acessibilidade (Web)
 
 Os princípios para acessibilidade são abordagens que ajudem a **antecipar, incluir e responder as necessidades dos indivíduos**.
 
@@ -19,7 +19,7 @@ Formas de tecnologias assistivas:
 
 ## Marcação de acessibilidade
 
-A marcação de acessibilidade (ou _markup_) baseia-se no uso correto do **HTML semântico** e de atributos **ARIA** (Accessible Rich Internet Applications). Isso permite que leitores de tela e tecnologias assistivas compreendam a estrutura, o estado e a função dos elementos na sua página.
+A marcação de acessibilidade (ou _markup_) baseia-se no uso correto do **HTML semântico** e de atributos [[ARIA roles]] (Accessible Rich Internet Applications). Isso permite que leitores de tela e tecnologias assistivas compreendam a estrutura, o estado e a função dos elementos na sua página.
 
 Usar os elementos nativos da plataforma aproveita o conhecimento do usuário para conseguir uma navegação mais consistente. Usar elementos não-padronizados exige testes extras para atender as necessidades de acessibilidade.
 
@@ -79,3 +79,30 @@ Manter a consistência entre todos os elementos de toque ou ponteiro evita erros
 ### Espaçamento
 
 Na maioria dos casos, alvos separados por 8dp de espaço ou mais promovem densidade e usabilidade de informações equilibradas.
+
+## Fluxo
+
+As pessoas devem ser capazes de navegar e interagir com o seu aplicativo **sem o uso de um mouse tradicional ou tela sensível ao toque**. Para suportar a navegação por teclado, leitor de tela ou outra tecnologia assistiva, os objetivos devem ser alcançáveis usando guia, seta e outras teclas de navegação comuns.
+
+Simplifique seus fluxos por: 
+
+- Estrategicamente ordenando paradas de foco (uso do Tab)
+- Reduzir a complexidade geral da página
+
+> [!tip] Foco
+> Focus refere-se a qual controle é atualmente o alvo ativo das interações do usuário, como cliques do mouse ou toques de teclado.
+
+Determinando o fluxo da aplicação:
+
+1. Agrupe casos de uso por funcionalidade ou produto.
+
+2. Defina um foco inicial e nível de foco para os componentes
+
+3. Defina qualquer travessia atípica entre as páginas e componentes
+	- **Tab e Tab + Shift** são utilizados para navegação entre componentes
+	- **Arrow keys** são utilizados dentro do componente
+	- **Enter** ativa uma função, como apertar um link ou botão, ou enviar um formulário
+	- Os atalhos de teclado devem usar uma combinação de duas ou mais teclas por padrão.
+
+4. Eduque seu usuário
+	- Inclua um tutorial, lista ou página de centro de ajuda de todos os atalhos de teclado personalizados em seu produto. Por exemplo, Cmd+Z (Ctrl+Z) para desfazer a exclusão de um evento no Google Calendar.
