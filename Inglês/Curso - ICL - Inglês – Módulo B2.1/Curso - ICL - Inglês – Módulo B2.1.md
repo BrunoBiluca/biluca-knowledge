@@ -8,7 +8,7 @@
 > Aulas: 66
 > Quizzes: 10
 
-### **OBJETIVOS DE APRENDIZAGEM**
+## OBJETIVOS DE APRENDIZAGEM
 
 Ao final do nível B2, o aluno poderá:
 
@@ -18,8 +18,11 @@ Ao final do nível B2, o aluno poderá:
 
 Além disso, compreenderá e usará estruturas gramaticais e vocabulário intermediários, incluindo tempos verbais diversos, preposições, artigos, pronomes, conjunções, advérbios e adjetivos, etc.
 
-### Conteúdos abordados
+## Conteúdos abordados
+
+#### Módulo B2.1
 
 - [[Cleft Sentenses]]
 - [[Conditionals]]
 - [[Phrasal verbs]]
+- [[Modals]]
