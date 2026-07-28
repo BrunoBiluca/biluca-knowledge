@@ -16,7 +16,17 @@ Conceitos comuns ao utilizar o Fivetran:
 | **connector type** | The pre-built component that determines which source type Fivetran connects to. For example, Salesforce is a connector type                                                                                                                                                                                                                                                                                                                                             |
 | **group**          | A group maps users to the destination. Each group is mapped on a 1:1 basis to its destination. We do this mapping using the group's `id` value that we automatically generate when you create a group, and the destination's `group_id` value that you specify when you create a destination. This means that you must create a group in your Fivetran account before you can create a destination in it. Users and connections can be provisioned within these groups. |
 
+![[Fivetran UI (2026).png|Fivetran UI em 2026]]
+
+# Fivetran SDK
+
+[Documentação do SDK](https://fivetran.com/docs/connector-sdk)
+
+O Fivetran SDK permite desenvolver um conector de dados personalizado usando [[Python]] e publica-lo como uma extensão do Fivetran.
+
 # Fivetran API
+
+[Documentação da API](https://fivetran.com/docs/rest-api)
 
 O Fivetran disponibiliza uma API Rest que permite executar várias operações da plataforma de forma programável.
 

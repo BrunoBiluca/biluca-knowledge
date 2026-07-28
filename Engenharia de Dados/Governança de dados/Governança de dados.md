@@ -4,22 +4,10 @@ tags:
 ---
 # Governança de dados
 
---- start-multi-column: ExampleRegion1  
-```column-settings  
-number of columns: 2
-Column Size: [59%, 40%]
-Border: disabled
-Shadow: off
-```
-
 A governança de dados é a estrutura de política interna de uma organização que determina a forma como as pessoas tomam decisões de gerenciamento de dados. Todos os aspectos da gestão de dados devem ser realizados de acordo com as políticas de governança da organização.
-
---- end-column ---
 
 > [!info] Principais referências
 > - [Artigo - O que governança de dados](https://www.integrate.io/glossary/what-is-data-governance/)
-
---- end-multi-column
 
 A governança de dados se compromete a definir vários elementos entre eles:
 
