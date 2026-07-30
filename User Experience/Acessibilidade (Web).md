@@ -23,6 +23,13 @@ A marcação de acessibilidade (ou _markup_) baseia-se no uso correto do **HTML 
 
 Usar os elementos nativos da plataforma aproveita o conhecimento do usuário para conseguir uma navegação mais consistente. Usar elementos não-padronizados exige testes extras para atender as necessidades de acessibilidade.
 
+### Como adicionar rótulos
+
+Os rótulos ajudam a deixar a experiência de texto tão usável quanto a experiência visual. Rótulos devem descrever o **conteúdo, propósito e comportamento de um elemento.**
+
+Não é necessário adicionar o tipo do elemento ao rótulo, isso ocorre automaticamente quando adicionado um papel a esse elemento ([[ARIA roles]]).
+
+Para mais exemplos de rotulação acessar [[Material Design]].
 ## Cor e contraste
 
 Cor e contraste ajudam os usuários a interpretar o conteúdo da aplicação e interagir com os elementos certos.
@@ -106,3 +113,37 @@ Determinando o fluxo da aplicação:
 
 4. Eduque seu usuário
 	- Inclua um tutorial, lista ou página de centro de ajuda de todos os atalhos de teclado personalizados em seu produto. Por exemplo, Cmd+Z (Ctrl+Z) para desfazer a exclusão de um evento no Google Calendar.
+
+## Escrita
+
+Escrita assistiva se refere ao texto que é utilizado por software de leitura de tela. Esses softwares leem o texto visível e não visível.
+
+- Texto adjacente é utilizado para explicar imagens ao redor
+	- **legendas (captions)** são textos que aparecem abaixo das imagens e adicionam contexto sobre ela.
+	- **texto alternativo (alt text)** traduz o visual para textual.
+
+> [!warning] Texto embarcado em imagens
+> Leitores de telas não conseguem ler textos embarcados em imagens.
+
+- Cor do texto
+	- Informações essenciais devem ter o mínimo de contraste
+		- 3:1 para texto grande
+		- 4.5:1 para texto pequeno
+	- Informações não-essenciais não precisam seguir as normas de contraste, suas cores podem refletir questões mais decorativas do projeto.
+
+- Truncamento de texto
+	- Informação sempre deve estar disponível para os leitores, mesmo que o texto tenha sido truncado ou evolvido
+	- Aumentar o tamanho do texto, espaçamento ou traduzir um texto não deve apresentar perda de conteúdo
+	- Soluções
+		- Envolva o texto, caso ainda o texto não caiba na tela, dê ao usuário opções para ver mais do texto.
+		- Use componentes flexíveis que alterem sua altura ou largura dependendo do conteúdo
+			- Use todo o espaço disponível nesses componentes com o texto
+		- Texto pode ser truncado usando reticências (...), nesse caso é necessário providenciar opção ao usuário para ver o texto completo.
+
+- Reajuste de texto
+	- Texto e a altura da linha devem escalar proporcionalmente
+	- Padding e espaçamento deve permanecer constantes em qualquer escala
+	- Para calcular o tamanho de uma fonte usando multiplicadores, pegue o tamanho padrão da fonte (densidade = 0) e multiplique-o pelo valor da escala.
+		- Por exemplo, se uma fonte é 14pt em escala 1x, então o tamanho da fonte deve ser 28pt quando ampliado para 2x escala: (14pt) x (valor de escala 2) = 28.
+	- Componentes que não possuem texto, como barras de progresso, caixas de texto ou botões radiais não devem ser afetados pela escala do texto.
+	- Evite problemas com a escala do texto aumentando o tamanho dos containers, refazendo o fluxo da aplicação, habilitando rolagem e adicionando **tooltips**.
