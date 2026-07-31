@@ -58,7 +58,7 @@ shadow: off
 
 - [[Flutter]]
 	- [[Dart]]
-	- [[fl_chart (gráficos)]]
+	- [[fl_chart]]
 	- [[GetIt]]
 	- [[Logging]]
 	- [[Mocktail]]
