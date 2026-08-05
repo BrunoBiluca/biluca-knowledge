@@ -1,4 +1,6 @@
-### thenAnswerMany
+# Solução - thenAnswerMany
+
+Solução para [[Mocktail]] de forma a verificar o resultado de várias invocações de uma mesmo método mockado.
 
 ```dart
 // implementação

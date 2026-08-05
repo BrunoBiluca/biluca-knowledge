@@ -22,6 +22,6 @@ right.write("Dentro da coluna da direita")
 ```
 
 > [!warning] Componentes de layout não ativam eventos.
-> Para isso é necessário um [[Widgets]] de entrada. Por exemplo, quando uma tab é exibida, não é possível associar um callback para carregar dados específicos.
+> Para isso é necessário um [[Engenharia de Dados/Data Platforms/Streamlit/Widgets]] de entrada. Por exemplo, quando uma tab é exibida, não é possível associar um callback para carregar dados específicos.
 
 

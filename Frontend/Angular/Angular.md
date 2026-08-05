@@ -13,7 +13,7 @@ Ele já inclui soluções integradas para:
 	- [[Diretivas]] – Estendem HTML com comportamentos dinâmicos (ex.: `*ngIf`, `*ngFor`).
 		- Várias diretivas foram atualizadas a partir da versão 17 para deixarem o código mais fluído
 		- **Deferrable Views** – Carregamento lazy de seções da view (`@defer`).
-	- [[Formulários]]
+	- [[Frontend/Angular/Formulários]]
 - [[Serviços]]
 	- **Requisições HTTP** (`HttpClient`)
 - Gerenciamento de estados
