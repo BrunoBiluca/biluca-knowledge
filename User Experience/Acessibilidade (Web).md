@@ -121,6 +121,9 @@ Escrita assistiva se refere ao texto que é utilizado por software de leitura de
 - Texto adjacente é utilizado para explicar imagens ao redor
 	- **legendas (captions)** são textos que aparecem abaixo das imagens e adicionam contexto sobre ela.
 	- **texto alternativo (alt text)** traduz o visual para textual.
+		- ajudam a melhorar o [[SEO]]
+		- focar no significado da imagem
+		- o tamanho recomendado é 140 caracteres
 
 > [!warning] Texto embarcado em imagens
 > Leitores de telas não conseguem ler textos embarcados em imagens.
