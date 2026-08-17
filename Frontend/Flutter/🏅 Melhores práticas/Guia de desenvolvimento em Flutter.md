@@ -1,4 +1,5 @@
-# Notas sobre desenvolvimento em Flutter
+# Guia de desenvolvimento em Flutter
+
 
 Algumas considerações gerais sobre desenvolvimento de aplicações em [[Flutter]].
 

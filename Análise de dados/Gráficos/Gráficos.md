@@ -1,6 +1,5 @@
 # Gráficos
 
-
 > [!quote]- (Site de referência) - [Datavizproject](https://datavizproject.com/)
 > É um site de referência para visualizações de dados, trás vários elementos visuais para ajudar na hora de apresentar os dados da melhor forma possível
 
