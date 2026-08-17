@@ -9,12 +9,11 @@ O React se ampara principalmente em [[JSX]] ou TSX (variante do JSX para [[TypeS
 
 > [!info] Principais referências
 > - [Documentação](https://react.dev/learn)
+> - [[Guia de desenvolvimento em React]]
 
-Principais elementos do React:
+Principais recursos
 
-- [[Árvore de componentes]]
 - [[Frontend/React/Recursos/Componentes]]
-- [[Tratamento de Erros]]
 - [[Frontend/React/Recursos/Gerenciamento de estado]]
 - [[Hooks]]
 - [[Frontend/React/Recursos/Estilização]]
