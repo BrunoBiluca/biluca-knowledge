@@ -1,4 +1,4 @@
-# Criando um aplicação com Vite
+# Vite em React
 
 Estrutura de pasta de uma aplicação [[React]] com [[Vite]].
 

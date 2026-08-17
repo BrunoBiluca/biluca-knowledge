@@ -1,6 +1,6 @@
-# Publicação de bibliotecas
+# Solução - Publicação de bibliotecas em React
 
-Uma biblioteca para React nada mais é do que uma aplicação React só que o cliente será uma segunda aplicação que instala a biblioteca. 
+Uma biblioteca para [[React]] nada mais é do que uma aplicação React só que o cliente será uma segunda aplicação que instala a biblioteca. 
 
 > [!quote]- Artigo - [Creating a library of React components using Create React App](https://hackernoon.com/creating-a-library-of-react-components-using-create-react-app-without-ejecting-d182df690c6b)
 > 

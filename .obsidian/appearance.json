@@ -6,7 +6,7 @@
     "default",
     "center-images"
   ],
-  "cssTheme": "Light & Bright",
+  "cssTheme": "Dracula Official",
   "theme": "system",
   "nativeMenus": false,
   "showRibbon": false,

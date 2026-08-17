@@ -13,11 +13,11 @@ O React se ampara principalmente em [[JSX]] ou TSX (variante do JSX para [[TypeS
 Principais elementos do React:
 
 - [[Árvore de componentes]]
-- [[Ciclo de vida dos componentes]]
+- [[Frontend/React/Recursos/Componentes]]
 - [[Tratamento de Erros]]
-- [[Frontend/React/Gerenciamento de estado]]
+- [[Frontend/React/Recursos/Gerenciamento de estado]]
 - [[Hooks]]
-- [[Frontend/React/Estilização]]
+- [[Frontend/React/Recursos/Estilização]]
 - [[Eventos]]
 
 # CLI Options
@@ -25,7 +25,7 @@ Principais elementos do React:
 O [[React]] possui algumas formas de fazer o controle a partir de linha de comando:
 
 - [[Vite]]
-	- [[Criando um aplicação com Vite]]
+	- [[Vite em React]]
 - Create React App
 
 # Testes em React
@@ -34,6 +34,6 @@ Para criar testes em React é possível utilizando duas extensões:
 
 - [[Jest]]
 - [[React Testing Library]]
-- [[Frontend/React/Vitest|Vitest]]
+- [[Vitest em React|React com Vitest]]
 
 

@@ -1,4 +1,4 @@
-# Integração contínua
+# Github actions para CI em React
 
 Para garantir que a qualidade de uma aplicação criada em [[React]] precisamos publicar continuamente suas alterações a fim de entender seu comportamento.
 

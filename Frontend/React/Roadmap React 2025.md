@@ -14,7 +14,7 @@ tags: [excalidraw]
 
 [[React]] ^D8CUZnEg
 
-[[Publicação de bibliotecas]] ^MVpiYo2n
+[[Solução - Publicação de bibliotecas em React]] ^MVpiYo2n
 
 [[Hooks]] ^oGPRzQ4c
 
@@ -43,7 +43,7 @@ Testes ^oTHjotZf
 Gerenciamento de estado ^yE83YWWZ
 
 ## Embedded Files
-83c6806ae20a3900578f186fdb797ecf03bc4c35: [[roadme_2025.png]]
+83c6806ae20a3900578f186fdb797ecf03bc4c35: [[Roadmap React 2025.png]]
 
 %%
 ## Drawing
