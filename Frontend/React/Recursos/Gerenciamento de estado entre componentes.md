@@ -1,4 +1,4 @@
-# Gerenciamento de estado
+# Gerenciamento de estado entre componentes
 
 Gerenciamento de estado no [[React]] é quando precisamos manter estado da aplicação e não apenas de cada componente.
 
@@ -13,6 +13,7 @@ Existem várias formas de manter esse estado entre os componentes, entre elas as
 - **Context** - nativo do próprio React
 - [[Recoil]]
 - [[Zustand]]
+- [[Redux]]
 
 Algumas boas práticas no gerenciamento de estado global são:
 
@@ -22,11 +23,9 @@ Algumas boas práticas no gerenciamento de estado global são:
 
 ### Context
 
-O **Context** foi criado para facilitar o consumo de dados entre componentes de uma aplicação. Ele **não é para ser utilizado** em casos que esses dados precisam de ser atualizados com frequência, já que ele causa re-renderizações desnecessárias na árvore de componentes quando esses dados são atualizados.
+O **Context** foi criado para facilitar o consumo de dados entre componentes de uma aplicação. Ele **não é feito para ser utilizado** em casos que esses dados precisam de ser atualizados com frequência, já que ele causa re-renderizações desnecessárias na árvore de componentes quando esses dados são atualizados.
 
-O [[Exemplo - Serviços com múltiplas implementações]] demonstra a utilização do context para múltiplas implementações de uma mesma interface.
-
-Uma das **principais limitações** do Context é que ele consegue **armazenar apenas um único valor**, o que dificulta muito a modularização do código. Esse tipo de limitação é bem endereçada pelos bibliotecas externas.
+Uma das **principais limitações** do Context é que ele consegue **armazenar apenas um único valor**, o que dificulta muito a modularização do código. Esse tipo de limitação é bem endereçada pelos bibliotecas externas como [[Zustand]] e [[Redux]].
 
 > [!quote]- (Documentação) - [Passando dados com Context](https://react.dev/learn/passing-data-deeply-with-context#use-cases-for-context)
 > Documentação trata dos principais casos de uso da utilização do Context e trás também a discussão sobre suas limitações.
@@ -34,3 +33,6 @@ Uma das **principais limitações** do Context é que ele consegue **armazenar a
 > [!quote]- (Artigo) - [Você está utilizando React Context errado](https://blog.codeminer42.com/you-are-using-react-context-wrong/)
 > Série de dicas para evitar as principais armadilhas de utilizar Context para gerenciamento de estado.
 > A utilização do Context e valores default causa altas confusões
+
+> [!example]- [[Exemplo - Serviços com múltiplas implementações]]
+> Demonstra a utilização do context para múltiplas implementações de uma mesma interface.

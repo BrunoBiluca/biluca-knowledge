@@ -5,7 +5,30 @@
 
 Quando um componente mantém algum estado, é necessário decidir a **quantidade e o formato dos dados** que será mantido.
 
-## Princípios
+Para como funciona [[Gerenciamento de estado entre componentes]].
+
+Bibliotecas recomendadas:
+
+- [[Zustand]] para qualquer projeto
+- [[Redux]]
+	- Não acho que o Redux é uma biblioteca tão mais robusta que compense em relação ao Zustand
+
+Para gerenciamento de estado assíncrono:
+
+- [[TanStack Query]]
+
+## Princípios do React
+
+Essa seção explica alguns princípios de gerenciamento de estado para uma aplicação em [[React]].
+
+Aqui estamos interessados no estado da aplicação, por exemplo:
+
+- Controlar qual post está selecionado (`selectedPostId`).
+- Controlar se a sidebar está aberta.
+- Guardar o filtro de busca digitado pelo usuário.
+- Controlar a paginação (página atual).
+- Estado de formulários complexos.
+- Tema escuro/claro
 
 ### Agrupe estados relacionados
 
@@ -217,3 +240,59 @@ function PlaceTree({ place }) {
 ```
 
 Agora, é possível com apenas um nível de acesso editar a lista.
+
+## Gerenciamento de estado assíncrono
+
+Além do estado dos componentes, também é necessário sincronizar, cachear, atualizar estado assíncrono (providos por uma API) (backend).
+
+São necessidades comuns a dados assíncronos:
+
+- **Cache de dados**
+	- Uma mesma query pode ser acessada de dois ou mais componentes
+- **Gerenciamento de loading e erros**
+	- Toda requisição assíncrona deve indicar seu tempo de carregamento e possíveis erros de conexão
+- **Revalidação de dados em segundo plano**
+	- Enquanto o usuário interage, os dados devem ser revalidados para mostrar informações atualizadas sem travamentos de tela.
+- **Retentativas de conexão**
+	- Casos de falha de conexão são comuns em ambientes com sinal fraco de internet.
+- **Dedup de requisições**
+	- De tempos em tempos os dados devem ser atualizados para mostrar as informações mais recentes.
+
+> [!warning] Bibliotecas de Gerenciamento de estado da aplicação
+> Geralmente as bibliotecas gerais (Zustand, Redux...) não são ideias para controle de estado assíncrono, já que não implementam nenhuma solução para as necessidades específicas desse tipo de dado.
+
+Exemplo utilizando [[TanStack Query]]
+
+```tsx
+function Posts() {
+  const { data, isLoading, error } = useQuery({
+    queryKey: ['posts'],
+    queryFn: () => fetch('/api/posts').then(res => res.json()),
+    // Já tem cache, retry, refetch na janela focada, staleTime, etc.
+  });
+  // ... render
+}
+```
+
+## Combinação dos estados síncronos e assíncronos
+
+A arquitetura moderna mais performática é:
+
+- **TanStack Query** cuida de todo o estado assíncrono vindo do backend (busca, cache, sincronia).
+- **Zustand** (ou Context API) cuida do estado síncrono da UI.
+    
+Se você precisa de um dado da Query dentro do Zustand, faça:
+
+```tsx
+const useStore = create((set) => ({
+  filters: { category: 'tech' },
+  setFilters: (newFilters) => set({ filters: newFilters }),
+}));
+
+// No componente:
+const filters = useStore((state) => state.filters);
+const { data } = useQuery({
+  queryKey: ['posts', filters], // A Query reage às mudanças do Zustand!
+  queryFn: () => fetchPosts(filters),
+});
+```

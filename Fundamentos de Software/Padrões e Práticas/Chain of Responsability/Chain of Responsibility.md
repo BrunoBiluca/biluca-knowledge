@@ -60,6 +60,3 @@ landingPage.handle(request);
 userRoute.handle(request);
 ```
 
-
-# Referências
-

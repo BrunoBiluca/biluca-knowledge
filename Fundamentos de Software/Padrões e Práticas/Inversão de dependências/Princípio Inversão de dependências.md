@@ -54,7 +54,7 @@ Agora, o DIP (Dependency Inversion Principle) está nos diz para inverter o flux
 
 O fluxo de controle seguirá o mesmo caminho. No entanto, agora ambos os nossos objetos dependerão do nível de abstração da interface. Assim, _ClassB_ inverte sua dependência em relação a _ClassA_. Também podemos criar um diagrama de classes para mostrar como ambas as classes agora dependem da abstração:
 
-![[class_diagram_2.webp|center]]
+![[class_diagram_2.webp|center|170]]
 
 Da mesma forma, podemos ver isso como código:
 

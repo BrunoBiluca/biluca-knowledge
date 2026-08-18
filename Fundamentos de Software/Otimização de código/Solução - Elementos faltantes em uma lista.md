@@ -1,6 +1,3 @@
-#programação/padrões 
-# Otimização de código
-
 # 📜 Problema: Elementos faltantes em uma lista
 
 Um tarefa costumeira no desenvolvimento de software é verificar se elementos existem ou não em uma listagem. Levamos por exemplo o seguinte problema:

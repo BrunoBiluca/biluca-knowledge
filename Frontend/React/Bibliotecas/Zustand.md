@@ -3,17 +3,16 @@ categoria: biblioteca
 ---
 # Zustand
 
-
 > [!info] Principais referências
 > - [Documentação](https://zustand.docs.pmnd.rs/getting-started/introduction)
 
-Pequena e rápida solução para gerenciamento de estado em [[React]]
+Pequena e rápida solução para gerenciamento de estado em [[React]].
 
 Zustand não depende de context providers para funcionar.
 
 ```js
-// Exemplo mais simples de declaração de um estado e suas ações utilizanod Zustand
 // countStore.js
+// Exemplo mais simples de declaração de um estado e suas ações
 import { create } from 'zustand'
 
 type State = {
@@ -34,9 +33,43 @@ const useCountStore = create<State & Actions>((set) => ({
 
 Zustand também permite separar a lógica do armazenamento global em múltiplos pedaços ([Slices Pattern](https://zustand.docs.pmnd.rs/guides/slices-pattern)). Isso permite uma maior modularização do nosso código enquanto mantemos uma única fonte de verdade (boa prática) para nossa aplicação.
 
-### Boas práticas
+## Chamadas assíncronas
 
-#### Exportar apenas Hooks customizados
+Zustand já integração ações assíncronas diretamente.
+
+```jsx
+// store.js
+const useUserStore = create((set) => ({
+  data: null,
+  loading: false,
+  fetchUser: async (id) => {
+    set({ loading: true })
+    try {
+      const response = await fetch(`/api/users/${id}`)
+      const data = await response.json()
+      set({ data, loading: false })
+    } catch {
+      set({ loading: false })
+    }
+  }
+}))
+
+// Componente
+function UserProfile({ userId }) {
+  const { data, loading, fetchUser } = useUserStore()
+  
+  useEffect(() => {
+    fetchUser(userId)
+  }, [userId])
+  
+  return loading ? <Spinner /> : <div>{data?.name}</div>
+}
+```
+
+## Boas práticas
+
+
+### Exportar apenas Hooks customizados
 
 Essa é uma forma de garantir que o armazenamento será sempre inicializado da mesma forma, além de reduzir código escrito.
 
@@ -61,7 +94,7 @@ E podemos utilizar no cliente:
 const count = useCount();
 ```
 
-#### Usar seletores atômicos
+### Usar seletores atômicos
 
 Quando precisamos de construir objetos com múltiplos valores podemos fazer o seguinte:
 
@@ -72,7 +105,7 @@ const {a, b} = useABStore((state) => ({
 })
 ```
 
-O problema dessa abordagem é que cada vez que criamos esse objeto um novo objeto é criado a cara renderização, podendo fazer o app quebrar.
+O problema dessa abordagem é que cada vez que criamos esse objeto um novo objeto é criado a cada renderização, podendo fazer o app quebrar.
 
 Podemos corrigir esse problema utilizando Hooks para cada objeto:
 
@@ -93,3 +126,6 @@ const {a, b} = useABStore((state) =>
 ```
 
 Porém, ainda assim é recomendável utilizar Hooks atômicos para cada objeto.
+
+> [!tip] Múltiplos armazenamentos
+> Para dividir o nosso estado em múltiplos armazenamentos podemos utilizar o [[Slice Pattern]].

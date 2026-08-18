@@ -14,7 +14,7 @@ O React se ampara principalmente em [[JSX]] ou TSX (variante do JSX para [[TypeS
 Principais recursos
 
 - [[Frontend/React/Recursos/Componentes]]
-- [[Frontend/React/Recursos/Gerenciamento de estado]]
+- [[Gerenciamento de estado entre componentes]]
 - [[Hooks]]
 - [[Frontend/React/Recursos/Estilização]]
 - [[Eventos]]

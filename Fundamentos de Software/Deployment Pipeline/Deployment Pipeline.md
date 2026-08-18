@@ -5,7 +5,7 @@
 > - Livro Dave Farley - Software Developer's Guide - 2025
 > - Livro Dave Farley - Continuous Delivery Pipeline
 
-O deployment pipeline (esteira de publicação) é um mecanismo de falseamento, onde nos permite aprender mais, corrigir erros de falhas de testes rápidos.É uma plataforma que nos permite testar ideias rapidamente e muda-las na mesma velocidade. Esse mecanismos no provê informações sobre o ciclo da aplicação, estabilidade e vazão de novas funcionalidades, permitindo assim tomar decisões baseados em métricas claras. 
+O deployment pipeline (esteira de publicação) é um mecanismo de falseamento, onde nos permite aprender mais, corrigir erros de falhas de testes rápidos. É uma plataforma que nos permite testar ideias rapidamente e muda-las na mesma velocidade. Esse mecanismos no provê informações sobre o ciclo da aplicação, estabilidade e vazão de novas funcionalidades, permitindo assim tomar decisões baseados em métricas claras. 
 
 O que a esteira de publicação não é:
 
