@@ -125,7 +125,7 @@ const cachedFn = useCallback(fn, dependencies)
 
 Para o Javascript, uma função sempre cria um função diferente, isso pode gerar um problema de renderização fazendo que o componente seja renderizado sem necessidade.
 
-Assim o useCallback persiste essa função que será atualiza apenas se suas dependências mudarem.
+Assim, o `useCallback` persiste essa função que será atualiza apenas se suas dependências mudarem.
 
 ```js
 const handleSubmit = useCallback((orderDetails) => {
@@ -136,7 +136,8 @@ const handleSubmit = useCallback((orderDetails) => {
   }, [productId, referrer]); // muda apenas quando productId e referrer mudar
 ```
 
-`useCallback` é muito comum de ser utilizado junto com `useMemo`, já que o useMemo persiste o resultado de uma função, enquanto o useCallback a própria função, isso possibilita otimizar alguns elementos que exijam mais cálculos, como um formulário por exemplo.
+> [!tip]- `useCallback` e `useMemo`
+> É muito comum utilizar o `useCallback` junto com `useMemo`, já que o `useMemo` persiste o resultado de uma função, enquanto o `useCallback` a própria função, isso possibilita otimizar alguns elementos que exijam mais cálculos, como um formulário por exemplo.
 
 ### [useMemo](https://react.dev/reference/react/useMemo)
 
