@@ -9,6 +9,9 @@ Esse tipo de solução é relacionada ao [[Princípio Inversão de dependências
 > [!warning] Sobre essa implementação
 > 
 > A utilização de Contexto no React não é exatamente injeção de dependência, já que apenas a árvore de componentes tem acesso as instâncias criadas, nesse sentido, uma classe puramente javascript não consegue buscar instâncias como em um container de injeção de dependências.
+
+> [!example]- [[Projeto - Biluca Agenda da Breja (React)]]
+> Implementa essa solução.
 ## Exemplo: Informações de usuários
 
 Interface definida:

@@ -1,5 +1,7 @@
 #programação/equipe  
 
+# Programação em par
+
 Programação em par é uma possível forma de desenvolver qualquer tarefa no dia a dia do desenvolvimento de software. Essa prática é recomendada principalmente para melhorar as integrações entre os integrantes do time de desenvolvimento e compartilhar conhecimento.
 
 ## Técnicas

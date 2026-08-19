@@ -28,4 +28,4 @@ Para buscar as legendas é possível utilizar o [youtube-transcript-api-sharp](h
 
 #### Casos de uso
 
-- [[Assistente para descoberta de conteúdo]] utiliza para fazer download de legendas que serão utilizadas para fazer resumos, sinopse e explicações sobre o conteúdo do vídeo
+- [[Projeto - Assistente para descoberta de conteúdo]] utiliza para fazer download de legendas que serão utilizadas para fazer resumos, sinopse e explicações sobre o conteúdo do vídeo

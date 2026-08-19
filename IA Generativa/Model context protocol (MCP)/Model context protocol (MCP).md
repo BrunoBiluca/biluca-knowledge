@@ -1,32 +1,18 @@
 # Model context protocol (MCP)
 
---- start-multi-column: ExampleRegion1  
-```column-settings  
-number of columns: 2
-Column Size: [59%, 40%]
-Border: disabled
-Shadow: off
-```
-
 MCP é um protocolo aberto, criado pela [Anthropic](https://www.anthropic.com/), que padroniza como aplicações fornecem contexto para [[Large Language Models]]. 
 
 O MCP ajuda a criar agentes de linguagem natural (ChatGPT e similares) para outras fontes de dados fora os modelos criados. Por ser um protocolo aberto vários tipos de conectores estão sendo desenvolvido e disponibilizados.
-
---- end-column ---
 
 > [!info] Principais referências
 > - [Documentação](https://modelcontextprotocol.io/introduction)
 >- [Github](https://github.com/modelcontextprotocol)
 >- [Tutorial de desenvolvimento de MCP com LLMs](https://modelcontextprotocol.io/tutorials/building-mcp-with-llms)
->- [Conceitos arquiteturais](https://modelcontextprotocol.io/docs/concepts/architecture)>
+>- [Conceitos arquiteturais](https://modelcontextprotocol.io/docs/concepts/architecture)
 >- [MCP Python SDK](https://pypi.org/project/mcp/) tem apresenta uma parte da documentação que está melhor que no site principal
 
----
-
-> [!quote]- Referências externas
->- [[Assistente para descoberta de conteúdo]] foi um MVP que implementei o algumas funcionalidades utilizando MCP
-
---- end-multi-column
+> [!example]- [[Projeto - Assistente para descoberta de conteúdo]]
+> MVP que implementei o algumas funcionalidades utilizando MCP
 
 ![[Arquitetura MCP.png|Exemplo de uma arquitetura implementada utilizando MCP para fontes adicionais de informações]]
 

@@ -4,8 +4,7 @@ Os princípios para acessibilidade são abordagens que ajudem a **antecipar, inc
 
 Experiências universais dificilmente irão dar respostas as necessidades de todos. Introduzir funcionalidades personalizadas por melhorar a adaptação individual. Por exemplo, permitir a configuração de um controle num jogo de luta permite que cada pessoa encontre a forma que mais se identifica ao jogar.
 
-> [!important] Acessibilidade para web
-> [WCAG](https://www.w3.org/WAI/standards-guidelines/wcag/) define uma série de guias para padronização da acessibilidade para conteúdos disponíveis na Web.
+Um dos modelos mais seguidos de qualidade de acessibilidade na web é o [[WCAG]].
 
 ## Tecnologia assistiva
 

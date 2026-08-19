@@ -27,4 +27,4 @@ Alternativas
 
 #### Casos de uso
 
-- [[Assistente para descoberta de conteúdo]] utilizou o Youtube Data API para buscar informações de vídeos de canais específicos
+- [[Projeto - Assistente para descoberta de conteúdo]] utilizou o Youtube Data API para buscar informações de vídeos de canais específicos

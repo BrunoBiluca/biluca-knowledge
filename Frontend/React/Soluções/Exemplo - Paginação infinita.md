@@ -9,7 +9,9 @@ Em [[React]] podemos implementar isso da seguinte maneira:
 - Classe de serviço de recuperação dos dados
 - Componente que mantem o estado da lista de itens
 
-Esse exemplo utiliza o caso [[Projeto - Biluca Agenda da Breja (React)]] como base.
+> [!example]- [[Projeto - Biluca Agenda da Breja (React)]]
+> Implementa essa solução.
+
 ### Interface do serviço
 
 ```ts

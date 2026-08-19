@@ -1,4 +1,4 @@
-# Assistente para descoberta de conteúdo
+# Projeto - Assistente para descoberta de conteúdo
 
 > [!info] Objetivo
 > Criar um assistente de IA para a descoberta de conteúdo no Youtube de canais cadastrados. Esse assistente irá utilizar as informações disponíveis no Youtube integrado a um Modelo de linguagem para ajudar a pessoa a encontrar conteúdo específico, coisa que o Youtube não nos ajuda muito (você pesquisa uma coisa e depois de 4 vídeos na lista já trás coisa na a ver).
@@ -146,7 +146,6 @@ Nesse caso estamos desenvolvimento uma aplicação que acessa um endpoint custom
 > 
 > Seria necessário um estudo mais aprofundado de invocação de funções
 > - [Function calling with chat completion](https://learn.microsoft.com/en-us/semantic-kernel/concepts/ai-services/chat-completion/function-calling/?pivots=programming-language-csharp)
-
 
 #### Claudie Desktop e MCP
 

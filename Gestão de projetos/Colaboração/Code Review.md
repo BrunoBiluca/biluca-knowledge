@@ -3,6 +3,8 @@ tags:
   - programação
   - programação/equipe
 ---
+# Code Review
+
 Uma etapa essencial no ciclo de vida de desenvolvimento de software é a revisão de código. Ele permite que os desenvolvedores melhorem significativamente a qualidade do código. A revisão de código, neste contexto, refere-se ao exame e avaliação do código por outras pessoas.
   
 Existem diferentes **benefícios do 𝗰𝗼𝗱𝗲 𝗿𝗲𝘃𝗶𝗲𝘄**: garante consistência no design e implementação, otimiza o código para melhor desempenho, é uma oportunidade de aprender e compartilhar conhecimento e orientação, bem como promove a coesão da equipe.

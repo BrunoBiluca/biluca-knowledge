@@ -19,7 +19,7 @@ As chaves de API podem ser divididas em duas categorias:
 
 1. Chaves Públicas por Natureza: algumas chaves de API foram feitas para rodar no navegador do cliente e o próprio fornecedor já sabe disso.
 
-- **Exemplos:** Firebase, Google Maps, Supabase, Stripe (Chave Pública/Publishable).
+- **Exemplos:** Firebase, Google Maps, [[Supabase]], Stripe (Chave Pública/Publishable).
 - **Por que é seguro?** Essas chaves sozinhas não dão acesso destrutivo à sua conta. A segurança delas é feita direto no painel do provedor (ex: bloqueando o Google Maps para funcionar **apenas** no seu domínio `seu-site.com`).
 
 1. Chaves Privadas e Secretas: chaves que dão acesso total e irrestrito ao seu backend, banco de dados ou geram custos diretos por uso.

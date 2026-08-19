@@ -1,6 +1,6 @@
 # Autenticação utilizando React
 
-> [!info] [[Projeto - Agenda da Breja - React]]
+> [!example]- [[Projeto - Agenda da Breja - React]]
 > Esse projeto implementa uma versão bem completa da utilização do Supabase para gerenciar autenticação do usuário.
 
 Em [[React]] podemos definir uma autenticação básica a partir da seguinte interface.
