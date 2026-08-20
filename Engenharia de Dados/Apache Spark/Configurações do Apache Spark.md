@@ -1,4 +1,4 @@
-# Configurações
+# Configurações do Apache Spark
 
 Podemos fazer configurações sobre os aspectos que a sessão do spark é executada.
 

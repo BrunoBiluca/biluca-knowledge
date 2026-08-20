@@ -22,7 +22,7 @@ As chaves de API podem ser divididas em duas categorias:
 - **Exemplos:** Firebase, Google Maps, [[Supabase]], Stripe (Chave Pública/Publishable).
 - **Por que é seguro?** Essas chaves sozinhas não dão acesso destrutivo à sua conta. A segurança delas é feita direto no painel do provedor (ex: bloqueando o Google Maps para funcionar **apenas** no seu domínio `seu-site.com`).
 
-1. Chaves Privadas e Secretas: chaves que dão acesso total e irrestrito ao seu backend, banco de dados ou geram custos diretos por uso.
+1. Chaves Privadas e Secretas: chaves que dão acesso total e irrestrito ao seu backend, banco de dados ou geram custos diretos por uso. Para resolver esse problema podemos utilizar o fluxo de autenticação [[On-Behaft-Of (OBO)]].
 
 - **Exemplos:** OpenAI (ChatGPT), Stripe (Chave Secreta/Secret Key), SendGrid (envio de e-mails), chaves de bancos de dados.
 - **Por que é perigoso?** O código do frontend geralmente é compilado junto com as credenciais. O nosso cliente pode verificar esse código apenas com uma inspeção do browser.

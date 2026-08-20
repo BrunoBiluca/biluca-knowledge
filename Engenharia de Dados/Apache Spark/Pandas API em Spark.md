@@ -1,6 +1,6 @@
 # Pandas API em Spark
 
-É possível criar DataFrame do panda em Spark passando os valores como um dicionário de objetos.
+É possível criar DataFrame do Pandas em Spark passando os valores como um dicionário de objetos.
 
 ```py
 import pyspark.pandas as ps

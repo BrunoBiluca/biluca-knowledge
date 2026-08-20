@@ -30,7 +30,7 @@ Outros dois princípios são muito importantes
 - Autenticidade: deve validar a autorização do usuário para acessar, transmitir e receber determinadas informações.
 - Irretratabilidade (também chamada de legalidade): deve garantir que a pessoa ou entidade não possa negar a autoria da informação fornecida, como no caso de uso de certificados digitais para transações online e assinatura de documentos eletrônicos.
 
-Temos 3 principais processos para a implementação desses princípios
+Temos 3 principais processos para a implementação desses princípios:
 
 - Autenticação
 - Autorização
@@ -48,8 +48,6 @@ Temos 3 principais processos para a implementação desses princípios
 	- Biometria
 
 Utilizando esses 3 fatores temos uma boa confiabilidade da autenticação da pessoa ou entidade a informação que está sendo disponibilizada.
-
-
 
 # Testes de segurança
 

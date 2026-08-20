@@ -31,7 +31,8 @@ A função `set` retornada serve para atualizar o estado da variável na próxim
 
 [[React]] condensa várias atualizações de estados para evitar várias re-renderizações de componentes. Assim, se vários `set` forem executados na mesma renderização apenas o último valor será considerado.
 
-> [!info]- Objetos e arrays em estado são considerados imutáveis.
+> [!info] Objetos e arrays em estado são considerados imutáveis.
+> 
 > ```js
 > // 🚩 Don't mutate an object in state like this:
 > form.firstName = 'Taylor';
@@ -123,7 +124,7 @@ useEffect(() => {
 const cachedFn = useCallback(fn, dependencies)
 ```
 
-Para o Javascript, uma função sempre cria um função diferente, isso pode gerar um problema de renderização fazendo que o componente seja renderizado sem necessidade.
+Para o [[Javascript]], uma função sempre cria um função diferente, isso pode gerar um problema de renderização fazendo que o componente seja renderizado sem necessidade.
 
 Assim, o `useCallback` persiste essa função que será atualiza apenas se suas dependências mudarem.
 
@@ -290,6 +291,28 @@ function MyComponent() {
   return <input ref={inputRef} />; // quando o componente é renderizado a referência se torna o componente
 ```
 
+Outro caso é manter variáveis que não são utilizadas para renderização.
+
+```jsx
+import { useRef } from 'react';
+
+export default function Counter() {
+  let ref = useRef(0);
+
+  function handleClick() {
+    ref.current = ref.current + 1;
+    alert('You clicked ' + ref.current + ' times!');
+  }
+
+  return (
+    <button onClick={handleClick}>
+      Click me!
+    </button>
+  );
+}
+```
+
+Nesse caso o ref é um valor mantido em memória, sempre que ele altera não é invocada uma re-renderização no componente.
 ### [useDeferredValue](https://react.dev/reference/react/useDeferredValue)
 
 Permite prorrogar a atualização de parte da UI.

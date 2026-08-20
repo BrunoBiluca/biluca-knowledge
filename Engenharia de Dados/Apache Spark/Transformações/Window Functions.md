@@ -3,7 +3,7 @@
 > [!info] Documentação
 > - [Funções em Janelas](https://sparkbyexamples.com/spark/spark-sql-functions/#window)
 
-Funções de janela operam sobre um grupo de linhas e retorna uma único valor para cada linha em relação a janela desejada. Window não é uma forma de agregação, mas uma forma atribuir valores a cada uma das linhas que compõem esse conjunto.
+Funções de janela operam sobre um grupo de linhas e retorna uma único valor para cada linha em relação a janela desejada. **Window não é uma forma de agregação**, mas uma forma atribuir valores a cada uma das linhas que compõem o conjunto de dados definido pela janela especificada.
 
 Existem 3 tipos de funções de janela no Spark:
 - [ranking functions](https://sparkbyexamples.com/spark/spark-sql-window-functions/#ranking-functions)
@@ -71,7 +71,7 @@ val aggDF = df
     .withColumn("sum", sum(col("salary")).over(windowSpecAgg))
     .withColumn("min", min(col("salary")).over(windowSpecAgg))
     .withColumn("max", max(col("salary")).over(windowSpecAgg))
-    .where(col("row") === 1) # acredito que isso seja para consolidar apenas a primeira linha e evitar duplicatas
+    .where(col("row") === 1) // acredito que isso seja para consolidar apenas a primeira linha e evitar duplicatas
     .select("department","avg","sum","min","max")
     .show()
 
@@ -82,5 +82,4 @@ val aggDF = df
 |   Finance|3400.0|10200|3000|3900|
 | Marketing|2500.0| 5000|2000|3000|
 +----------+------+-----+----+----+
-
 ```

@@ -10,7 +10,7 @@ Esse framework tem integrações importantes com [[Snowflake]], sendo possível 
 
 Principais elementos do StreamLit:
 
-- [[Engenharia de Dados/Data Platforms/Streamlit/Widgets]]
+- [[Engenharia de Dados/Streamlit/Widgets]]
 - [[Caching]]
 - [[Layouts]]
 
