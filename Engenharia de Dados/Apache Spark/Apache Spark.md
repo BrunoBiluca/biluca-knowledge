@@ -56,6 +56,6 @@ O Apache Spark também pode ser utilizado com uma camada escrita para a linguage
 - [[Esquema em Apache Spark]]
 - [[Broadcast]]
 - [[Memória]]
-- [[Cache]]
+- [[Engenharia de Dados/Apache Spark/🏅 Melhores práticas/Cache]]
 
 [[Principais diferenças entre Spark 2 e Spark 3]]

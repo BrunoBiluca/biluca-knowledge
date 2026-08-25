@@ -64,7 +64,7 @@ Exame cobre:
 	- [[Derramamento de dados (Spill)]]
 	- [[Garbage Collection]]
 	- [[Broadcast]]
-	- [[Cache]]
+	- [[Engenharia de Dados/Apache Spark/🏅 Melhores práticas/Cache]]
 
 5. Structured Streaming - 10%
 	- [[Structured Streaming]]

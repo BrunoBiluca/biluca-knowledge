@@ -20,10 +20,15 @@
 
 Os formulários podem ser configurados todos em um objeto que é atualizado a partir do `FormControl` ou `FormGroup`.
 
+> [!example]- [[Projeto - Biluca agenda da Breja (Angular)]]
+> - Para a criação de usuários.
+
+> [!example]- [[Projeto - Biblioteca de Jogos]]
+> - Formulários de cadastro e autenticação
+> - Formulários de cadastro de jogos
+
 #### Exemplo de formulário de cadastro de Usuário
 
-> [!quote] Utilizado em
-> - [[Biluca Notas Rápidas (Angular)]] para a criação de usuários.
 
 ```ts
 // Exemplo da classe responsável pelo cadastro de um usuário

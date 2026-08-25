@@ -1,26 +1,18 @@
 # Esquema Estrela (Star Schema)
 
---- start-multi-column: ExampleRegion1  
-```column-settings  
-number of columns: 2
-Column Size: [59%, 40%]
-Border: disabled
-Shadow: off
-```
-
 O _esquema em estrela_ é uma abordagem de modelagem semântica adotada por data warehouses relacionais. Ele requer que os modeladores classifiquem suas tabelas de modelo como _dimensão_ ou _fato_. 
 
 Esse modelo busca principalmente criar uma representação do **modelo do negócio**, onde uma tabela fato é cercada apenas das dimensões necessárias. Esse esquema captura lógica do negócio e deve ser flexível o bastante para responder questões críticas.
 
---- end-column ---
-
 > [!info] Principais referências
 > - [Esquema estrela pela Microsoft.Learn](https://learn.microsoft.com/pt-br/power-bi/guidance/star-schema)
 
---- end-multi-column
+Ele se divide em dois tipos de tabelas:
+
 - **Tabelas dimensões** que descrevem as entidades de negócios, como por exemplo produtos, pessoas.
 	- Contem um coluna identificadora e demais colunas de informações sobre as entidades.
 	- Permitem a filtragem e agrupamento
+
 - **Tabelas fatos** que armazenam observações ou eventos como ordens de venda, saldos de estoque, taxas de câmbio.
 	- Contém chaves de dimensões e colunas numéricas
 	- Permitem o resumo

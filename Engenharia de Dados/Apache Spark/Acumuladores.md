@@ -36,7 +36,7 @@ Dessa forma quando declaramos um acumulador dentro de uma transformação precis
 
 - ❌ Quando uma tarefa é lenta demais, o Spark pode lançar uma cópia dessa tarefa para outro nó executor
 
-- ❌ Quando um RDD é persistido ([[Cache]]) parcialmente em memória, a parte que não for persistida precisa ser recomputada toda vez que necessário
+- ❌ Quando um RDD é persistido ([[Engenharia de Dados/Apache Spark/🏅 Melhores práticas/Cache]]) parcialmente em memória, a parte que não for persistida precisa ser recomputada toda vez que necessário
 
 ### Principais casos de uso
 

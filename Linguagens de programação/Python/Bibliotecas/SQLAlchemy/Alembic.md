@@ -7,7 +7,7 @@ categoria: biblioteca
 ---
 # Alembic
 
-Alembic é a biblioteca que implementa as ferramentas de migração do SQLAlchemy.
+Alembic é a biblioteca que implementa as ferramentas de migração do [[SQLAlchemy]].
 
 # Exemplo - Básico
 

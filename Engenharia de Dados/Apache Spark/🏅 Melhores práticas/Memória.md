@@ -2,7 +2,7 @@
 
 O [[Apache Spark]] disponibiliza uma série de recursos que utilizam memória durante o processamento. Sobre memória é importante levar em consideração:
 
-- [[Cache]]
+- [[Engenharia de Dados/Apache Spark/🏅 Melhores práticas/Cache]]
 - [[Broadcast]]
 - [[Garbage Collection]]
 - Os principais tipos de transformações (principalmente Wide Transformations)

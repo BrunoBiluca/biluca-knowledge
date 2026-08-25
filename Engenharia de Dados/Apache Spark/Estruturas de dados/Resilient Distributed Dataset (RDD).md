@@ -22,7 +22,7 @@ Os RDDs são criados principalmente de duas maneiras diferentes: primeiro, [par
 
 **Operações em RDDs:**
 
-- [[Cache]]
+- [[Engenharia de Dados/Apache Spark/🏅 Melhores práticas/Cache]]
 
 ### Repartição de RDDs
 

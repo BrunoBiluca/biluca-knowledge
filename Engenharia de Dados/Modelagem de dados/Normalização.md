@@ -23,7 +23,6 @@ Codd define vários passos onde a aplicação de cada um desses passos deixam a 
 	- Remover todo tipo de dependência transitiva
 		- Dependência transitiva: ocorre quando um campo não-chave depende de outro campo não-chave
 
-
 ### Exemplo de aplicação de normalização
 
 Vamos levar em consideração a modelagem de um sistema de pedidos de produtos em uma loja. Inicialmente temos a seguinte modelagem para os dados dessa loja:
