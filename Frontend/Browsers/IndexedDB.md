@@ -1,6 +1,4 @@
-# Bases de dados e armazenamento
-
-## IndexedDB
+# IndexedDB
 
 IndexedDB é um banco de dados completo no próprio navegador, podemos ser utilizado até para armazenamento de arquivos.
 

@@ -7,4 +7,4 @@ Angular CLI é o principal agente de terminal do [[Angular]] que pode ser utiliz
 Principais comandos:
 
 - [generate](https://angular.dev/cli/generate)
-	- Gera qualquer tipo de elemento dentro da aplicação, como [[Frontend/Angular/Componentes|Componentes]], classes, configurações, diretivas, pipes e todos outros
+	- Gera qualquer tipo de elemento dentro da aplicação, como [[Frontend/Angular/Recursos/Componentes|Componentes]], classes, configurações, diretivas, pipes e todos outros

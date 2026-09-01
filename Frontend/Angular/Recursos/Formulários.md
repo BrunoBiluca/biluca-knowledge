@@ -29,7 +29,6 @@ Os formulários podem ser configurados todos em um objeto que é atualizado a pa
 
 #### Exemplo de formulário de cadastro de Usuário
 
-
 ```ts
 // Exemplo da classe responsável pelo cadastro de um usuário
 export class Signup {

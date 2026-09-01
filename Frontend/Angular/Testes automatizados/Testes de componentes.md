@@ -1,6 +1,6 @@
 ## Testes de componentes
 
-[[Frontend/Angular/Componentes|Componentes]] podem ser testados facilmente em Angular.
+[[Frontend/Angular/Recursos/Componentes|Componentes]] podem ser testados facilmente em Angular.
 
 Elementos auxiliares ([ComponentFixture](https://angular.dev/api/core/testing/ComponentFixture)):
 

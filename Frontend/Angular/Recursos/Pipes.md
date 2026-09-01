@@ -2,7 +2,7 @@
 
 [Documentação](https://angular.dev/guide/templates/pipes)
 
-[[Angular]] pipes são usados para transformar dados diretamente nos templates dos [[Frontend/Angular/Componentes|Componentes]]
+[[Angular]] pipes são usados para transformar dados diretamente nos templates dos [[Frontend/Angular/Recursos/Componentes|Componentes]]
 
 Existem vários Pipes prontos para uso e é possível construir seus próprio de acordo com as suas necessidades.
 

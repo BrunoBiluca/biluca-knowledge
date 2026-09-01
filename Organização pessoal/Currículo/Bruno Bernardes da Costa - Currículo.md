@@ -259,6 +259,14 @@
 
 ## Certificados relevantes / Relevant certificates
 
+### Streamlit for Snowflake Masterclass Hands-On
+
+**Plataforma:** Udemy
+**Data de conclusão:** 2026/08  
+[Certificado](https://drive.google.com/open?id=1JyHVkJKS9uWiWKtITP8oVHcff4tT6WXY&usp=drive_fs)
+
+**Habilidades:** Snowflake, Streamlit, Python, Data Analyst, Data Engineer
+
 ### Databricks Certified Associate Developer for Apache Spark 3.0
 
 **Plataforma:** Databricks  

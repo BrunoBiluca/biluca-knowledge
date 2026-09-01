@@ -1,3 +1,6 @@
+---
+categoria: framework
+---
 # Angular
 
 > [!info] Links
@@ -9,11 +12,11 @@ Ele utiliza [[TypeScript]] como linguagem padrão e segue uma arquitetura basead
 
 Ele já inclui soluções integradas para:
 
-- [[Frontend/Angular/Componentes|Componentes]]
+- [[Frontend/Angular/Recursos/Componentes|Componentes]]
 	- [[Diretivas]] – Estendem HTML com comportamentos dinâmicos (ex.: `*ngIf`, `*ngFor`).
 		- Várias diretivas foram atualizadas a partir da versão 17 para deixarem o código mais fluído
 		- **Deferrable Views** – Carregamento lazy de seções da view (`@defer`).
-	- [[Frontend/Angular/Formulários]]
+	- [[Frontend/Angular/Recursos/Formulários]]
 - [[Serviços]]
 	- **Requisições HTTP** (`HttpClient`)
 - Gerenciamento de estados
@@ -25,9 +28,9 @@ Ele já inclui soluções integradas para:
 - [[Pipes]] – Transformação de dados diretamente nos templates (ex.: `date`, `currency`).
 - [[Roteamento]] (`@angular/router`)
 - [[Frontend/Angular/Testes automatizados/Testes automatizados|Testes automatizados]]
-- [[Frontend/Angular/Estilização|Estilização]]
+- [[Frontend/Angular/Recursos/Estilização|Estilização]]
 - [[App config]]
-- [[Bases de dados e armazenamento]]
+- [[IndexedDB]]
 
 O [[🏅 Guia de projetos em Angular]]  oferece várias dicas relacionadas ao código, implementação, estratégias e outros elementos do projeto para um melhor aproveitamento do framework.
 

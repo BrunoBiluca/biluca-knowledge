@@ -2,7 +2,7 @@
 
 Diretivas são instruções no [[Angular]] que estendem o comportamento ou a aparência de elementos HTML, componentes ou outras diretivas. Elas permitem manipular o DOM, adicionar lógica personalizada ou modificar estilos dinamicamente. Existem três tipos de diretivas no Angular:
 
-1. [[Frontend/Angular/Componentes|Componentes]]: Diretivas com template (um tipo especializado de diretiva).
+1. [[Frontend/Angular/Recursos/Componentes|Componentes]]: Diretivas com template (um tipo especializado de diretiva).
     
 2. **Diretivas Estruturais**: Alteram a estrutura do DOM (ex: `*ngIf`, `*ngFor`).
     
