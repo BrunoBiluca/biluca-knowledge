@@ -11,15 +11,18 @@
   --accent-soft: #e4f5ee;
   --dark: #141b22;
   --dark-2: #1c2530;
-  --dark-line: rgba(255,255,255,0.12);
+  --dark-line: rgba(255, 255, 255, 0.12);
   --light-ink: #eef2f4;
   --light-muted: #97a5b0;
   --sidebar-w: 62mm;
 }
 
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+}
 
-html, body {
+html,
+body {
   margin: 0;
   padding: 0;
   font-family: "Liberation Sans", Arial, sans-serif;
@@ -31,7 +34,10 @@ html, body {
   display: flex;
 }
 
-a { color: var(--accent); text-decoration: none; }
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
 
 /* ---------------- SIDEBAR ---------------- */
 
@@ -85,6 +91,7 @@ a { color: var(--accent); text-decoration: none; }
   padding-bottom: 1.6mm;
   margin-bottom: 3mm;
 }
+
 .side-title::before {
   content: "// ";
   color: var(--accent);
@@ -95,18 +102,23 @@ a { color: var(--accent); text-decoration: none; }
   flex-direction: column;
   margin-bottom: 3mm;
 }
+
 .contact-label {
   font-size: 6.6pt;
   color: var(--light-muted);
   text-transform: uppercase;
   letter-spacing: 0.4px;
 }
+
 .contact-value {
   font-size: 8pt;
   color: var(--light-ink);
   word-break: break-word;
 }
-.contact-value a { color: var(--light-ink); }
+
+.contact-value a {
+  color: var(--light-ink);
+}
 
 .lang-row {
   display: flex;
@@ -114,26 +126,39 @@ a { color: var(--accent); text-decoration: none; }
   font-size: 8.2pt;
   margin-bottom: 2mm;
 }
-.lang-name { color: var(--light-ink); }
-.lang-level { color: var(--accent); font-family: "Liberation Mono", monospace; font-size: 7.4pt; }
 
-.skill-group { margin-bottom: 4mm; }
+.lang-name {
+  color: var(--light-ink);
+}
+
+.lang-level {
+  color: var(--accent);
+  font-family: "Liberation Mono", monospace;
+  font-size: 7.4pt;
+}
+
+.skill-group {
+  margin-bottom: 4mm;
+}
+
 .skill-cat {
   font-size: 7.4pt;
   color: var(--light-muted);
   margin-bottom: 1.6mm;
   font-weight: bold;
 }
+
 .tag-row {
   display: flex;
   flex-wrap: wrap;
   gap: 1.3mm;
 }
+
 .tag {
   font-family: "Liberation Mono", monospace;
   font-size: 6.8pt;
   color: var(--light-ink);
-  background: rgba(255,255,255,0.07);
+  background: rgba(255, 255, 255, 0.07);
   border: 1px solid var(--dark-line);
   border-radius: 3px;
   padding: 0.9mm 1.8mm;
@@ -146,7 +171,9 @@ a { color: var(--accent); text-decoration: none; }
   padding: 11mm 10mm 11mm 9mm;
 }
 
-section { margin-bottom: 6mm; }
+section {
+  margin-bottom: 6mm;
+}
 
 .sec-title {
   font-size: 11.5pt;
@@ -157,13 +184,16 @@ section { margin-bottom: 6mm; }
   border-bottom: 2px solid var(--accent);
   display: inline-block;
 }
+
 .sec-title::before {
   content: "> ";
   color: var(--accent);
   font-family: "Liberation Mono", monospace;
 }
 
-section p { margin: 0 0 2mm 0; }
+section p {
+  margin: 0 0 2mm 0;
+}
 
 .entry {
   margin-bottom: 4.5mm;
@@ -171,7 +201,10 @@ section p { margin: 0 0 2mm 0; }
   border-bottom: 1px solid var(--line);
   break-inside: avoid;
 }
-.entry:last-child { border-bottom: none; }
+
+.entry:last-child {
+  border-bottom: none;
+}
 
 .entry-head {
   display: flex;
@@ -180,16 +213,19 @@ section p { margin: 0 0 2mm 0; }
   gap: 3mm;
   margin-bottom: 1.3mm;
 }
+
 .entry-title {
   font-weight: 700;
   font-size: 10pt;
   color: var(--dark);
 }
+
 .entry-sub {
   font-size: 8.4pt;
   color: var(--muted);
   margin-top: 0.5mm;
 }
+
 .entry-period {
   font-family: "Liberation Mono", monospace;
   font-size: 7.6pt;
@@ -198,6 +234,7 @@ section p { margin: 0 0 2mm 0; }
   flex-shrink: 0;
   padding-top: 0.8mm;
 }
+
 .entry-desc {
   font-size: 8.7pt;
   color: #333c46;
@@ -223,6 +260,7 @@ section p { margin: 0 0 2mm 0; }
   flex-wrap: wrap;
   gap: 2.5mm;
 }
+
 .cert-card {
   width: 48.7%;
   border: 1px solid var(--line);
@@ -231,6 +269,7 @@ section p { margin: 0 0 2mm 0; }
   padding: 2.4mm 3mm;
   break-inside: avoid;
 }
+
 .cert-title {
   font-size: 8.1pt;
   font-weight: 700;
@@ -238,11 +277,13 @@ section p { margin: 0 0 2mm 0; }
   margin-bottom: 0.8mm;
   line-height: 1.3;
 }
+
 .cert-meta {
   font-size: 7.2pt;
   color: var(--muted);
   font-family: "Liberation Mono", monospace;
 }
+
 .cert-link {
   font-size: 7pt;
   margin-top: 0.8mm;
@@ -250,19 +291,51 @@ section p { margin: 0 0 2mm 0; }
 
 /* No CSS */
 .page-break {
-    page-break-before: always; /* Quebra antes do elemento */
+  page-break-before: always;
+  border: 1px solid red;
+  padding-top: 11mm;
+  /* Quebra antes do elemento */
 }
 
 /* Ou */
 .page-break-after {
-    page-break-after: always; /* Quebra depois do elemento */
+  page-break-after: always;
+  border: 1px solid red;
+  /* Quebra depois do elemento */
+}
+
+.page-break::after {
+  content: 'QUEBRA';
+  color: red
+}
+
+.page-breakk-after::after {
+  content: 'QUEBRA';
+  color: red
 }
 
 /* Para evitar quebras dentro de elementos */
 .no-break {
-    page-break-inside: avoid;
+  page-break-inside: avoid;
 }
 
-.p-top {
+@media print {
+  .page-break {
+    border: 0;
     padding-top: 11mm;
+    page-break-before: always;
+  }
+
+  .page-break::after {
+    content: '';
+  }
+
+  .page-break-after {
+    page-break-after: always;
+    border: 0;
+  }
+
+  .page-break-after::after {
+    content: '';
+  }
 }
