@@ -142,7 +142,8 @@ const handleSubmit = useCallback((orderDetails) => {
 
 ### [useMemo](https://react.dev/reference/react/useMemo)
 
-É utilizado para persistir o resultado de uma função entre re-renderizações.
+É utilizado para persistir o resultado de uma função entre re-renderizações pelo conceito de [[Função memoizada]].
+
 
 Pode ser utilizado para
 

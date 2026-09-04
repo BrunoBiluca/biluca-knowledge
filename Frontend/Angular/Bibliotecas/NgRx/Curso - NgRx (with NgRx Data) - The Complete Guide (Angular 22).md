@@ -13,7 +13,6 @@ Relacionados:
 
 - [[Angular]]
 - [[NgRx]]
-- 
 
 ## OBJETIVOS DE APRENDIZAGEM
 
@@ -73,46 +72,4 @@ Alguns pacotes recomendados pelo professor
 	- Conjunto completo de ferramentas para controlar o estado sobre o NgRx
 	- Existe uma extensão para Chrome
 
-### Arquitetura do NgRx
-
-O instrutor define um `@NgModule` e dentro dele define a funcionalidade `StoreModule.forFeature()`. Dessa forma, o store está atrelado apenas ao módulo declarado.
-
-#### Action
-
-**Action** é qualquer operação informa a uma store que alguma coisa aconteceu.
-
-```js
-// action definition
-// [Login Page] é considerado a fonte da ação utilizado para definir contexto
-export const login = createAction(
-  '[Login Page] Login',
-  props<{ username: string; password: string }>()
-);
-
-// dispatch uma ação
-this.store.dispatch({
-	type: 'Login Action',
-	payload: {
-		userProfile: user
-	}
-})
-```
-
-> [!info]- Uso da interface `dispatch` no lugar de uma interface direta (CRUD)
-> A utilização desse tipo de interface adiciona flexibilidade ao armazenamento por desvincular sua execução de componentes específicos Assim, quando um componente envia uma ação a store, ele não sabe o que vai acontecer exatamente.
-> É um sistema de eventos que desacopla implementação e interface.
-
-> [!tip] Exportar todas as ações
-> 
-> Uma dica para exportar as ações de um módulo é criar um arquivo `action-types.ts`.
-> 
-> ```ts
-> import * as AuthActions from './actions.ts'
-> export {AuthActions}
-> 
-> // ... em outro arquivo
-> // posso acessr a ação diretamente
-> // permitindo que o desenvolvedor tenha conhecimento de todas as ações disponíveis
-> AuthActions.login()
-> ```
-
+[[Arquitetura do NgRx]]
