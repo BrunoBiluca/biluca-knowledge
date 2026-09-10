@@ -55,3 +55,18 @@ Além disso, irei passar novamente pelos principais conceitos do framework, o qu
 
 [[Flutter]] é um framework que permite a compilação de código [[Dart]] em código nativo das plataformas disponíveis.
 
+### Widgets
+
+Dentro de uma linha ou coluna, o tamanho na direção cruzada (cross) é dado pelo maior widget filho.
+
+### Ferramentas e recursos auxiliares
+
+#### Icon kitchen
+
+[icon.kitchen](icon.kitchen) é um site para a criação de ícones para a aplicações.
+
+Permite criar ícones para todas as plataformas disponíveis.
+
+#### Dartpad
+
+Dartpad é um website que permite criar pequenos códigos em Dart ou Flutter. Muito bom para experimentar.
