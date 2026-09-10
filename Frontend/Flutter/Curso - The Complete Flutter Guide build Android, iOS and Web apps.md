@@ -59,6 +59,14 @@ Além disso, irei passar novamente pelos principais conceitos do framework, o qu
 
 Dentro de uma linha ou coluna, o tamanho na direção cruzada (cross) é dado pelo maior widget filho.
 
+Tipos de containers para disposição de elementos:
+
+- **Column**
+- **Row**
+- **Wrap** - funciona como um flexible container e ajuda a disposição dos filhos de acordo com o tamanho da tela
+- **Stack** - empilha os elementos filho um sobre o outro
+	- Muito utilizado com o widget **Positioned** para definir a posição específica de um widget interno
+
 ### Ferramentas e recursos auxiliares
 
 #### Icon kitchen

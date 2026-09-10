@@ -55,3 +55,77 @@ class Greeter {
 var greeter = Greeter('Jane');
 greeter(); // Output: Hello, Jane!
 ```
+
+## late, const e final
+
+### late
+
+`late` é utilizado para declarar uma variável não-nula que será inicializada posteriormente.
+
+```dart
+class MyClass {
+  late String nonNullableString;
+ 
+  void initializeValue() {
+    nonNullableString = 'Initialized String';
+  }
+}
+```
+
+### const
+
+`const` define uma constante em tempo de compilação. Esses valores não são alterados durante a execução do programa.
+
+```dart
+const double pi = 3.14159;
+const myImmutableWidget = const Text('Hello, Flutter!');
+```
+
+### final
+
+`final` define uma variável que é setada em tempo de execução, porém o seu valor não é alterado depois disso.
+
+```dart
+class UserProfile {
+  final String username;
+  UserProfile(this.username);
+}
+```
+
+## Null safety
+
+[[Null safety]]
+
+### Working with Null Safety
+
+So, how do you work with nullable variables? Say you have a nullable string and you want to work with it safely. You can use the 'if' statement to check for null:
+
+```dart
+String? name;
+ 
+if (name != null) {
+  print('Hello, $name!');
+}
+```
+
+Or, you can use the handy null-aware operators that Dart provides:
+
+- **The Question Dot Operator (?.):** Allows you to access a property or call a method on an object if it isn't null.
+
+```dart
+print(name?.length); // Only tries to get length if name is not null
+```
+    
+- **The Null Coalescing Operator (??):** Provides a default value if the variable is null.
+
+```dart
+print(name ?? 'Guest'); // Prints 'Guest' if name is null
+```
+
+#### Tips for Smooth Sailing
+
+- **Initialize Early:** Try to give variables non-null initial values as early as possible. It's easier to deal with.
+    
+- **Be Explicit:** Use nullable types only when you really expect nulls. The more you can avoid null, the safer your code will be.
+    
+- **Embrace the Tools:** Dart's analysis tools are great at pointing out potential null safety issues. Listen to them!
