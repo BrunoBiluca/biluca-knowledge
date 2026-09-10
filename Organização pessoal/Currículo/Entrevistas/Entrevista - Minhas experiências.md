@@ -1,9 +1,54 @@
 # Entrevista - Minhas experiências
 
-
 ## 07/2025 - Atual (1 ano e 1 meses) | Full-stack developer sênior
 
+Trabalho de consultor em alguns projetos.
+
+Atuação:
+
+- **Chat de documentos:** sistema de chat de texto utilizando inteligência artificial generativa, para análise de documentos. O sistema servia como uma plataforma de gerenciamento de arquivos para documentos do setor jurídico da empresa, e os usuários podia a partir dos documentos nesse portal fazer perguntas a IA implementada sobre os documentos.
+
+- **Portal de governança de dados:** criação de uma nova versão do portal de governança de dados da empresa. Esse portal era responsável por gerenciar as permissões das pessoas aos diversos produtos de dados dentro da empresa. A nova versão consistia em melhorar a usabilidade e performance da aplicação, além de reduzir custos de operação que eram muito altos na versão anterior por ter uma arquitetura microsserviços, que para esse tipo de aplicação era desnecessária.
+
+- Manutenção a versão anterior do portal de governança de dados
+
+**Principal desafio:** o Chat de documentos foi um sistema bem complexo construído do zero, mas que no final se provou uma ótima aplicação tanto que ganhou prêmio de inovação dentro da empresa. Eram muitos requisitos como gerenciamento de estado assíncrono, utilização de integrações para a inteligência artificial, gerenciamento de documentos grandes, processamento desses processamentos, então, foi bem desafiante manter uma boa experiência de usuário dados todos esses requisitos.
+
+### Tecnologias utilizadas
+
+- **Python** é a principal linguagem utilizada pelo time
+
+- **Flask** foi utilizado para a criação dos serviços de backend no projeto do Chat de documentos
+
+- **Angular 2+** na real a versão 19 é a que foi utilizada para a criação do frontend do projeto de Chat de documentos
+
+- **Typescript** linguagem utilizada no projeto do Chat de documentos
+
+- **Streamlit** foi o framework escolhido para a segunda versão do portal de governança de dados. Principais razões: hospedagem e integração direta com o Snowflake e componentes prontos para uso sem necessidade de estilização.
+
+- **Snowflake** foi utilizado como banco de dados para o portal de governança de dados, além de ser o Data Warehouse utilizado pela empresa para o armazenamento dos seus produtos de dados.
+
+- **Git** para versionamento do código em ambos os projetos
+
+- **Github actions** para publicação de versões do projeto em ambiente de desenvolvimento e de produção de ambos os projetos.
+
 ## 03/2024 - 07/2025 (1 ano e 4 meses) | Engenheiro de Dados sênior
+
+Meu trabalho foi na criação do armazenamento de décadas de documentos de expedições em poços e embarcações de petróleo a fim de permitir busca rápida textual, filtragem, agregação de informações para processos de descomissionamento.
+
+**Principal desafio:** os documentos era separados em vários formatos e várias fontes, foi necessário fazer um fluxo de processamento que integre todas essas fontes que utilizam protocolos de comunicação diferentes e tecnologias diferentes, enquanto mantem também o processamento recorrente para novos documentos.
+
+### Tecnologias utilizadas
+
+- **Python** principal linguagem para o processamento dos documentos
+
+- **PDF Extractor** biblioteca em python utilizada para extrair as informações em documentos PDF e imagens por meio do OCR
+
+- **Inteligência artifial** para processar e analisar o conteúdo dos documentos. Foi utilizado uma combinação de técnicas de LLM junto a mineração de dados para categorizar informações nos documentos.
+
+- **Elasticsearch** foi utilizado como destino final das informações dos documentos. Ele permite pesquisa em grande quantidade de arquivos com uma performance muito rápida, além de consultas agregadores.
+
+- **Databricks** foi utilizado para fazer o processamento dos dados e armazenamento dos documentos em nível bruto e curado.
 
 ## 01/23 - 03/24 (1 ano e 2 meses) | Full-stack/Games developer sênior
 
