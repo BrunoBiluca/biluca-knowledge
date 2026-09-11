@@ -1,31 +1,8 @@
-# Solução - thenAnswerMany
-
-Solução para [[Mocktail]] de forma a verificar o resultado de várias invocações de uma mesmo método mockado.
-
-```dart
-// implementação
-import 'package:mocktail/mocktail.dart';
-
-extension WhenExtension<T> on When<T> {
-  thenAnswerMany(List<Answer<T>> cbs) {
-    return thenAnswer((invocation) {
-      if (cbs.isEmpty) throw "No more answers available";
-      return cbs.removeAt(0)(invocation);
-    });
-  }
-}
-
-// uso
-when(() => mock.someMethod().thenAnswerMany([
-  (_) => 1, // retorno da primeira chamada
-  (_) => 2, // retorno da segunda chamada
-]);
-```
-
 ## Testes
 
-[[Fundamentos de Software/Testes automatizados/Testes automatizados|Testes automatizados]]
-[[Estratégias de testes (Web)]]
+> [!info] Referências
+> - [[Fundamentos de Software/Testes automatizados/Testes automatizados|Testes automatizados]]
+> - [[Estratégias de testes (Web)]]
 
 Para [[Frontend]] testes são muito importantes para garantir que a interação direta do usuário seja especificada, evitando problemas e garantindo que o usuário está seguindo um caminho otimizado para fazer o que ele precisa.
 
