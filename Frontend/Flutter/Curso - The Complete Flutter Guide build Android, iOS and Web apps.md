@@ -67,6 +67,30 @@ Tipos de containers para disposição de elementos:
 - **Stack** - empilha os elementos filho um sobre o outro
 	- Muito utilizado com o widget **Positioned** para definir a posição específica de um widget interno
 
+#### AppBar
+
+- **iconTheme** pode ser utilizado para alterar o tema de todos os ícones utilizados dentro da AppBar.
+
+#### MouseEnter
+
+Cria uma região para capturar os eventos do mouse, como `onEnter`, `onLeave`
+
+### Animations
+
+#### AnimationDefaultTextStyle
+
+Cria uma animação em relação ao estilo do texto.
+
+O elemento de text interno não deve ser estilizado para permitir que o `AnimationDefaultTextStyle` aplique as mudanças.
+
+> [!tip] Animação de texto sublinhado
+> Não existe uma propriedade específica para aumentar o espeço entre o texto e a linha.
+> 
+> Isso pode ser realizado da seguinte forma:
+> - Alteramos a cor do texto para transparente
+> - Utilizamos a propriedade de sombra com o offset posicionado acima da linha
+
+
 ### Ferramentas e recursos auxiliares
 
 #### Icon kitchen
