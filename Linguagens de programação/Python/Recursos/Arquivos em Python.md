@@ -1,3 +1,14 @@
+# Arquivos em Python
+
+```python
+‘r’      # leitura
+‘r+’     # leitura e escrita
+‘w’      # escrita
+‘w+’     # escrita e leitura
+‘a’      # apêndices apenas
+‘rb’     # leitura em arquivo binário
+‘wb’     # escrita em arquivo binário
+```
 
 # Encoding e Decoding
 

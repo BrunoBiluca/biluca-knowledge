@@ -1,7 +1,9 @@
 ---
 categoria: prática
 ---
-### Formatador padrão
+# VSCode e Python
+
+## Formatador padrão
 
 Necessário instalar o formatador autopep8.
 

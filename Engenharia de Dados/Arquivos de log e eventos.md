@@ -22,3 +22,15 @@ Para entender as vantagens disso, imagine um evento simples: mostrar um anúncio
 Logo, o simples ato de exibir um trabalho se tornou bastante complexo. E à medida que adicionamos outros lugares onde os trabalhos são exibidos — aplicativos móveis e assim por diante — essa lógica deve ser transferida e a complexidade aumenta. Pior, os sistemas com os quais precisamos interagir agora estão um pouco interligados – a pessoa que trabalha na exibição de trabalhos precisa saber sobre muitos outros sistemas e recursos e garantir que eles estejam integrados corretamente. Esta é apenas uma versão de brinquedo do problema, qualquer aplicação real seria mais, não menos, complexo.
 
 O estilo "orientado a eventos" fornece uma abordagem para simplificar isso. A página de exibição do trabalho agora mostra apenas um trabalho e registra o fato de que um trabalho foi mostrado junto com os atributos relevantes do trabalho, o visualizador e quaisquer outros fatos úteis sobre a exibição do trabalho. Cada um dos outros sistemas interessados — o sistema de recomendação, o sistema de segurança, o sistema de análise de cartazes de trabalho e o data warehouse — todos apenas assinam o feed e fazem seu processamento. O código de exibição não precisa estar ciente desses outros sistemas e não precisa ser alterado se um novo consumidor de dados for adicionado.
+
+# Modos de abertura de arquivos
+
+```python
+‘r’      # leitura
+‘r+’     # leitura e escrita
+‘w’      # escrita
+‘w+’     # escrita e leitura
+‘a’      # apêndices apenas
+‘rb’     # leitura em arquivo binário
+‘wb’     # escrita em arquivo binário
+```
