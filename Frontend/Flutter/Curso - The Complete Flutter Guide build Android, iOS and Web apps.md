@@ -90,6 +90,44 @@ O elemento de text interno não deve ser estilizado para permitir que o `Animati
 > - Alteramos a cor do texto para transparente
 > - Utilizamos a propriedade de sombra com o offset posicionado acima da linha
 
+#### SingleTickerProviderStateMixin
+
+Esse mixin adiciona a funcionalidade ao widget de ter acesso ao Ticker que atualiza um StatefulWidget sempre que um novo frame é gerado pela aplicação.
+
+To create the [AnimationController](https://api.flutter.dev/flutter/animation/AnimationController-class.html) in a [State](https://api.flutter.dev/flutter/widgets/State-class.html) that only uses a single [AnimationController](https://api.flutter.dev/flutter/animation/AnimationController-class.html), mix in this class, then pass `vsync: this` to the animation controller constructor.
+
+```dart
+class AnimatedWidget extends State<AnimatedWidget> 
+	with SingleTickerProviderStateMixin {
+	
+	// Cria a instância do controller de animação
+	late AnimationController _controller = AnimationController(
+		vsync: this,
+		durantion: const Duration(seconds: 4),
+	)..repeat()
+	
+	// Exemplo de animação de translação do elemento
+	late Animation<Offset> _animation = Tween(
+		begin: Offset.zero,
+		end: Offset(0, 8)
+	).animate(_controller)
+	
+	@override
+	Widget build(context) {
+		...
+	}
+}
+```
+
+### Formulários
+
+#### TextInputField
+
+Propriedades:
+
+- **inputFormatters** - define os valores aceitos de entrada do usuário
+- **validator** - valida o valor de entrada
+- **autoValidator** - define o comportamento que o campo de texto será validado e ativará o texto de erro
 
 ### Ferramentas e recursos auxiliares
 
@@ -102,3 +140,10 @@ Permite criar ícones para todas as plataformas disponíveis.
 #### Dartpad
 
 Dartpad é um website que permite criar pequenos códigos em Dart ou Flutter. Muito bom para experimentar.
+
+#### Firebase
+
+Firebase é um conjunto de serviços de backend.
+
+Pode ser utilizado para hospedagem, armazenamento, banco de dados (padrão e real-time).
+
