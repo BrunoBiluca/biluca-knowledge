@@ -1,4 +1,5 @@
-# Conflito de cor entre texto e fundo
+# Solução - Conflito de cor entre texto e fundo personalizado
+
 
 Um problema bem comum em componentes que são constituídos por texto e uma cor de fundo é definir a cor de ambos. Dependendo da combinação o texto pode ficar ilegível.
 

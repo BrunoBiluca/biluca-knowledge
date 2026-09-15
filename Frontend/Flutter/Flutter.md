@@ -29,7 +29,7 @@ Vantagens
 - [Material components](https://docs.flutter.dev/ui/widgets/material)
 - [Temas](https://docs.flutter.dev/cookbook/design/themes)
 - [[Navegação]]
-- [[Frontend/Flutter/Recursos/Estilização/Estilização|Estilização]]
+- [[Frontend/Flutter/Recursos/Estilização|Estilização]]
 - [[Frontend/Flutter/Recursos/Widgets|Widgets]]
 - [[Frontend/Flutter/Recursos/Formulários|Formulários]]
 
