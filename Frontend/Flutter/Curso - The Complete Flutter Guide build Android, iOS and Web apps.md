@@ -129,6 +129,19 @@ Propriedades:
 - **validator** - valida o valor de entrada
 - **autoValidator** - define o comportamento que o campo de texto será validado e ativará o texto de erro
 
+### Navigation
+
+Tipos de navegações em aplicações Flutter:
+
+- **Navigator e context** - formato mais básico, cada página é empilhada no histórico de navegação
+- **Routes** - formato mais sofisticado que permite uma configuração a partir de nomes das páginas para guia a navegação
+
+Para evitar que um hash `#` seja adicionado a URL da aplicação, podemos utilizar a função  `setUrlPathStrategy()` na raiz do projeto.
+
+#### Deep link
+
+Para deep link podemos utilizar [[go_router]].
+
 ### Ferramentas e recursos auxiliares
 
 #### Icon kitchen
