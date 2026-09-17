@@ -142,6 +142,16 @@ Para evitar que um hash `#` seja adicionado a URL da aplicação, podemos utiliz
 
 Para deep link podemos utilizar [[go_router]].
 
+### Flutter Web
+
+Existem dois tipos que o Flutter utiliza para renderização de páginas web. São eles:
+
+- Canvas kit
+- HTML
+
+Por padrão quando a aplicação é carregada de um desktop o Flutter utiliza o Canvas Kit e para aparelhos mobile, ele utiliza HTML.
+
+
 ### Ferramentas e recursos auxiliares
 
 #### Icon kitchen
