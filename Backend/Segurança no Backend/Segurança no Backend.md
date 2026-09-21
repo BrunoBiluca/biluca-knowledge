@@ -1,12 +1,19 @@
-# Segurança no desenvolvimento de software
+# Segurança no Backend
 
-Vulnerabilidades
+A segurança em projetos de software no [[Backend]] deve ser tratada em múltiplas fontes e de diversas maneiras
 
-- Uso de bibliotecas desatualizadas
-- Uso de código desconhecido
-- Considerar apenas cenários positivos
 
-Definições
+## Autenticação e Autorização
+
+No [[Backend]] podemos dividir o acesso de um usuário ou serviço de duas maneiras [[Autorização]] e [[Autenticação|Autenticação]]
+
+Analogia do mundo real:
+
+- **Autorização** = O manobrista do restaurante. Ele pode estacionar seu carro (ação), mas não é você.
+    
+- **Autenticação** = Seu RG. Ele prova que você é você.
+
+## Definições
 
 - Superfície de ataque: o sistema que pode ser atacado
 	- Vetores de ataques: maneira dos invasores entrarem em uma rede ou sistema
@@ -17,7 +24,7 @@ Definições
 - Ameaça
 - Vulnerabilidade
 
-# Princípios de segurança
+## Princípios de segurança
 
 Os primeiros são definido como CIA (Confidentiality, Integrity, Availability)
 
@@ -49,7 +56,7 @@ Temos 3 principais processos para a implementação desses princípios:
 
 Utilizando esses 3 fatores temos uma boa confiabilidade da autenticação da pessoa ou entidade a informação que está sendo disponibilizada.
 
-# Testes de segurança
+## Testes de segurança
 
 ### SAST
 

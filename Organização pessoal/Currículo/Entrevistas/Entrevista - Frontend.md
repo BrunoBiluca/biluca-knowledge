@@ -54,3 +54,27 @@ Para os **filtros em tempo** real utilizar alguma biblioteca para controle de **
 Também podemos permitir que o usuário **compartilhe** a página com filtros previamente selecionados. Isso é possível utilizando o **roteador** do Next.js pelo **hook useRouter**. Assim, na inicialização da página, lemos os parâmetros passados na URL para popular os filtros e o Zustand.
 
 Para páginas de detalhes, como uma página de um produto, por exemplo, podemos utilizar a capacidade do Next.js de **gerar páginas estáticas** em tempo de construção, melhorando a performance tanto no frontend como reduz a carga no servidor.
+
+### [[Angular]]
+
+> [!example] Que tipo de estruturas implementam os conceitos de autenticação e autorização no Angular?
+
+**Conceitos abordados:**
+
+- [[Roteamento|Roteamento no Angular]]
+
+**Resposta:**
+
+No Angular para rotas inteiras podemos utilizar o sistema de Guardas, dado pela propriedade `canActivate` de cada rota. Essas rotas são personalizáveis e podem  ser definidas de acordo com a autenticação ou com os papéis do usuário.
+
+Por exemplo, a página de perfil do usuário só pode ser acessada caso o usuário esteja autenticado, uma página administrativa interna do sistema só pode ser acessada por usuários com a permissão para isso.
+
+```ts
+// AuthGuard: autenticação (tem token válido?)
+canActivate(): boolean { return this.auth.isAuthenticated(); }
+
+// RoleGuard: autorização (tem a role necessária?)
+canActivate(route): boolean {
+  return this.auth.hasRole(route.data.role);
+}
+```
