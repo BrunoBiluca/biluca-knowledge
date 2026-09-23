@@ -1,7 +1,11 @@
 # Solução - Conflito de cor entre texto e fundo personalizado
 
+> [!example] Projetos relacionados
+> - [[Projetos/Projeto - Biluca Finanças/Biluca Finanças|Biluca Finanças]]
 
-Um problema bem comum em componentes que são constituídos por texto e uma cor de fundo é definir a cor de ambos. Dependendo da combinação o texto pode ficar ilegível.
+[[Flutter]]
+
+Um problema bem comum em componentes que são constituídos por texto e uma cor de fundo é definir a cor de ambos, principalmente quando a cor de fundo pode ser personalizada pelo usuário. Dependendo da **combinação o texto pode ficar ilegível.**
 
 Uma solução simples para esse problema é definir a cor do fundo e ajustar a cor do texto de acordo com a luminância dessa cor. Para isso podemos fazer uma simples função:
 

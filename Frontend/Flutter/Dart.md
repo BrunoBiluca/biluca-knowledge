@@ -56,6 +56,43 @@ var greeter = Greeter('Jane');
 greeter(); // Output: Hello, Jane!
 ```
 
+
+## Factory methods
+
+Uma função nativa do Dart é a construção de métodos factory para a criação de novas instâncias de objetos de uma classe.
+
+```dart
+class SummaryCardLabel extends StatelessWidget {
+  final String label;
+  final Color color;
+  final Color bgColor;
+  final IconData? icon;
+
+  const SummaryCardLabel({
+    super.key,
+    required this.label,
+    required this.color,
+    required this.bgColor,
+    this.icon,
+  });
+
+  // Factory methods personalizado
+  SummaryCardLabel.positive({
+    super.key,
+    required this.label,
+    required AppTheme theme,
+    this.icon,
+  })  : color = theme.colors.positiveYield,
+        bgColor = theme.colors.positiveYieldBg;
+  
+	...
+}
+```
+
+Esse exemplo demonstra a criação de um **Widget com múltiplos construtores,** dessa forma o desenvolvedor já tem parte dos campos necessários preenchidos. Quando é necessário uma construção que não foi prevista por um factory method é apenas necessário utilizar o próprio construtor da classe.
+
+Além disso, também melhora a legibilidade do código.
+
 ## late, const e final
 
 ### late

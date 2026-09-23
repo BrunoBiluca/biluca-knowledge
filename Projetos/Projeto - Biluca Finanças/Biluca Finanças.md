@@ -59,7 +59,7 @@ shadow: off
 - [[Flutter]]
 	- [[Dart]]
 	- [[fl_chart]]
-	- [[GetIt]]
+	- [[get_it]]
 	- [[Logging]]
 	- [[Mocktail]]
 	- [[StaggeredGrid]]

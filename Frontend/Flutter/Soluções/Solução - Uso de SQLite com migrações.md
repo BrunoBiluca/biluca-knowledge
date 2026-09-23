@@ -1,5 +1,8 @@
 # Solução - Uso de SQLite com migrações
 
+> [!example] Projetos relacionados
+> - [[Projetos/Projeto - Biluca Finanças/Biluca Finanças|Biluca Finanças]]
+
 Uma forma de encapsular a utilização do banco de dados é criar uma estrutura que seja responsável por implementar operações relacionadas ao banco de dados, essa classe chamamos de `DBProvider`. Podemos definir essa classe como singleton ou não dentro da aplicação.
 
 ```dart

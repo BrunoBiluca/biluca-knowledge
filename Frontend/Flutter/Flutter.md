@@ -43,7 +43,7 @@ Vantagens
 - [[Padrão BLoC]]
 - [[Testes]]
 - [[Injeção de dependências]]
-	- [[GetIt]]
+	- [[get_it]]
 - [[Guia de desenvolvimento em Flutter]]
 - [[Publicação de aplicações]]
 

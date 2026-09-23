@@ -1,7 +1,10 @@
 ---
 categoria: biblioteca
 ---
-### GetIt
+# get_it
+
+> [!example] Projetos relacionados
+> - [[Projetos/Projeto - Biluca Finanças/Biluca Finanças|Biluca Finanças]]
 
 > [!info] Documentação
 > - [Página do pacote](https://pub.dev/packages/get_it)

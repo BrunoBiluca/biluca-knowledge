@@ -20,10 +20,15 @@ Para manter a barra lateral sempre na tela precisamos fazer uma solução person
 
 #### Implementação
 
-```dart
-import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+A implementação escolhida divide a apresentação em dois Widgets: um para a barra aberta e outro para a barra fechada. Esse modelo se mostrou mais simples de controlar, já que vários elementos da barra era alterados entre as duas visualizações.
 
+Todos os elementos são:
+
+- `sidebar.dart`
+- `opened_sidebar.dart`
+- `closed_sidebar.dart`
+
+```dart
 class Sidebar extends StatefulWidget {
   const Sidebar({
     super.key,
@@ -34,117 +39,70 @@ class Sidebar extends StatefulWidget {
 }
 
 class _SidebarState extends State<Sidebar> {
-  final List<dynamic> _pages = [
-    {
-      'title': 'Home',
-      'icon': Icons.home,
-      'color': Colors.purpleAccent,
-      'route': '/',
-    },
-    {
-      'title': 'Relatório do mês',
-      'icon': Icons.dashboard,
-      'color': Colors.purpleAccent,
-      'route': "/monthly-report",
-    },
-    {
-      'title': 'Prestação de contas',
-      'icon': Icons.table_view,
-      'color': Colors.lightGreen,
-      'route': "/accountability",
-    },
+  final List<SidebarPage> _pages = [
+    SidebarPage("Home", "/", Icons.home, Colors.purpleAccent),
+    SidebarPage("Relatório do mês", "/monthly-report", Icons.dashboard, Colors.purpleAccent),
+    SidebarPage("Relatório anual", "/yearly-report", Icons.space_dashboard, Colors.blueAccent),
+    SidebarPage("Prestação de contas", "/accountability", Icons.table_view, Colors.lightGreen),
   ];
 
   int selectedPage = 0;
   bool isOpen = true;
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Drawer(
-      width: isOpen ? 300 : 56,
+      width: isOpen ? 300 : 68,
       shape: const ContinuousRectangleBorder(),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Expanded(
-            child: ListView.separated(
-              shrinkWrap: true,
-              itemCount: _pages.length,
-              separatorBuilder: (context, index) => SizedBox(height: 8),
-              itemBuilder: (context, index) {
-                return isOpen ? itemFull(_pages[index], index) : itemShort(_pages[index], index);
-              },
-            ),
-          ),
-          IconButton(
-            key: const Key('toggle-sidebar'),
-            icon: Icon(isOpen ? Icons.arrow_left : Icons.arrow_right),
-            onPressed: () {
-              setState(() => isOpen = !isOpen);
-            },
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget itemFull(
-    dynamic page,
-    int pageIndex,
-  ) {
-    return ListTile(
-      selected: pageIndex == selectedPage,
-      selectedColor: Colors.black,
-      selectedTileColor: Colors.white,
-      minTileHeight: 56,
-      leading: pageIcon(page),
-      title: Text(page['title']),
-      onTap: () => goToPage(pageIndex, page['route']),
-    );
-  }
-
-  Widget itemShort(
-    dynamic page,
-    int pageIndex,
-  ) {
-    return ListTile(
-      selected: pageIndex == selectedPage,
-      selectedColor: Colors.black,
-      selectedTileColor: Colors.white,
-      contentPadding: EdgeInsets.all(0),   // IMPORTANTE remover o padding para itens pequenos
-      horizontalTitleGap: 0,
-      minLeadingWidth: 0,
-      minTileHeight: 56,
-      title: pageIcon(page),
-      onTap: () => goToPage(pageIndex, page['route']),
-    );
-  }
-
-  Widget pageIcon(dynamic page) {
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: Theme.of(context).colorScheme.outline,
-      ),
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Icon(
-          page['icon'],
-          color: page['color'],
+        padding: const EdgeInsets.fromLTRB(8, 20, 8, 20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          spacing: 20,
+          children: [
+            Expanded(
+              child: isOpen
+                  ? OpenSidebar(
+                      pages: _pages,
+                      selectedPage: selectedPage,
+                      onSelectPage: goToPage,
+                    )
+                  : ClosedSidebar(
+                      pages: _pages,
+                      selectedPage: selectedPage,
+                      onSelectPage: goToPage,
+                    ),
+            ),
+            Row(
+              mainAxisAlignment: isOpen ? MainAxisAlignment.end : MainAxisAlignment.center,
+              children: [
+                IconButton(
+                  key: const Key('toggle-sidebar'),
+                  icon: Icon(isOpen ? Icons.arrow_left : Icons.arrow_right),
+                  onPressed: () {
+                    setState(() => isOpen = !isOpen);
+                  },
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );
   }
 
-  void goToPage(int pageIndex, String route) {
+  void goToPage(int pageIndex) {
     if (pageIndex == selectedPage) return;
     setState(() => selectedPage = pageIndex);
-    context.go(route);
+    context.go(_pages[pageIndex].route);
   }
+}
 ```
 
-Considerações da implementação:
-
-- Uma **ListView** é utilizada para garantir a funcionalidade de item selecionado para destacar o elemento
-- O **ListTile** deve sempre definir um elemento **title**, que é o que define o seu tamanho
-- Na visualização colapsada o **ListTile** deve ter a propriedade **contentPadding** para `0`, já que por padrão ele define um valor para isso e quando a barra é diminuída o conteúdo tem muito pouco espaço.
+> [!info] Possível melhoria
+> Talvez uma melhoria futura para essa implementação seria adicionar o estado da sidebar ao um ContextProvider, dessa forma não seria necessário declarar as páginas na barra lateral, ela apenas renderizaria os dados consumidos.

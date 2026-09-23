@@ -1,5 +1,8 @@
 # Solução - Servidor local junto a aplicação
 
+> [!example] Projetos relacionados
+> - [[Projetos/Projeto - Biluca Finanças/Biluca Finanças|Biluca Finanças]]
+
 É possível empacotar um servidor rodando [[Python]] junto com a aplicação [[Flutter]]. Dessa forma podemos encapsular algumas funcionalidades para esse servidor local ou remoto. Para aplicativos desktop podemos utilizar o servidor local e para aplicativos mobile e web servidores remotos.
 
 > [!Documentação]

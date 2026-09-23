@@ -1,5 +1,8 @@
 # Solução - Padronização de componentes
 
+> [!example] Projetos relacionados
+> - [[Projetos/Projeto - Biluca Finanças/Biluca Finanças|Biluca Finanças]]
+
 Uma coisa imprescindível em todo projeto de software é conseguir padronizar os componentes para eles comportarem tanto em nível de funcionalidade como também no aspecto visual. Além disso, o código fica centralizado ajudando na modularização do projeto.
 
 Porém, a padronização de componentes se não for bem feito pode levar a falta de flexibilidade e perda de funcionalidades dos componentes nativos do [[Flutter]].
@@ -59,7 +62,6 @@ class ReportTooltip extends StatelessWidget {
 > Esse tipo de implementação é bem direta e garante a padronização de forma muito eficiente, porém ela enrijece o contrato do componente. Assim, esses componentes devem ser pontuais no projeto, se restringindo a escopos menores. 
 > 
 > Para componentes globais podemos pensar em outras abordagem, como a criação de uma extensão na classe que estamos abordando.
-
 
 ## Abordagem com Mixin
 
