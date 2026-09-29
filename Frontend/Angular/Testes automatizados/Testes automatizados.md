@@ -28,8 +28,8 @@ Principais elementos que queremos testar:
 - [[Testes assíncronos (fakeAsync)]]
 - [[Testes assíncronos (Vitest)]]
 
-### Práticas
+### Soluções
 
-- [[Mock de HTTPClient]]
-- [[Reuso de testes entre componentes]]
-
+- [[Solução - Mock de HTTPClient]]
+- [[Solução - Reuso de testes entre componentes]]
+- [[Solução - Mocks de serviços]]

@@ -1,4 +1,4 @@
-## Testes assíncronos (fakeAsync)
+# Testes assíncronos (fakeAsync)
 
 Para testar elementos que apresentam funções relacionadas ao tempo, como `setTimeout` ou `setInterval`, ou também requisições HTTP que podem demorar algum tempo podemos utilizar o [fakeAsync](https://angular.dev/api/core/testing/fakeAsync).
 

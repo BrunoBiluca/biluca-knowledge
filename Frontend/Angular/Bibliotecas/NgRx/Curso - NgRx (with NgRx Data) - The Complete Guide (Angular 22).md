@@ -72,4 +72,33 @@ Alguns pacotes recomendados pelo professor
 	- Conjunto completo de ferramentas para controlar o estado sobre o NgRx
 	- Existe uma extensão para Chrome
 
-[[Arquitetura do NgRx]]
+### Router store
+
+É possível salver as informações do Router no estado da aplicação. Essa é uma forma de executar ações que alterem o estado da aplicação em resposta a navegação do usuário.
+
+```ts
+export const appConfig: ApplicationConfig = {
+	...
+	provideRouterStore(),
+	...
+}
+```
+
+### NgRx runtime checks
+
+O NgRx disponibiliza no modo de desenvolvimento várias outras ferramentas para o desenvolvedor.
+
+As verificações durante a execução do código ajudam a verificar vazamentos da implementação.
+
+### NgRx Entity
+
+#### EntityState
+
+Define o estado de uma entidade dentro do NgRx.
+
+#### Router resolve
+
+É uma interface do Angular que é o melhor local para buscar informações de serviços externos.
+
+O Resolve permite que dados sejam injetados para a rota antes mesmo de iniciar o componente, por exemplo, para uma lista de produtos podemos utilizar o Resolve para buscar as informações dos produtos e já acessar essas informações no próprio componente de lista, sem a necessidade de implementar a função de buscar esses produtos no componente.
+

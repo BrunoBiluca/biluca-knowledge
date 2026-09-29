@@ -1,4 +1,4 @@
-## Testes de componentes
+# Testes de componentes
 
 [[Frontend/Angular/Recursos/Componentes|Componentes]] podem ser testados facilmente em Angular.
 

@@ -11,7 +11,7 @@ Exemplos de ações:
 - Usuário clica no botão de login da página de login para tentar se autenticar
 - Uma requisição é enviada para um serviço de terceiros
 
-Uma **boa prática** em relação a ações é que quanto **mais ações se cria mais descritivo** o seu sistema fica expressando melhor o fluxo da aplicação. **Prover contexto** a um evento único também ajuda na hora de depurar a aplicação utilizando as **ferramentas de desenvolvimento**.
+Uma **boa prática** em relação a ações é: quanto **mais ações se cria mais descritivo** o seu sistema fica e assim expressando melhor o fluxo da aplicação. **Prover contexto** a um evento único também ajuda na hora de depurar a aplicação utilizando as **ferramentas de desenvolvimento**.
 
 ```js
 // action definition
@@ -32,7 +32,8 @@ this.store.dispatch({
 
 > [!info]- Uso da interface `dispatch` no lugar de uma interface direta (CRUD)
 > A utilização desse tipo de interface adiciona flexibilidade ao armazenamento por desvincular sua execução de componentes específicos Assim, quando um componente envia uma ação a store, ele não sabe o que vai acontecer exatamente.
-> É um sistema de eventos que desacopla implementação e interface.
+> 
+> **É um sistema de eventos que desacopla implementação e interface.**
 
 > [!tip] Exportar todas as ações
 > 

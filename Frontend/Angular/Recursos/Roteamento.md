@@ -63,3 +63,37 @@ export const userIsAuthenticated: CanActivateFn = (route, state) : boolean | Url
 ```
 
 Outro exemplo de implementação de guardas está em [[Exemplo - Login e registro de usuários]].
+
+## Resolve
+
+O Resolve permite que dados sejam injetados para a rota antes mesmo de iniciar o componente, por exemplo, para uma lista de produtos podemos utilizar o Resolve para buscar as informações dos produtos e já acessar essas informações carregadas no componente de lista
+
+Essa abordagem permite concentrar a implementação em um único ponto, sem a necessidade replicar a função de buscar esses produtos nos componentes.
+
+```ts
+// Resolve<T> -> T deve ser o tipo retornado pela função resolve()
+export class ProductsResolver implements Resolve<any> {
+
+	loading = false;
+
+	constructor(private store: Store<AppState>) {}
+
+	resolve(
+		route: ActivateRouteSnapshot, 
+		state: RouterStateSnapshot
+	) 
+	: Observable<any> {
+		return this.store
+			.pipe(
+				tap(() => {
+					if (!loading) {
+						loading = true;
+						this.store.dispatch(loadAllProducts());
+					}
+				})
+				.first(), // o Resolve deve retorna um valor, por isso é necessário esse operador
+				.finalize(() => this.loading = false)
+			);
+	}
+}
+```

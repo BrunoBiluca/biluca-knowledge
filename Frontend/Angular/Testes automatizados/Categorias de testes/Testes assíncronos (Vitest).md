@@ -20,3 +20,9 @@ describe('', () => {
 	});
 });
 ```
+
+Para avançar o tempo dos times, por exemplo, um operador debouce ou um delay podemos utilizar:
+
+- `vi.runAllTimersAsync()` - executa todos os timers registrados
+
+- `vi.advanceTimersByTime(time)` - avança no progresso de tempo falseado por um valor específico

@@ -16,6 +16,10 @@
 	- O modelo de dados é desestruturado (diretivas) e mutável e seu fluxo assíncrono
 	- Sua validação é feita ligada ao template das diretivas e deve prover diretivas para validação personalizadas
 
+Soluções:
+
+- [[Solução - Campo de imagens]]
+
 ## Formulários reativos
 
 Os formulários podem ser configurados todos em um objeto que é atualizado a partir do `FormControl` ou `FormGroup`.
@@ -77,7 +81,9 @@ export class Signup {
 
 [[Angular]] disponibiliza por padrão vários validadores para os vários tipos de campos necessários em formulários.
 
-Também é possível definir validadores customizados.
+### Validadores personalizados
+
+Também é possível definir validadores personalizados.
 
 ```ts
 @Component({...})
@@ -89,16 +95,6 @@ export class FormComponent {
     this.nonExistingUserValidator.check,
   ]);
   
-  email = new FormControl('', 
-  [
-	Validators.required, 
-	Validators.email
-  ]);
-  
-  password = new FormControl('', 
-  [
-    Validators.required,
-    Validators.minLength(6),
-  ]);
+  ...
 }
 ```

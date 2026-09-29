@@ -1,4 +1,4 @@
-## Mock de HTTPClient
+# Mock de HTTPClient
 
 É muito comum testarmos elementos que recuperam informações de serviços externos. Angular já disponibiliza um módulo pronto de testes para HTTP, `HttpClientTestingModule`.
 
@@ -31,4 +31,4 @@ service.getUrl().subscribe((result) => {
 
 ### Melhores práticas
 
-- [[Reuso de testes entre componentes]]
+- [[Solução - Reuso de testes entre componentes]]

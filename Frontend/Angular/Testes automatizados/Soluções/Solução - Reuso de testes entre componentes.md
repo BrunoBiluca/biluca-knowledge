@@ -1,4 +1,4 @@
-## Reuso de testes entre componentes
+# Solução - Reuso de testes entre componentes
 
 > [!quote] (Implementação)
 > - [[Biluca Notas Rápidas (Angular)]] implementa uma especificação para os componentes exibição em lista e em grade
