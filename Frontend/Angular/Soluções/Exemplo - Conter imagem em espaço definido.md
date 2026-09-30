@@ -1,6 +1,6 @@
 # Exemplo - Conter imagem em espaço definido
 
-Uma solução muito comum de desenvolvimento [[Frontend]] é conter uma imagem dentro de um espaço definido. 
+Uma solução muito comum de desenvolvimento [[Frontend/Frontend]] é conter uma imagem dentro de um espaço definido. 
 
 Esse problema é facilmente resolvido em [[Angular]] e [[Tailwind]] da seguinte maneira:
 

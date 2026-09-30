@@ -1,30 +1,6 @@
-# Entrevista - Frontend
+# Fundamentos React
 
-Conteúdo relacionado a perguntas para entrevistas técnicas de [[Frontend]].
-
-## Geral
-
-Temas gerais:
-
-- Componentes e estrutura de projeto
-	- Ciclo de vida
-- [[Frontend/React/🏅 Melhores práticas/Gerenciamento de estado|Gerenciamento de estado]]
-- Gerenciamento de estado assíncrono (dados externos)
-	- [[Cache no Frontend]]
-	- Revalidação de cache
-- Filtros em tempo real
-	- Debounce
-- [[Paginação]]
-	- OFFSET/LIMIT
-	- Cursor-based
-	- Keyset-based com indexação
-- Roteamento
-	- Compartilhamento pela URL
-- Server-side render
-
-## [[React]]
-
-### Possíveis perguntas
+[[React]]
 
 > [!example]- Você precisa construir uma página de portal com listagem de projetos, filtros em tempo real e roteamento dinâmico. Como você estruturaria isso em Next.js? Quais hooks e padrões usaria para performance?
 
@@ -55,26 +31,11 @@ Também podemos permitir que o usuário **compartilhe** a página com filtros pr
 
 Para páginas de detalhes, como uma página de um produto, por exemplo, podemos utilizar a capacidade do Next.js de **gerar páginas estáticas** em tempo de construção, melhorando a performance tanto no frontend como reduz a carga no servidor.
 
-### [[Angular]]
 
-> [!example] Que tipo de estruturas implementam os conceitos de autenticação e autorização no Angular?
+> [!example] O que é React.memo?
 
-**Conceitos abordados:**
+**Conhecimentos abordados:**
+- [[Função pura]]
+- [[Hooks]]
 
-- [[Roteamento|Roteamento no Angular]]
-
-**Resposta:**
-
-No Angular para rotas inteiras podemos utilizar o sistema de Guardas, dado pela propriedade `canActivate` de cada rota. Essas rotas são personalizáveis e podem  ser definidas de acordo com a autenticação ou com os papéis do usuário.
-
-Por exemplo, a página de perfil do usuário só pode ser acessada caso o usuário esteja autenticado, uma página administrativa interna do sistema só pode ser acessada por usuários com a permissão para isso.
-
-```ts
-// AuthGuard: autenticação (tem token válido?)
-canActivate(): boolean { return this.auth.isAuthenticated(); }
-
-// RoleGuard: autorização (tem a role necessária?)
-canActivate(route): boolean {
-  return this.auth.hasRole(route.data.role);
-}
-```
+É um Hook que permite registrar uma função pura que armazena o resultado para cada execução apenas quando os parâmetros mudam evitando re-renderizações. Isso é bem útil quando temos componentes mais pesados.

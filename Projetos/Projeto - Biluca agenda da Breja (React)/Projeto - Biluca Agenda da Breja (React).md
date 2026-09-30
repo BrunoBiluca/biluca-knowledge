@@ -4,11 +4,11 @@
 > - [Repositório](https://github.com/BrunoBiluca/biluca-agenda-breja-react)
 > - [Link da aplicação](https://biluca-agenda-breja-react.vercel.app/)
 
-Projeto desenvolvido para estudo de tecnologias para [[Frontend]] baseado no [[Projeto Base - Agenda da Breja]].
+Projeto desenvolvido para estudo de tecnologias para [[Frontend/Frontend]] baseado no [[Projeto Base - Agenda da Breja]].
 
 #### Conceitos abordados
 
-- Desenvolvimento [[Frontend]]
+- Desenvolvimento [[Frontend/Frontend]]
 
 ##### Stack selecionada
 

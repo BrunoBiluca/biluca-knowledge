@@ -2,6 +2,8 @@
 tags:
   - arquitetura_software
 ---
+# Architecture
+
 Nesse capítulo o autor foca em apresentar várias arquiteturas de software de forma a mostrar que o DDD funciona bem com qualquer uma delas.
 
 Ele apresenta como um resumo cada arquitetura, porém com o foco na interação com as práticas do DDD e em quais problemas cada arquitetura é melhor empregada

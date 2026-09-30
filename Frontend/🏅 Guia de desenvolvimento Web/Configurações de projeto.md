@@ -11,7 +11,7 @@ Podemos executar a aplicação em diferentes modos como:
 
 ### Chaves
 
-É importante garantirmos que as chaves dos nossos projetos sejam escondidas a fim de gerar falhas de seguranças em relação aos nossos dados e também evitar acesso indevido. No [[Frontend]] temos um problema ainda maior já que o **código é enviado diretamente** para os nossos clientes deixando ele vulnerável.
+É importante garantirmos que as chaves dos nossos projetos sejam escondidas a fim de gerar falhas de seguranças em relação aos nossos dados e também evitar acesso indevido. No [[Frontend/Frontend]] temos um problema ainda maior já que o **código é enviado diretamente** para os nossos clientes deixando ele vulnerável.
 
 As chaves de API podem ser divididas em duas categorias:
 

@@ -1,6 +1,6 @@
 # Solução - Filtros em tempo real
 
-Um elemento muito comum em aplicações [[Frontend]] é permitir ao usuário filtrar resultados por um campo de texto.
+Um elemento muito comum em aplicações [[Frontend/Frontend]] é permitir ao usuário filtrar resultados por um campo de texto.
 
 Esse tipo de filtro pode gerar múltiplas requisições a cada caractere alterado.
 

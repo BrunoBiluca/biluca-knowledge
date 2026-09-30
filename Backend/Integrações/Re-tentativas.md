@@ -1,6 +1,6 @@
 # Re-tentativas
 
-Em qualquer integração externa de um serviço de [[Backend]] é importante pensarmos em um sistema de re-tentativas. São várias variáveis que podem deixar um serviço indisponível temporariamente.
+Em qualquer integração externa de um serviço de [[Backend/Backend]] é importante pensarmos em um sistema de re-tentativas. São várias variáveis que podem deixar um serviço indisponível temporariamente.
 
 ## Estratégias
 

@@ -1,6 +1,6 @@
 # Projeto Base - Notas rápidas
 
-Esse projeto tem como objetivo servir como base para desenvolvimento de aplicações focando na parte responsável pelo [[Frontend]].
+Esse projeto tem como objetivo servir como base para desenvolvimento de aplicações focando na parte responsável pelo [[Frontend/Frontend]].
 
 A ideia aqui é praticar os conceitos dessas ferramentas de Frontend simulando um ambiente real de desenvolvimento para buscar melhores práticas e servir como base para projetos futuros.
 
@@ -23,7 +23,7 @@ Além dos conceitos de Frontend abordados, também podemos estender para outros 
 
 # Funcionalidades
 
-As seguintes funcionalidades foram selecionadas para praticar vários tipos de conceitos muito comuns ao [[Frontend]].
+As seguintes funcionalidades foram selecionadas para praticar vários tipos de conceitos muito comuns ao [[Frontend/Frontend]].
 
 - [[DRP 01 - Controle de acesso (mock)]]
 	- Fluxos de autenticação (rotas)

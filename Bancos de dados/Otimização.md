@@ -1,6 +1,6 @@
 # Otimização
 
-O banco de dados geralmente é um dos elementos de um sistema [[Backend]]  que mais tem espaço para otimização. Isso se dá porque é um dos elementos mais lentos do sistema.
+O banco de dados geralmente é um dos elementos de um sistema [[Backend/Backend]]  que mais tem espaço para otimização. Isso se dá porque é um dos elementos mais lentos do sistema.
 
 ## Índices
 

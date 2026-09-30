@@ -1,8 +1,8 @@
 # Carregamento sob demanda
 
-Carregamento sob demanda também chamado de **Lazy Loading** define uma prática de organização de uma aplicação de [[Frontend]] onde os módulos e recursos dessa aplicação são requisitados a medida que o usuário necessita.
+Carregamento sob demanda também chamado de **Lazy Loading** define uma prática de organização de uma aplicação de [[Frontend/Frontend]] onde os módulos e recursos dessa aplicação são requisitados a medida que o usuário necessita.
 
-O mais comum no desenvolvimento de [[Frontend]] é fazer importações estáticas dos módulos da aplicação. Isso pode funcionar muito bem para projeto pequenos, porém a medida que esses projetos crescem o tempo necessário para baixar todos esses módulos pode levar a uma experiência de usuário ruim.
+O mais comum no desenvolvimento de [[Frontend/Frontend]] é fazer importações estáticas dos módulos da aplicação. Isso pode funcionar muito bem para projeto pequenos, porém a medida que esses projetos crescem o tempo necessário para baixar todos esses módulos pode levar a uma experiência de usuário ruim.
 
 Os principais problemas de uma aplicação em relação ao carregamento são:
 

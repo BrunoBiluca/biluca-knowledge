@@ -1,6 +1,6 @@
 # Supabase
 
-Supabase é um serviço de [[Backend]] online que disponibiliza várias funcionalidades prontas ao uso como:
+Supabase é um serviço de [[Backend/Backend]] online que disponibiliza várias funcionalidades prontas ao uso como:
 
 - Autenticação
 - Banco de dados como serviço (API HTTP)

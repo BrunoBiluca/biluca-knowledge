@@ -3,7 +3,7 @@
 > [!info] Conteúdos relacionados
 > - [[Exemplo - Login e registro de usuários]]
 
-No caso do [[Angular]] e do [[Frontend]] estamos mais preocupados com os aspectos de manter o acesso do nosso usuário ao sistema, já que a autenticação em si será feita no [[Backend]] ([[Autenticação|Autenticação]]).
+No caso do [[Angular]] e do [[Frontend/Frontend]] estamos mais preocupados com os aspectos de manter o acesso do nosso usuário ao sistema, já que a autenticação em si será feita no [[Backend/Backend]] ([[Autenticação|Autenticação]]).
 
 Tipo de manutenção de sessões da aplicação:
 

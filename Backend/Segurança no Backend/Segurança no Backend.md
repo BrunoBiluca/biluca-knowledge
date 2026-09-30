@@ -1,11 +1,11 @@
 # Segurança no Backend
 
-A segurança em projetos de software no [[Backend]] deve ser tratada em múltiplas fontes e de diversas maneiras
+A segurança em projetos de software no [[Backend/Backend]] deve ser tratada em múltiplas fontes e de diversas maneiras
 
 
 ## Autenticação e Autorização
 
-No [[Backend]] podemos dividir o acesso de um usuário ou serviço de duas maneiras [[Autorização]] e [[Autenticação|Autenticação]]
+No [[Backend/Backend]] podemos dividir o acesso de um usuário ou serviço de duas maneiras [[Autorização]] e [[Autenticação|Autenticação]]
 
 Analogia do mundo real:
 

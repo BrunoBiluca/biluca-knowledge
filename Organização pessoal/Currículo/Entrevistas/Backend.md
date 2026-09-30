@@ -1,6 +1,6 @@
 # Entrevista - Backend
 
-Conteúdo relacionado a perguntas para entrevistas técnicas de [[Backend]].
+Conteúdo relacionado a perguntas para entrevistas técnicas de [[Backend/Backend]].
 
 ## Geral
 
@@ -16,8 +16,8 @@ Temas gerais:
 
 **Conhecimentos abordados:**
 
-- Base: [[Backend]]
-- [[Banco de dados]]
+- Base: [[Backend/Backend]]
+- [[Bancos de dados/Banco de dados]]
 	- Relacionais
 	- NoSQL
 	- [[ORM - Object Relational Mappers]]
@@ -64,3 +64,13 @@ O fluxo de uma aplicação nesses moldes seria:
 
 É importante ressaltar que a autorização no frontend não é segura, já que o usuário pode ter acesso ao código. Por esse motivo, o backend deve ser utilizado como fonte de verdade.
 
+
+> [!example] Como lidar com comunicação entre serviços?
+
+**Conhecimentos abordados:**
+- 
+
+- Síncrona via HTTP/gRPC; 
+- Assíncrona via mensageria (RabbitMQ, Kafka)
+
+Uma vantagem do modelo assíncrono é o desacoplamento e resiliência entre os serviços.

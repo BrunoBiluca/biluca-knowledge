@@ -12,7 +12,7 @@ ano: 2026
 
 #### Objetivo
 
-Esse projeto tem como principal objetivo praticar desenvolvimento de aplicações [[Frontend]] utilizando um conjunto de tecnologias completo que será utilizado para aplicações futuras.
+Esse projeto tem como principal objetivo praticar desenvolvimento de aplicações [[Frontend/Frontend]] utilizando um conjunto de tecnologias completo que será utilizado para aplicações futuras.
 
 Após a execução desse projeto teremos um fluxo de trabalho completo e um conhecimento robusto das tecnologias, permitindo assim agilizar outros projetos.
 

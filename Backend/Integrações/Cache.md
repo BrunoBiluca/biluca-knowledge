@@ -1,6 +1,6 @@
 # Cache
 
-Uma forma muito comum de melhorar performance em sistemas que dependem de outras integrações é adicionar cache ao serviço de [[Backend]]. A utilização da cache permite **reduzir chamadas às fontes originais** que geralmente são mais lentas que consultas a memória ou a serviços gerenciados como Redis.
+Uma forma muito comum de melhorar performance em sistemas que dependem de outras integrações é adicionar cache ao serviço de [[Backend/Backend]]. A utilização da cache permite **reduzir chamadas às fontes originais** que geralmente são mais lentas que consultas a memória ou a serviços gerenciados como Redis.
 
 ## Redis
 

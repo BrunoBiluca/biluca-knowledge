@@ -1,6 +1,6 @@
 # Slice Pattern
 
-Slice Pattern é um padrão comumente utilizado para quebrar o estado global de aplicações [[Frontend]] em partes melhores, facilitando assim seu controle e manutenção.
+Slice Pattern é um padrão comumente utilizado para quebrar o estado global de aplicações [[Frontend/Frontend]] em partes melhores, facilitando assim seu controle e manutenção.
 
 Cada armazenamento (store) é responsável pelo seu estado e pelos métodos de mutação.
 

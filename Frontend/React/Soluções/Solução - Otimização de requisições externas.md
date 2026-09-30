@@ -1,6 +1,6 @@
 # Solução - Otimização de requisições externas com Promise.all
 
-Um problema muito comum em projeto [[Frontend]] é carregar dados a partir de uma fonte externa. Existem várias formas de resolver esse problema.
+Um problema muito comum em projeto [[Frontend/Frontend]] é carregar dados a partir de uma fonte externa. Existem várias formas de resolver esse problema.
 
 Um dos mais simples é utilizar o `Promise.all()`, função nativa do [[Javascript]].
 

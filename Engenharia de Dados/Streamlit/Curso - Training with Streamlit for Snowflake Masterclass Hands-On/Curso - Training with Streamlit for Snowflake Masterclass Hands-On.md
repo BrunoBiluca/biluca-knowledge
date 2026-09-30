@@ -14,7 +14,7 @@
 
 Cristian busca demonstrar as capacidades do [[StreamLit]] aplicado principalmente ao contexto do [[Snowflake]].
 
-São demonstradas várias de suas funcionalidades, como a criação de páginas, tabelas, visualizações em gráficos, e muitos outros elementos que fazem o [[StreamLit]] ser uma ótima alternativa a outros frameworks [[Frontend]], já que seu uso em ambientes como [[Snowflake]] é majoritariamente feito por Cientistas de dados, pessoas que não estão muito acostumados com essa modalidade de programação, mas tem bastante experiência com manipulação de dados e [[Python]].
+São demonstradas várias de suas funcionalidades, como a criação de páginas, tabelas, visualizações em gráficos, e muitos outros elementos que fazem o [[StreamLit]] ser uma ótima alternativa a outros frameworks [[Frontend/Frontend]], já que seu uso em ambientes como [[Snowflake]] é majoritariamente feito por Cientistas de dados, pessoas que não estão muito acostumados com essa modalidade de programação, mas tem bastante experiência com manipulação de dados e [[Python]].
 
 Da metade do curso pra frente Cristian foca na integração do [[StreamLit]] com o [[Snowflake]], apresentando algumas aplicações bem úteis para essa [[Data Platforms| Plataforma de dados]]. 
 

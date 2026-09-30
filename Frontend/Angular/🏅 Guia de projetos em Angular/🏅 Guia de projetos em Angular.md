@@ -2,7 +2,7 @@
 
 Esse guia tem como objetivo tratar sobre melhores práticas no desenvolvimento de aplicações com [[Angular]].
 
-O desenvolvimento de aplicações [[Frontend]] se apresenta com vários desafios, entre eles:
+O desenvolvimento de aplicações [[Frontend/Frontend]] se apresenta com vários desafios, entre eles:
 
 - Aumento da complexidade em relação as regras de negócio implementadas nas aplicações
 - Lidar com vários desenvolvedores no mesmo projeto

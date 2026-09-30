@@ -3,7 +3,7 @@
 > [!example] Projetos relacionados
 > - [[Projetos/Projeto - Biluca Finanças/Biluca Finanças|Biluca Finanças]]
 
-Todo projeto de [[Frontend]] precisa garantir que possa ser apresentado em vários tipos de telas.
+Todo projeto de [[Frontend/Frontend]] precisa garantir que possa ser apresentado em vários tipos de telas.
 
 No [[Flutter]] temos dois tipos de estruturas para nos informarmos:
 

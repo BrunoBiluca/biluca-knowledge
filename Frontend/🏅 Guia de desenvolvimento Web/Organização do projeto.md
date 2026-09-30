@@ -1,6 +1,6 @@
 # Organização do projeto
 
-Aqui quero apresentar uma organização de projetos geral para [[Frontend]]. O objetivo é deixar a navegação da aplicação da forma mais simples, isso só é possível se a organização das pastas e arquivos representarem bem a intenção do projeto.
+Aqui quero apresentar uma organização de projetos geral para [[Frontend/Frontend]]. O objetivo é deixar a navegação da aplicação da forma mais simples, isso só é possível se a organização das pastas e arquivos representarem bem a intenção do projeto.
 
 ## Princípios
 
