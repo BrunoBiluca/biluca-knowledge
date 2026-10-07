@@ -7,6 +7,9 @@ Com as AI generativas aumentando as suas capacidades um novo formato de trabalho
 > - [awesome-copilot](https://github.com/github/awesome-copilot) repositório com várias informações consolidadas para desenvolvimento assistido
 >   - disponibiliza Agentes, Instruções, Skills, Plugins e Cookbooks
 
+
+Dependendo do [[Tipos de formas de inteligência artificial]] que seja utilizado as ferramentas e o custo da operação podem aumentar ou diminuir.
+
 ## Configuração de um projeto
 
 Para utilizar em todo o seu potencial o desenvolvimento assistido é necessário adicionar alguns elementos a estrutura de arquivos de um projeto de software.
