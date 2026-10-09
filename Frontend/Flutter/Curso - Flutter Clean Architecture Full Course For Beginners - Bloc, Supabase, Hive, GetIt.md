@@ -12,6 +12,8 @@ Esse curso apresenta o desenvolvimento de uma aplicação completa a fim de apre
 
 Outro problema para mim é a falta de citar a utilização de testes automatizados. Testes automatizados são a base de arquiteturas limpas, o formato sugerido só faz sentido se quisermos testar automaticamente o código, se isso não for uma necessidade nem precisa desse formato de arquitetura.
 
+## Anotações
+
 #### Rotas e páginas
 
 Uma prática que o autor propõe é adicionar a rota da página como uma função estática no início da classe que implementa a página. Achei isso uma boa ideia, já que assim podemos definir as páginas e rotas de maneira programática, e move a responsabilidade para a página, facilitando também a construção do roteador.
