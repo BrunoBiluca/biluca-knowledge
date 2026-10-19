@@ -3,6 +3,9 @@
 > [!quote]- (Aula) - [O que é Spec-driven development por Balta](https://www.youtube.com/watch?v=z6Dg0UhcOvo)
 > Explicação geral dos conceitos de Spec-driven development
 
+> [!quote]- (Repositório) - [balta-desafio-halloween-2026-spec-driven-02](https://github.com/balta-io/balta-desafio-halloween-2026-spec-driven-02/tree/main)
+> Repositório de exemplo utilizando a implementação de uma aplicação com SDD
+
 O Spec-driven development veio como uma forma de trabalho que se contrapõe ao Vibe Coding.
 
 O Vibe Code utiliza como fonte de verdade do projeto o código, porém como esse código passa por muitas mudanças ao longo do tempo, esse formato de trabalho apresenta limitações severas em relação a escala do sistema como:
@@ -108,6 +111,42 @@ A constituição fica definida no arquivo `constitution.md`. Abaixo está um tem
 --
 ```
 
+#### Exemplo
+
+```md
+# Constituição do projeto
+
+## Stack
+- .NET 10, C#, Minimal API
+- Persistência em SQLite via EF Core
+- Testes com xUnit
+
+## Arquitetura
+- Todo código deve ser gerado dentro da pasta src/
+- Endpoint não acessa banco diretamente, sempre via serviço de aplicação
+- Regra de negócio não vive no endpoint nem no handler HTTP
+- Nenhuma dependência nova entra sem justificativa escrita no plano
+
+## Qualidade
+- Toda regra de negócio precisa ter teste unitário
+- Todo endpoint precisa ter ao menos um teste de integração de caminho feliz
+- Erro de validação sempre retorna 400 com ProblemDetails
+
+## Convenções
+- Nomes de classe e arquivo em inglês, mensagens de erro em português
+- Commit no formato: tipo(escopo): descrição, com o identificador do requisito
+
+## Governança
+- Se o plano contradiz a constituição, quem muda é o plano
+- Se a constituição precisa mudar, muda em commit separado
+```
+
+Alguns pontos interessantes das regras levantadas:
+
+- Definição da Stack
+- Qualidade do software pode definir regras que são obrigatórias em todo o projeto, como é o caso do retorno 400 com ProblemDetails
+- Clarificação para a IA como foi definido na seção de Governança
+
 ### Passo 1: Especificação
 
 A especificação é onde definimos o escopo do que queremos construir.
@@ -163,6 +202,24 @@ A IA para de adivinhar e passa a perguntar.
 - Ele faz perguntas fechadas, com opções
 - Sua resposta é gravada de volta na spec
 - Esse passo pode definir o custo do projeto a longo prazo
+
+#### Exemplo
+
+Para esse passo podemos utilizar um prompt para clarificar a especificação definida.
+
+Exemplo de prompt:
+
+```
+Você é um desenvolvedor de software cético e sênior.
+
+Leia a especificação abaixo e NÃO escreva código, NÃo proponha solução técnica.
+
+Sua tarefa: lista de 5 a 7 pontos onde a especificação está ambígua, incompleta ou contraditória. Para cada ponto, faça uma pergunta objetiva e ofereça de 2 a 3 opções de resposta, marcando qual você recomenda e por quê.
+
+Ordene da mais crítica para a menor crítica.
+
+[cole aqui a especificação]
+```
 
 ### Passo 3: Plano
 
@@ -244,6 +301,27 @@ Aqui a IA revisa o trabalho da própria IA, antes de escrever código.
 - Aponta contradição, requisito órfão, tarefa sem origem
 - Checklists de qualidade por tipo de risco
 - Tudo isso ainda sem uma linha de código escrita
+
+#### Exemplo
+
+A revisão do projeto pode ser feito a partir do prompt.
+
+```
+Você é um auditor de consistência. NÃO escreva código.
+
+Recebe quatro artefatos: constituição, específicação, plano e tarefas.
+
+Aponte, em lista:
+
+1. Requisito da especificação que não tem nenhuma tarefa correspondente
+2. Tarefa que não tem origem em nenhum requisito ou decisão
+3. Decisão do plano que contradiz a constituição
+4. Contradiçõa entre a especificação e o plano.
+
+Para cada achado, cite o identificador e diga qual artefato precisa mudar.
+
+[cole os quatro arquivos]
+```
 
 ### Passo 6: Implementação
 
