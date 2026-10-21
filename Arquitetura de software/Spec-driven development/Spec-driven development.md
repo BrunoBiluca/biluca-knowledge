@@ -71,6 +71,7 @@ Os elementos (etapas) de uma abordagem Spec-Driven Development são:
 
 - **Análise** - checagem cruzada
 	- `relatório`
+	- Portão humano
 
 - **Implementação** - execução do plano
 	- `code/commit`

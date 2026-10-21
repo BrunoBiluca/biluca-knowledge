@@ -59,4 +59,120 @@ Principais problemas em desenvolvimento de software
 
 Todos esse problemas continuam existindo utilizando IA no processo, a IA inclusive pode ser um agravante nesses casos.
 
+### O que é Spec-Driven Development
+
+#### Por que especificar antes de implementar?
+
+Vibe coding e código tradicional
+
+- Prompt vago gera código inconsistente
+- retrabalho constante
+- Ambiguidade acumulada
+- IA "adivinha" a intenção
+
+Com SDD
+
+- Especificação clara gera comportamento previsível
+- Menos iterações de correção
+- Contratos explícitos entre componentes
+- IA executa com precisão cirúrgica
+
+#### Gerar código != Gerar Software
+
+**Gerar código -** A IA produz linhas de código sintaticamente corretas. O resultado pode compilar, porém não tem garantia de que faz o que o negócio precisa. É *output técnico* sem compromisso semântico.
+
+**Gerar software -** A IA produz um sistema que cumpre contratos definidos, passa em validações estruturadas e resolve o problema real. É *output funcional* com compromisso de comportamento verificável.
+
+Ainda assim, nenhum dos dois, garante que estamos construindo as coisas certas. Não existe entrega de valor real, sem uso real do software.
+
+#### O que uma especificação deve conter?
+
+- Contexto
+	- Qual problema estamos resolvendo? Por que agora? Quem é afetado?
+
+- Comportamento
+	- O que o sistema deve fazer - descrito em linguagem declarativa e sem ambiguidade
+
+- Contratos
+	- Interfaces, comunicação entre módulos e sistemas
+
+- Restrições
+	- Limites técnicos, de performance, segurança e de negócio que a IA deve respeitar
+
+- Critérios de aceite
+	- Condições verificáveis que definem "pronto". Cada critério vira um teste.
+
+##### Erros comuns
+
+- Specs gigantes
+
+- Misturar requisitos e implementação
+
+- Duplicar especificações
+
+- Não atualizar a documentação
+
+- Ignorar versionamento
+
+- Tasks antes dos requisitos
+
+### Princípios
+
+- Especificação primeiro
+
+- Especificação como fonte de verdade
+
+- IA como implementadora
+
+- Humano como revisor
+
+- Iteração contínua
+
+- Automação inteligente
+	- Testes automáticos
+	- Docs geradas
+	- CI/CD orientado
+	- Revisão automatizada
+
+### Padrões de SDD
+
+#### Workflow - Greenfield
+
+Etapas:
+
+- Especificação (O que e por quê?)
+- Arquitetura (Como?)
+- Tarefas (pequenas e verificáveis)
+- Implementação
+- Testes e Iteração
+- Deploy
+
+#### Workflow - Brownfield
+
+Em sistemas ligados é necessário entender o sistema para começar a desenvolver uma especificação.
+
+#### Workflow - Feature
+
+Podemos também limitar a nossa aplicação de SDD a uma funcionalidade, reduzindo o escopo de especificação, já que a arquitetura e outras coisas já estão definidas no sistema maior.
+
+### Anatomia de um projeto SDD
+
+Simplificando um sistema SDD é composto por várias especificações. Cada especificação tem um escopo bem definido.
+
+Uma especificação é definida por 3 arquivos:
+
+- **requirements.md** - define o requisito
+- **design.md** - define os aspectos técnicos do requisitos, como arquitetura, banco de dados, ferramentas
+- **tasks.md** - define cada uma das tarefas que serão executadas para a IA implementar o sistema
+
+Outros arquivos
+
+- ADR
+- Glossary
+- Template
+- Prompts
+- Convenções
+- Constituição
+
+As especificações são versionadas, permitindo o acompanhamento da sua evolução.
 
