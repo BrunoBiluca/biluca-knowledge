@@ -176,3 +176,61 @@ Outros arquivos
 
 As especificações são versionadas, permitindo o acompanhamento da sua evolução.
 
+#### Informações gerais
+
+É importante deixar bem claro algumas informações gerais para o Agente trabalhar. 
+
+- Objetivo do projeto
+	- Aqui definimos em poucas palavras os principais objetivos do projeto, isso ajuda a nortear o Agente a garantir que os requisitos façam sentido
+
+- Regras não-negociáveis
+	- São regras que o Agente precisa seguir sem questionar
+
+- Como trabalhar nesse repositório
+	- Define regras gerais de como a organização dos arquivos e pastas devem ser definidas
+
+#### Especificação
+
+Esse arquivo define o requisito que será executado.
+
+- Objetivo
+- Contexto do pedido
+- Perguntas de esclarecimento e Respostas
+- User stories
+- Fora do escopo / decisões negociadas
+- Critérios de aceite
+
+Os critérios de aceite são indispensáveis, já que eles serão utilizados pelo Agente para entender que cumpriu o requisito com sucesso.
+
+#### Plano técnico
+
+Para cada requisito é importante definirmos uma plano técnico de implementação para o Agente.
+
+Esse plano técnico deve conter:
+
+- Visão geral
+- Dados utilizados
+- Fluxo
+- Decisões técnicas
+- Riscos
+
+**Exemplo**
+
+- Visão geral: Módulo de execução de queries
+
+- Dados utilizados: todas as 7 tabelas do modelo
+
+- Fluxo: env -> database.py -> cache -> página Streamlit
+
+- Decisões técnicas:
+	- Driver psycopg2/SQLAlchemy
+	- st.cache_data
+	- Não usar Select *
+
+- Riscos: Alternativas para se o volume for muito grande
+
+> [!tip] Dependendo da especificação é necessário prover ou não algumas informações. São essas informações que irão guiar a implementação do Agente.
+
+#### Tarefas
+
+Uma boa prática é definir um arquivo para definir cada uma das tarefas que o Agente irá desempenhar. Isso permite que o Agente tenha uma fluxo bem definido resolvendo problemas de ambiguidade.

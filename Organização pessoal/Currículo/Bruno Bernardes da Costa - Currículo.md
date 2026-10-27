@@ -259,6 +259,15 @@
 
 ## Certificados relevantes / Relevant certificates
 
+### Spec Driven Development (SDD): Engenharia de Software com IA
+
+**Plataforma:** Udemy
+**Data de conclusão:** 2026/10  
+**Instrutor:** Fernando Amaral
+[Certificado](https://drive.google.com/open?id=1kRbGWFW839ImO60GkqD0PoCVe8jJdD6B&usp=drive_fs)
+
+**Habilidades:** Spec-Driven Development, Python, Streamlit, Software Engineering
+
 ### Streamlit for Snowflake Masterclass Hands-On
 
 **Plataforma:** Udemy
