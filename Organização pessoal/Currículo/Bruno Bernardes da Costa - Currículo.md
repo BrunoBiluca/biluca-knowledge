@@ -259,6 +259,15 @@
 
 ## Certificados relevantes / Relevant certificates
 
+### Spec-Driven Development com OpenSpec e Claude Code
+
+**Plataforma:** Udemy
+**Data de conclusão:** 2026/11  
+**Instrutor:** Jose Carlos Macoratti
+[Certificado](https://drive.google.com/open?id=1U6zzjtiuduOvnJP-ZZNNC94w1E1CzKVW&usp=drive_fs)
+
+**Habilidades:** Spec-Driven Development, OpenSpec, Claude Code, AI-Assisted Development, Software Engineering
+
 ### Spec Driven Development (SDD): Engenharia de Software com IA
 
 **Plataforma:** Udemy
