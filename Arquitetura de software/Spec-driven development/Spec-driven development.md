@@ -373,3 +373,20 @@ São os Harnesses que permitem alterar arquivos no seu computador e executar pro
 - Todos os artefatos gerados são markdown no seu repositório
 
 É possível fazer SDD sem nenhuma ferramenta, já que trata de uma disciplina adotada no projeto.
+
+## Harness
+
+Um elemento muito importante para o sucesso de um projeto de software guiado a IA é garantir que o ambiente que o modelo está inserido tenha condições de implementar o que espera.
+
+O SDD já é uma forma de organizar esse processo, porém precisamos de outros elementos além das especificações para elevar o nível do software ao longo do tempo. Isso é ainda mais importante para projetos maiores que passem por muita iteração.
+
+Alguns conceitos:
+
+- Utilização de múltiplos agentes
+	- Agentes podem ter objetivos diferentes, como um agente para implementação e um agente para validação. 
+
+- Memória
+	- Cada sessão iniciada sempre inicia do zero, ela precisa ler toda a especificação para daí iniciar o desenvolvimento. Além disso gastar muitos tokens também é um processo demorado, então, definir arquivos de memória que resumam o que já está pronto pode ser uma alternativa que mantenha o ambiente sanitarizado
+
+- Guardas
+	- Podemos definir também vários tipos de guardas que irão servir como validação para o que o Agente está gerando. Exemplos: Code Review, Testes de Unidade, Testes de Integração
