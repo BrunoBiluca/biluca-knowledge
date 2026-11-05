@@ -48,11 +48,29 @@ Nesse projeto eu desempenhei as seguintes funções:
 
 Esse projeto utilizará o processo de desenvolvimento [[Spec-driven development]] e todo o código será gerado pelos agentes de IA.
 
+A primeira especificação foi bem implementada, consegui deixar mais parecido com o que tinha em mente a partir de alterações na especificação.
+
+Uma dificuldade que tive foi em criar uma interface visual consistente, até agora ele não consegue entender coisas específicas relacionadas a interface.
+
+### Sobre o desenvolvimento
+
+- Não consegui ter o layout desejado, fiz vários prompts e mudanças na especificação, porém o layout ficou como a IA quis me entregar. O layout precisa estar definido na especificação, pelo menos a disposição dos elementos na tela.
+
+- Tempo do desenvolvimento foi rápido comparado com uma implementação tradicional. Todo o projeto deve ter sido feito em coisa de 6-8 horas considerando as várias pesquisas que tive que fazer para conseguir melhorar meus prompts e resultados.
+
+- Utilizei o modo padrão do copilot para escolher o modelo, e a minha experiência é que dependendo do modelo mudava muito a qualidade de entrega e entendimento das especificações.
+
+- Em relação aos tokens eu gastei quase toda minha cota grátis disponível. O que para esse projeto achei muito.
+
+- Sobre as funcionalidades, essa foi a parte mais satisfatória, as funcionalidades foram implementadas de acordo com o especificado.
+
+- Sobre o entendimento de tecnologia, eu senti que foi secundário. Eu especifiquei os elementos principais necessários para o projeto, o que ajudou, principalmente na primeira especificação, como banco de dados e bibliotecas utilizadas. Porém, não sei se caso as minhas escolhas de tecnologias fossem melhores ou piores isso teria um impacto considerável na entrega do resultado final. Como é um projeto simples fica difícil de avaliar. Talvez o próprio agente iria utilizar as bibliotecas que eu indiquei de antemão. Talvez as indicações serviram para otimizar o tempo de pesquisa e avaliação dos modelos.
+
 ## Soluções e aprendizados
 
 ### Prompts utilizados
 
-#### Para a criação da constituição
+#### Constituição
 
 Projeto em Angular na versão mais recente. Para testes utilizar vitest.
 
@@ -72,7 +90,7 @@ Princípios que quero fixar:
 - NgRx deve ser utilizado para gerenciar o estado da aplicação em memória
 - Deve utilizar apenas ngrx/signals para esse projeto
 
-#### Para criação da especificação de gerenciamento de notas
+#### Spec: gerenciamento de notas
 
 Uma aplicação que permite ao usuário manter anotações de variados tipos.
 
@@ -145,3 +163,16 @@ A página principal é composta por:
         - Todos os comandos devem ser alterados para utilizarem um ícone que demonstre a sua inteção, por exemplo, editar deve ser o ícone de lapis.
 
 Detalhe da nota deve ser exibido como uma modal.
+
+#### Nova spec: Temas
+
+Adicione a possibilidade de utilizar temas (escuro, claro, definido pelo sistema) ao projeto. 
+
+Casos de uso:
+O usuário irá selecionar o tema em um botão ícone (localizado no lado direito da barra de navegação superiora) que irá abrir um drop down menu com as opções possível.
+
+Fora do escopo: temas de terceiros. 
+
+Requisitos: Todas as funcionalidades devem ser mantida, o tema selecionado deve garantir que as notas continuam sendo visíveis.
+
+Futuras possibilidades: adicionar outros temas ao projeto. 
